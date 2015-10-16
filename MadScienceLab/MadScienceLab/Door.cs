@@ -14,7 +14,6 @@ namespace MadScienceLab
         {
             base.Model = Game1._models["door"];
             base.isCollidable = true;
-
             this.isOpen = isOpen;
 
             // Provides a hitbox for the block - Steven
@@ -25,6 +24,7 @@ namespace MadScienceLab
 
         public override void Update(RenderContext renderContext)
         {
+            
             if(isOpen){
                 this.Position = new Vector3(Position.X, Position.Y, -Game1.SINGLE_CELL_SIZE + 2);
                 isCollidable = false;
@@ -35,25 +35,7 @@ namespace MadScienceLab
             }
         }
 
-        public override void Draw(RenderContext _renderContext)
-        {
-            //Jacob: These lines don't seem to be used anymore.
-            //var transforms = new Matrix[model.Bones.Count];
-            //model.CopyAbsoluteBoneTransformsTo(transforms);
-
-            foreach (ModelMesh mesh in base.Model.Meshes)
-            {
-                foreach (BasicEffect effect in mesh.Effects)
-                {
-                    effect.EnableDefaultLighting();
-
-                    effect.View = _renderContext.Camera.View;
-                    effect.Projection = _renderContext.Camera.Projection;
-                    effect.World = Matrix.CreateTranslation(Position);
-                }
-                mesh.Draw();
-            }
-        }
+        
 
         public void Toggle()
         {

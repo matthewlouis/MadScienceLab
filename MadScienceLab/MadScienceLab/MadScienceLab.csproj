@@ -78,6 +78,7 @@
     <Compile Include="Button.cs" />
     <Compile Include="CellObject.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="LaserProjectile.cs" />
     <Compile Include="PickableBox.cs" />
     <Compile Include="Switch.cs" />
     <Compile Include="Door.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="RenderContext.cs" />
+    <Compile Include="LaserTurret.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

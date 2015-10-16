@@ -105,6 +105,7 @@ namespace MadScienceLab
             _models.Add("switch", Content.Load<Model>("Switch"));
             _models.Add("MoveableBox", Content.Load<Model>("MoveableBox"));
             _models.Add("block", Content.Load<Model>("block"));
+            _models.Add("Turret", Content.Load<Model>("turret"));
 
             _textures.Add("MoveableBox", Content.Load<Texture2D>("WoodPlanks_Color"));
             _textures.Add("clay_blue", Content.Load<Texture2D>("blockTextures/clay_blue"));

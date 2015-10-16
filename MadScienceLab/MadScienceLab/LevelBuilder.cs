@@ -44,7 +44,7 @@ namespace MadScienceLab
             string leveltxt = "XXXXXXXXXXXXXXXXXXXXXX\n"
                             + "XT                   X\n"
                             + "XXXX                 X\n"
-                            + "X                    X\n"
+                            + "X                   LX\n"
                             + "X                   XX\n"
                             + "X       X        X  XX\n"
                             + "X    X          X    X\n"
@@ -98,6 +98,10 @@ namespace MadScienceLab
                         break;
                     case 'X':
                         level.AddChild ( new BasicBlock ( col++, row ) );
+                        break;
+                    case 'L':
+                       level.AddChild(new LaserTurret(col++, row, true));
+                        //level.AddChild ( new Door ( col++, row, true ) ); //Starting open door
                         break;
                     case 'd':
                         open = new Door(col++, row, true);

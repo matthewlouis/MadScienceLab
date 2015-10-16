@@ -40,6 +40,12 @@ namespace MadScienceLab
         //Allows for easier transformations
         protected Matrix WorldMatrix;
 
+        float verticalOffset;
+        public void SetVerticalOffset(float verticalOffset)
+        {
+            this.verticalOffset = verticalOffset;
+        }
+
         public Matrix GetWorldMatrix()
         {
             return WorldMatrix;
@@ -52,6 +58,8 @@ namespace MadScienceLab
         {
             Children = new List<GameObject3D>();
             LocalScale = WorldScale = Vector3.One; //default is one
+
+            verticalOffset = 0;
         }
 
         /**
@@ -140,7 +148,9 @@ namespace MadScienceLab
             //Uses helper methods to create compiled WorldMatrix
             WorldMatrix = Matrix.CreateFromQuaternion(LocalRotation) *
                           Matrix.CreateScale(LocalScale) *
-                          Matrix.CreateTranslation(Position);
+                          Matrix.CreateTranslation(new Vector3(Position.X,Position.Y - verticalOffset, Position.Z));
+
+
 
             Children.ForEach(child => child.Update(renderContext));
         }
