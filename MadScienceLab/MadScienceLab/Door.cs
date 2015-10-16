@@ -51,7 +51,7 @@ namespace MadScienceLab
             if (isOpen)
                 isOpen = false;
             else
-                isOpen = false;
+                isOpen = true;
         }
     }
 }

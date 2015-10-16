@@ -13,6 +13,7 @@ namespace MadScienceLab
         //MATT- DEBUG STUFF
         static Door open, closed;
         static Button testButton;
+        static Switch testSwitch;
 
         public static int levelwidth = 0;
         public static int startWall = 10;
@@ -87,7 +88,8 @@ namespace MadScienceLab
                         level.AddChild ( new PickableBox ( col++, row ) ); //replace BasicBlock with the actual object once implemented
                         break;
                     case 'T': //Toggleable lever switch
-                        level.AddChild ( new Switch ( col++, row, true ) );
+                        testSwitch = new Switch(col++, row, true);
+                        //level.AddChild ( new Switch ( col++, row, true ) );
                         break;
                     case 't': //One-time lever switch
                         level.AddChild ( new Switch ( col++, row, false ) );
@@ -134,9 +136,12 @@ namespace MadScienceLab
             //Matt- Button debug
             testButton.LinkedDoors.Add(open);
             testButton.LinkedDoors.Add(closed);
+            testSwitch.AddChild(open);
+            testSwitch.AddChild(closed);
             level.AddChild(open);
             level.AddChild(closed);
             level.AddChild(testButton);
+            level.AddChild(testSwitch);
             //End debug
 
             /**DRAWS BACKGROUND**/

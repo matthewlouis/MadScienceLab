@@ -15,12 +15,15 @@ namespace MadScienceLab
 {
     public class Character: CellObject
     {
+        public enum InteractState { HandsEmpty = 0, JustPickedUpBox = 1, AnimatingPickup = 2, CompletedPickup = 3, 
+                                    StartingDropBox = 4, AnimatingDropBox = 5};
+
         GameAnimatedModel charModel;
 
         //properties used for picking up a box
-        public CellObject adjacentObj { get; set; }
-        public PickableBox storedBox { get; set; }
-        public int pickUpState = 0;
+        public CellObject AdjacentObj { get; set; }
+        public PickableBox StoredBox { get; set; }
+        public InteractState interactState = InteractState.HandsEmpty;
         public int pickUpAnimationAngle = 0;
 
         public int putDownAnimationAngle = 90;
@@ -77,12 +80,12 @@ namespace MadScienceLab
 
         public void PutBox()
         {
-            if (pickUpState == 4)
+            if (interactState == InteractState.StartingDropBox)
             {
                 putFacingDirection = facingDirection; //set the direction the character is facing at the point the character begins putting down the box
-                pickUpState = 5;
+                interactState = InteractState.AnimatingDropBox;
             }
-            if (pickUpState == 5)
+            if (interactState == InteractState.AnimatingDropBox)
             {
                 if (putDownAnimationAngle > 0 && putDownAnimationAngle < 180)
                 {
@@ -92,18 +95,18 @@ namespace MadScienceLab
                         putDownAnimationAngle += 9;
 
                     float angleRad = putDownAnimationAngle * 2 * (float)Math.PI / 360;
-                    storedBox.Position = Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
-                    storedBox.Hitbox = new Rectangle((int)(Hitbox.Location.X + Hitbox.Width * Math.Cos(angleRad)),
+                    StoredBox.Position = Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
+                    StoredBox.Hitbox = new Rectangle((int)(Hitbox.Location.X + Hitbox.Width * Math.Cos(angleRad)),
                                                      (int)(Hitbox.Location.Y + Hitbox.Height * Math.Sin(angleRad)),
-                                                     storedBox.Hitbox.Width, storedBox.Hitbox.Height);
+                                                     StoredBox.Hitbox.Width, StoredBox.Hitbox.Height);
 
                 }
                 else
                 {
-                    pickUpState = 0;
+                    interactState = InteractState.HandsEmpty;
                     //remove storedBox from player
-                    storedBox.isCollidable = true;
-                    storedBox = null;
+                    StoredBox.isCollidable = true;
+                    StoredBox = null;
                 }
             }
         }
@@ -111,15 +114,15 @@ namespace MadScienceLab
         public void PickBox()
         {
 
-            if (pickUpState == 1) //determine initial pickup animation angle
+            if (interactState == InteractState.JustPickedUpBox) //determine initial pickup animation angle
             {
-                if (storedBox.Position.X < Position.X)
+                if (StoredBox.Position.X < Position.X)
                     pickUpAnimationAngle = 180;
                 else
                     pickUpAnimationAngle = 0;
-                pickUpState = 2;
+                interactState = InteractState.AnimatingPickup;
             }
-            if (pickUpState == 2) //update box position
+            if (interactState == InteractState.AnimatingPickup) //update box position
             {
                 if (pickUpAnimationAngle != 90)
                 { //endpoint is 90
@@ -131,10 +134,10 @@ namespace MadScienceLab
                         pickUpAnimationAngle += 9; //from right
 
                     float angleRad = pickUpAnimationAngle * 2 * (float)Math.PI / 360;
-                    storedBox.Position = Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
-                    storedBox.Hitbox = new Rectangle((int)(Hitbox.Location.X + Hitbox.Width * Math.Cos(angleRad)),
+                    StoredBox.Position = Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
+                    StoredBox.Hitbox = new Rectangle((int)(Hitbox.Location.X + Hitbox.Width * Math.Cos(angleRad)),
                                                      (int)(Hitbox.Location.Y + Hitbox.Height * Math.Sin(angleRad)),
-                                                     storedBox.Hitbox.Width, storedBox.Hitbox.Height);
+                                                     StoredBox.Hitbox.Width, StoredBox.Hitbox.Height);
                     // Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
                     //if (storedBox.Position.X > Position.X)
                     //    storedBox.Position += new Vector3(-Hitbox.Width / 10, Hitbox.Height / 10, 0);
@@ -143,14 +146,14 @@ namespace MadScienceLab
                 }
                 else
                 {
-                    pickUpState = 3;
+                    interactState = InteractState.CompletedPickup;
                 }
             }
-            else if (pickUpState == 3)
+            else if (interactState == InteractState.CompletedPickup)
             {
-                storedBox.Position = Position + new Vector3(0, Hitbox.Height, 0);
-                storedBox.Hitbox = new Rectangle(Hitbox.Location.X, Hitbox.Location.Y + Hitbox.Height,
-                                                 storedBox.Hitbox.Width, storedBox.Hitbox.Height);
+                StoredBox.Position = Position + new Vector3(0, Hitbox.Height, 0);
+                StoredBox.Hitbox = new Rectangle(Hitbox.Location.X, Hitbox.Location.Y + Hitbox.Height,
+                                                 StoredBox.Hitbox.Width, StoredBox.Hitbox.Height);
             }
  
         }
