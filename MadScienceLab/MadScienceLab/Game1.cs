@@ -143,21 +143,26 @@ namespace MadScienceLab
             //Just player and level object physics for now
             UpdatePhysics ( player );
             player.Update(_renderContext);
-            CheckPlayerBoxCollision();
-
             
             //Calls to control methods
             
             player.AdjacentObj = null; //reset to null after checking PickBox, and before the adjacentObj is updated
+
             CheckPlayerBoxCollision();
             
+
+
+            // Prevents the player from not being able to jump due to collision handling - Steven
+
             if (player.TransVelocity.Y >= 0)
                 collisionJumping = true;
             else
                 collisionJumping = false;
 
-            if (player.TransVelocity.Y > 0)
+            // Allows for one jump and prevents jumping when falling off a brick - Steven
+            if (player.TransVelocity.Y != 0)
                 jumping = true;
+
             
             
             if (DebugCheckPlayerBoxCollision() && !collisionJumping)
@@ -167,13 +172,12 @@ namespace MadScienceLab
                 jumping = false;
             }
 
-
-            // TODO: Add your update logic here
             _renderContext.GameTime = gameTime;
             _camera.Update(_renderContext);
             basicLevel.Update(_renderContext);
             // update player£¨not included in basicLevel)
             player.Update(_renderContext);
+            CheckPlayerBoxCollision();
 
 
             base.Update(gameTime);
@@ -197,24 +201,8 @@ namespace MadScienceLab
         {
             GraphicsDevice.Clear(Color.White);
 
-            // TODO: Add your drawing code here
             player.Draw(_renderContext);
-            
-            
-
             basicLevel.Draw(_renderContext);
-            
-            /*
-            spriteBatch.Begin();
-            spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
-            spriteBatch.DrawString(font, player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
-            spriteBatch.DrawString(font, boxHitState, new Vector2(50, 150), Color.Black);
-            spriteBatch.End();
-            
-            // Spritebatch changes graphicsdevice values; sets the oringinal state
-            GraphicsDevice.BlendState = BlendState.Opaque;
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;*/
             
             spriteBatch.Begin();
             spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
@@ -231,9 +219,17 @@ namespace MadScienceLab
 
             base.Draw(gameTime);
         }
+
+        /// <summary>
+        /// Only used for debugging purposes
+        /// </summary>
+        /// <returns></returns>
         private Boolean DebugCheckPlayerBoxCollision()
         {
+
             player.Hitbox = new Rectangle((int)player.Position.X, (int)player.Position.Y, GameConstants.SINGLE_CELL_SIZE, GameConstants.SINGLE_CELL_SIZE);
+
+
             foreach (CellObject brick in basicLevel.Children)
             {
                 if (player.Hitbox.Intersects(brick.Hitbox) && brick.isCollidable)
@@ -244,9 +240,16 @@ namespace MadScienceLab
             }
             return false;
         }
+
+        /// <summary>
+        /// Checks which side the intersect occured on the player and handles it
+        /// </summary>
         private void CheckPlayerBoxCollision()
         {
+
             player.Hitbox = new Rectangle((int)player.Position.X, (int)player.Position.Y, GameConstants.SINGLE_CELL_SIZE, GameConstants.SINGLE_CELL_SIZE);
+
+
             foreach (CellObject levelObject in basicLevel.Children)
             {
                 if (levelObject.isCollidable && player.Hitbox.Intersects(levelObject.Hitbox))
@@ -260,11 +263,10 @@ namespace MadScienceLab
                     Button tmpButton = levelObject as Button;
                     if (tmpButton != null) //if it is a button
                     {
+                        Console.Out.WriteLine("Pressed");
                         Button button = (Button)levelObject as Button;
                         button.IsPressed = true;
-                        break;
                     }
-
                     if (wy > hx)
                     {
                         if (wy > -hx)
@@ -276,7 +278,7 @@ namespace MadScienceLab
                         else
                         {
                             boxHitState = "Box Left";// left
-                            player.Position = new Vector3(levelObject.Hitbox.Right, (int)player.Position.Y, 0);
+                            player.Position = new Vector3(levelObject.Hitbox.Right + 1, (int)player.Position.Y, 0);
                             player.AdjacentObj = levelObject;
                         }
                     }
@@ -285,20 +287,22 @@ namespace MadScienceLab
                         if (wy > -hx)
                         {
                             boxHitState = "Box Right";// right
+
                             player.Position = new Vector3(levelObject.Hitbox.Left - GameConstants.SINGLE_CELL_SIZE, (int)player.Position.Y, 0);
+
+                            player.Position = new Vector3(levelObject.Hitbox.Left - player.Width, (int)player.Position.Y, 0);
+
                             player.AdjacentObj = levelObject;
                         }
                         else
                         {
-                            boxHitState = "Box Bottem";//bottem
-                             player.Position = new Vector3((int)player.Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+                            player.Position = new Vector3((int)player.Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+                            if (!collisionJumping)
+                                player.TransVelocity = Vector3.Zero;
                             jumping = false;
                         }
                     }
-                    break;
                 }
-                boxHitState = "No box";
-
             }
         }
 

@@ -42,7 +42,8 @@ namespace MadScienceLab
         {
             // create model with offset of position
             charModel = new GameAnimatedModel("Vampire", startRow, startCol);
-            charModel.VerticalOffset = 22;
+            charModel.VerticalOffset = 22;         
+            Rotate(0f, 90f, 0f);
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
@@ -50,6 +51,10 @@ namespace MadScienceLab
             base.LoadContent(contentManager);
             charModel.LoadContent(contentManager);
             charModel.PlayAnimation("Idle");
+            UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, false);
+            // Overriding the hitbox size - Steven
+            base.Width = 48;
+            base.Height = 48;
         }
 
         
@@ -163,10 +168,6 @@ namespace MadScienceLab
 
                     float angleRad = putDownAnimationAngle * 2 * (float)Math.PI / 360;
                     StoredBox.Position = Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
-                    StoredBox.Hitbox = new Rectangle((int)(Hitbox.Location.X + Hitbox.Width * Math.Cos(angleRad)),
-                                                     (int)(Hitbox.Location.Y + Hitbox.Height * Math.Sin(angleRad)),
-                                                     StoredBox.Hitbox.Width, StoredBox.Hitbox.Height);
-
                 }
                 else
                 {
@@ -202,9 +203,6 @@ namespace MadScienceLab
 
                     float angleRad = pickUpAnimationAngle * 2 * (float)Math.PI / 360;
                     StoredBox.Position = Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
-                    StoredBox.Hitbox = new Rectangle((int)(Hitbox.Location.X + Hitbox.Width * Math.Cos(angleRad)),
-                                                     (int)(Hitbox.Location.Y + Hitbox.Height * Math.Sin(angleRad)),
-                                                     StoredBox.Hitbox.Width, StoredBox.Hitbox.Height);
                     // Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
                     //if (storedBox.Position.X > Position.X)
                     //    storedBox.Position += new Vector3(-Hitbox.Width / 10, Hitbox.Height / 10, 0);
@@ -219,8 +217,6 @@ namespace MadScienceLab
             else if (interactState == InteractState.CompletedPickup)
             {
                 StoredBox.Position = Position + new Vector3(0, Hitbox.Height, 0);
-                StoredBox.Hitbox = new Rectangle(Hitbox.Location.X, Hitbox.Location.Y + Hitbox.Height,
-                                                 StoredBox.Hitbox.Width, StoredBox.Hitbox.Height);
             }
  
         }

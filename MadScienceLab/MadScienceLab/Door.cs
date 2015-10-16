@@ -15,12 +15,9 @@ namespace MadScienceLab
             base.Model = Game1._models["door"];
             base.isCollidable = true;
             base.Rotate(0f, 90f, 0f);
-            this.isOpen = isOpen;
 
-            // Provides a hitbox for the block - Steven
-            BoundingBox box = UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position));
-            Vector3 size = box.Max - box.Min;
-            base.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)size.X, (int)size.Y);
+            this.isOpen = isOpen;
+            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), true, true);
         }
 
         public override void Update(RenderContext renderContext)

@@ -28,10 +28,7 @@ namespace MadScienceLab
             Scale(24,24,24);
 
             // hitbox for collision
-            BoundingBox box = UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position));
-            Vector3 size = box.Max - box.Min;
-            base.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)size.X, (int)size.Y);
-
+            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), true, true);
         }
 
         public override void Update(RenderContext renderContext)
