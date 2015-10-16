@@ -144,27 +144,14 @@ namespace MadScienceLab
             //Just player and level object physics for now
             UpdatePhysics ( player );
             player.Update(_renderContext);
-            
-            //Calls to control methods
-            
+                        
             player.AdjacentObj = null; //reset to null after checking PickBox, and before the adjacentObj is updated
-
-            
-            
-
-
-            // Prevents the player from not being able to jump due to collision handling - Steven
-
-            
 
             _renderContext.GameTime = gameTime;
             _camera.Update(_renderContext);
             basicLevel.Update(_renderContext);
-            // update player£¨not included in basicLevel)
             player.Update(_renderContext);
-            // toremove CheckPlayerBoxCollision();
-
-
+  
             base.Update(gameTime);
         }
 
