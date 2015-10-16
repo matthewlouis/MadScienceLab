@@ -130,7 +130,7 @@ namespace MadScienceLab
             if (isRotated)
             {
                 Width = (int)size.Z;
-                WidthOffset = Game1.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
+                WidthOffset = GameConstants.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
             }
             else
             {
@@ -140,7 +140,7 @@ namespace MadScienceLab
 
             if (isOffset)
             {
-                WidthOffset = Game1.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
+                WidthOffset = GameConstants.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
             }
             else
             {

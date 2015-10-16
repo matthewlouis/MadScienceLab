@@ -36,6 +36,7 @@ namespace MadScienceLab
         KeyboardState oldKeyboardState;
 
         private bool jumping;
+        private Boolean collisionJumping = false;
 
 
         public Character(int startRow, int startCol):base(startRow, startCol)
@@ -60,9 +61,31 @@ namespace MadScienceLab
         
         public override void Update(RenderContext renderContext)
         {
+
             charModel.Update(renderContext);
 
+            CheckPlayerBoxCollision(renderContext);
+
             HandleInput();
+            if (TransVelocity.Y >= 0)
+                collisionJumping = true;
+            else
+                collisionJumping = false;
+
+            // Allows for one jump and prevents jumping when falling off a brick - Steven
+            if (TransVelocity.Y != 0)
+                jumping = true;
+
+
+            /*
+            if (DebugCheckPlayerBoxCollision() && !collisionJumping)
+            {
+                Position = new Vector3((int)Position.X, brick.Top + GameConstants.SINGLE_CELL_SIZE - 1, 0);
+                TransVelocity = Vector3.Zero;
+                jumping = false;
+            }*/
+
+            
 
 
             PickBox();
@@ -75,6 +98,7 @@ namespace MadScienceLab
         {
             KeyboardState currentKeyboardState = Keyboard.GetState();
             GamePadState currentGamePadState = GamePad.GetState(PlayerIndex.One);
+
 
             //Setting up basic controls
 
@@ -243,5 +267,81 @@ namespace MadScienceLab
                 }
             }
         }
+
+        private void CheckPlayerBoxCollision(RenderContext renderContext)
+        {
+            foreach (CellObject levelObject in renderContext.Level.Children)
+            {
+                if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
+                {
+                    /**Determining what side was hit**/
+                    float wy = (levelObject.Hitbox.Width + Hitbox.Width)
+                             * (((levelObject.Hitbox.Y + levelObject.Hitbox.Height) / 2) - (Hitbox.Y + Hitbox.Height) / 2);
+                    float hx = (Hitbox.Height + levelObject.Hitbox.Height)
+                             * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
+
+                    Button tmpButton = levelObject as Button;
+                    if (tmpButton != null) //if it is a button
+                    {
+                        Console.Out.WriteLine("Pressed");
+                        Button button = (Button)levelObject as Button;
+                        button.IsPressed = true;
+                    }
+                    if (wy > hx)
+                    {
+                        if (wy > -hx)
+                        {
+                            //boxHitState = "Box Top";//top
+                            Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
+                            TransVelocity = Vector3.Zero;
+                        }
+                        else
+                        {
+                            //boxHitState = "Box Left";// left
+                            Position = new Vector3(levelObject.Hitbox.Right + 1, (int)Position.Y, 0);
+                            AdjacentObj = levelObject;
+                        }
+                    }
+                    else
+                    {
+                        if (wy > -hx)
+                        {
+                            //boxHitState = "Box Right";// right
+
+                            Position = new Vector3(levelObject.Hitbox.Left - GameConstants.SINGLE_CELL_SIZE, (int)Position.Y, 0);
+
+                            Position = new Vector3(levelObject.Hitbox.Left - Width, (int)Position.Y, 0);
+
+                            AdjacentObj = levelObject;
+                        }
+                        else
+                        {
+                            Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+                            if (!collisionJumping)
+                                TransVelocity = Vector3.Zero;
+                            jumping = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        /*   /// <summary>
+   /// Only used for debugging purposes
+   /// </summary>
+   /// <returns></returns>
+   private Boolean DebugCheckPlayerBoxCollision()
+   {
+
+       foreach (CellObject brick in basicLevel.Children)
+       {
+           if (player.Hitbox.Intersects(brick.Hitbox) && brick.isCollidable)
+           {
+               this.brick = brick.Hitbox;
+               return true;
+           }
+       }
+       return false;
+   }*/
     }
 }
