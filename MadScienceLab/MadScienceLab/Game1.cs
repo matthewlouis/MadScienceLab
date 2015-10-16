@@ -19,11 +19,8 @@ namespace MadScienceLab
     {
 
         //Default width/height of screen.
-        public const int X_RESOLUTION = 1280;
-        public const int Y_RESOLUTION = 720;
-        public const int SINGLE_CELL_SIZE = 48;
-        public const float MIN_Z = 0.1f;
-        public const float MAX_Z = 5000;
+        
+        
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -37,19 +34,17 @@ namespace MadScienceLab
         public static Dictionary<String, Model> _models = new Dictionary<string,Model>();
         public static Dictionary<String, Texture2D> _textures = new Dictionary<string, Texture2D>();
 
-        //For controls - stores previous state.
-        GamePadState oldGamePadState;
-        KeyboardState oldKeyboardState;
+        
 
         Character player;
-        const float MOVEAMOUNT = 2f;
+        
 
         // Debugging - Steven
         private Boolean collisionJumping = false;
         private String boxHitState = "";
         SpriteFont font;
         private Rectangle brick;
-        private bool jumping;
+        
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -57,8 +52,8 @@ namespace MadScienceLab
             this.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
 
             Window.Title = "Group_Project";
-            graphics.PreferredBackBufferWidth = X_RESOLUTION;
-            graphics.PreferredBackBufferHeight = Y_RESOLUTION;
+            graphics.PreferredBackBufferWidth = GameConstants.X_RESOLUTION;
+            graphics.PreferredBackBufferHeight = GameConstants.Y_RESOLUTION;
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
         }
@@ -76,12 +71,6 @@ namespace MadScienceLab
             _camera = new BaseCamera();
             _camera.Translate(new Vector3(0, 0, 10));
             _renderContext.Camera = _camera;
-            
-
-
-            //Init controls
-            oldGamePadState = GamePad.GetState(PlayerIndex.One);
-            oldKeyboardState = Keyboard.GetState();
 
             base.Initialize();
         }
@@ -123,7 +112,7 @@ namespace MadScienceLab
             player.LoadContent(Content);
             _renderContext.Player = player;
             _camera.setFollowTarget(player);
-            player.TransAccel = new Vector3 ( 0, -SINGLE_CELL_SIZE * 9, 0 );
+            player.TransAccel = new Vector3(0, -GameConstants.SINGLE_CELL_SIZE * 9, 0);
             font = Content.Load<SpriteFont>("Verdana");
 
         }
@@ -144,42 +133,51 @@ namespace MadScienceLab
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            // Allows the game to exit
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+                this.Exit();
+
             _renderContext.GameTime = gameTime;
             //Update physics
             //Just player and level object physics for now
             UpdatePhysics ( player );
             player.Update(_renderContext);
-            CheckPlayerBoxCollision();
-
             
             //Calls to control methods
-            UpdateGamePad();
-            UpdateKeyboard();
+            
             player.AdjacentObj = null; //reset to null after checking PickBox, and before the adjacentObj is updated
+
             CheckPlayerBoxCollision();
+            
+
+
+            // Prevents the player from not being able to jump due to collision handling - Steven
+
             if (player.TransVelocity.Y >= 0)
                 collisionJumping = true;
             else
                 collisionJumping = false;
 
-            if (player.TransVelocity.Y > 0)
+            // Allows for one jump and prevents jumping when falling off a brick - Steven
+            if (player.TransVelocity.Y != 0)
                 jumping = true;
+
             
             
             if (DebugCheckPlayerBoxCollision() && !collisionJumping)
             {
-                player.Position = new Vector3((int)player.Position.X, brick.Top + SINGLE_CELL_SIZE - 1, 0);
+                player.Position = new Vector3((int)player.Position.X, brick.Top + GameConstants.SINGLE_CELL_SIZE - 1, 0);
                 player.TransVelocity = Vector3.Zero;
                 jumping = false;
             }
 
-
-            // TODO: Add your update logic here
             _renderContext.GameTime = gameTime;
             _camera.Update(_renderContext);
             basicLevel.Update(_renderContext);
             // update player£¨not included in basicLevel)
             player.Update(_renderContext);
+            CheckPlayerBoxCollision();
 
 
             base.Update(gameTime);
@@ -203,24 +201,8 @@ namespace MadScienceLab
         {
             GraphicsDevice.Clear(Color.White);
 
-            // TODO: Add your drawing code here
             player.Draw(_renderContext);
-            
-            
-
             basicLevel.Draw(_renderContext);
-            
-            /*
-            spriteBatch.Begin();
-            spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
-            spriteBatch.DrawString(font, player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
-            spriteBatch.DrawString(font, boxHitState, new Vector2(50, 150), Color.Black);
-            spriteBatch.End();
-            
-            // Spritebatch changes graphicsdevice values; sets the oringinal state
-            GraphicsDevice.BlendState = BlendState.Opaque;
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;*/
             
             spriteBatch.Begin();
             spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
@@ -237,9 +219,17 @@ namespace MadScienceLab
 
             base.Draw(gameTime);
         }
+
+        /// <summary>
+        /// Only used for debugging purposes
+        /// </summary>
+        /// <returns></returns>
         private Boolean DebugCheckPlayerBoxCollision()
         {
-            player.Hitbox = new Rectangle((int)player.Position.X, (int)player.Position.Y, SINGLE_CELL_SIZE, SINGLE_CELL_SIZE);
+
+            player.Hitbox = new Rectangle((int)player.Position.X, (int)player.Position.Y, GameConstants.SINGLE_CELL_SIZE, GameConstants.SINGLE_CELL_SIZE);
+
+
             foreach (CellObject brick in basicLevel.Children)
             {
                 if (player.Hitbox.Intersects(brick.Hitbox) && brick.isCollidable)
@@ -250,9 +240,16 @@ namespace MadScienceLab
             }
             return false;
         }
+
+        /// <summary>
+        /// Checks which side the intersect occured on the player and handles it
+        /// </summary>
         private void CheckPlayerBoxCollision()
         {
-            player.Hitbox = new Rectangle((int)player.Position.X, (int)player.Position.Y, SINGLE_CELL_SIZE, SINGLE_CELL_SIZE);
+
+            player.Hitbox = new Rectangle((int)player.Position.X, (int)player.Position.Y, GameConstants.SINGLE_CELL_SIZE, GameConstants.SINGLE_CELL_SIZE);
+
+
             foreach (CellObject levelObject in basicLevel.Children)
             {
                 if (levelObject.isCollidable && player.Hitbox.Intersects(levelObject.Hitbox))
@@ -266,11 +263,10 @@ namespace MadScienceLab
                     Button tmpButton = levelObject as Button;
                     if (tmpButton != null) //if it is a button
                     {
+                        Console.Out.WriteLine("Pressed");
                         Button button = (Button)levelObject as Button;
                         button.IsPressed = true;
-                        break;
                     }
-
                     if (wy > hx)
                     {
                         if (wy > -hx)
@@ -282,7 +278,7 @@ namespace MadScienceLab
                         else
                         {
                             boxHitState = "Box Left";// left
-                            player.Position = new Vector3(levelObject.Hitbox.Right, (int)player.Position.Y, 0);
+                            player.Position = new Vector3(levelObject.Hitbox.Right + 1, (int)player.Position.Y, 0);
                             player.AdjacentObj = levelObject;
                         }
                     }
@@ -291,20 +287,22 @@ namespace MadScienceLab
                         if (wy > -hx)
                         {
                             boxHitState = "Box Right";// right
-                            player.Position = new Vector3(levelObject.Hitbox.Left - SINGLE_CELL_SIZE, (int)player.Position.Y, 0);
+
+                            player.Position = new Vector3(levelObject.Hitbox.Left - GameConstants.SINGLE_CELL_SIZE, (int)player.Position.Y, 0);
+
+                            player.Position = new Vector3(levelObject.Hitbox.Left - player.Width, (int)player.Position.Y, 0);
+
                             player.AdjacentObj = levelObject;
                         }
                         else
                         {
-                            boxHitState = "Box Bottem";//bottem
-                             player.Position = new Vector3((int)player.Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+                            player.Position = new Vector3((int)player.Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+                            if (!collisionJumping)
+                                player.TransVelocity = Vector3.Zero;
                             jumping = false;
                         }
                     }
-                    break;
                 }
-                boxHitState = "No box";
-
             }
         }
 
@@ -316,103 +314,7 @@ namespace MadScienceLab
             //}
         }
 
-        public void InteractWithObject()
-        {
-            if (player.interactState == Character.InteractState.HandsEmpty && player.AdjacentObj != null)
-            {
-                if (player.AdjacentObj.GetType() == typeof(PickableBox))
-                {
-                    player.interactState = Character.InteractState.JustPickedUpBox;
-                    player.StoredBox = (PickableBox)player.AdjacentObj;
-                    player.StoredBox.isCollidable = false;
-                }
-                else if (player.AdjacentObj.GetType() == typeof(Switch))
-                {
-                    Switch currentSwitch = (Switch)player.AdjacentObj;
-                    currentSwitch.FlickSwitch();
-                }
-            }
-        }
-
-        private void UpdateKeyboard()
-        {
-            KeyboardState currentKeyboardState = Keyboard.GetState();
-
-            //Setting up basic controls
-            if (currentKeyboardState.IsKeyDown(Keys.Space) &&
-                oldKeyboardState.IsKeyUp(Keys.Space) && !jumping)
-            {
-                //handle jump movement
-                //Added a bit of physics to this.
-                jumping = true;
-                player.TransVelocity += new Vector3(0, SINGLE_CELL_SIZE * 10, 0);
-            }
-            if (currentKeyboardState.IsKeyDown(Keys.Z) &&
-                oldKeyboardState.IsKeyUp(Keys.Z))
-            {
-                if(player.interactState == Character.InteractState.CompletedPickup)
-                {
-                    PutBox();
-                }
-                else
-                    InteractWithObject();
-                //handle pick up box
-            }
-            if (currentKeyboardState.IsKeyDown(Keys.Left))
-            {
-                player.MoveLeft(MOVEAMOUNT);
-            }
-            else if (currentKeyboardState.IsKeyDown(Keys.Right))
-            {
-                player.MoveRight(MOVEAMOUNT);
-            }
-            else
-            {
-                player.Stop();
-            }
-
-            // Allows the game to exit
-            if (currentKeyboardState.IsKeyDown(Keys.Escape))
-                this.Exit();
-
-            oldKeyboardState = currentKeyboardState;
-        }
-
-        private void UpdateGamePad()
-        {
-            GamePadState currentGamePadState = GamePad.GetState(PlayerIndex.One);
-
-            //Setting up basic controls
-            if (currentGamePadState.Buttons.A == ButtonState.Pressed &&
-                oldGamePadState.Buttons.A != ButtonState.Pressed)
-            {
-                //handle jump movement
-                player.TransAccel = new Vector3(0, -SINGLE_CELL_SIZE * 9, 0);
-                player.TransVelocity += new Vector3(0, SINGLE_CELL_SIZE * 5, 0);
-            }
-            if (currentGamePadState.Buttons.X == ButtonState.Pressed &&
-                oldGamePadState.Buttons.X != ButtonState.Pressed)
-            {
-                //handle pick up box
-            }
-            if (currentGamePadState.DPad.Left == ButtonState.Pressed)
-            {
-                //handle left movement
-                player.MoveLeft(MOVEAMOUNT);
-            }
-            else if (currentGamePadState.DPad.Right == ButtonState.Pressed)
-            {
-                //handle right right movement
-                player.MoveRight(MOVEAMOUNT);
-            }
-            
-
-            // Allows the game to exit
-            if (currentGamePadState.Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
-            oldGamePadState = currentGamePadState;
-        }
+        
     }
 
 }

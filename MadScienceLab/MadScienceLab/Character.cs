@@ -31,10 +31,19 @@ namespace MadScienceLab
         byte putFacingDirection = FACING_RIGHT; //direction when the player puts down the box
         const int FACING_LEFT = 1, FACING_RIGHT = 2;
 
+        //For controls - stores previous state.
+        GamePadState oldGamePadState;
+        KeyboardState oldKeyboardState;
+
+        private bool jumping;
+
+
         public Character(int startRow, int startCol):base(startRow, startCol)
         {
+            // create model with offset of position
             charModel = new GameAnimatedModel("Vampire", startRow, startCol);
-            charModel.VerticalOffset = 22;
+            charModel.VerticalOffset = 22;         
+            Rotate(0f, 90f, 0f);
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
@@ -42,6 +51,10 @@ namespace MadScienceLab
             base.LoadContent(contentManager);
             charModel.LoadContent(contentManager);
             charModel.PlayAnimation("Idle");
+            UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, false);
+            // Overriding the hitbox size - Steven
+            base.Width = 48;
+            base.Height = 48;
         }
 
         
@@ -49,11 +62,62 @@ namespace MadScienceLab
         {
             charModel.Update(renderContext);
 
+            HandleInput();
+
+
             PickBox();
             PutBox();
 
             base.Update(renderContext);
         }
+
+        private void HandleInput()
+        {
+            KeyboardState currentKeyboardState = Keyboard.GetState();
+            GamePadState currentGamePadState = GamePad.GetState(PlayerIndex.One);
+
+            //Setting up basic controls
+
+            // Jumping on keyboard Space or gamepad A button
+            if (!jumping && 
+                ((currentKeyboardState.IsKeyDown(Keys.Space) &&
+                oldKeyboardState.IsKeyUp(Keys.Space)) || 
+                (currentGamePadState.Buttons.A == ButtonState.Pressed &&
+                oldGamePadState.Buttons.A != ButtonState.Pressed)))
+            {
+                Jumping();
+            }
+
+            if ((currentKeyboardState.IsKeyDown(Keys.F) &&
+                oldKeyboardState.IsKeyUp(Keys.F)) || 
+                (currentGamePadState.Buttons.B == ButtonState.Pressed &&
+                oldGamePadState.Buttons.B != ButtonState.Pressed))
+            {
+                if (interactState == Character.InteractState.CompletedPickup)
+                {
+                    PutBox();
+                }
+                else
+                    InteractWithObject();  
+                //handle pick up box
+                }
+            if (currentKeyboardState.IsKeyDown(Keys.Left))
+            {
+                MoveLeft(GameConstants.MOVEAMOUNT);
+            }
+            else if (currentKeyboardState.IsKeyDown(Keys.Right))
+            {
+                MoveRight(GameConstants.MOVEAMOUNT);
+            }
+            else
+            {
+                Stop();
+            }
+
+            oldKeyboardState = currentKeyboardState;
+            oldGamePadState = currentGamePadState;
+        }
+
 
         public override void Draw(RenderContext renderContext)
         {
@@ -78,7 +142,14 @@ namespace MadScienceLab
             Translate(newPosition);
         }
 
-
+        public void Jumping()
+        {
+            //handle jump movement
+            //Added a bit of physics to this.
+            jumping = true;
+            base.TransVelocity += new Vector3(0, GameConstants.SINGLE_CELL_SIZE * 10, 0);
+            charModel.PlayAnimation("Jump");
+        }
         public void PutBox()
         {
             if (interactState == InteractState.StartingDropBox)
@@ -97,10 +168,6 @@ namespace MadScienceLab
 
                     float angleRad = putDownAnimationAngle * 2 * (float)Math.PI / 360;
                     StoredBox.Position = Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
-                    StoredBox.Hitbox = new Rectangle((int)(Hitbox.Location.X + Hitbox.Width * Math.Cos(angleRad)),
-                                                     (int)(Hitbox.Location.Y + Hitbox.Height * Math.Sin(angleRad)),
-                                                     StoredBox.Hitbox.Width, StoredBox.Hitbox.Height);
-
                 }
                 else
                 {
@@ -136,9 +203,6 @@ namespace MadScienceLab
 
                     float angleRad = pickUpAnimationAngle * 2 * (float)Math.PI / 360;
                     StoredBox.Position = Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
-                    StoredBox.Hitbox = new Rectangle((int)(Hitbox.Location.X + Hitbox.Width * Math.Cos(angleRad)),
-                                                     (int)(Hitbox.Location.Y + Hitbox.Height * Math.Sin(angleRad)),
-                                                     StoredBox.Hitbox.Width, StoredBox.Hitbox.Height);
                     // Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
                     //if (storedBox.Position.X > Position.X)
                     //    storedBox.Position += new Vector3(-Hitbox.Width / 10, Hitbox.Height / 10, 0);
@@ -153,8 +217,6 @@ namespace MadScienceLab
             else if (interactState == InteractState.CompletedPickup)
             {
                 StoredBox.Position = Position + new Vector3(0, Hitbox.Height, 0);
-                StoredBox.Hitbox = new Rectangle(Hitbox.Location.X, Hitbox.Location.Y + Hitbox.Height,
-                                                 StoredBox.Hitbox.Width, StoredBox.Hitbox.Height);
             }
  
         }
@@ -162,6 +224,24 @@ namespace MadScienceLab
         public void Stop()
         {
             charModel.PlayAnimation("Idle");
+        }
+
+        public void InteractWithObject()
+        {
+            if (interactState == Character.InteractState.HandsEmpty && AdjacentObj != null)
+            {
+                if (AdjacentObj.GetType() == typeof(PickableBox))
+                {
+                    interactState = Character.InteractState.JustPickedUpBox;
+                    StoredBox = (PickableBox)AdjacentObj;
+                    StoredBox.isCollidable = false;
+                }
+                else if (AdjacentObj.GetType() == typeof(Switch))
+                {
+                    Switch currentSwitch = (Switch)AdjacentObj;
+                    currentSwitch.FlickSwitch();
+                }
+            }
         }
     }
 }

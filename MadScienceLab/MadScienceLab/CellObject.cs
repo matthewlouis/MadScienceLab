@@ -14,7 +14,17 @@ namespace MadScienceLab
      */
     public class CellObject : GameObject3D
     {
-        //Will need to include collision property here- like HitRegion
+        // Hit box information - Steven
+        public int Width;
+        public int Height;
+        public int WidthOffset;
+        public Rectangle Hitbox
+        {
+            get
+            {
+                return new Rectangle((int)base.Position.X + WidthOffset, (int)base.Position.Y, Width, Height);
+            }
+        }
 
         public bool isCollidable { get; protected set; }
         
@@ -34,8 +44,8 @@ namespace MadScienceLab
         public CellObject(int column, int row)
         {
             //Calculate offset where object will be placed.
-            x = (Game1.SINGLE_CELL_SIZE * column) - (Game1.X_RESOLUTION / 2); // divde by 2 because 4 quadrants
-            y = (Game1.SINGLE_CELL_SIZE * row) - (Game1.Y_RESOLUTION / 2);
+            x = (GameConstants.SINGLE_CELL_SIZE * column) - (GameConstants.X_RESOLUTION / 2); // divde by 2 because 4 quadrants
+            y = (GameConstants.SINGLE_CELL_SIZE * row) - (GameConstants.Y_RESOLUTION / 2);
             CellNumber = new Point(column, row);
 
             //Place object on grid.
@@ -85,7 +95,7 @@ namespace MadScienceLab
             }
         }
 
-        public BoundingBox UpdateBoundingBox(Model model, Matrix worldTransform)
+        public void UpdateBoundingBox(Model model, Matrix worldTransform, bool isRotated, bool isOffset)
         {
             // Initialize minimum and maximum corners of the bounding box to max and min values
             Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
@@ -116,7 +126,27 @@ namespace MadScienceLab
             }
 
             // Create and return bounding box
-            return new BoundingBox(min, max);
+            Vector3 size = max - min;
+            if (isRotated)
+            {
+                Width = (int)size.Z;
+                WidthOffset = Game1.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
+            }
+            else
+            {
+                Width = (int)size.X;
+                WidthOffset = 0;
+            }
+
+            if (isOffset)
+            {
+                WidthOffset = Game1.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
+            }
+            else
+            {
+                WidthOffset = 0;
+            }
+            Height = (int)size.Y;
         }
     }
 }
