@@ -34,8 +34,8 @@ namespace MadScienceLab
         public CellObject(int column, int row)
         {
             //Calculate offset where object will be placed.
-            x = (Game1.SINGLE_CELL_SIZE * column) - (Game1.X_RESOLUTION / 2); // divde by 2 because 4 quadrants
-            y = (Game1.SINGLE_CELL_SIZE * row) - (Game1.Y_RESOLUTION / 2);
+            x = (GameConstants.SINGLE_CELL_SIZE * column) - (GameConstants.X_RESOLUTION / 2); // divde by 2 because 4 quadrants
+            y = (GameConstants.SINGLE_CELL_SIZE * row) - (GameConstants.Y_RESOLUTION / 2);
             CellNumber = new Point(column, row);
 
             //Place object on grid.

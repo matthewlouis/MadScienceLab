@@ -15,9 +15,9 @@ namespace MadScienceLab
 
         //hard-coded offsets from the sides of the stage that the player would have to be for the camera to move
         //float leftSideCollsion = 150f;
-        float leftSideCollsion  = Game1.SINGLE_CELL_SIZE*4;
+        float leftSideCollsion = GameConstants.SINGLE_CELL_SIZE * 4;
         float topSideCollsion = 50;
-        float bottomSideCollsion = Game1.SINGLE_CELL_SIZE * 1;
+        float bottomSideCollsion = GameConstants.SINGLE_CELL_SIZE * 1;
 
         int xLeftWall;
         int xRightWall;
@@ -26,14 +26,14 @@ namespace MadScienceLab
         public BaseCamera(Character followTarget){
             this.followTarget = followTarget;
             //Perspective allows objects to looks smaller/larger depending on distance 
-            Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)Game1.X_RESOLUTION / (float)Game1.Y_RESOLUTION, Game1.MIN_Z, Game1.MAX_Z);
+            Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)GameConstants.X_RESOLUTION / (float)GameConstants.Y_RESOLUTION, GameConstants.MIN_Z, GameConstants.MAX_Z);
             Position = followTarget.Position + cameraDistance;
         }
 
         public BaseCamera()
         {
             //Perspective allows objects to looks smaller/larger depending on distance 
-            Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)Game1.X_RESOLUTION / (float)Game1.Y_RESOLUTION, Game1.MIN_Z, Game1.MAX_Z);
+            Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)GameConstants.X_RESOLUTION / (float)GameConstants.Y_RESOLUTION, GameConstants.MIN_Z, GameConstants.MAX_Z);
             Position = cameraDistance;
         }
 
@@ -59,9 +59,9 @@ namespace MadScienceLab
         {
             followTarget = target;
             //placed here in order to be after the levelbuilder variables are set in Game1 - that's the only reason
-            xLeftWall = (Game1.SINGLE_CELL_SIZE * LevelBuilder.startWall) - (Game1.X_RESOLUTION / 2);
-            xRightWall = (Game1.SINGLE_CELL_SIZE * (LevelBuilder.levelwidth + LevelBuilder.startWall)) - (Game1.X_RESOLUTION / 2);
-            yFloor = (Game1.SINGLE_CELL_SIZE * LevelBuilder.startFloor) - (Game1.Y_RESOLUTION / 2);
+            xLeftWall = (GameConstants.SINGLE_CELL_SIZE * LevelBuilder.startWall) - (GameConstants.X_RESOLUTION / 2);
+            xRightWall = (GameConstants.SINGLE_CELL_SIZE * (LevelBuilder.levelwidth + LevelBuilder.startWall)) - (GameConstants.X_RESOLUTION / 2);
+            yFloor = (GameConstants.SINGLE_CELL_SIZE * LevelBuilder.startFloor) - (GameConstants.Y_RESOLUTION / 2);
         }
 
         public Character getFollowTarget()

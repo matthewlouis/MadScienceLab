@@ -23,7 +23,7 @@ namespace MadScienceLab
             BoundingBox box = UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position));
             Vector3 size = box.Max - box.Min;
             base.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)size.X, (int)size.Y);
-            Translate(Position.X, Position.Y - Game1.SINGLE_CELL_SIZE / 2 + 1, Position.Z); //Matt: this is for offsetting the model position so it's flat on the floor
+            Translate(Position.X, Position.Y - GameConstants.SINGLE_CELL_SIZE / 2 + 1, Position.Z); //Matt: this is for offsetting the model position so it's flat on the floor
         }
 
         public override void Update(RenderContext renderContext)
