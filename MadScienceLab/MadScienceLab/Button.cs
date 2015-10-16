@@ -18,12 +18,12 @@ namespace MadScienceLab
             LinkedDoors = new List<Door>();
             base.Model = Game1._models["button"];
             base.isCollidable = true;
-            Translate(Position.X, Position.Y - Game1.SINGLE_CELL_SIZE / 2 + 1, Position.Z); //Matt: this is for offsetting the model position so it's flat on the floor
 
             // Provides a hitbox for the block - Steven
             BoundingBox box = UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position));
             Vector3 size = box.Max - box.Min;
             base.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)size.X, (int)size.Y);
+            Translate(Position.X, Position.Y - Game1.SINGLE_CELL_SIZE / 2 + 1, Position.Z); //Matt: this is for offsetting the model position so it's flat on the floor
         }
 
         public override void Update(RenderContext renderContext)
@@ -46,26 +46,12 @@ namespace MadScienceLab
                 }
             }
             IsPressed = false; //button resets to up unless current pressed
+            base.Update(renderContext);
         }
 
-        public override void Draw(RenderContext _renderContext)
+        public override void Draw(RenderContext renderContext)
         {
-            //Jacob: These lines don't seem to be used anymore.
-            //var transforms = new Matrix[model.Bones.Count];
-            //model.CopyAbsoluteBoneTransformsTo(transforms);
-
-            foreach (ModelMesh mesh in base.Model.Meshes)
-            {
-                foreach (BasicEffect effect in mesh.Effects)
-                {
-                    effect.EnableDefaultLighting();
-
-                    effect.View = _renderContext.Camera.View;
-                    effect.Projection = _renderContext.Camera.Projection;
-                    effect.World = Matrix.CreateTranslation(Position);
-                }
-                mesh.Draw();
-            }
+            base.Draw(renderContext);
         }
     }
 }

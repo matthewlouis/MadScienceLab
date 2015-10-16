@@ -17,6 +17,7 @@ namespace MadScienceLab
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+
         //Default width/height of screen.
         public const int X_RESOLUTION = 1280;
         public const int Y_RESOLUTION = 720;
@@ -154,7 +155,7 @@ namespace MadScienceLab
             //Calls to control methods
             UpdateGamePad();
             UpdateKeyboard();
-            player.adjacentObj = null; //reset to null after checking PickBox, and before the adjacentObj is updated
+            player.AdjacentObj = null; //reset to null after checking PickBox, and before the adjacentObj is updated
             CheckPlayerBoxCollision();
             if (player.TransVelocity.Y >= 0)
                 collisionJumping = true;
@@ -164,7 +165,7 @@ namespace MadScienceLab
             if (player.TransVelocity.Y > 0)
                 jumping = true;
             
-
+            
             if (DebugCheckPlayerBoxCollision() && !collisionJumping)
             {
                 player.Position = new Vector3((int)player.Position.X, brick.Top + SINGLE_CELL_SIZE - 1, 0);
@@ -265,9 +266,9 @@ namespace MadScienceLab
                     Button tmpButton = levelObject as Button;
                     if (tmpButton != null) //if it is a button
                     {
-                        Console.Out.WriteLine("Pressed");
                         Button button = (Button)levelObject as Button;
                         button.IsPressed = true;
+                        break;
                     }
 
                     if (wy > hx)
@@ -282,7 +283,7 @@ namespace MadScienceLab
                         {
                             boxHitState = "Box Left";// left
                             player.Position = new Vector3(levelObject.Hitbox.Right, (int)player.Position.Y, 0);
-                            player.adjacentObj = levelObject;
+                            player.AdjacentObj = levelObject;
                         }
                     }
                     else
@@ -291,12 +292,12 @@ namespace MadScienceLab
                         {
                             boxHitState = "Box Right";// right
                             player.Position = new Vector3(levelObject.Hitbox.Left - SINGLE_CELL_SIZE, (int)player.Position.Y, 0);
-                            player.adjacentObj = levelObject;
+                            player.AdjacentObj = levelObject;
                         }
                         else
                         {
                             boxHitState = "Box Bottem";//bottem
-                            player.Position = new Vector3((int)player.Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+                             player.Position = new Vector3((int)player.Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
                             jumping = false;
                         }
                     }
@@ -311,19 +312,24 @@ namespace MadScienceLab
         {
             //if (/*player.adjacentObj == null*/) //will need a condition for when the adjacent area where the player would be trying to put the box is empty,
             //{
-                player.pickUpState = 4; //state for while the player begins putting down the box
+                player.interactState = Character.InteractState.StartingDropBox; //state for while the player begins putting down the box
             //}
         }
 
-        public void PickBox()
+        public void InteractWithObject()
         {
-            if (player.pickUpState == 0 && player.adjacentObj != null)
+            if (player.interactState == Character.InteractState.HandsEmpty && player.AdjacentObj != null)
             {
-                if (player.adjacentObj.GetType() == typeof(PickableBox))
+                if (player.AdjacentObj.GetType() == typeof(PickableBox))
                 {
-                    player.pickUpState = 1;
-                    player.storedBox = (PickableBox)player.adjacentObj;
-                    player.storedBox.isCollidable = false;
+                    player.interactState = Character.InteractState.JustPickedUpBox;
+                    player.StoredBox = (PickableBox)player.AdjacentObj;
+                    player.StoredBox.isCollidable = false;
+                }
+                else if (player.AdjacentObj.GetType() == typeof(Switch))
+                {
+                    Switch currentSwitch = (Switch)player.AdjacentObj;
+                    currentSwitch.FlickSwitch();
                 }
             }
         }
@@ -344,12 +350,12 @@ namespace MadScienceLab
             if (currentKeyboardState.IsKeyDown(Keys.Z) &&
                 oldKeyboardState.IsKeyUp(Keys.Z))
             {
-                if(player.pickUpState == 3)
+                if(player.interactState == Character.InteractState.CompletedPickup)
                 {
                     PutBox();
                 }
                 else
-                    PickBox();
+                    InteractWithObject();
                 //handle pick up box
             }
             if (currentKeyboardState.IsKeyDown(Keys.Left))
@@ -408,4 +414,5 @@ namespace MadScienceLab
             oldGamePadState = currentGamePadState;
         }
     }
+
 }

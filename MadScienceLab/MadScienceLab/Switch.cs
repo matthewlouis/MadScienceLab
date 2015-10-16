@@ -11,7 +11,7 @@ namespace MadScienceLab
     {
         List<Door> LinkedDoors { get; set; }
         public Boolean Toggleable { get; private set; }
-        public Boolean IsPressed { get; set; }
+        public Boolean IsSwitched { get; set; }
         private Boolean doorsToggled = false;
 
         public Switch(int column, int row, Boolean toggleable):base(column, row)
@@ -19,6 +19,7 @@ namespace MadScienceLab
             base.Model = Game1._models["switch"];
             base.isCollidable = true;
             Toggleable = toggleable;
+            Rotate(0f, 90f, 0);
             Translate(Position.X, Position.Y - Game1.SINGLE_CELL_SIZE / 2 + 1, Position.Z); //Matt: this is for offsetting the model position so it's flat on the floor
 
             // Provides a hitbox for the block - Steven
@@ -27,9 +28,25 @@ namespace MadScienceLab
             base.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)size.X, (int)size.Y);
         }
 
+        public void FlickSwitch()
+        {
+            if (IsSwitched && Toggleable)
+            {
+                Console.Out.WriteLine("Flicked Off");
+                IsSwitched = false;
+            }
+            else
+            {
+                Console.Out.WriteLine("Flicked On");
+                IsSwitched = true;
+            }
+        }
+
+
+
         public override void Update(RenderContext renderContext)
         {
-            if (IsPressed && doorsToggled == false)
+            if (IsSwitched && doorsToggled == false)
             {
                 doorsToggled = true;
                 foreach (Door door in LinkedDoors)
@@ -37,7 +54,7 @@ namespace MadScienceLab
                     door.Toggle();
                 }
             }
-            else if (!IsPressed && doorsToggled == true)
+            else if (!IsSwitched && doorsToggled == true)
             {
                 doorsToggled = false;
                 foreach (Door door in LinkedDoors)
@@ -45,27 +62,7 @@ namespace MadScienceLab
                     door.Toggle();
                 }
             }
-
-        }
-
-        public override void Draw(RenderContext _renderContext)
-        {
-            //Jacob: These lines don't seem to be used anymore.
-            //var transforms = new Matrix[model.Bones.Count];
-            //model.CopyAbsoluteBoneTransformsTo(transforms);
-
-            foreach (ModelMesh mesh in base.Model.Meshes)
-            {
-                foreach (BasicEffect effect in mesh.Effects)
-                {
-                    effect.EnableDefaultLighting();
-
-                    effect.View = _renderContext.Camera.View;
-                    effect.Projection = _renderContext.Camera.Projection;
-                    effect.World = Matrix.CreateTranslation(Position);
-                }
-                mesh.Draw();
-            }
+            base.Update(renderContext);
         }
     }
 }

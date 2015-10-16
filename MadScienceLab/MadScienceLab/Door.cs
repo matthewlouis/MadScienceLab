@@ -14,6 +14,11 @@ namespace MadScienceLab
         {
             base.Model = Game1._models["door"];
             base.isCollidable = true;
+<<<<<<< HEAD
+=======
+            base.Rotate(0f, 90f, 0f);
+
+>>>>>>> origin/master
             this.isOpen = isOpen;
 
             // Provides a hitbox for the block - Steven
@@ -33,9 +38,21 @@ namespace MadScienceLab
                 this.Position = new Vector3(Position.X, Position.Y, 0);
                 isCollidable = true;
             }
+            base.Update(renderContext);
         }
 
+<<<<<<< HEAD
         
+=======
+        public override void Draw(RenderContext _renderContext)
+        {
+            //Jacob: These lines don't seem to be used anymore.
+            //var transforms = new Matrix[model.Bones.Count];
+            //model.CopyAbsoluteBoneTransformsTo(transforms);
+
+            base.Draw(_renderContext);
+        }
+>>>>>>> origin/master
 
         public void Toggle()
         {
