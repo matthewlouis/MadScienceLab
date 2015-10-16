@@ -64,7 +64,6 @@ namespace MadScienceLab
             //Jacob: These lines don't seem to be used anymore.
             //var transforms = new Matrix[Model.Bones.Count];
             //Model.CopyAbsoluteBoneTransformsTo(transforms);
-
             foreach (ModelMesh mesh in Model.Meshes)
             {
                 foreach (BasicEffect effect in mesh.Effects)

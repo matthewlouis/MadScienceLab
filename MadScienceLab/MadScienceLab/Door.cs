@@ -14,6 +14,7 @@ namespace MadScienceLab
         {
             base.Model = Game1._models["door"];
             base.isCollidable = true;
+            base.Rotate(0f, 90f, 0f);
 
             this.isOpen = isOpen;
 
@@ -33,6 +34,7 @@ namespace MadScienceLab
                 this.Position = new Vector3(Position.X, Position.Y, 0);
                 isCollidable = true;
             }
+            base.Update(renderContext);
         }
 
         public override void Draw(RenderContext _renderContext)
@@ -41,18 +43,7 @@ namespace MadScienceLab
             //var transforms = new Matrix[model.Bones.Count];
             //model.CopyAbsoluteBoneTransformsTo(transforms);
 
-            foreach (ModelMesh mesh in base.Model.Meshes)
-            {
-                foreach (BasicEffect effect in mesh.Effects)
-                {
-                    effect.EnableDefaultLighting();
-
-                    effect.View = _renderContext.Camera.View;
-                    effect.Projection = _renderContext.Camera.Projection;
-                    effect.World = Matrix.CreateTranslation(Position);
-                }
-                mesh.Draw();
-            }
+            base.Draw(_renderContext);
         }
 
         public void Toggle()
@@ -60,7 +51,7 @@ namespace MadScienceLab
             if (isOpen)
                 isOpen = false;
             else
-                isOpen = true;
+                isOpen = false;
         }
     }
 }

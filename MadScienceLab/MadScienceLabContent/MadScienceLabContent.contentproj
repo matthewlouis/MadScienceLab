@@ -65,7 +65,6 @@
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
       <ProcessorParameters_Scale>48</ProcessorParameters_Scale>
-      <ProcessorParameters_RotationY>90</ProcessorParameters_RotationY>
     </Compile>
     <Compile Include="Switch.fbx">
       <Name>Switch</Name>
