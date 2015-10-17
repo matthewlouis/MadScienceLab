@@ -14,17 +14,10 @@ namespace MadScienceLab
         {
             base.Model = Game1._models["door"];
             base.isCollidable = true;
-<<<<<<< HEAD
-=======
             base.Rotate(0f, 90f, 0f);
 
->>>>>>> origin/master
             this.isOpen = isOpen;
-
-            // Provides a hitbox for the block - Steven
-            BoundingBox box = UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position));
-            Vector3 size = box.Max - box.Min;
-            base.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)size.X, (int)size.Y);
+            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), true, true);
         }
 
         public override void Update(RenderContext renderContext)
@@ -41,9 +34,6 @@ namespace MadScienceLab
             base.Update(renderContext);
         }
 
-<<<<<<< HEAD
-        
-=======
         public override void Draw(RenderContext _renderContext)
         {
             //Jacob: These lines don't seem to be used anymore.
@@ -52,7 +42,6 @@ namespace MadScienceLab
 
             base.Draw(_renderContext);
         }
->>>>>>> origin/master
 
         public void Toggle()
         {

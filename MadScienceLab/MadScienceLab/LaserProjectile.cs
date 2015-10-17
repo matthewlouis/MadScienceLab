@@ -13,16 +13,11 @@ namespace MadScienceLab
         public LaserProjectile(int column, int row):base(column, row)
         {
             // hitbox for collision
-            BoundingBox box = UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position));
-            Vector3 size = box.Max - box.Min;
-            base.Hitbox = new Rectangle((int)Position.X, (int)Position.Y, (int)size.X, (int)size.Y);
-
+            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
         }
 
         public override void Update(RenderContext renderContext)
         {
-            
-
             base.Update(renderContext);
         }
         
