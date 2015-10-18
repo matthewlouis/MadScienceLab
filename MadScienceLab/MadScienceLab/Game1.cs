@@ -17,11 +17,6 @@ namespace MadScienceLab
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-
-        //Default width/height of screen.
-        
-        
-
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -34,13 +29,9 @@ namespace MadScienceLab
         public static Dictionary<String, Model> _models = new Dictionary<string,Model>();
         public static Dictionary<String, Texture2D> _textures = new Dictionary<string, Texture2D>();
 
-        
-
         Character player;
         
-
         // Debugging - Steven
-        
         private String boxHitState = "";
         SpriteFont font;
         private Rectangle brick;
@@ -154,8 +145,6 @@ namespace MadScienceLab
             base.Update(gameTime);
         }
 
-
-
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -181,18 +170,7 @@ namespace MadScienceLab
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
             base.Draw(gameTime);
-        }
-
-
-
-        /// <summary>
-        /// Checks which side the intersect occured on the player and handles it
-        /// </summary>
-        
-
-
-
-        
+        }       
     }
 
 }

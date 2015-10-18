@@ -119,7 +119,7 @@ namespace MadScienceLab
             {
                 if (interactState == Character.InteractState.CompletedPickup)
                 {
-                    PutBox();
+                    interactState = Character.InteractState.StartingDropBox; 
                 }
                 else
                     InteractWithObject();  
