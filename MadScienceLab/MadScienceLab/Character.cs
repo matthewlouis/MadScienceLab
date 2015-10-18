@@ -84,13 +84,6 @@ namespace MadScienceLab
                 TransVelocity = Vector3.Zero;
                 jumping = false;
             }*/
-
-            
-
-
-            PickBox();
-            PutBox();
-
             base.Update(renderContext);
         }
 
@@ -119,11 +112,10 @@ namespace MadScienceLab
             {
                 if (interactState == Character.InteractState.CompletedPickup)
                 {
-                    interactState = Character.InteractState.StartingDropBox; 
+                    PutBox(); 
                 }
                 else
-                    InteractWithObject();  
-                //handle pick up box
+                    PickBox();  
                 }
             if (currentKeyboardState.IsKeyDown(Keys.Left))
             {
@@ -176,73 +168,51 @@ namespace MadScienceLab
         }
         public void PutBox()
         {
-            if (interactState == InteractState.StartingDropBox)
+            //if (/*player.adjacentObj == null*/) //will need a condition for when the adjacent area where the player would be trying to put the box is empty,
+            //{
+            float sideXPos;
+            float leeway = 10; //leeway allowed to place the box away from you (ie. amount allowed to place a box into another object)
+            if (facingDirection == Character.FACING_RIGHT)
             {
-                putFacingDirection = facingDirection; //set the direction the character is facing at the point the character begins putting down the box
-                interactState = InteractState.AnimatingDropBox;
+                sideXPos = Position.X + Hitbox.Width;
             }
-            if (interactState == InteractState.AnimatingDropBox)
+            else //facing left
             {
-                if (putDownAnimationAngle > 0 && putDownAnimationAngle < 180)
-                {
-                    if (putFacingDirection == FACING_RIGHT)
-                        putDownAnimationAngle -= 9;
-                    else //if(putFacingDirection == FACING_LEFT)
-                        putDownAnimationAngle += 9;
-
-                    float angleRad = putDownAnimationAngle * 2 * (float)Math.PI / 360;
-                    StoredBox.Position = Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
-                }
-                else
-                {
-                    interactState = InteractState.HandsEmpty;
-                    //remove storedBox from player
-                    StoredBox.isCollidable = true;
-                    StoredBox = null;
-                }
+                sideXPos = Position.X - StoredBox.Hitbox.Width + leeway;
             }
+            Rectangle areaSide = new Rectangle((int)sideXPos, (int)Position.Y + 2, (int)StoredBox.Hitbox.Width - (int)leeway, (int)StoredBox.Hitbox.Height);
+            bool putdownable = true;
+            foreach (CellObject levelObject in Game1.CurrentLevel.Children) //check to see if it has collision with anything
+            {
+                if (levelObject.isCollidable && areaSide.Intersects(levelObject.Hitbox))
+                {
+                    putdownable = false;
+                }
+                /*
+                 +		areaSide	{X:-92 Y:-313 Width:38 Height:38}	Microsoft.Xna.Framework.Rectangle £¨-313 £¨top£©to -275 (bot)£©
+                 +		Hitbox	{X:-112 Y:-360 Width:48 Height:48}	Microsoft.Xna.Framework.Rectangle -360 (top£© to -312 (bot)
+                        So, the hitboxes (rectangles) are actually upside down - 'bot' is actually the top, 'top' is the bottom,
+                 *      height increases upwards.
+                 */
+            }
+            if (jumping) //disallow putting down when jumping
+                putdownable = false;
+            if (putdownable)
+                interactState = InteractState.StartingDropBox; //state for while the player begins putting down the box
+            //}
         }
 
         public void PickBox()
         {
-
-            if (interactState == InteractState.JustPickedUpBox) //determine initial pickup animation angle
+            if (interactState == InteractState.HandsEmpty && !jumping && AdjacentObj != null)
             {
-                if (StoredBox.Position.X < Position.X)
-                    pickUpAnimationAngle = 180;
-                else
-                    pickUpAnimationAngle = 0;
-                interactState = InteractState.AnimatingPickup;
-            }
-            if (interactState == InteractState.AnimatingPickup) //update box position
-            {
-                if (pickUpAnimationAngle != 90)
-                { //endpoint is 90
-                    if (pickUpAnimationAngle > 90)
-                    {
-                        pickUpAnimationAngle -= 9; //from left
-                    }
-                    else
-                        pickUpAnimationAngle += 9; //from right
-
-                    float angleRad = pickUpAnimationAngle * 2 * (float)Math.PI / 360;
-                    StoredBox.Position = Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
-                    // Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
-                    //if (storedBox.Position.X > Position.X)
-                    //    storedBox.Position += new Vector3(-Hitbox.Width / 10, Hitbox.Height / 10, 0);
-
-                    putDownAnimationAngle = 90; 
-                }
-                else
+                if (AdjacentObj.GetType() == typeof(PickableBox) && (((PickableBox)(AdjacentObj)).IsLiftable))
                 {
-                    interactState = InteractState.CompletedPickup;
+                    interactState = InteractState.HandsEmpty;
+                    StoredBox = (PickableBox)AdjacentObj;
+                    StoredBox.isCollidable = false;
                 }
             }
-            else if (interactState == InteractState.CompletedPickup)
-            {
-                StoredBox.Position = Position + new Vector3(0, Hitbox.Height, 0);
-            }
- 
         }
 
 

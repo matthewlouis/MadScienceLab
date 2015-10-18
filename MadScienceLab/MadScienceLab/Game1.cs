@@ -17,6 +17,8 @@ namespace MadScienceLab
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        public static Level CurrentLevel { get; private set; }
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -98,6 +100,7 @@ namespace MadScienceLab
 
             //loads the basic level
             basicLevel = LevelBuilder.MakeBasicLevel ();
+            CurrentLevel = basicLevel; //we can handle this through render context eventually.
 
             player = new Character(basicLevel.PlayerPoint.X, basicLevel.PlayerPoint.Y);
             player.LoadContent(Content);
@@ -134,6 +137,18 @@ namespace MadScienceLab
             //Update physics
             //Just player and level object physics for now
             player.Update(_renderContext);
+
+            //apply gravity to pickable boxes
+            foreach (CellObject levelobject in basicLevel.Children)
+            {
+                //check collision - cease gravity if colliding with another box below - then apply physics
+                if (levelobject.GetType() == typeof(PickableBox) && levelobject.isCollidable)
+                {
+                    UpdatePhysics(levelobject);
+                    levelobject.TransAccel = new Vector3(0, -GameConstants.SINGLE_CELL_SIZE * 9, 0);
+                    levelobject.CheckCollision(basicLevel);
+                }
+            }
                         
             player.AdjacentObj = null; //reset to null after checking PickBox, and before the adjacentObj is updated
 
@@ -170,7 +185,13 @@ namespace MadScienceLab
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
             base.Draw(gameTime);
-        }       
+        }
+
+        private void UpdatePhysics(GameObject3D Object)
+        {
+            Object.TransVelocity += Object.TransAccel / 60; //amt. accel (where TransAccel is in seconds) per frame ...
+            Object.Translate(Object.Position + Object.TransVelocity / 60);
+        }
     }
 
 }
