@@ -142,7 +142,6 @@ namespace MadScienceLab
             _renderContext.GameTime = gameTime;
             //Update physics
             //Just player and level object physics for now
-            UpdatePhysics ( player );
             player.Update(_renderContext);
                         
             player.AdjacentObj = null; //reset to null after checking PickBox, and before the adjacentObj is updated
@@ -155,15 +154,7 @@ namespace MadScienceLab
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This updates the physics of te player.
-        /// </summary>
-        /// <param name="Object"></param>
-        private void UpdatePhysics (GameObject3D Object)
-        {
-            Object.TransVelocity += Object.TransAccel / 60; //amt. accel (where TransAccel is in seconds) per frame ...
-            Object.Translate(Object.Position+Object.TransVelocity / 60);
-        }
+
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -199,13 +190,7 @@ namespace MadScienceLab
         /// </summary>
         
 
-        public void PutBox()
-        {
-            //if (/*player.adjacentObj == null*/) //will need a condition for when the adjacent area where the player would be trying to put the box is empty,
-            //{
-                player.interactState = Character.InteractState.StartingDropBox; //state for while the player begins putting down the box
-            //}
-        }
+
 
         
     }

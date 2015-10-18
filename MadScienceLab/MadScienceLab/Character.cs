@@ -61,9 +61,9 @@ namespace MadScienceLab
         
         public override void Update(RenderContext renderContext)
         {
-
+            
             charModel.Update(renderContext);
-
+            UpdatePhysics();
             CheckPlayerBoxCollision(renderContext);
 
             HandleInput();
@@ -172,7 +172,7 @@ namespace MadScienceLab
             //Added a bit of physics to this.
             jumping = true;
             base.TransVelocity += new Vector3(0, GameConstants.SINGLE_CELL_SIZE * 10, 0);
-            charModel.PlayAnimation("Jump");
+            charModel.PlayAnimation("Jump",false, 0.2f);
         }
         public void PutBox()
         {
@@ -245,6 +245,8 @@ namespace MadScienceLab
  
         }
 
+
+
         public void Stop()
         {
             charModel.PlayAnimation("Idle");
@@ -266,6 +268,16 @@ namespace MadScienceLab
                     currentSwitch.FlickSwitch();
                 }
             }
+        }
+
+        /// <summary>
+        /// This updates the physics of te player.
+        /// </summary>
+        /// <param name="Object"></param>
+        public void UpdatePhysics()
+        {
+            TransVelocity += TransAccel / 60; //amt. accel (where TransAccel is in seconds) per frame ...
+            Translate(Position + TransVelocity / 60);
         }
 
         private void CheckPlayerBoxCollision(RenderContext renderContext)
