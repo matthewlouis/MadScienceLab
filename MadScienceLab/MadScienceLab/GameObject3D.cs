@@ -35,16 +35,17 @@ namespace MadScienceLab
         public List<GameObject3D> Children { get; private set; }
 
         // Hit box information - Steven
-        public int Width;
-        public int Height;
-        public int WidthOffset;
+        public int HitboxWidth;
+        public int HitboxHeight;
+        public int HitboxWidthOffset;
+        public int HitboxHeightOffset;
 
         //public BoundingBox Hitbox { get; set; }
         public virtual Rectangle Hitbox
         {
             get
             {
-                return new Rectangle((int)Position.X + WidthOffset, (int)Position.Y, Width, Height);
+                return new Rectangle((int)Position.X + HitboxWidthOffset, (int)Position.Y + HitboxHeightOffset, HitboxWidth, HitboxHeight);
             }
         }
         //compiled version of position, rotation, and scale
@@ -187,56 +188,56 @@ namespace MadScienceLab
                     Button tmpButton = levelObject as Button;
                     if (tmpButton != null) //if it is a button
                     {
-                        Console.Out.WriteLine("Pressed");
                         Button button = (Button)levelObject as Button;
                         button.IsPressed = true;
                     }
-
-                    if (wy > hx)
-                    {
-                        if (wy > -hx) //hitting something above
+                    if (!levelObject.IsPassable)
+                    { //same logic as Character- if levelObject is passable, no need to handle physics
+                        if (wy > hx)
                         {
-                            //Game1.boxHitState = "Box Top";//top
-                            Position = new Vector3(Position.X, levelObject.Hitbox.Bottom - this.Hitbox.Height, 0); //clip to the top of the colliding object
+                            if (wy > -hx) //hitting something above
+                            {
+                                //Game1.boxHitState = "Box Top";//top
+                                Position = new Vector3(Position.X, levelObject.Hitbox.Bottom - this.Hitbox.Height, 0); //clip to the top of the colliding object
 
-                            //end all downward acceleration (eg. gravity) and velocity
-                            //TransAccel = Vector3.Zero;
-                            TransVelocity = new Vector3(TransVelocity.X, Math.Min(TransVelocity.Y, GameConstants.SINGLE_CELL_SIZE * 2), TransVelocity.Z); //cease upward velocity
+                                //end all downward acceleration (eg. gravity) and velocity
+                                //TransAccel = Vector3.Zero;
+                                TransVelocity = new Vector3(TransVelocity.X, Math.Min(TransVelocity.Y, GameConstants.SINGLE_CELL_SIZE * 2), TransVelocity.Z); //cease upward velocity
+                            }
+                            else
+                            {
+                                //boxHitState = "Box Left";// left
+                                Position = new Vector3(levelObject.Hitbox.Right, Position.Y, 0);
+                                TransVelocity = new Vector3(Math.Max(TransVelocity.X, -GameConstants.SINGLE_CELL_SIZE * 2), TransVelocity.Y, TransVelocity.Z); //cease velocity
+                                //adjacentObj = levelObject;
+                            }
                         }
                         else
                         {
-                            //boxHitState = "Box Left";// left
-                            Position = new Vector3(levelObject.Hitbox.Right, Position.Y, 0);
-                            TransVelocity = new Vector3(Math.Max(TransVelocity.X, -GameConstants.SINGLE_CELL_SIZE * 2), TransVelocity.Y, TransVelocity.Z); //cease velocity
-                            //adjacentObj = levelObject;
+                            if (wy > -hx)
+                            {
+                                //boxHitState = "Box Right";// right
+                                Position = new Vector3(levelObject.Hitbox.Left - this.Hitbox.Width, Position.Y, 0);
+                                TransVelocity = new Vector3(Math.Min(TransVelocity.X, GameConstants.SINGLE_CELL_SIZE * 2), TransVelocity.Y, TransVelocity.Z); //cease velocity
+                                //adjacentObj = levelObject;
+                            }
+                            else
+                            { //hitting something below
+                                //boxHitState = "Box Bottem";//bottem
+                                //Game1.boxPosition = "{"+Position.X+", "+Position.Y+", "+Position.Z+"}";
+                                Position = new Vector3(Position.X, levelObject.Hitbox.Y + this.Hitbox.Height, 0); //clip to the top of the colliding object
+                                TransVelocity = new Vector3(TransVelocity.X, Math.Max(TransVelocity.Y, -GameConstants.SINGLE_CELL_SIZE * 2), TransVelocity.Z); //cease velocity
+                                /*Note that not all velocity is reset, to avoid an issue with 'box shaking,' due to:
+                                 *  when velocity would be reset, there would be at least one frame where
+                                 *  box would change position (eg. from gravity), that position would be large enough to make a difference in how it's drawn
+                                 *  while not reaching a value that would lead to collision （ie. an intersection of hitboxes (which would be truncated
+                                 *  integers representing position)
+                                 *  and another frame where box would be in its original position due to the collision
+                                */
+                                //jumping = false;
+                            }
                         }
                     }
-                    else
-                    {
-                        if (wy > -hx)
-                        {
-                            //boxHitState = "Box Right";// right
-                            Position = new Vector3(levelObject.Hitbox.Left - this.Hitbox.Width, Position.Y, 0);
-                            TransVelocity = new Vector3(Math.Min(TransVelocity.X, GameConstants.SINGLE_CELL_SIZE * 2), TransVelocity.Y, TransVelocity.Z); //cease velocity
-                            //adjacentObj = levelObject;
-                        }
-                        else
-                        { //hitting something below
-                            //boxHitState = "Box Bottem";//bottem
-                            //Game1.boxPosition = "{"+Position.X+", "+Position.Y+", "+Position.Z+"}";
-                            Position = new Vector3(Position.X, levelObject.Hitbox.Y + this.Hitbox.Height, 0); //clip to the top of the colliding object
-                            TransVelocity = new Vector3(TransVelocity.X, Math.Max(TransVelocity.Y, -GameConstants.SINGLE_CELL_SIZE * 2), TransVelocity.Z); //cease velocity
-                            /*Note that not all velocity is reset, to avoid an issue with 'box shaking,' due to:
-                             *  when velocity would be reset, there would be at least one frame where
-                             *  box would change position (eg. from gravity), that position would be large enough to make a difference in how it's drawn
-                             *  while not reaching a value that would lead to collision （ie. an intersection of hitboxes (which would be truncated
-                             *  integers representing position)
-                             *  and another frame where box would be in its original position due to the collision
-                            */
-                            //jumping = false;
-                        }
-                    }
-                    //break;
                 }
                 //boxHitState = "No box";
             }
