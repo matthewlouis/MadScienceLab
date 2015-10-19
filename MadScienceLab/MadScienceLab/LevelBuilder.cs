@@ -13,7 +13,7 @@ namespace MadScienceLab
         //MATT- DEBUG STUFF
         static Door open, closed;
         static Button testButton;
-        static Switch testSwitch;
+        static ToggleSwitch testSwitch;
 
         public static int levelwidth = 0;
         public static int startWall = 10;
@@ -43,7 +43,7 @@ namespace MadScienceLab
              * (It's either this, or not have simple characters for the properties ... I think I may prefer this, unless there is a tool that allows easy parsing of XML data or such.)
              */
             string leveltxt = "XXXXXXXXXXXXXXXXXXXXXX\n"
-                            + "XT                   X\n"
+                            + "X                    X\n"
                             + "XXXX                 X\n"
                             + "X                   LX\n"
                             + "X                   XX\n"
@@ -53,7 +53,7 @@ namespace MadScienceLab
                             + "XXX         B   X    X\n"
                             + "X     S B   XXXXXX   X\n"
                             + "X     XXXrrX  B      X\n"
-                            + "X PBS dD  D   B      X\n"
+                            + "X PBT dD  D   B      X\n"
                             + "XXXXXXXXXXXXXXXXXXXXXX\n";
 
             string backtxt  = "XXXXXXXXXXXXXXXXXXXXXX\n"
@@ -67,7 +67,7 @@ namespace MadScienceLab
                             + "XXX         B   X1111X\n"
                             + "X       B   XXXXXX111X\n"
                             + "X     XXXrrX111111111X\n"
-                            + "X PBS 111111111111111X\n"
+                            + "X PBT 111111111111111X\n"
                             + "XXXXXXXXXXXXXXXXXXXXXX\n";
 
             //get object pairs (for links between switches and doors/boxes)
@@ -94,11 +94,12 @@ namespace MadScienceLab
                         level.AddChild ( new PickableBox ( col++, row ) ); //replace BasicBlock with the actual object once implemented
                         break;
                     case 'T': //Toggleable lever switch
-                        testSwitch = new Switch(col++, row, true);
-                        //level.AddChild ( new Switch ( col++, row, true ) );
+                        level.AddChild ( new ToggleSwitch ( col++, row, true ) );
+                        _buttons.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 't': //One-time lever switch
-                        level.AddChild ( new Switch ( col++, row, false ) );
+                        level.AddChild ( new ToggleSwitch ( col++, row, false ) );
+                        _buttons.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 'S':
                         //testButton = new Button(col++, row);
@@ -165,6 +166,15 @@ namespace MadScienceLab
                             index = _doors[door];
                             Door doorToAdd = (Door)level.Children[index];
                             button.LinkedDoors.Add(doorToAdd);
+                        }
+                    }else if(level.Children[index].GetType() == typeof(ToggleSwitch))
+                    {
+                        ToggleSwitch toggleSwitch = (ToggleSwitch)level.Children[index];
+                        foreach (string door in doors)
+                        {
+                            index = _doors[door];
+                            Door doorToAdd = (Door)level.Children[index];
+                            toggleSwitch.LinkedDoors.Add(doorToAdd);
                         }
                     }
                 }

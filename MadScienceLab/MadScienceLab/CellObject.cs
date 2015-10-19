@@ -16,6 +16,7 @@ namespace MadScienceLab
     {
         // Hit box information - Steven
         public bool isCollidable { get; protected set; }
+        public bool IsPassable { get; protected set; }
         
         public Model Model { get; protected set; }
         public Texture2D Texture { get; protected set; }
@@ -118,24 +119,24 @@ namespace MadScienceLab
             Vector3 size = max - min;
             if (isRotated)
             {
-                Width = (int)size.Z;
-                WidthOffset = GameConstants.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
+                HitboxWidth = (int)size.Z;
+                HitboxWidthOffset = GameConstants.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
             }
             else
             {
-                Width = (int)size.X;
-                WidthOffset = 0;
+                HitboxWidth = (int)size.X;
+                HitboxWidthOffset = 0;
             }
 
             if (isOffset)
             {
-                WidthOffset = GameConstants.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
+                HitboxWidthOffset = GameConstants.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
             }
             else
             {
-                WidthOffset = 0;
+                HitboxWidthOffset = 0;
             }
-            Height = (int)size.Y;
+            HitboxHeight = (int)size.Y;
         }
     }
 }

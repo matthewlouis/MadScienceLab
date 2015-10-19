@@ -21,6 +21,7 @@ namespace MadScienceLab
         GameAnimatedModel charModel;
 
         //properties used for picking up a box
+        public CellObject InteractiveObj { get; set; }
         public CellObject AdjacentObj { get; set; }
         public PickableBox StoredBox { get; set; }
         public InteractState interactState = InteractState.HandsEmpty;
@@ -44,7 +45,7 @@ namespace MadScienceLab
             {
                 if (interactState == InteractState.CompletedPickup) //new hitbox if currently carrying a box
                 {
-                    return new Rectangle ( (int)StoredBox.Position.X, (int)Position.Y, Width, Height+StoredBox.Height );
+                    return new Rectangle ( (int)StoredBox.Position.X, (int)Position.Y, HitboxWidth, HitboxHeight+StoredBox.HitboxHeight );
                 }
                 return base.Hitbox;
             }
@@ -73,8 +74,8 @@ namespace MadScienceLab
             charModel.PlayAnimation("Idle");
             UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, false);
             // Overriding the hitbox size - Steven
-            base.Width = 48;
-            base.Height = 48;
+            base.HitboxWidth = 48;
+            base.HitboxHeight = 48;
         }
 
         
@@ -95,6 +96,8 @@ namespace MadScienceLab
             if (TransVelocity.Y != 0)
                 jumping = true;
 
+            //Ensures we're checking what the player is in front of each frame
+            InteractiveObj = null;
 
             /*
             if (DebugCheckPlayerBoxCollision() && !collisionJumping)
@@ -136,11 +139,11 @@ namespace MadScienceLab
             {
                 if (interactState == Character.InteractState.CompletedPickup)
                 {
-                    PutBox(); 
+                    PutBox();
                 }
                 else
                     PickBox();  
-                }
+            }
 
             //prevent the player from moving while still in box pickup/putdown animation
             bool NotActiveWithBox = interactState == InteractState.CompletedPickup || interactState == InteractState.HandsEmpty;
@@ -190,7 +193,7 @@ namespace MadScienceLab
             //handle jump movement
             //Added a bit of physics to this.
             jumping = true;
-            base.TransVelocity += new Vector3(0, GameConstants.SINGLE_CELL_SIZE * 10, 0);
+            base.TransVelocity += new Vector3(0, GameConstants.SINGLE_CELL_SIZE*5, 0);
             charModel.PlayAnimation("Jump",false, 0.2f);
         }
         public void PutBox()
@@ -231,11 +234,9 @@ namespace MadScienceLab
 
         public void PickBox()
         {
-
-
-            if (interactState == InteractState.HandsEmpty/*state 0*/ && !jumping && AdjacentObj != null)
+            if (interactState == InteractState.HandsEmpty/*state 0*/ && !jumping)
             {
-                if (AdjacentObj.GetType() == typeof(PickableBox) && (((PickableBox)(AdjacentObj)).IsLiftable))
+                if (AdjacentObj != null && AdjacentObj.GetType() == typeof(PickableBox) && (((PickableBox)(AdjacentObj)).IsLiftable))
                 {
                     //check if there is area above the player to pick up the box
                     Rectangle areaTop = new Rectangle ( (int)Position.X, CharacterHitbox.Bottom, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height) );
@@ -259,7 +260,12 @@ namespace MadScienceLab
                         StoredBox.isCollidable = false;
                     }
                 }
-            }
+                else if (InteractiveObj != null && InteractiveObj.GetType() == typeof(ToggleSwitch))
+                {
+                    ToggleSwitch currentSwitch = (ToggleSwitch)InteractiveObj;
+                    currentSwitch.FlickSwitch();
+                }
+            }     
         }
         /// <summary>
         /// Code to update any animations occurring with PickBox.
@@ -392,11 +398,6 @@ namespace MadScienceLab
                     StoredBox = (PickableBox)AdjacentObj;
                     StoredBox.isCollidable = false;
                 }
-                else if (AdjacentObj.GetType() == typeof(Switch))
-                {
-                    Switch currentSwitch = (Switch)AdjacentObj;
-                    currentSwitch.FlickSwitch();
-                }
             }
         }
 
@@ -425,44 +426,52 @@ namespace MadScienceLab
                     Button tmpButton = levelObject as Button;
                     if (tmpButton != null) //if it is a button
                     {
-                        Console.Out.WriteLine("Pressed");
                         Button button = (Button)levelObject as Button;
                         button.IsPressed = true;
                     }
-                    if (wy > hx)
+
+                    if (!levelObject.IsPassable) //if object is not passable, handle physics issues:
                     {
-                        if (wy > -hx)
+                        if (wy > hx)
                         {
-                            //boxHitState = "Box Top";//top
-                            Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
-                            TransVelocity = Vector3.Zero;
+                            if (wy > -hx)
+                            {
+                                //boxHitState = "Box Top";//top
+                                Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
+                                TransVelocity = Vector3.Zero;
+                            }
+                            else
+                            {
+                                //boxHitState = "Box Left";// left
+                                Position = new Vector3(levelObject.Hitbox.Right + 1, (int)Position.Y, 0);
+                                AdjacentObj = levelObject;
+                            }
                         }
                         else
                         {
-                            //boxHitState = "Box Left";// left
-                            Position = new Vector3(levelObject.Hitbox.Right + 1, (int)Position.Y, 0);
-                            AdjacentObj = levelObject;
+                            if (wy > -hx)
+                            {
+                                //boxHitState = "Box Right";// right
+
+                                Position = new Vector3(levelObject.Hitbox.Left - GameConstants.SINGLE_CELL_SIZE, (int)Position.Y, 0);
+
+                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth, (int)Position.Y, 0);
+
+                                AdjacentObj = levelObject;
+                            }
+                            else
+                            {
+                                Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+                                if (!collisionJumping)
+                                    TransVelocity = Vector3.Zero;
+                                jumping = false;
+                            }
                         }
                     }
                     else
                     {
-                        if (wy > -hx)
-                        {
-                            //boxHitState = "Box Right";// right
-
-                            Position = new Vector3(levelObject.Hitbox.Left - GameConstants.SINGLE_CELL_SIZE, (int)Position.Y, 0);
-
-                            Position = new Vector3(levelObject.Hitbox.Left - Width, (int)Position.Y, 0);
-
-                            AdjacentObj = levelObject;
-                        }
-                        else
-                        {
-                            Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
-                            if (!collisionJumping)
-                                TransVelocity = Vector3.Zero;
-                            jumping = false;
-                        }
+                        InteractiveObj = levelObject;
+                        Console.Out.WriteLine(InteractiveObj.GetType());
                     }
                 }
             }
