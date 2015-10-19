@@ -18,7 +18,7 @@ namespace MadScienceLab
             LinkedDoors = new List<Door>();
             base.Model = Game1._models["button"];
             base.isCollidable = true;
-            Translate(Position.X, Position.Y - GameConstants.SINGLE_CELL_SIZE / 2 + 1, Position.Z); //Matt: this is for offsetting the model position so it's flat on the floor
+            //Translate(Position.X, Position.Y - GameConstants.SINGLE_CELL_SIZE / 2 + 1, Position.Z); //Matt: this is for offsetting the model position so it's flat on the floor
 
             // Provides a hitbox for the block - Steven
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
