@@ -19,5 +19,6 @@ namespace MadScienceLab
         public GameTime       GameTime { get; set; }
         public BaseCamera     Camera { get; set; }
         public Character      Player { get; set; }
+        public Level          Level { get; set; }
     }
 }

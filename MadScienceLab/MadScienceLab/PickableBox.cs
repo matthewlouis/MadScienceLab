@@ -18,6 +18,26 @@ namespace MadScienceLab
                 base.isCollidable = value;
             }
         }
+        public bool IsLiftable
+        {
+            //requires that nothing (eg. boxes) are on top of it
+            //as a simplification, not necessarily the arc to pick up the box would be the required area, but just a box worth of area above the box needs to not have any non-wall            objects (ie. BasicBlocks） (which would be objects that would exert a gravitational and frictional force on the box)
+            get
+            {
+                Rectangle areaAbove = new Rectangle((int)Position.X, (int)Position.Y + Hitbox.Height, (int)Hitbox.Width, (int)Hitbox.Height);
+                bool pickuppable = true;
+                foreach (CellObject levelObject in Game1.CurrentLevel.Children) //check to see if it has collision with anything
+                {
+                    if (levelObject.isCollidable && levelObject.GetType() != typeof(BasicBlock) && areaAbove.Intersects(levelObject.Hitbox))
+                    {
+                        pickuppable = false;
+                    }
+                }
+                return pickuppable;
+            }
+        }
+
+
         public PickableBox(int column, int row)
             : base(column, row)
         {

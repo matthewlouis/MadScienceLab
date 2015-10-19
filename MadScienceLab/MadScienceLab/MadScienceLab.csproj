@@ -78,6 +78,7 @@
     <Compile Include="Button.cs" />
     <Compile Include="CellObject.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="GameConstants.cs" />
     <Compile Include="LaserProjectile.cs" />
     <Compile Include="PickableBox.cs" />
     <Compile Include="Switch.cs" />

@@ -24,7 +24,7 @@ namespace MadScienceLab
         {
             
             if(isOpen){
-                this.Position = new Vector3(Position.X, Position.Y, -Game1.SINGLE_CELL_SIZE + 2);
+                this.Position = new Vector3(Position.X, Position.Y, -GameConstants.SINGLE_CELL_SIZE + 2);
                 isCollidable = false;
             }else
             {
@@ -32,15 +32,6 @@ namespace MadScienceLab
                 isCollidable = true;
             }
             base.Update(renderContext);
-        }
-
-        public override void Draw(RenderContext _renderContext)
-        {
-            //Jacob: These lines don't seem to be used anymore.
-            //var transforms = new Matrix[model.Bones.Count];
-            //model.CopyAbsoluteBoneTransformsTo(transforms);
-
-            base.Draw(_renderContext);
         }
 
         public void Toggle()

@@ -17,13 +17,7 @@ namespace MadScienceLab
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-
-        //Default width/height of screen.
-        public const int X_RESOLUTION = 1280;
-        public const int Y_RESOLUTION = 720;
-        public const int SINGLE_CELL_SIZE = 48;
-        public const float MIN_Z = 0.1f;
-        public const float MAX_Z = 5000;
+        public static Level CurrentLevel { get; private set; }
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -37,19 +31,13 @@ namespace MadScienceLab
         public static Dictionary<String, Model> _models = new Dictionary<string,Model>();
         public static Dictionary<String, Texture2D> _textures = new Dictionary<string, Texture2D>();
 
-        //For controls - stores previous state.
-        GamePadState oldGamePadState;
-        KeyboardState oldKeyboardState;
-
         Character player;
-        const float MOVEAMOUNT = 2f;
-
+        
         // Debugging - Steven
-        private Boolean collisionJumping = false;
         private String boxHitState = "";
         SpriteFont font;
         private Rectangle brick;
-        private bool jumping;
+        
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -57,8 +45,8 @@ namespace MadScienceLab
             this.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
 
             Window.Title = "Group_Project";
-            graphics.PreferredBackBufferWidth = X_RESOLUTION;
-            graphics.PreferredBackBufferHeight = Y_RESOLUTION;
+            graphics.PreferredBackBufferWidth = GameConstants.X_RESOLUTION;
+            graphics.PreferredBackBufferHeight = GameConstants.Y_RESOLUTION;
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
         }
@@ -76,12 +64,6 @@ namespace MadScienceLab
             _camera = new BaseCamera();
             _camera.Translate(new Vector3(0, 0, 10));
             _renderContext.Camera = _camera;
-            
-
-
-            //Init controls
-            oldGamePadState = GamePad.GetState(PlayerIndex.One);
-            oldKeyboardState = Keyboard.GetState();
 
             base.Initialize();
         }
@@ -118,13 +100,15 @@ namespace MadScienceLab
 
             //loads the basic level
             basicLevel = LevelBuilder.MakeBasicLevel ();
+            CurrentLevel = basicLevel; //we can handle this through render context eventually.
 
             player = new Character(basicLevel.PlayerPoint.X, basicLevel.PlayerPoint.Y);
             player.LoadContent(Content);
             _renderContext.Player = player;
             _camera.setFollowTarget(player);
-            player.TransAccel = new Vector3 ( 0, -SINGLE_CELL_SIZE * 9, 0 );
+            player.TransAccel = new Vector3(0, -GameConstants.SINGLE_CELL_SIZE * 9, 0);
             font = Content.Load<SpriteFont>("Verdana");
+            _renderContext.Level = basicLevel;
 
         }
 
@@ -144,46 +128,36 @@ namespace MadScienceLab
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            // Allows the game to exit
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+                this.Exit();
+
             _renderContext.GameTime = gameTime;
             //Update physics
             //Just player and level object physics for now
-            UpdatePhysics ( player );
             player.Update(_renderContext);
-            
-            //Calls to control methods
-            UpdateGamePad();
-            UpdateKeyboard();
+
+            //apply gravity to pickable boxes
+            foreach (CellObject levelobject in basicLevel.Children)
+            {
+                //check collision - cease gravity if colliding with another box below - then apply physics
+                if (levelobject.GetType() == typeof(PickableBox) && levelobject.isCollidable)
+                {
+                    UpdatePhysics(levelobject);
+                    levelobject.TransAccel = new Vector3(0, -GameConstants.SINGLE_CELL_SIZE * 9, 0);
+                    levelobject.CheckCollision(basicLevel);
+                }
+            }
+                        
             player.AdjacentObj = null; //reset to null after checking PickBox, and before the adjacentObj is updated
-
-            // Prevents the player from not being able to jump due to collision handling - Steven
-            if (player.TransVelocity.Y >= 0)
-                collisionJumping = true;
-            else
-                collisionJumping = false;
-
-            // Allows for one jump and prevents jumping when falling off a brick - Steven
-            if (player.TransVelocity.Y != 0)
-                jumping = true;
 
             _renderContext.GameTime = gameTime;
             _camera.Update(_renderContext);
             basicLevel.Update(_renderContext);
-            // update player£¨not included in basicLevel)
             player.Update(_renderContext);
-            CheckPlayerBoxCollision();
-
-
+  
             base.Update(gameTime);
-        }
-
-        /// <summary>
-        /// This updates the physics of te player.
-        /// </summary>
-        /// <param name="Object"></param>
-        private void UpdatePhysics (GameObject3D Object)
-        {
-            Object.TransVelocity += Object.TransAccel / 60; //amt. accel (where TransAccel is in seconds) per frame ...
-            Object.Translate(Object.Position+Object.TransVelocity / 60);
         }
 
         /// <summary>
@@ -196,14 +170,14 @@ namespace MadScienceLab
 
             player.Draw(_renderContext);
             basicLevel.Draw(_renderContext);
-            
+            /*
             spriteBatch.Begin();
             spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
             spriteBatch.DrawString(font, "Velocity: " + player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
             spriteBatch.DrawString(font, "Acceleration: " + player.TransAccel.ToString(), new Vector2(50, 200), Color.Black);
             spriteBatch.DrawString(font, "Box: " + brick.ToString(), new Vector2(50, 250), Color.Black);
             spriteBatch.DrawString(font, boxHitState, new Vector2(50, 150), Color.Black);
-            spriteBatch.End();
+            spriteBatch.End();*/
 
             // Spritebatch changes graphicsdevice values; sets the oringinal state
             GraphicsDevice.BlendState = BlendState.Opaque;
@@ -213,186 +187,10 @@ namespace MadScienceLab
             base.Draw(gameTime);
         }
 
-        /// <summary>
-        /// Only used for debugging purposes
-        /// </summary>
-        /// <returns></returns>
-        private Boolean DebugCheckPlayerBoxCollision()
+        private void UpdatePhysics(GameObject3D Object)
         {
-
-            foreach (CellObject brick in basicLevel.Children)
-            {
-                if (player.Hitbox.Intersects(brick.Hitbox) && brick.isCollidable)
-                {
-                    this.brick = brick.Hitbox;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Checks which side the intersect occured on the player and handles it
-        /// </summary>
-        private void CheckPlayerBoxCollision()
-        {
-
-            foreach (CellObject levelObject in basicLevel.Children)
-            {
-                if (levelObject.isCollidable && player.Hitbox.Intersects(levelObject.Hitbox))
-                {
-                    /**Determining what side was hit**/
-                    float wy = (levelObject.Hitbox.Width + player.Hitbox.Width)
-                             * (((levelObject.Hitbox.Y + levelObject.Hitbox.Height) / 2) - (player.Hitbox.Y + player.Hitbox.Height) / 2);
-                    float hx = (player.Hitbox.Height + levelObject.Hitbox.Height)
-                             * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (player.Hitbox.X + player.Hitbox.Width) / 2);
-
-                    Button tmpButton = levelObject as Button;
-                    if (tmpButton != null) //if it is a button
-                    {
-                        Console.Out.WriteLine("Pressed");
-                        Button button = (Button)levelObject as Button;
-                        button.IsPressed = true;
-                    }
-                    if (wy > hx)
-                    {
-                        if (wy > -hx)
-                        {
-                            boxHitState = "Box Top";//top
-                            player.Position = new Vector3((int)player.Position.X, (int)player.Position.Y - 1, 0);
-                            player.TransVelocity = Vector3.Zero;
-                        }
-                        else
-                        {
-                            boxHitState = "Box Left";// left
-                            player.Position = new Vector3(levelObject.Hitbox.Right + 1, (int)player.Position.Y, 0);
-                            player.AdjacentObj = levelObject;
-                        }
-                    }
-                    else
-                    {
-                        if (wy > -hx)
-                        {
-                            boxHitState = "Box Right";// right
-                            player.Position = new Vector3(levelObject.Hitbox.Left - player.Width, (int)player.Position.Y, 0);
-                            player.AdjacentObj = levelObject;
-                        }
-                        else
-                        {
-                            player.Position = new Vector3((int)player.Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
-                            if (!collisionJumping)
-                                player.TransVelocity = Vector3.Zero;
-                            jumping = false;
-                        }
-                    }
-                }
-            }
-        }
-
-        public void PutBox()
-        {
-            //if (/*player.adjacentObj == null*/) //will need a condition for when the adjacent area where the player would be trying to put the box is empty,
-            //{
-                player.interactState = Character.InteractState.StartingDropBox; //state for while the player begins putting down the box
-            //}
-        }
-
-        public void InteractWithObject()
-        {
-            if (player.interactState == Character.InteractState.HandsEmpty && player.AdjacentObj != null)
-            {
-                if (player.AdjacentObj.GetType() == typeof(PickableBox))
-                {
-                    player.interactState = Character.InteractState.JustPickedUpBox;
-                    player.StoredBox = (PickableBox)player.AdjacentObj;
-                    player.StoredBox.isCollidable = false;
-                }
-                else if (player.AdjacentObj.GetType() == typeof(Switch))
-                {
-                    Switch currentSwitch = (Switch)player.AdjacentObj;
-                    currentSwitch.FlickSwitch();
-                }
-            }
-        }
-
-        private void UpdateKeyboard()
-        {
-            KeyboardState currentKeyboardState = Keyboard.GetState();
-
-            //Setting up basic controls
-            if (currentKeyboardState.IsKeyDown(Keys.Space) &&
-                oldKeyboardState.IsKeyUp(Keys.Space) && !jumping)
-            {
-                //handle jump movement
-                //Added a bit of physics to this.
-                jumping = true;
-                player.TransVelocity += new Vector3(0, SINGLE_CELL_SIZE * 10, 0);
-            }
-            if (currentKeyboardState.IsKeyDown(Keys.Z) &&
-                oldKeyboardState.IsKeyUp(Keys.Z))
-            {
-                if(player.interactState == Character.InteractState.CompletedPickup)
-                {
-                    PutBox();
-                }
-                else
-                    InteractWithObject();
-                //handle pick up box
-            }
-            if (currentKeyboardState.IsKeyDown(Keys.Left))
-            {
-                player.MoveLeft(MOVEAMOUNT);
-            }
-            else if (currentKeyboardState.IsKeyDown(Keys.Right))
-            {
-                player.MoveRight(MOVEAMOUNT);
-            }
-            else
-            {
-                player.Stop();
-            }
-
-            // Allows the game to exit
-            if (currentKeyboardState.IsKeyDown(Keys.Escape))
-                this.Exit();
-
-            oldKeyboardState = currentKeyboardState;
-        }
-
-        private void UpdateGamePad()
-        {
-            GamePadState currentGamePadState = GamePad.GetState(PlayerIndex.One);
-
-            //Setting up basic controls
-            if (currentGamePadState.Buttons.A == ButtonState.Pressed &&
-                oldGamePadState.Buttons.A != ButtonState.Pressed)
-            {
-                //handle jump movement
-                player.TransAccel = new Vector3(0, -SINGLE_CELL_SIZE * 9, 0);
-                player.TransVelocity += new Vector3(0, SINGLE_CELL_SIZE * 5, 0);
-            }
-            if (currentGamePadState.Buttons.X == ButtonState.Pressed &&
-                oldGamePadState.Buttons.X != ButtonState.Pressed)
-            {
-                //handle pick up box
-            }
-            if (currentGamePadState.DPad.Left == ButtonState.Pressed)
-            {
-                //handle left movement
-                player.MoveLeft(MOVEAMOUNT);
-            }
-            else if (currentGamePadState.DPad.Right == ButtonState.Pressed)
-            {
-                //handle right right movement
-                player.MoveRight(MOVEAMOUNT);
-            }
-            
-
-            // Allows the game to exit
-            if (currentGamePadState.Buttons.Back == ButtonState.Pressed)
-                this.Exit();
-
-            oldGamePadState = currentGamePadState;
+            Object.TransVelocity += Object.TransAccel / 60; //amt. accel (where TransAccel is in seconds) per frame ...
+            Object.Translate(Object.Position + Object.TransVelocity / 60);
         }
     }
 

@@ -15,17 +15,6 @@ namespace MadScienceLab
     public class CellObject : GameObject3D
     {
         // Hit box information - Steven
-        public int Width;
-        public int Height;
-        public int WidthOffset;
-        public Rectangle Hitbox
-        {
-            get
-            {
-                return new Rectangle((int)base.Position.X + WidthOffset, (int)base.Position.Y, Width, Height);
-            }
-        }
-
         public bool isCollidable { get; protected set; }
         
         public Model Model { get; protected set; }
@@ -44,8 +33,8 @@ namespace MadScienceLab
         public CellObject(int column, int row)
         {
             //Calculate offset where object will be placed.
-            x = (Game1.SINGLE_CELL_SIZE * column) - (Game1.X_RESOLUTION / 2); // divde by 2 because 4 quadrants
-            y = (Game1.SINGLE_CELL_SIZE * row) - (Game1.Y_RESOLUTION / 2);
+            x = (GameConstants.SINGLE_CELL_SIZE * column) - (GameConstants.X_RESOLUTION / 2); // divde by 2 because 4 quadrants
+            y = (GameConstants.SINGLE_CELL_SIZE * row) - (GameConstants.Y_RESOLUTION / 2);
             CellNumber = new Point(column, row);
 
             //Place object on grid.
@@ -130,7 +119,7 @@ namespace MadScienceLab
             if (isRotated)
             {
                 Width = (int)size.Z;
-                WidthOffset = Game1.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
+                WidthOffset = GameConstants.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
             }
             else
             {
@@ -140,7 +129,7 @@ namespace MadScienceLab
 
             if (isOffset)
             {
-                WidthOffset = Game1.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
+                WidthOffset = GameConstants.SINGLE_CELL_SIZE / 2 - (int)size.Z / 2;
             }
             else
             {
