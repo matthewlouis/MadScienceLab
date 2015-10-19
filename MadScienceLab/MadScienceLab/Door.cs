@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace MadScienceLab
 {
-    class Door:CellObject
+    class Door:SwitchableObject
     {
         private Boolean isOpen;
         public Door(int column, int row, Boolean isOpen):base(column, row)
@@ -34,7 +34,7 @@ namespace MadScienceLab
             base.Update(renderContext);
         }
 
-        public void Toggle()
+        public override void Toggle(RenderContext renderContext)
         {
             if (isOpen)
                 isOpen = false;
