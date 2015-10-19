@@ -38,6 +38,25 @@ namespace MadScienceLab
         private bool jumping;
         private Boolean collisionJumping = false;
 
+        public override Rectangle Hitbox
+        {
+            get
+            {
+                if (interactState == InteractState.CompletedPickup) //new hitbox if currently carrying a box
+                {
+                    return new Rectangle ( (int)StoredBox.Position.X, (int)Position.Y, Width, Height+StoredBox.Height );
+                }
+                return base.Hitbox;
+            }
+        }
+        public Rectangle CharacterHitbox
+        {
+            get
+            {
+                return base.Hitbox;
+            }
+        }
+
 
         public Character(int startRow, int startCol):base(startRow, startCol)
         {
@@ -64,7 +83,7 @@ namespace MadScienceLab
             
             charModel.Update(renderContext);
             UpdatePhysics();
-            CheckPlayerBoxCollision(renderContext);
+            CheckPlayerBoxCollision ( renderContext );
 
             HandleInput();
             if (TransVelocity.Y >= 0)
@@ -84,6 +103,11 @@ namespace MadScienceLab
                 TransVelocity = Vector3.Zero;
                 jumping = false;
             }*/
+
+            //Code used to update any actions occurring with PickBox and PutBox.
+            UpdatePickBox ();
+            UpdatePutBox (renderContext);
+
             base.Update(renderContext);
         }
 
@@ -204,18 +228,151 @@ namespace MadScienceLab
 
         public void PickBox()
         {
-            if (interactState == InteractState.HandsEmpty && !jumping && AdjacentObj != null)
+
+
+            if (interactState == InteractState.HandsEmpty/*state 0*/ && !jumping && AdjacentObj != null)
             {
                 if (AdjacentObj.GetType() == typeof(PickableBox) && (((PickableBox)(AdjacentObj)).IsLiftable))
                 {
-                    interactState = InteractState.HandsEmpty;
-                    StoredBox = (PickableBox)AdjacentObj;
-                    StoredBox.isCollidable = false;
+                    //check if there is area above the player to pick up the box
+                    Rectangle areaTop = new Rectangle ( (int)Position.X, CharacterHitbox.Bottom, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height) );
+                    bool pickuppable = true;
+                    foreach (CellObject levelObject in Game1.CurrentLevel.Children) //check to see if it has collision with anything
+                    {
+                        if (levelObject.isCollidable && areaTop.Intersects ( levelObject.Hitbox ))
+                        {
+                            pickuppable = false;
+                        }
+                        /*
+                         +		The hitboxes (rectangles) are actually upside down - 'bot' is actually the top, 'top' is the bottom,
+                         *      height increases upwards.
+                         */
+                    }
+                    if (jumping) //disallow putting down when jumping
+                        pickuppable = false;
+                    if (pickuppable) {
+                        interactState = InteractState.JustPickedUpBox; //state 1
+                        StoredBox = (PickableBox)AdjacentObj;
+                        StoredBox.isCollidable = false;
+                    }
                 }
             }
         }
+        /// <summary>
+        /// Code to update any animations occurring with PickBox.
+        /// </summary>
+        public void UpdatePickBox ()
+        {
+            if (interactState == InteractState.JustPickedUpBox) //determine initial pickup animation angle
+            {
+                if (StoredBox.Position.X < Position.X)
+                    pickUpAnimationAngle = 180;
+                else
+                    pickUpAnimationAngle = 0;
+                interactState = InteractState.AnimatingPickup; //state 2
+            }
+            if (interactState == InteractState.AnimatingPickup) //update box position
+            {
+                if (pickUpAnimationAngle != 90)
+                { //endpoint is 90
+                    if (pickUpAnimationAngle > 90)
+                    {
+                        pickUpAnimationAngle -= 9; //from left
+                    }
+                    else
+                        pickUpAnimationAngle += 9; //from right
+
+                    float angleRad = pickUpAnimationAngle * 2 * (float)Math.PI / 360;
+                    StoredBox.Position = Position + new Vector3 ( CharacterHitbox.Width * (float)Math.Cos ( angleRad ), CharacterHitbox.Height * (float)Math.Sin ( angleRad ), 0f );
+
+                    //no need to update hitbox anymore
+                    /*StoredBox.Hitbox = new Rectangle ( (int)(Hitbox.Location.X + Hitbox.Width * Math.Cos ( angleRad )),
+                                                     (int)(Hitbox.Location.Y + Hitbox.Height * Math.Sin ( angleRad )),
+                                                     StoredBox.Hitbox.Width, StoredBox.Hitbox.Height );*/
+                    // Position + new Vector3(Hitbox.Width * (float)Math.Cos(angleRad), Hitbox.Height * (float)Math.Sin(angleRad), 0f);
+                    //if (storedBox.Position.X > Position.X)
+                    //    storedBox.Position += new Vector3(-Hitbox.Width / 10, Hitbox.Height / 10, 0);
+
+                    putDownAnimationAngle = 90;
+                }
+                else
+                {
+                    interactState = InteractState.CompletedPickup; //state 3
+                }
+            }
+            else if (interactState == InteractState.CompletedPickup) //state 3s
+            {
+                StoredBox.Position = Position + new Vector3 ( 0, CharacterHitbox.Height, 0 );
+                //no need to update hitbox anymore
+                /*StoredBox.Hitbox = new Rectangle ( Hitbox.Location.X, Hitbox.Location.Y + Hitbox.Height,
+                                                 storedBox.Hitbox.Width, storedBox.Hitbox.Height );*/
+            }
+
+        }
+        /// <summary>
+        /// Code to update any animations occurring with PutBox.
+        /// </summary>
+        /// <param name="renderContext"></param>
+        public void UpdatePutBox (RenderContext renderContext) //need renderContext to access level for collision checking
+        {
+            if (interactState == InteractState.StartingDropBox) //state 4
+            {
+                putFacingDirection = facingDirection; //set the direction the character is facing at the point the character begins putting down the box
+                interactState = InteractState.AnimatingDropBox;
+            }
+            if (interactState == InteractState.AnimatingDropBox) //animation state
+            {
+                if (putDownAnimationAngle > 0 && putDownAnimationAngle < 180)
+                {
+                    if (putFacingDirection == FACING_RIGHT)
+                        putDownAnimationAngle -= 9;
+                    else //if(putFacingDirection == FACING_LEFT)
+                        putDownAnimationAngle += 9;
+
+                    float angleRad = putDownAnimationAngle * 2 * (float)Math.PI / 360;
+                    StoredBox.Position = Position + new Vector3 ( CharacterHitbox.Width * (float)Math.Cos ( angleRad ), CharacterHitbox.Height * (float)Math.Sin ( angleRad ), 0f );
+                    
+                    //no need to update hitbox
+                    /*
+                    storedBox.Hitbox = new Rectangle ( (int)(Hitbox.Location.X + Hitbox.Width * Math.Cos ( angleRad )),
+                                                     (int)(Hitbox.Location.Y + Hitbox.Height * Math.Sin ( angleRad )),
+                                                     storedBox.Hitbox.Width, storedBox.Hitbox.Height );
+                    */
+
+                }
+                else
+                {
+                    interactState = InteractState.HandsEmpty;
+                    StoredBox.TransVelocity = Vector3.Zero;
+                    float startX = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.X_RESOLUTION / 2);
+                    float startY = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.Y_RESOLUTION / 2);
+                    Vector3 CELLREMAINDER = new Vector3 ( (StoredBox.Position.X - startX) % GameConstants.SINGLE_CELL_SIZE,
+                                                        (StoredBox.Position.Y - startY) % GameConstants.SINGLE_CELL_SIZE,
+                                                        StoredBox.Position.Z );
+                    //Move positions to the nearest cell
+
+                    if (CELLREMAINDER.X < GameConstants.SINGLE_CELL_SIZE / 2)
+                        StoredBox.Position = new Vector3 ( StoredBox.Position.X - CELLREMAINDER.X, StoredBox.Position.Y, StoredBox.Position.Z );
+                    else
+                        StoredBox.Position = new Vector3 ( StoredBox.Position.X - CELLREMAINDER.X + GameConstants.SINGLE_CELL_SIZE, StoredBox.Position.Y, StoredBox.Position.Z );
+                    /*if (CELLREMAINDER.Y < Game1.SINGLE_CELL_SIZE / 2)
+                        storedBox.Position = new Vector3(storedBox.Position.X, storedBox.Position.Y - CELLREMAINDER.Y, storedBox.Position.Z);
+                    else
+                        storedBox.Position = new Vector3(storedBox.Position.X, storedBox.Position.Y + Game1.SINGLE_CELL_SIZE - CELLREMAINDER.Y, storedBox.Position.Z);
+                    if (CELLREMAINDER.Z < Game1.SINGLE_CELL_SIZE / 2)
+                        storedBox.Position = new Vector3(storedBox.Position.X, storedBox.Position.Y, storedBox.Position.Z - CELLREMAINDER.Z);
+                    else
+                        storedBox.Position = new Vector3(storedBox.Position.X, storedBox.Position.Y, storedBox.Position.Z + Game1.SINGLE_CELL_SIZE - CELLREMAINDER.Z);*/
 
 
+                    //quantize position to a multiple of SINGLE_CELL_SIZE
+                    StoredBox.CheckCollision ( renderContext.Level ); //check and update box position based on collision before updating any other boxes' positions
+                    //remove storedBox from player
+                    StoredBox.isCollidable = true;
+                    StoredBox = null;
+                }
+            }
+        }
 
         public void Stop()
         {

@@ -40,7 +40,7 @@ namespace MadScienceLab
         public int WidthOffset;
 
         //public BoundingBox Hitbox { get; set; }
-        public Rectangle Hitbox
+        public virtual Rectangle Hitbox
         {
             get
             {
