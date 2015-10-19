@@ -471,7 +471,6 @@ namespace MadScienceLab
                     else
                     {
                         InteractiveObj = levelObject;
-                        Console.Out.WriteLine(InteractiveObj.GetType());
                     }
                 }
             }

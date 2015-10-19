@@ -9,14 +9,14 @@ namespace MadScienceLab
 {
     class ToggleSwitch:CellObject
     {
-        public List<Door> LinkedDoors { get; set; }
+        public List<SwitchableObject> LinkedDoors { get; set; }
         public Boolean Toggleable { get; private set; }
         public Boolean IsSwitched { get; set; }
         private Boolean doorsToggled = false;
 
         public ToggleSwitch(int column, int row, Boolean toggleable):base(column, row)
         {
-            LinkedDoors = new List<Door>();
+            LinkedDoors = new List<SwitchableObject>();
             base.Model = Game1._models["switch"];
             base.isCollidable = true;
             base.IsPassable = true;
@@ -47,17 +47,17 @@ namespace MadScienceLab
             if (IsSwitched && doorsToggled == false)
             {
                 doorsToggled = true;
-                foreach (Door door in LinkedDoors)
+                foreach (SwitchableObject door in LinkedDoors)
                 {
-                    door.Toggle();
+                    door.Toggle(renderContext);
                 }
             }
             else if (!IsSwitched && doorsToggled == true)
             {
                 doorsToggled = false;
-                foreach (Door door in LinkedDoors)
+                foreach (SwitchableObject door in LinkedDoors)
                 {
-                    door.Toggle();
+                    door.Toggle(renderContext);
                 }
             }
             base.Update(renderContext);

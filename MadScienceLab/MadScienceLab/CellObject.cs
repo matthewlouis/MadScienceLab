@@ -52,6 +52,15 @@ namespace MadScienceLab
             Translate(x, y, zPosition);
         }
 
+        //Overloaded Constructor for placing at exact coordinates
+        public CellObject(Vector2 coordinates)
+        {
+            //Place object on grid.
+            Translate(coordinates.X,coordinates.Y, zPosition);
+            TransVelocity = new Vector3(0, 0, 0);
+            TransAccel = new Vector3(0, 0, 0);
+        }
+
         //Will need to override update to move hitbox as well.
         public override void Update(RenderContext renderContext)
         {

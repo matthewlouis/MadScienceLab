@@ -10,11 +10,6 @@ namespace MadScienceLab
 
     public class LevelBuilder
     {
-        //MATT- DEBUG STUFF
-        static Door open, closed;
-        static Button testButton;
-        static ToggleSwitch testSwitch;
-
         public static int levelwidth = 0;
         public static int startWall = 10;
         public static int startFloor = 1;
@@ -50,10 +45,10 @@ namespace MadScienceLab
                             + "X       X        X  XX\n"
                             + "X    X          X    X\n"
                             + "XB              X    X\n"
-                            + "XXX         B   X    X\n"
-                            + "X     S B   XXXXXX   X\n"
+                            + "XX          B   X    X\n"
+                            + "X 2     B   XXXXXX   X\n"
                             + "X     XXXrrX  B      X\n"
-                            + "X PBT dD  D   B      X\n"
+                            + "XTP T dD  D   B      X\n"
                             + "XXXXXXXXXXXXXXXXXXXXXX\n";
 
             string backtxt  = "XXXXXXXXXXXXXXXXXXXXXX\n"
@@ -65,15 +60,15 @@ namespace MadScienceLab
                             + "X    X          X1111X\n"
                             + "XBS             X1111X\n"
                             + "XXX         B   X1111X\n"
-                            + "X       B   XXXXXX111X\n"
+                            + "X           XXXXXX111X\n"
                             + "X     XXXrrX111111111X\n"
-                            + "X PBT 111111111111111X\n"
+                            + "XBPBT 111111111111111X\n"
                             + "XXXXXXXXXXXXXXXXXXXXXX\n";
 
             //get object pairs (for links between switches and doors/boxes)
             // The format used to link buttons to doors "ButtonCoord linked to 1 or more DoorCoord" - Steven
             string linktxt = "2:5|2:7&2:8\n"
-                           + "4:7|2:8";
+                           + "2:2|4:3";
             Dictionary<string, int> _buttons = new Dictionary<string, int>();
             Dictionary<string, int> _doors = new Dictionary<string, int>();
 
@@ -102,7 +97,6 @@ namespace MadScienceLab
                         _buttons.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 'S':
-                        //testButton = new Button(col++, row);
                         level.AddChild ( new Button ( col++, row ) );
                         _buttons.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
@@ -111,11 +105,8 @@ namespace MadScienceLab
                         break;
                     case 'L':
                        level.AddChild(new LaserTurret(col++, row, true));
-                        //level.AddChild ( new Door ( col++, row, true ) ); //Starting open door
                         break;
                     case 'd':
-                        //open = new Door(col++, row, true);
-                        //level.AddChild(open);
                         level.AddChild ( new Door ( col++, row, true ) ); //Starting open door
                         _doors.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
@@ -143,8 +134,11 @@ namespace MadScienceLab
                         col = startWall;
                         break;
                 }
-                if (c >= '1' && c <= '9') //BoxDropper case
-                    level.AddChild ( new BasicBlock ( col++, row )/*new BoxDropper(c - '0')*/ ); //replace BasicBlock with the actual BoxDropper once implemented
+                if (c >= '1' && c <= '9')
+                { //BoxDropper case
+                    level.AddChild(new BoxDropper(col++, row, c - '0')/*new BoxDropper(c - '0')*/ );
+                    _doors.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
+                }
             }
 
             // Interates through the link text to find buttons and their links to the doors - Steven
@@ -164,7 +158,7 @@ namespace MadScienceLab
                         foreach (string door in doors)
                         {
                             index = _doors[door];
-                            Door doorToAdd = (Door)level.Children[index];
+                            SwitchableObject doorToAdd = (SwitchableObject)level.Children[index];
                             button.LinkedDoors.Add(doorToAdd);
                         }
                     }else if(level.Children[index].GetType() == typeof(ToggleSwitch))
@@ -173,23 +167,12 @@ namespace MadScienceLab
                         foreach (string door in doors)
                         {
                             index = _doors[door];
-                            Door doorToAdd = (Door)level.Children[index];
+                            SwitchableObject doorToAdd = (SwitchableObject)level.Children[index];
                             toggleSwitch.LinkedDoors.Add(doorToAdd);
                         }
                     }
                 }
             }
-
-            //Matt- Button debug
-            //testButton.LinkedDoors.Add(open);
-            //testButton.LinkedDoors.Add(closed);
-            //testSwitch.AddChild(open);
-            //testSwitch.AddChild(closed);
-            //level.AddChild(open);
-            //level.AddChild(closed);
-            //level.AddChild(testButton);
-            //level.AddChild(testSwitch);
-            //End debug
 
             /**DRAWS BACKGROUND**/
             row = startFloor + levelheight - 1;
