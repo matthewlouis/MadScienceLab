@@ -15,17 +15,6 @@ namespace MadScienceLab
     public class CellObject : GameObject3D
     {
         // Hit box information - Steven
-        public int Width;
-        public int Height;
-        public int WidthOffset;
-        public Rectangle Hitbox
-        {
-            get
-            {
-                return new Rectangle((int)base.Position.X + WidthOffset, (int)base.Position.Y, Width, Height);
-            }
-        }
-
         public bool isCollidable { get; protected set; }
         
         public Model Model { get; protected set; }
