@@ -141,11 +141,14 @@ namespace MadScienceLab
                 else
                     PickBox();  
                 }
-            if (currentKeyboardState.IsKeyDown(Keys.Left))
+
+            //prevent the player from moving while still in box pickup/putdown animation
+            bool NotActiveWithBox = interactState == InteractState.CompletedPickup || interactState == InteractState.HandsEmpty;
+            if (currentKeyboardState.IsKeyDown ( Keys.Left ) && NotActiveWithBox)
             {
                 MoveLeft(GameConstants.MOVEAMOUNT);
             }
-            else if (currentKeyboardState.IsKeyDown(Keys.Right))
+            else if (currentKeyboardState.IsKeyDown ( Keys.Right ) && NotActiveWithBox)
             {
                 MoveRight(GameConstants.MOVEAMOUNT);
             }
