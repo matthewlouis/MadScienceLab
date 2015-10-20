@@ -39,7 +39,7 @@ namespace MadScienceLab
         private bool jumping;
         private Boolean collisionJumping = false;
 
-        public override Rectangle Hitbox
+/*        public override Rectangle Hitbox
         {
             get
             {
@@ -49,7 +49,7 @@ namespace MadScienceLab
                 }
                 return base.Hitbox;
             }
-        }
+        }*/
         public Rectangle CharacterHitbox
         {
             get
@@ -84,6 +84,11 @@ namespace MadScienceLab
             
             charModel.Update(renderContext);
             UpdatePhysics();
+           
+            if (interactState == InteractState.CompletedPickup) // Start checking for collisions for the box being carried - Steven
+            {
+                CheckBoxCarryCollision(renderContext);
+            }
             CheckPlayerBoxCollision ( renderContext );
 
             HandleInput();
@@ -98,14 +103,6 @@ namespace MadScienceLab
 
             //Ensures we're checking what the player is in front of each frame
             InteractiveObj = null;
-
-            /*
-            if (DebugCheckPlayerBoxCollision() && !collisionJumping)
-            {
-                Position = new Vector3((int)Position.X, brick.Top + GameConstants.SINGLE_CELL_SIZE - 1, 0);
-                TransVelocity = Vector3.Zero;
-                jumping = false;
-            }*/
 
             //Code used to update any actions occurring with PickBox and PutBox.
             UpdatePickBox ();
@@ -411,6 +408,70 @@ namespace MadScienceLab
             Translate(Position + TransVelocity / 60);
         }
 
+        /// <summary>
+        /// Checks the collisions for the box that the player is carrying seperately
+        /// Expanding the player hitbox to be larger than the blocks cause collision issues
+        /// - Steven
+        /// </summary>
+        /// <param name="renderContext"></param>
+        private void CheckBoxCarryCollision(RenderContext renderContext)
+        {
+            foreach (CellObject levelObject in renderContext.Level.Children)
+            {
+                if (levelObject.isCollidable && StoredBox.Hitbox.Intersects(levelObject.Hitbox))
+                {
+                    /**Determining what side was hit**/
+                    float wy = (levelObject.Hitbox.Width + Hitbox.Width)
+                             * (((levelObject.Hitbox.Y + levelObject.Hitbox.Height) / 2) - (StoredBox.Hitbox.Y + Hitbox.Height) / 2);
+                    float hx = (Hitbox.Height + levelObject.Hitbox.Height)
+                             * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
+
+                    Button tmpButton = levelObject as Button;
+                    if (tmpButton != null) //if it is a button
+                    {
+                        Button button = (Button)levelObject as Button;
+                        button.IsPressed = true;
+                    }
+
+                    if (!levelObject.IsPassable) //if object is not passable, handle physics issues:
+                    {
+                        if (wy > hx)
+                        {
+                            if (wy > -hx)
+                            {
+                                //boxHitState = "Box Top";//top
+                                Position = new Vector3(Position.X, levelObject.Hitbox.Top - this.Hitbox.Height * 2 - 1, 0); //clip to the top of the colliding object
+                                TransVelocity = Vector3.Zero;
+                            }
+                            else
+                            {
+                                //boxHitState = "Box Left";// left
+                                Position = new Vector3(levelObject.Hitbox.Right + 1, (int)Position.Y, 0);
+                                AdjacentObj = levelObject;
+                            }
+                        }
+                        else
+                        {
+                            if (wy > -hx)
+                            {
+                                //boxHitState = "Box Right";// right
+                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth, (int)Position.Y, 0);
+                                AdjacentObj = levelObject;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        InteractiveObj = levelObject;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks for player collision with all collidable objects in the level - Steven
+        /// </summary>
+        /// <param name="renderContext"></param>
         private void CheckPlayerBoxCollision(RenderContext renderContext)
         {
             foreach (CellObject levelObject in renderContext.Level.Children)
@@ -452,11 +513,7 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Right";// right
-
-                                Position = new Vector3(levelObject.Hitbox.Left - GameConstants.SINGLE_CELL_SIZE, (int)Position.Y, 0);
-
                                 Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth, (int)Position.Y, 0);
-
                                 AdjacentObj = levelObject;
                             }
                             else
@@ -471,28 +528,9 @@ namespace MadScienceLab
                     else
                     {
                         InteractiveObj = levelObject;
-                        Console.Out.WriteLine(InteractiveObj.GetType());
                     }
                 }
             }
         }
-
-        /*   /// <summary>
-   /// Only used for debugging purposes
-   /// </summary>
-   /// <returns></returns>
-   private Boolean DebugCheckPlayerBoxCollision()
-   {
-
-       foreach (CellObject brick in basicLevel.Children)
-       {
-           if (player.Hitbox.Intersects(brick.Hitbox) && brick.isCollidable)
-           {
-               this.brick = brick.Hitbox;
-               return true;
-           }
-       }
-       return false;
-   }*/
     }
 }

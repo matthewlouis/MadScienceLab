@@ -47,5 +47,15 @@ namespace MadScienceLab
             // Provides a hitbox for the block - Steven
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
         }
+
+        public PickableBox(Vector2 coordinates)
+            : base(coordinates)
+        {
+            base.Model = Game1._models["MoveableBox"];
+            base.isCollidable = true;
+
+            // Provides a hitbox for the block - Steven
+            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
+        }
     }
 }
