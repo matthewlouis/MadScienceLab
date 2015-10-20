@@ -17,7 +17,7 @@ namespace MadScienceLab
         {
             this.row = row;
             this.column = column;
-            base.Model = Game1._models["BasicBlock"];
+            base.Model = Game1._models["BlockDropper"];
             NumberOfBoxes = numberOfBoxes;
         }
 

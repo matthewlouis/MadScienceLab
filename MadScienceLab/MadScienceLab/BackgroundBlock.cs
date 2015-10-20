@@ -12,7 +12,8 @@ namespace MadScienceLab
         public BackgroundBlock(int row, int column, Texture2D texture)
             : base(row, column, -GameConstants.SINGLE_CELL_SIZE) //calls overloaded cellobject constructor and places in background
         {
-            base.Model = Game1._models["block"];
+            base.Model = Game1._models["BackgroundBlock"];
+            Scale(48f, 48f, 48f);
             this.Texture = texture;
         }
     }

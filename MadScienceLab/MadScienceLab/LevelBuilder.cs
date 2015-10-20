@@ -60,9 +60,9 @@ namespace MadScienceLab
                             + "X    X          X1111X\n"
                             + "XBS             X1111X\n"
                             + "XXX         B   X1111X\n"
-                            + "X           XXXXXX111X\n"
-                            + "X     XXXrrX111111111X\n"
-                            + "XBPBT 111111111111111X\n"
+                            + "X           XXXXXX666X\n"
+                            + "X     XXXrrX999999666X\n"
+                            + "XBPBT 222229999999666X\n"
                             + "XXXXXXXXXXXXXXXXXXXXXX\n";
 
             //get object pairs (for links between switches and doors/boxes)
@@ -181,15 +181,42 @@ namespace MadScienceLab
             {
                 switch (c2) //convert char to level object at the coordinate iterated through
                 {
-                    case '1': //blue clay
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["clay_blue"]));
+                    case '1': //Bare Metal Gray
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["BareMetal_Gray"]));
+                        break;
+                    case '2': //Rounded Brushed Gray Metal
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["BrushedRoundMetal_Gray"]));
+                        break;
+                    case '3': //Textured Metal Floor Gray
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["MetalFloor_Gray"]));
+                        break;
+                    case '4': //Dirty Rusted Metal
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["DirtyMetal"]));
+                        break;
+                    case '5': //White Fiberglass
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Fiberglass_White"]));
+                        break;
+                    case '6': //Tile Blue
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_Blue"]));
+                        break;
+                    case '7': //Tile Beige
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_Beige"]));
+                        break;
+                    case '8': //Tile Multicolored
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_Fun"]));
+                        break;
+                    case '9': //Tile Gray
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_DarkGray"]));
+                        break;
+                    case '0': //Windowed Glass Blocks
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["WindowBlocks"]));
                         break;
                     case '\n': //new line/row
                         row--;
                         col = startWall;
                         break;
                     default:
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["clay_white"]));
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_Gray"]));
                         break;
                 }
             }
