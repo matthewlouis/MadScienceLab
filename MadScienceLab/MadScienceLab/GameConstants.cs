@@ -18,8 +18,9 @@ namespace MadScienceLab
         public const float MIN_Z = 0.1f;
         public const float MAX_Z = 5000;
 
-        // player movement
+        // player
         public const float MOVEAMOUNT = 2f;
+        public const int PLAYER_DAMAGE = 1;
 
         // projectile 
         public enum DIRECTION { pointLeft = -1, pointRight = 1 }

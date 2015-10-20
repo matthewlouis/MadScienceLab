@@ -51,7 +51,7 @@ namespace MadScienceLab
                             + "X    X          X    X\n"
                             + "XB              X    X\n"
                             + "XXX         B   X    X\n"
-                            + "X     SLB   XXXXXX   X\n"
+                            + "XL    S B   XXXXXX   X\n"
                             + "X     XXXrrX  B      X\n"
                             + "X PBT dD  D   B      X\n"
                             + "XXXXXXXXXXXXXXXXXXXXXX\n";

@@ -172,14 +172,16 @@ namespace MadScienceLab
 
             player.Draw(_renderContext);
             basicLevel.Draw(_renderContext);
-            /*
+            
             spriteBatch.Begin();
-            spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
+            //spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
+            spriteBatch.DrawString(font, "Player Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
             spriteBatch.DrawString(font, "Velocity: " + player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
             spriteBatch.DrawString(font, "Acceleration: " + player.TransAccel.ToString(), new Vector2(50, 200), Color.Black);
             spriteBatch.DrawString(font, "Box: " + brick.ToString(), new Vector2(50, 250), Color.Black);
-            spriteBatch.DrawString(font, boxHitState, new Vector2(50, 150), Color.Black);
-            spriteBatch.End();*/
+            //spriteBatch.DrawString(font, boxHitState, new Vector2(50, 150), Color.Black);
+            spriteBatch.DrawString(font, "Projectile: " + basicLevel.Children[basicLevel.Children.Count()-1].Hitbox.ToString(), new Vector2(50, 150), Color.Black);
+            spriteBatch.End();
 
             // Spritebatch changes graphicsdevice values; sets the oringinal state
             GraphicsDevice.BlendState = BlendState.Opaque;

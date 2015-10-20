@@ -13,8 +13,8 @@ namespace MadScienceLab
         GameConstants.DIRECTION direction;
         int elapsedFireTime = 0;
         int firingDelay = 900;
-        
 
+        //List<LaserProjectile> projectiles = new List<LaserProjectile>();
         public void SetTurret(bool turretOn)
         {
             this.turretOn = turretOn;
@@ -61,9 +61,9 @@ namespace MadScienceLab
             if(elapsedFireTime > firingDelay)
             {
                 elapsedFireTime = 0;
+                //projectiles.Add(new LaserProjectile(CellNumber.X, CellNumber.Y, direction));
                 renderContext.Level.AddChild(new LaserProjectile(CellNumber.X, CellNumber.Y, direction));
             }
-            
         }
 
         public void RotateLeft()
@@ -75,6 +75,16 @@ namespace MadScienceLab
         {
             base.Rotate(0f, 270f, 0f);
         }
+
+        /*
+        public override void Draw(RenderContext renderContext)
+        {
+            foreach(LaserProjectile projectile in projectiles)
+            {
+                projectile.Draw(renderContext);
+            }
+            base.Draw(renderContext);
+        }*/
 
     }
 }

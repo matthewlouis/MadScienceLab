@@ -42,6 +42,15 @@ namespace MadScienceLab
 
         // Health Support
         private int health;
+        public void SetHealth(int damage)
+        {
+            health -= damage;
+        }
+        public int GetHealth()
+        {
+            return health;
+        }
+
 
         public Character(int startRow, int startCol):base(startRow, startCol)
         {
