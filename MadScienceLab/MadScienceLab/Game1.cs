@@ -32,6 +32,7 @@ namespace MadScienceLab
         public static Dictionary<String, Texture2D> _textures = new Dictionary<string, Texture2D>();
 
         Character player;
+        Enemy enemy;
         
         // Debugging - Steven
         private String boxHitState = "";
