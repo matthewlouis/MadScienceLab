@@ -45,13 +45,13 @@ namespace MadScienceLab
             string leveltxt = "XXXXXXXXXXXXXXXXXXXXXX\n"
                             + "X                    X\n"
                             + "XXXX                 X\n"
-                            + "X                   LX\n"
+                            + "X                    X\n"
                             + "X                   XX\n"
                             + "X       X        X  XX\n"
                             + "X    X          X    X\n"
                             + "XB              X    X\n"
                             + "XXX         B   X    X\n"
-                            + "X     S B   XXXXXX   X\n"
+                            + "X     SLB   XXXXXX   X\n"
                             + "X     XXXrrX  B      X\n"
                             + "X PBT dD  D   B      X\n"
                             + "XXXXXXXXXXXXXXXXXXXXXX\n";
@@ -110,7 +110,7 @@ namespace MadScienceLab
                         level.AddChild ( new BasicBlock ( col++, row ) );
                         break;
                     case 'L':
-                       level.AddChild(new LaserTurret(col++, row, true));
+                       level.AddChild(new LaserTurret(col++, row, true, GameConstants.DIRECTION.pointRight));
                         //level.AddChild ( new Door ( col++, row, true ) ); //Starting open door
                         break;
                     case 'd':

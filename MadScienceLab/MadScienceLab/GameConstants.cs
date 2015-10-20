@@ -22,6 +22,8 @@ namespace MadScienceLab
         public const float MOVEAMOUNT = 2f;
 
         // projectile 
+        public enum DIRECTION { pointLeft = -1, pointRight = 1 }
+        public const int PROJECTILE_X_VELOCITY = 10;
 
         // physics
     }

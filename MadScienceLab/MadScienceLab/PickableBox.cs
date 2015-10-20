@@ -47,5 +47,7 @@ namespace MadScienceLab
             // Provides a hitbox for the block - Steven
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
         }
+
+        
     }
 }

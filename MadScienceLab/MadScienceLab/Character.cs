@@ -36,28 +36,12 @@ namespace MadScienceLab
         GamePadState oldGamePadState;
         KeyboardState oldKeyboardState;
 
+        // Jumping support
         private bool jumping;
         private Boolean collisionJumping = false;
 
-        public override Rectangle Hitbox
-        {
-            get
-            {
-                if (interactState == InteractState.CompletedPickup) //new hitbox if currently carrying a box
-                {
-                    return new Rectangle ( (int)StoredBox.Position.X, (int)Position.Y, HitboxWidth, HitboxHeight+StoredBox.HitboxHeight );
-                }
-                return base.Hitbox;
-            }
-        }
-        public Rectangle CharacterHitbox
-        {
-            get
-            {
-                return base.Hitbox;
-            }
-        }
-
+        // Health Support
+        private int health;
 
         public Character(int startRow, int startCol):base(startRow, startCol)
         {
@@ -65,6 +49,7 @@ namespace MadScienceLab
             charModel = new GameAnimatedModel("Vampire", startRow, startCol);
             charModel.VerticalOffset = 22;         
             Rotate(0f, 90f, 0f);
+            health = 1;
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
@@ -164,6 +149,24 @@ namespace MadScienceLab
             oldGamePadState = currentGamePadState;
         }
 
+        public override Rectangle Hitbox
+        {
+            get
+            {
+                if (interactState == InteractState.CompletedPickup) //new hitbox if currently carrying a box
+                {
+                    return new Rectangle((int)StoredBox.Position.X, (int)Position.Y, HitboxWidth, HitboxHeight + StoredBox.HitboxHeight);
+                }
+                return base.Hitbox;
+            }
+        }
+        public Rectangle CharacterHitbox
+        {
+            get
+            {
+                return base.Hitbox;
+            }
+        }
 
         public override void Draw(RenderContext renderContext)
         {
