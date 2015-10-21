@@ -48,15 +48,15 @@ namespace MadScienceLab
             string leveltxt = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
                             + "X                           X\n"
                             + "X                          LX\n"
-                            + "X             XXX2XXXXXXXXXXX\n"
-                            + "X            XXXX        X  X\n"
-                            + "X       X                X  X\n"
+                            + "X         XXXXXXX2XXXXXXXXXXX\n"
+                            + "X      X                 X  X\n"
+                            + "X E     X                X  X\n"
                             + "XXXXXXXXXXX     S  S   T X  X\n"
                             + "X            XXXXXXXXXXXXX  X\n"
-                            + "X            D  D  D     D @X\n"
-                            + "X4        XXXXXXXXXXXX   XXXX\n"
-                            + "X         XXX           XXXXX\n"
-                            + "XP   T    XXXT         XXXXXX\n"
+                            + "XXX3X        D  D  D     D @X\n"
+                            + "XT        XXXXXXXXXXXX   XXXX\n"
+                            + "XX        XXX           XXXXX\n"
+                            + "XX  P T  BXXXT         XXXXXX\n"
                             + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
 
             string backtxt =  "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
@@ -77,8 +77,9 @@ namespace MadScienceLab
             // The format used to link buttons to doors "ButtonCoord linked to 1 or more DoorCoord" - Steven
             string linktxt = "7:20|5:17\n"
                            + "2:14|5:26\n"
-                           + "7:17|5:14&5:20\n"
-                           + "2:6|4:2\n"
+                           + "7:17|5:14\n"
+                           + "2:7|5:4\n"
+                           + "4:2|5:20\n"
                            + "7:24|10:18";
             Dictionary<string, int> _buttons = new Dictionary<string, int>();
             Dictionary<string, int> _doors = new Dictionary<string, int>();
@@ -245,41 +246,7 @@ namespace MadScienceLab
             return level;
         }
 
-        /// <summary>
-        /// Populates the gameObjects map of list of game objects by type.
-        /// </summary>
-        /// <param name="renderContext"></param>
-        public static void PopulateTypeList(RenderContext renderContext)
-        {
-            Dictionary<Type, List<GameObject3D>> gameObjects = new Dictionary<Type, List<GameObject3D>>();
-            //gameObjects.Add(typeof(PickableBox), new List<GameObject3D>()); //make a list of PickableBox
-            //Type[] Types = { typeof(PickableBox), typeof(ToggleSwitch), typeof(Door), typeof(Button), typeof(BasicBlock), typeof(LaserTurret), typeof(Character) };
-            //foreach (Type type in Types)
-            //{
-            //    gameObjects.Add(type);
-            //}
-            foreach (GameObject3D Child in renderContext.Level.Children)
-            {
-                if (!gameObjects.ContainsKey(Child.GetType())) //add any object types as found in the level
-                {
-                    gameObjects.Add(Child.GetType(), new List<GameObject3D>());
-                }
-                //foreach (Type type in Types)
-                //{
-                //    if (Child.GetType() == type)
-                //    {
-                //        gameObjects[type].Add(Child);
-                //        break;
-                //    }
-                //}
-                gameObjects[Child.GetType()].Add(Child);
-            }
-            //add anything that wasn't part of level.Children
-            gameObjects.Add(typeof(Character), new List<GameObject3D>());
-            gameObjects[typeof(Character)].Add(renderContext.Player);
 
-            renderContext.Level.gameObjects = gameObjects;
-        }
         
 
     }

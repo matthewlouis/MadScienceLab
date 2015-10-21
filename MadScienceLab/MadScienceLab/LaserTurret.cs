@@ -12,7 +12,7 @@ namespace MadScienceLab
         bool turretOn;
         GameConstants.DIRECTION direction;
         int elapsedFireTime = 0;
-        int firingDelay = 9000;
+        int firingDelay = 1500;
 
         //List<LaserProjectile> projectiles = new List<LaserProjectile>();
         public void SetTurret(bool turretOn)

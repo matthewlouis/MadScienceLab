@@ -111,6 +111,7 @@ namespace MadScienceLab
             _textures.Add("Tile_Fun", Content.Load<Texture2D>("Textures/Tile_Fun"));
             _textures.Add("Exit", Content.Load<Texture2D>("Textures/EXIT"));
             _textures.Add("Complete", Content.Load<Texture2D>("Textures/Complete"));
+            _textures.Add("GameOver", Content.Load<Texture2D>("Textures/GameOver"));
 
             //loads the basic level
             basicLevel = LevelBuilder.MakeBasicLevel ();
@@ -124,7 +125,7 @@ namespace MadScienceLab
             font = Content.Load<SpriteFont>("Verdana");
             _renderContext.Level = basicLevel;
 
-            LevelBuilder.PopulateTypeList(_renderContext);
+            basicLevel.PopulateTypeList(_renderContext);
         }
 
         /// <summary>
@@ -148,31 +149,52 @@ namespace MadScienceLab
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
-            _renderContext.GameTime = gameTime;
-            //Update physics
-            //Just player and level object physics for now
-            player.Update(_renderContext);
-
-            //apply gravity to pickable boxes
-            foreach (CellObject levelobject in basicLevel.Children)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
-                //check collision - cease gravity if colliding with another box below - then apply physics
-                if (levelobject.GetType() == typeof(PickableBox) && levelobject.isCollidable)
-                {
-                    UpdatePhysics(levelobject);
-                    levelobject.TransAccel = new Vector3(0, -GameConstants.SINGLE_CELL_SIZE * 9, 0);
-                    levelobject.CheckCollision(basicLevel);
-                }
-            }
-                        
-            player.AdjacentObj = null; //reset to null after checking PickBox, and before the adjacentObj is updated
+                //loads the basic level
+                basicLevel = LevelBuilder.MakeBasicLevel();
+                CurrentLevel = basicLevel; //we can handle this through render context eventually.
 
-            _renderContext.GameTime = gameTime;
-            _camera.Update(_renderContext);
-            basicLevel.Update(_renderContext);
-            player.Update(_renderContext);
-  
-            base.Update(gameTime);
+                player = new Character(basicLevel.PlayerPoint.X, basicLevel.PlayerPoint.Y);
+                player.LoadContent(Content);
+                _renderContext.Player = player;
+                _camera.setFollowTarget(player);
+                player.TransAccel = new Vector3(0, -GameConstants.SINGLE_CELL_SIZE * 9, 0);
+                font = Content.Load<SpriteFont>("Verdana");
+                _renderContext.Level = basicLevel;
+
+                basicLevel.PopulateTypeList(_renderContext);
+            }
+
+            if (!basicLevel.GameOver && !basicLevel.LevelOver)
+            {
+                _renderContext.GameTime = gameTime;
+                //Update physics
+                //Just player and level object physics for now
+                player.Update(_renderContext);
+
+                //apply gravity to pickable boxes
+                foreach (CellObject levelobject in basicLevel.Children)
+                {
+                    //check collision - cease gravity if colliding with another box below - then apply physics
+                    if (levelobject.GetType() == typeof(PickableBox) && levelobject.isCollidable)
+                    {
+                        UpdatePhysics(levelobject);
+                        levelobject.TransAccel = new Vector3(0, -GameConstants.SINGLE_CELL_SIZE * 9, 0);
+                        levelobject.CheckCollision(basicLevel);
+                    }
+                }
+
+                player.AdjacentObj = null; //reset to null after checking PickBox, and before the adjacentObj is updated
+
+                _renderContext.GameTime = gameTime;
+                _camera.Update(_renderContext);
+                basicLevel.Update(_renderContext);
+                player.Update(_renderContext);
+
+                base.Update(gameTime);
+            }
         }
 
         /// <summary>
@@ -188,19 +210,26 @@ namespace MadScienceLab
             
             spriteBatch.Begin();
             //spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
-            spriteBatch.DrawString(font, "Player Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
-            spriteBatch.DrawString(font, "Velocity: " + player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
-            spriteBatch.DrawString(font, "Acceleration: " + player.TransAccel.ToString(), new Vector2(50, 200), Color.Black);
-            spriteBatch.DrawString(font, "Box: " + brick.ToString(), new Vector2(50, 250), Color.Black);
+            spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
+            //spriteBatch.DrawString(font, "Velocity: " + player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
+            //spriteBatch.DrawString(font, "Acceleration: " + player.TransAccel.ToString(), new Vector2(50, 200), Color.Black);
+            //spriteBatch.DrawString(font, "Box: " + brick.ToString(), new Vector2(50, 250), Color.Black);
             //spriteBatch.DrawString(font, boxHitState, new Vector2(50, 150), Color.Black);
-            spriteBatch.DrawString(font, "Projectile: " + basicLevel.Children[basicLevel.Children.Count()-1].Hitbox.ToString(), new Vector2(50, 150), Color.Black);
-            spriteBatch.DrawString(font, "Player pos: " + player.Position.ToString(), new Vector2(50, 300), Color.Black);
+            //spriteBatch.DrawString(font, "Projectile: " + basicLevel.Children[basicLevel.Children.Count()-1].Hitbox.ToString(), new Vector2(50, 150), Color.Black);
+            //spriteBatch.DrawString(font, "Player pos: " + player.Position.ToString(), new Vector2(50, 300), Color.Black);
             spriteBatch.End();
 
             if (_renderContext.Level.LevelOver)
             {
                 spriteBatch.Begin();
                 spriteBatch.Draw(Game1._textures["Complete"], new Vector2(GraphicsDevice.Viewport.Width/2 - Game1._textures["Complete"].Width / 2, GraphicsDevice.Viewport.Height/2 - Game1._textures["Complete"].Height / 2), Color.White);
+                spriteBatch.End();
+            }
+
+            if (_renderContext.Level.GameOver)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(Game1._textures["GameOver"], new Vector2(GraphicsDevice.Viewport.Width / 2 - Game1._textures["GameOver"].Width / 2, GraphicsDevice.Viewport.Height / 2 - Game1._textures["GameOver"].Height / 2), Color.White);
                 spriteBatch.End();
             }
             

@@ -78,7 +78,7 @@ namespace MadScienceLab
             charModel = new GameAnimatedModel("Vampire", startRow, startCol);
             charModel.VerticalOffset = 22;         
             Rotate(0f, 90f, 0f);
-            health = 1;
+            health = 3;
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
@@ -95,7 +95,10 @@ namespace MadScienceLab
         
         public override void Update(RenderContext renderContext)
         {
-            
+            if (health <= 0)
+            {
+                renderContext.Level.GameOver = true;
+            }
             charModel.Update(renderContext);
             UpdatePhysics();
            
@@ -158,11 +161,15 @@ namespace MadScienceLab
 
             //prevent the player from moving while still in box pickup/putdown animation
             bool NotActiveWithBox = interactState == InteractState.CompletedPickup || interactState == InteractState.HandsEmpty;
-            if ((currentKeyboardState.IsKeyDown ( Keys.Left ) || currentGamePadState.IsButtonDown(Buttons.DPadLeft)) && NotActiveWithBox)
+            if ((currentKeyboardState.IsKeyDown ( Keys.Left ) || 
+                currentGamePadState.IsButtonDown(Buttons.DPadLeft) ||
+                currentGamePadState.IsButtonDown(Buttons.LeftThumbstickLeft)) && NotActiveWithBox)
             {
                 MoveLeft(GameConstants.MOVEAMOUNT);
             }
-            else if ((currentKeyboardState.IsKeyDown ( Keys.Right ) || currentGamePadState.IsButtonDown(Buttons.DPadRight)) && NotActiveWithBox)
+            else if ((currentKeyboardState.IsKeyDown ( Keys.Right ) || 
+                currentGamePadState.IsButtonDown(Buttons.DPadRight) ||
+                currentGamePadState.IsButtonDown(Buttons.LeftThumbstickRight)) && NotActiveWithBox)
             {
                 MoveRight(GameConstants.MOVEAMOUNT);
             }
