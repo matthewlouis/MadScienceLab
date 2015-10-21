@@ -54,7 +54,7 @@ namespace MadScienceLab
         }
 
 
-        public void PlayAnimation(string clipName, bool loop = true, float blendTime = 0f)
+        public void PlayAnimation(string clipName, bool loop, float blendTime)
         {
             if (_animationPlayer == null)
             {

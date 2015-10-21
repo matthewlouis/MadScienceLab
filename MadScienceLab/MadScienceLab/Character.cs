@@ -20,8 +20,6 @@ namespace MadScienceLab
 
         GameAnimatedModel charModel;
 
-        bool gameOver = false; //DEBUG- for presentation only
-
         //properties used for picking up a box
         public CellObject InteractiveObj { get; set; }
         public CellObject AdjacentObj { get; set; }
@@ -73,7 +71,7 @@ namespace MadScienceLab
         {
             base.LoadContent(contentManager);
             charModel.LoadContent(contentManager);
-            charModel.PlayAnimation("Idle");
+            charModel.PlayAnimation("Idle", true, 0f);
             UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, false);
             // Overriding the hitbox size - Steven
             base.HitboxWidth = 48;
@@ -146,11 +144,11 @@ namespace MadScienceLab
 
             //prevent the player from moving while still in box pickup/putdown animation
             bool NotActiveWithBox = interactState == InteractState.CompletedPickup || interactState == InteractState.HandsEmpty;
-            if (currentKeyboardState.IsKeyDown ( Keys.Left ) && NotActiveWithBox)
+            if ((currentKeyboardState.IsKeyDown ( Keys.Left ) || currentGamePadState.IsButtonDown(Buttons.DPadLeft)) && NotActiveWithBox)
             {
                 MoveLeft(GameConstants.MOVEAMOUNT);
             }
-            else if (currentKeyboardState.IsKeyDown ( Keys.Right ) && NotActiveWithBox)
+            else if ((currentKeyboardState.IsKeyDown ( Keys.Right ) || currentGamePadState.IsButtonDown(Buttons.DPadRight)) && NotActiveWithBox)
             {
                 MoveRight(GameConstants.MOVEAMOUNT);
             }
@@ -173,7 +171,7 @@ namespace MadScienceLab
         {
             facingDirection = FACING_LEFT;
             Rotate(0f, -90f, 0f);
-            charModel.PlayAnimation("Run");
+            charModel.PlayAnimation("Run",true,0f);
             Vector3 newPosition = Position + new Vector3(-movementAmount, 0, 0);
             Translate(newPosition);
         }
@@ -182,7 +180,7 @@ namespace MadScienceLab
         {
             facingDirection = FACING_RIGHT;
             Rotate(0f, 90f, 0f);
-            charModel.PlayAnimation("Run");
+            charModel.PlayAnimation("Run", true, 0f);
             Vector3 newPosition = Position + new Vector3(movementAmount,0, 0);
             Translate(newPosition);
         }
@@ -384,7 +382,7 @@ namespace MadScienceLab
 
         public void Stop()
         {
-            charModel.PlayAnimation("Idle");
+            charModel.PlayAnimation("Idle", true, 0f);
         }
 
         public void InteractWithObject()
