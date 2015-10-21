@@ -12,7 +12,7 @@ namespace MadScienceLab
         bool turretOn;
         GameConstants.DIRECTION direction;
         int elapsedFireTime = 0;
-        int firingDelay = 900;
+        int firingDelay = 9000;
 
         //List<LaserProjectile> projectiles = new List<LaserProjectile>();
         public void SetTurret(bool turretOn)
@@ -76,15 +76,7 @@ namespace MadScienceLab
             base.Rotate(0f, 270f, 0f);
         }
 
-        /*
-        public override void Draw(RenderContext renderContext)
-        {
-            foreach(LaserProjectile projectile in projectiles)
-            {
-                projectile.Draw(renderContext);
-            }
-            base.Draw(renderContext);
-        }*/
+
 
     }
 }

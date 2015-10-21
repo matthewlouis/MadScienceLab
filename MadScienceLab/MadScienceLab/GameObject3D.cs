@@ -62,6 +62,7 @@ namespace MadScienceLab
         public void SetHorizontalOffset(float horizontalOffset)
         {
             this.horizontalOffset = horizontalOffset;
+
         }
 
         public Matrix GetWorldMatrix()

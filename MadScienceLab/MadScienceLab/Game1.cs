@@ -112,6 +112,7 @@ namespace MadScienceLab
             font = Content.Load<SpriteFont>("Verdana");
             _renderContext.Level = basicLevel;
 
+            LevelBuilder.PopulateTypeList(_renderContext);
         }
 
         /// <summary>
@@ -181,6 +182,7 @@ namespace MadScienceLab
             spriteBatch.DrawString(font, "Box: " + brick.ToString(), new Vector2(50, 250), Color.Black);
             //spriteBatch.DrawString(font, boxHitState, new Vector2(50, 150), Color.Black);
             spriteBatch.DrawString(font, "Projectile: " + basicLevel.Children[basicLevel.Children.Count()-1].Hitbox.ToString(), new Vector2(50, 150), Color.Black);
+            spriteBatch.DrawString(font, "Player pos: " + player.Position.ToString(), new Vector2(50, 300), Color.Black);
             spriteBatch.End();
 
             // Spritebatch changes graphicsdevice values; sets the oringinal state

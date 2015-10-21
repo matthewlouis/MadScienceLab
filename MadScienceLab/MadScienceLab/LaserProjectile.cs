@@ -20,7 +20,7 @@ namespace MadScienceLab
             //SetHorizontalOffset(30);
             active = true;
             this.direction = direction;
-            isCollidable = true;
+            isCollidable = false ;
 
             SetDirection();
             
@@ -45,13 +45,15 @@ namespace MadScienceLab
         {
             if (direction == GameConstants.DIRECTION.pointLeft)
             {
-                SetHorizontalOffset(30);
+                //SetHorizontalOffset(30);
+                Position += new Vector3(-30,0,0);
                 base.TransVelocity = new Vector3(-GameConstants.PROJECTILE_X_VELOCITY,0f,0f);
             }
             else
                 if (direction == GameConstants.DIRECTION.pointRight)
                 {
-                    SetHorizontalOffset(-30);
+                    //SetHorizontalOffset(-30);
+                    Position += new Vector3(30, 0, 0);
                     base.TransVelocity = new Vector3(GameConstants.PROJECTILE_X_VELOCITY,0f,0f);
                 }
                 else
@@ -61,26 +63,45 @@ namespace MadScienceLab
         public void CheckProjectileCollision(RenderContext renderContext)
         {
             // if collision with player, handle
-            if(this.Hitbox.Intersects(renderContext.Player.Hitbox))
-                {
-                    active = false;
-                    TransVelocity = Vector3.Zero;
-                    renderContext.Player.SetHealth(GameConstants.PLAYER_DAMAGE);
-                }
-                Position += TransVelocity;
-            
-            /*
-            foreach (CellObject worldOject in renderContext.Level.Children)
+           /* if(this.Hitbox.Intersects(renderContext.Player.Hitbox))
             {
-                if (Hitbox.Intersects(worldOject.Hitbox) && worldOject.GetType() != typeof(LaserTurret))
-                    
+                active = false;
+                TransVelocity = Vector3.Zero;
+                renderContext.Player.SetHealth(GameConstants.PLAYER_DAMAGE);
+            }*/
+            
+            
+           
+            foreach (GameObject3D worldObject in renderContext.Level.gameObjects[typeof(Character)])
+            {
+                if (Hitbox.Intersects(worldObject.Hitbox) && worldObject.GetType() != typeof(LaserTurret))
                 {
                     active = false;
                     TransVelocity = Vector3.Zero;
                     renderContext.Player.SetHealth(GameConstants.PLAYER_DAMAGE);
                 }
-                Position += TransVelocity;
-            }*/
+            }
+
+            foreach (GameObject3D worldObject in renderContext.Level.gameObjects[typeof(BasicBlock)])
+            {
+                if (Hitbox.Intersects(worldObject.Hitbox) && worldObject.GetType() != typeof(LaserTurret))
+                {
+                    active = false;
+                    TransVelocity = Vector3.Zero;
+                }
+            }
+
+            foreach (GameObject3D worldObject in renderContext.Level.gameObjects[typeof(PickableBox)])
+            {
+                if (Hitbox.Intersects(worldObject.Hitbox) && worldObject.GetType() != typeof(LaserTurret))
+                {
+                    active = false;
+                    TransVelocity = Vector3.Zero;
+                    renderContext.Player.SetHealth(GameConstants.PLAYER_DAMAGE);
+                }
+            }
+            Position += TransVelocity;
+
         }
 
 

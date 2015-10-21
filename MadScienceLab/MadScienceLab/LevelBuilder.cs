@@ -14,7 +14,7 @@ namespace MadScienceLab
         static Door open, closed;
         static Button testButton;
         static ToggleSwitch testSwitch;
-
+        
         public static int levelwidth = 0;
         public static int startWall = 10;
         public static int startFloor = 1;
@@ -36,25 +36,39 @@ namespace MadScienceLab
              * d - door (open by default); D - door (closed by default) 
              * r - trapdoor (open by default); R - trapdoor (closed by default)
              * P - player; G - goal
+             * L - laser turret
              *   - empty space
              * 
              * In order to match trapdoors/doors with switches, can have at the end of the txt file the (row,col) coordinates of each of the paired objects to be linked, in the following format:
              * [row,col]:[row,col];
              * (It's either this, or not have simple characters for the properties ... I think I may prefer this, unless there is a tool that allows easy parsing of XML data or such.)
              */
-            string leveltxt = "XXXXXXXXXXXXXXXXXXXXXX\n"
-                            + "X                    X\n"
-                            + "XXXX                 X\n"
-                            + "X                    X\n"
-                            + "X                   XX\n"
-                            + "X       X        X  XX\n"
-                            + "X    X          X    X\n"
-                            + "XB              X    X\n"
-                            + "XXX         B   X    X\n"
-                            + "XL    S B   XXXXXX   X\n"
-                            + "X     XXXrrX  B      X\n"
-                            + "X PBT dD  D   B      X\n"
-                            + "XXXXXXXXXXXXXXXXXXXXXX\n";
+            /*string leveltxt = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
+                            + "X                           X\n"
+                            + "X                           X\n"
+                            + "X                B  B       X\n"
+                            + "X                        X  X\n"
+                            + "X       X                X  X\n"
+                            + "X               S  S   T X  X\n"
+                            + "X            XXXXXXXXXXXXX  X\n"
+                            + "X BBB        D TD  D     D  X\n"
+                            + "XB        XXXXXXXXXXXX   XXXX\n"
+                            + "X         XXX           XXXXX\n"
+                            + "XP        XXXT         XXXXXX\n"
+                            + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";*/
+            string leveltxt = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
+                            + "X                            X\n"
+                            + "X                           LX\n"
+                            + "X           XXXXXXXXXXXXXXXXXX\n"
+                            + "X     B  X        B  B    XXXX\n"
+                            + "XXXXXXXXXXXX              XXXX\n"
+                            + "X          XX   S  S   T  XXXX\n"
+                            + "X             XXXXXXXXXXXXXXXX\n"
+                            + "XXXXX        BD TD  D     D  X\n"
+                            + "XXT        XXXXXXXXXXXX   XXXX\n"
+                            + "XXX     X   XX           XXXXX\n"
+                            + "XXXB PX XX BXXT         XXXXXX\n"
+                            + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
 
             string backtxt  = "XXXXXXXXXXXXXXXXXXXXXX\n"
                             + "XT                   X\n"
@@ -72,8 +86,9 @@ namespace MadScienceLab
 
             //get object pairs (for links between switches and doors/boxes)
             // The format used to link buttons to doors "ButtonCoord linked to 1 or more DoorCoord" - Steven
-            string linktxt = "2:5|2:7&2:8\n"
-                           + "4:7|2:8";
+            string linktxt = ""/*"7:17|5:17\n"
+                           + "2:14|5:26\n"
+                           + "7:20|5:14&5:20"*/;
             Dictionary<string, int> _buttons = new Dictionary<string, int>();
             Dictionary<string, int> _doors = new Dictionary<string, int>();
 
@@ -110,7 +125,7 @@ namespace MadScienceLab
                         level.AddChild ( new BasicBlock ( col++, row ) );
                         break;
                     case 'L':
-                       level.AddChild(new LaserTurret(col++, row, true, GameConstants.DIRECTION.pointRight));
+                       level.AddChild(new LaserTurret(col++, row, true, GameConstants.DIRECTION.pointLeft));
                         //level.AddChild ( new Door ( col++, row, true ) ); //Starting open door
                         break;
                     case 'd':
@@ -212,6 +227,41 @@ namespace MadScienceLab
             }
 
             return level;
+        }
+
+        /// <summary>
+        /// Populates the gameObjects map of list of game objects by type.
+        /// </summary>
+        /// <param name="renderContext"></param>
+        public static void PopulateTypeList(RenderContext renderContext)
+        {
+            Dictionary<Type, List<GameObject3D>> gameObjects = new Dictionary<Type, List<GameObject3D>>();
+            //gameObjects.Add(typeof(PickableBox), new List<GameObject3D>()); //make a list of PickableBox
+            /*Type[] Types = { typeof(PickableBox), typeof(ToggleSwitch), typeof(Door), typeof(Button), typeof(BasicBlock), typeof(LaserTurret), typeof(Character) };
+            foreach (Type type in Types)
+            {
+            }*/
+            foreach (GameObject3D Child in renderContext.Level.Children)
+            {
+                if (!gameObjects.ContainsKey(Child.GetType())) //add any object types as found in the level
+                {
+                    gameObjects.Add(Child.GetType(), new List<GameObject3D>());
+                }
+                //foreach (Type type in Types)
+                //{
+                //    if (Child.GetType() == type)
+                //    {
+                //        gameObjects[type].Add(Child);
+                //        break;
+                //    }
+                //}
+                gameObjects[Child.GetType()].Add(Child);
+            }
+            //add anything that wasn't part of level.Children
+            gameObjects.Add(typeof(Character), new List<GameObject3D>());
+            gameObjects[typeof(Character)].Add(renderContext.Player);
+
+            renderContext.Level.gameObjects = gameObjects;
         }
         
     }
