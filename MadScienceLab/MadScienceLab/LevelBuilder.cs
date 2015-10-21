@@ -29,6 +29,7 @@ namespace MadScienceLab
             //read level from text file - width and height of level will depend on the text file's characters
             /*
              Legend:
+             * @ - Exit
              * B - box; 2 - box dropper with 2 boxes (and any other non-zero digit would be a box dropper with said # boxes); 
              * T - toggle switch (can repeatedly use); t - toggle switch (only can use once);
              * S - button switch
@@ -43,7 +44,22 @@ namespace MadScienceLab
              * [row,col]:[row,col];
              * (It's either this, or not have simple characters for the properties ... I think I may prefer this, unless there is a tool that allows easy parsing of XML data or such.)
              */
-            /*string leveltxt = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
+
+            string leveltxt = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
+                            + "X                           X\n"
+                            + "X                           X\n"
+                            + "X                2          X\n"
+                            + "X                        X  X\n"
+                            + "X       X                X  X\n"
+                            + "X               S  S   T X  X\n"
+                            + "X            XXXXXXXXXXXXX  X\n"
+                            + "X            D  D  D     D @X\n"
+                            + "X4        XXXXXXXXXXXX   XXXX\n"
+                            + "X         XXX           XXXXX\n"
+                            + "XP   T    XXXT         XXXXXX\n"
+                            + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
+
+            string backtxt =  "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
                             + "X                           X\n"
                             + "X                           X\n"
                             + "X                B  B       X\n"
@@ -51,44 +67,19 @@ namespace MadScienceLab
                             + "X       X                X  X\n"
                             + "X               S  S   T X  X\n"
                             + "X            XXXXXXXXXXXXX  X\n"
-                            + "X BBB        D TD  D     D  X\n"
+                            + "X BBB        D TD  D     D @X\n"
                             + "XB        XXXXXXXXXXXX   XXXX\n"
                             + "X         XXX           XXXXX\n"
                             + "XP        XXXT         XXXXXX\n"
-                            + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";*/
-            string leveltxt = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
-                            + "X                            X\n"
-                            + "X                           LX\n"
-                            + "X           XXXXXXXXXXXXXXXXXX\n"
-                            + "X     B  X        B  B    XXXX\n"
-                            + "XXXXXXXXXXXX              XXXX\n"
-                            + "X          XX   S  S   T  XXXX\n"
-                            + "X             XXXXXXXXXXXXXXXX\n"
-                            + "XXXXX        BD TD  D     D  X\n"
-                            + "XXT        XXXXXXXXXXXX   XXXX\n"
-                            + "XXX     X   XX           XXXXX\n"
-                            + "XXXB PX XX BXXT         XXXXXX\n"
-                            + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
-
-            string backtxt  = "XXXXXXXXXXXXXXXXXXXXXX\n"
-                            + "XT                   X\n"
-                            + "XXXX                 X\n"
-                            + "X                    X\n"
-                            + "X                    X\n"
-                            + "X       X        X111X\n"
-                            + "X    X          X1111X\n"
-                            + "XBS             X1111X\n"
-                            + "XXX         B   X1111X\n"
-                            + "X       B   XXXXXX111X\n"
-                            + "X     XXXrrX111111111X\n"
-                            + "X PBT 111111111111111X\n"
-                            + "XXXXXXXXXXXXXXXXXXXXXX\n";
+                            + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
 
             //get object pairs (for links between switches and doors/boxes)
             // The format used to link buttons to doors "ButtonCoord linked to 1 or more DoorCoord" - Steven
-            string linktxt = ""/*"7:17|5:17\n"
+            string linktxt = "7:20|5:17\n"
                            + "2:14|5:26\n"
-                           + "7:20|5:14&5:20"*/;
+                           + "7:17|5:14&5:20\n"
+                           + "2:6|4:2\n"
+                           + "7:24|10:18";
             Dictionary<string, int> _buttons = new Dictionary<string, int>();
             Dictionary<string, int> _doors = new Dictionary<string, int>();
 
@@ -117,7 +108,6 @@ namespace MadScienceLab
                         _buttons.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 'S':
-                        //testButton = new Button(col++, row);
                         level.AddChild ( new Button ( col++, row ) );
                         _buttons.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
@@ -126,11 +116,9 @@ namespace MadScienceLab
                         break;
                     case 'L':
                        level.AddChild(new LaserTurret(col++, row, true, GameConstants.DIRECTION.pointLeft));
-                        //level.AddChild ( new Door ( col++, row, true ) ); //Starting open door
+                       level.AddChild(new LaserTurret(col++, row, true));
                         break;
                     case 'd':
-                        //open = new Door(col++, row, true);
-                        //level.AddChild(open);
                         level.AddChild ( new Door ( col++, row, true ) ); //Starting open door
                         _doors.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
@@ -148,6 +136,9 @@ namespace MadScienceLab
                     case 'P':
                         level.PlayerPoint = new Point (col++, row); //set player position
                         break;
+                    case '@':
+                        level.AddChild(new ExitBlock(col++, row));
+                        break;
                     case 'G':
                         level.AddChild ( new BasicBlock ( col++, row ) );
                         break;
@@ -158,8 +149,11 @@ namespace MadScienceLab
                         col = startWall;
                         break;
                 }
-                if (c >= '1' && c <= '9') //BoxDropper case
-                    level.AddChild ( new BasicBlock ( col++, row )/*new BoxDropper(c - '0')*/ ); //replace BasicBlock with the actual BoxDropper once implemented
+                if (c >= '1' && c <= '9')
+                { //BoxDropper case
+                    level.AddChild(new BoxDropper(col++, row, c - '0')/*new BoxDropper(c - '0')*/ );
+                    _doors.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
+                }
             }
 
             // Interates through the link text to find buttons and their links to the doors - Steven
@@ -179,7 +173,7 @@ namespace MadScienceLab
                         foreach (string door in doors)
                         {
                             index = _doors[door];
-                            Door doorToAdd = (Door)level.Children[index];
+                            SwitchableObject doorToAdd = (SwitchableObject)level.Children[index];
                             button.LinkedDoors.Add(doorToAdd);
                         }
                     }else if(level.Children[index].GetType() == typeof(ToggleSwitch))
@@ -188,24 +182,13 @@ namespace MadScienceLab
                         foreach (string door in doors)
                         {
                             index = _doors[door];
-                            Door doorToAdd = (Door)level.Children[index];
+                            SwitchableObject doorToAdd = (SwitchableObject)level.Children[index];
                             toggleSwitch.LinkedDoors.Add(doorToAdd);
                         }
                     }
                 }
             }
-
-            //Matt- Button debug
-            //testButton.LinkedDoors.Add(open);
-            //testButton.LinkedDoors.Add(closed);
-            //testSwitch.AddChild(open);
-            //testSwitch.AddChild(closed);
-            //level.AddChild(open);
-            //level.AddChild(closed);
-            //level.AddChild(testButton);
-            //level.AddChild(testSwitch);
-            //End debug
-
+            
             /**DRAWS BACKGROUND**/
             row = startFloor + levelheight - 1;
             col = startWall; 
@@ -213,15 +196,45 @@ namespace MadScienceLab
             {
                 switch (c2) //convert char to level object at the coordinate iterated through
                 {
-                    case '1': //blue clay
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["clay_blue"]));
+                    case '1': //Bare Metal Gray
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["BareMetal_Gray"]));
+                        break;
+                    case '2': //Rounded Brushed Gray Metal
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["BrushedRoundMetal_Gray"]));
+                        break;
+                    case '3': //Textured Metal Floor Gray
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["MetalFloor_Gray"]));
+                        break;
+                    case '4': //Dirty Rusted Metal
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["DirtyMetal"]));
+                        break;
+                    case '5': //White Fiberglass
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Fiberglass_White"]));
+                        break;
+                    case '6': //Tile Blue
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_Blue"]));
+                        break;
+                    case '7': //Tile Beige
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_Beige"]));
+                        break;
+                    case '8': //Tile Multicolored
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_Fun"]));
+                        break;
+                    case '9': //Tile Gray
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_DarkGray"]));
+                        break;
+                    case '0': //Windowed Glass Blocks
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["WindowBlocks"]));
+                        break;
+                    case '@':
+                        col++;
                         break;
                     case '\n': //new line/row
                         row--;
                         col = startWall;
                         break;
                     default:
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["clay_white"]));
+                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_Gray"]));
                         break;
                 }
             }
@@ -264,5 +277,6 @@ namespace MadScienceLab
             renderContext.Level.gameObjects = gameObjects;
         }
         
+
     }
 }

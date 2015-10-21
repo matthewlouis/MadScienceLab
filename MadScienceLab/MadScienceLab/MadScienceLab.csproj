@@ -75,9 +75,11 @@
     <Compile Include="BackgroundBlock.cs" />
     <Compile Include="BaseCamera.cs" />
     <Compile Include="BasicBlock.cs" />
+    <Compile Include="BoxDropper.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="CellObject.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="ExitBlock.cs" />
     <Compile Include="GameConstants.cs" />
     <Compile Include="LaserProjectile.cs" />
     <Compile Include="PickableBox.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="RenderContext.cs" />
     <Compile Include="LaserTurret.cs" />
+    <Compile Include="SwitchableObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

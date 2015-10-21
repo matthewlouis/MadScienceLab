@@ -9,13 +9,13 @@ namespace MadScienceLab
 {
     class Button:CellObject
     {
-        public List<Door> LinkedDoors { get; set; }
+        public List<SwitchableObject> LinkedDoors { get; set; }
         public Boolean IsPressed { get; set; }
         private Boolean doorsToggled = false;
 
         public Button(int column, int row):base(column, row)
         {
-            LinkedDoors = new List<Door>();
+            LinkedDoors = new List<SwitchableObject>();
             base.Model = Game1._models["button"];
             base.isCollidable = true;
             base.IsPassable = true;
@@ -33,17 +33,17 @@ namespace MadScienceLab
             if (IsPressed && doorsToggled == false)
             {
                 doorsToggled = true;
-                foreach (Door door in LinkedDoors)
+                foreach (SwitchableObject door in LinkedDoors)
                 {
-                    door.Toggle();
+                    door.Toggle(renderContext);
                 }
             }
             else if (!IsPressed && doorsToggled == true)
             {
                 doorsToggled = false;
-                foreach (Door door in LinkedDoors)
+                foreach (SwitchableObject door in LinkedDoors)
                 {
-                    door.Toggle();
+                    door.Toggle(renderContext);
                 }
             }
             IsPressed = false; //button resets to up unless current pressed

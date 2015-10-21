@@ -84,21 +84,32 @@ namespace MadScienceLab
             // TODO: use this.Content to load your game content here
             //_models.Add("player", Content.Load<Model>("scientist"));
             _models.Add ( "BasicBlock", Content.Load<Model> ( "BasicBlock" ) );
+            _models.Add("BackgroundBlock", Content.Load<Model>("BackgroundBlock"));
             _models.Add("button", Content.Load<Model>("Button"));
             _models.Add("door", Content.Load<Model>("Door"));
             _models.Add("switch", Content.Load<Model>("Switch"));
             _models.Add("MoveableBox", Content.Load<Model>("MoveableBox"));
+            _models.Add("BlockDropper", Content.Load<Model>("BlockDropper"));
+            _models.Add("BlockDropper_Empty", Content.Load<Model>("BlockDropper_Empty"));
             _models.Add("block", Content.Load<Model>("block"));
             _models.Add("Turret", Content.Load<Model>("turret"));
             _models.Add("projectile", Content.Load<Model>("projectile"));
 
             _textures.Add("MoveableBox", Content.Load<Texture2D>("WoodPlanks_Color"));
-            _textures.Add("clay_blue", Content.Load<Texture2D>("blockTextures/clay_blue"));
-            _textures.Add("clay_cyan", Content.Load<Texture2D>("blockTextures/clay_cyan"));
-            _textures.Add("clay_silver", Content.Load<Texture2D>("blockTextures/clay_silver"));
-            _textures.Add("clay_white", Content.Load<Texture2D>("blockTextures/clay_white"));
-            _textures.Add("quartz", Content.Load<Texture2D>("blockTextures/quartz"));
-            _textures.Add("stone", Content.Load<Texture2D>("blockTextures/stone"));
+            _textures.Add("BlockDropper", Content.Load<Texture2D>("Textures/dropper"));
+            _textures.Add("BareMetal_Gray", Content.Load<Texture2D>("Textures/BareMetal_Gray"));
+            _textures.Add("BrushedRoundMetal_Gray", Content.Load<Texture2D>("Textures/BrushedRoundMetal_Gray"));
+            _textures.Add("DirtyMetal", Content.Load<Texture2D>("Textures/DirtyMetal"));
+            _textures.Add("Fiberglass_White", Content.Load<Texture2D>("Textures/Fiberglass_White"));
+            _textures.Add("MetalFloor_Gray", Content.Load<Texture2D>("Textures/MetalFloor_Gray"));
+            _textures.Add("Tile_Beige", Content.Load<Texture2D>("Textures/Tile_Beige_Half"));
+            _textures.Add("Tile_Blue", Content.Load<Texture2D>("Textures/Tile_Blue"));
+            _textures.Add("Tile_DarkGray", Content.Load<Texture2D>("Textures/Tile_DarkGray"));
+            _textures.Add("Tile_Gray", Content.Load<Texture2D>("Textures/Tile_Gray"));
+            _textures.Add("WindowBlocks", Content.Load<Texture2D>("Textures/WindowBlocks"));
+            _textures.Add("Tile_Fun", Content.Load<Texture2D>("Textures/Tile_Fun"));
+            _textures.Add("Exit", Content.Load<Texture2D>("Textures/EXIT"));
+            _textures.Add("Complete", Content.Load<Texture2D>("Textures/Complete"));
 
             //loads the basic level
             basicLevel = LevelBuilder.MakeBasicLevel ();
@@ -185,8 +196,15 @@ namespace MadScienceLab
             spriteBatch.DrawString(font, "Player pos: " + player.Position.ToString(), new Vector2(50, 300), Color.Black);
             spriteBatch.End();
 
+            if (_renderContext.Level.LevelOver)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(Game1._textures["Complete"], new Vector2(GraphicsDevice.Viewport.Width/2 - Game1._textures["Complete"].Width / 2, GraphicsDevice.Viewport.Height/2 - Game1._textures["Complete"].Height / 2), Color.White);
+                spriteBatch.End();
+            }
+            
             // Spritebatch changes graphicsdevice values; sets the oringinal state
-            GraphicsDevice.BlendState = BlendState.Opaque;
+            GraphicsDevice.BlendState = BlendState.AlphaBlend;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 

@@ -34,8 +34,8 @@ namespace MadScienceLab
         public CellObject(int column, int row)
         {
             //Calculate offset where object will be placed.
-            x = (GameConstants.SINGLE_CELL_SIZE * column) - (GameConstants.X_RESOLUTION / 2); // divde by 2 because 4 quadrants
-            y = (GameConstants.SINGLE_CELL_SIZE * row) - (GameConstants.Y_RESOLUTION / 2);
+            x = (GameConstants.SINGLE_CELL_SIZE * column) - (GameConstants.X_RESOLUTION / 2.0f); // divde by 2 because 4 quadrants
+            y = (GameConstants.SINGLE_CELL_SIZE * row) - (GameConstants.Y_RESOLUTION / 2.0f);
             CellNumber = new Point(column, row);
 
             //Place object on grid.
@@ -50,6 +50,15 @@ namespace MadScienceLab
         public CellObject(int column, int row, int zPosition):this(column, row)
         {
             Translate(x, y, zPosition);
+        }
+
+        //Overloaded Constructor for placing at exact coordinates
+        public CellObject(Vector2 coordinates)
+        {
+            //Place object on grid.
+            Translate(coordinates.X,coordinates.Y, zPosition);
+            TransVelocity = new Vector3(0, 0, 0);
+            TransAccel = new Vector3(0, 0, 0);
         }
 
         //Will need to override update to move hitbox as well.
@@ -75,6 +84,7 @@ namespace MadScienceLab
                         renderContext.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
                         effect.Texture = Texture;
                         effect.TextureEnabled = true;
+             
                     }
 
                     effect.View = renderContext.Camera.View;

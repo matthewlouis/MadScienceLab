@@ -1,0 +1,24 @@
+
+//physics for Jacob's level to work
+/*
+        public override Rectangle Hitbox
+        {
+            get
+            {
+                if (interactState == InteractState.CompletedPickup) //new hitbox if currently carrying a box
+                {
+                    return new Rectangle((int)StoredBox.Position.X+StoredBox.HitboxWidth/4, (int)Position.Y, HitboxWidth/2, HitboxHeight + StoredBox.HitboxHeight);
+                }
+                return new Rectangle((int)this.Position.X + HitboxWidth / 4, (int)Position.Y, HitboxWidth / 2, HitboxHeight/2);
+                return base.Hitbox;
+            }
+        }
+        public Rectangle CharacterHitbox
+        {
+            get
+            {
+                return new Rectangle((int)this.Position.X + HitboxWidth / 4, (int)Position.Y, HitboxWidth / 2, HitboxHeight/2);
+                return base.Hitbox;
+            }
+        //gravity is 30*cell size
+		//jump velocity is 9*cell size
