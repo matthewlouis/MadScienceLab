@@ -21,11 +21,10 @@ namespace MadScienceLab
             base.isCollidable = true;
             base.IsPassable = true;
             Toggleable = toggleable;
-            Rotate(0f, 90f, 0);
-            Translate(Position.X, Position.Y - GameConstants.SINGLE_CELL_SIZE / 2 + 1, Position.Z); //Matt: this is for offsetting the model position so it's flat on the floor
+            Translate(Position.X, Position.Y - GameConstants.SINGLE_CELL_SIZE / 2, Position.Z); //Matt: this is for offsetting the model position so it's flat on the floor
 
-            // Provides a hitbox for the block - Steven
-            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
+            // Matt- Steven's code for auto-calculating hitbox not working for this, so I've hardcoded it here.
+            HitboxHeight = HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
         }
 
         public void FlickSwitch()
@@ -46,6 +45,8 @@ namespace MadScienceLab
         {
             if (IsSwitched && doorsToggled == false)
             {
+                Scale(-1f, 1f, 1f); //FLIP MODEL
+
                 doorsToggled = true;
                 foreach (SwitchableObject door in LinkedDoors)
                 {
@@ -54,6 +55,8 @@ namespace MadScienceLab
             }
             else if (!IsSwitched && doorsToggled == true)
             {
+                Scale(1f, 1f, 1f); //FLIP MODEL BACK
+
                 doorsToggled = false;
                 foreach (SwitchableObject door in LinkedDoors)
                 {
@@ -65,7 +68,17 @@ namespace MadScienceLab
 
         public override void Draw(RenderContext renderContext)
         {
-            base.Draw(renderContext);
+            if (IsSwitched)
+            {
+                RasterizerState prevState = renderContext.GraphicsDevice.RasterizerState;
+                RasterizerState state = new RasterizerState();
+                state.CullMode = CullMode.None;
+                renderContext.GraphicsDevice.RasterizerState = state;
+                base.Draw(renderContext);
+                renderContext.GraphicsDevice.RasterizerState = prevState;
+            }else
+                base.Draw(renderContext);
+
         }
     }
 }

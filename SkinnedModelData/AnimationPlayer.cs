@@ -74,7 +74,7 @@ namespace SkinnedModelData
         /// <summary>
         /// Starts decoding the specified animation clip.
         /// </summary>
-        public void StartClip(AnimationClip clip, bool loop = true, float blendTime = 0f)
+        public void StartClip(AnimationClip clip, bool loop, float blendTime)
         {
             if(IsPauzed)
             {
