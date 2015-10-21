@@ -25,7 +25,7 @@ namespace MadScienceLab
         public Enemy(int column, int row)
             : base(column, row)
         {
-            base.Model = Game1._models["door"];
+            base.Model = Game1._models["block"];
             base.isCollidable = true;
 
             // Provides a hitbox for the block - Steven

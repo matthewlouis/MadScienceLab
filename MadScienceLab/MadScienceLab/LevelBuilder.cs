@@ -49,7 +49,7 @@ namespace MadScienceLab
                             + "X            XXXXXXXXXXXXX  X\n"
                             + "X            D  D  D     D @X\n"
                             + "X4        XXXXXXXXXXXX   XXXX\n"
-                            + "X         XXX           XXXXX\n"
+                            + "X       E XXX           XXXXX\n"
                             + "XP   T    XXXT         XXXXXX\n"
                             + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
 
