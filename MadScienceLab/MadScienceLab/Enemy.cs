@@ -59,6 +59,7 @@ namespace MadScienceLab
         {
             foreach (CellObject levelObject in renderContext.Level.Children)
             {
+
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
                     /**Determining what side was hit**/
@@ -67,6 +68,15 @@ namespace MadScienceLab
                     float hx = (Hitbox.Height + levelObject.Hitbox.Height)
                              * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
 
+                    if (movestate)
+                    {
+                        MoveLeft(GameConstants.MOVEAMOUNT);
+
+                    }
+                    else
+                    {
+                        MoveRight(GameConstants.MOVEAMOUNT);
+                    }
 
                     if (wy > hx)
                     {                      
@@ -78,26 +88,15 @@ namespace MadScienceLab
                         //boxHitState = "Box Right";// right
                         movestate = true;
                     }
-                    else
-                    {
-                        if(movestate)
-                        {
-                            MoveLeft(GameConstants.MOVEAMOUNT);
 
-                        }else
-                        {
-                            MoveRight(GameConstants.MOVEAMOUNT);
-                        }
-                        
-                    }
+
                    
                 }
 
-                    }
-                    
-                }
-            }
+            }       
         }
+    }
+}
 
     
 

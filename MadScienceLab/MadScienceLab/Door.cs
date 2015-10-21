@@ -14,12 +14,14 @@ namespace MadScienceLab
         {
             base.Model = Game1._models["door"];
             base.isCollidable = true;
-            base.Rotate(0f, 90f, 0f);
 
             this.isOpen = isOpen;
-            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), true, true);
+            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
+
+            HitboxWidthOffset = GameConstants.SINGLE_CELL_SIZE / 2;
         }
 
+        //Makes door unCollidable when open
         public override void Update(RenderContext renderContext)
         {
             
@@ -34,6 +36,7 @@ namespace MadScienceLab
             base.Update(renderContext);
         }
 
+        //Opens or closes the door depending on current state
         public override void Toggle(RenderContext renderContext)
         {
             if (isOpen)

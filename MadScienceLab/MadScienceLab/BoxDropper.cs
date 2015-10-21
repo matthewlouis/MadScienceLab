@@ -17,7 +17,7 @@ namespace MadScienceLab
         {
             this.row = row;
             this.column = column;
-            base.Model = Game1._models["BasicBlock"];
+            base.Model = Game1._models["BlockDropper"];
             NumberOfBoxes = numberOfBoxes;
         }
 
@@ -27,10 +27,14 @@ namespace MadScienceLab
             if (NumberOfBoxes > 0)
             {
                 //Creates new PickableBox underneath dropper.
-                PickableBox newBox = new PickableBox(new Vector2(this.Position.X, this.Position.Y-GameConstants.SINGLE_CELL_SIZE));
+                PickableBox newBox = new PickableBox(new Vector2(this.Position.X, this.Position.Y - GameConstants.SINGLE_CELL_SIZE));
                 renderContext.Level.AddChild(newBox);
                 NumberOfBoxes--;
             }
+            
+            //Show the model as empty if so.
+            if(NumberOfBoxes == 0)
+                base.Model = Game1._models["BlockDropper_Empty"];
         }
     }
 }

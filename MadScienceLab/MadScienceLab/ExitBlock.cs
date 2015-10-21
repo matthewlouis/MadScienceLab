@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
 
 namespace MadScienceLab
 {
-    class BackgroundBlock:CellObject
+    class ExitBlock:CellObject
     {
-        public BackgroundBlock(int row, int column, Texture2D texture)
+        public ExitBlock(int row, int column)
             : base(row, column, -GameConstants.SINGLE_CELL_SIZE) //calls overloaded cellobject constructor and places in background
         {
             base.Model = Game1._models["BackgroundBlock"];
             Scale(48f, 48f, 48f);
-            this.Texture = texture;
+            Rotate(90f, 0f, 0f);
+            this.Texture = Game1._textures["Exit"];
+            isCollidable = true;
         }
     }
 }

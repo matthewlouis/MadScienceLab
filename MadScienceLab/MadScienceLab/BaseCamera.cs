@@ -60,8 +60,8 @@ namespace MadScienceLab
             followTarget = target;
             //placed here in order to be after the levelbuilder variables are set in Game1 - that's the only reason
             xLeftWall = (GameConstants.SINGLE_CELL_SIZE * LevelBuilder.startWall) - (GameConstants.X_RESOLUTION / 2);
-            xRightWall = (GameConstants.SINGLE_CELL_SIZE * (LevelBuilder.levelwidth + LevelBuilder.startWall)) - (GameConstants.X_RESOLUTION / 2);
-            yFloor = (GameConstants.SINGLE_CELL_SIZE * LevelBuilder.startFloor) - (GameConstants.Y_RESOLUTION / 2);
+            xRightWall = (GameConstants.SINGLE_CELL_SIZE * (LevelBuilder.levelwidth - 1 + LevelBuilder.startWall)) - (GameConstants.X_RESOLUTION / 2);
+            yFloor = (GameConstants.SINGLE_CELL_SIZE * (LevelBuilder.startFloor+1)) - (GameConstants.Y_RESOLUTION / 2);
         }
 
         public Character getFollowTarget()
@@ -71,7 +71,7 @@ namespace MadScienceLab
         
         private void CameraFollow(Character character)
         {
-            if (followTarget.Position.Y <= yFloor+bottomSideCollsion)
+            if (followTarget.Position.Y <= yFloor + bottomSideCollsion)
             {
                 Position = new Vector3(Position.X, yFloor + bottomSideCollsion, Position.Z);
             }
@@ -88,7 +88,7 @@ namespace MadScienceLab
             {
                 Position = new Vector3(Position.X, followTarget.Position.Y - topSideCollsion + bottomSideCollsion, Position.Z);
             }
-            
+
             if (followTarget.Position.X <= xLeftWall + leftSideCollsion)
             {
                 Position = new Vector3(xLeftWall + leftSideCollsion, Position.Y, Position.Z);
@@ -101,6 +101,7 @@ namespace MadScienceLab
             {
                 Position = new Vector3(followTarget.Position.X, Position.Y, Position.Z);
             }
+
 
         }
     }
