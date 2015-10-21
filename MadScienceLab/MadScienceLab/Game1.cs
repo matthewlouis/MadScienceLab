@@ -32,6 +32,7 @@ namespace MadScienceLab
         public static Dictionary<String, Texture2D> _textures = new Dictionary<string, Texture2D>();
 
         Character player;
+        Enemy enemy;
         
         // Debugging - Steven
         private String boxHitState = "";
@@ -87,7 +88,7 @@ namespace MadScienceLab
             _models.Add("BackgroundBlock", Content.Load<Model>("BackgroundBlock"));
             _models.Add("button", Content.Load<Model>("Button"));
             _models.Add("door", Content.Load<Model>("Door"));
-            _models.Add("switch", Content.Load<Model>("Switch"));
+            _models.Add("switch", Content.Load<Model>("ToggleSwitch"));
             _models.Add("MoveableBox", Content.Load<Model>("MoveableBox"));
             _models.Add("BlockDropper", Content.Load<Model>("BlockDropper"));
             _models.Add("BlockDropper_Empty", Content.Load<Model>("BlockDropper_Empty"));

@@ -55,7 +55,7 @@ namespace MadScienceLab
                             + "X            XXXXXXXXXXXXX  X\n"
                             + "X            D  D  D     D @X\n"
                             + "X4        XXXXXXXXXXXX   XXXX\n"
-                            + "X         XXX           XXXXX\n"
+                            + "X       E XXX           XXXXX\n"
                             + "XP   T    XXXT         XXXXXX\n"
                             + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
 
@@ -95,6 +95,9 @@ namespace MadScienceLab
                 {
                     case ' ':
                         col++;
+                        break;
+                    case 'E':
+                        level.AddChild(new Enemy(col++, row)); 
                         break;
                     case 'B':
                         level.AddChild ( new PickableBox ( col++, row ) ); //replace BasicBlock with the actual object once implemented
