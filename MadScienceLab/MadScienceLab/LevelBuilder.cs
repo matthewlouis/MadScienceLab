@@ -47,15 +47,15 @@ namespace MadScienceLab
 
             string leveltxt = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
                             + "X                           X\n"
-                            + "X                           X\n"
-                            + "X                2          X\n"
-                            + "X                        X  X\n"
+                            + "X                          LX\n"
+                            + "X             XXX2XXXXXXXXXXX\n"
+                            + "X            XXXX        X  X\n"
                             + "X       X                X  X\n"
-                            + "X               S  S   T X  X\n"
+                            + "XXXXXXXXXXX     S  S   T X  X\n"
                             + "X            XXXXXXXXXXXXX  X\n"
                             + "X            D  D  D     D @X\n"
                             + "X4        XXXXXXXXXXXX   XXXX\n"
-                            + "X       E XXX           XXXXX\n"
+                            + "X         XXX           XXXXX\n"
                             + "XP   T    XXXT         XXXXXX\n"
                             + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
 
@@ -119,7 +119,7 @@ namespace MadScienceLab
                         break;
                     case 'L':
                        level.AddChild(new LaserTurret(col++, row, true, GameConstants.DIRECTION.pointLeft));
-                       level.AddChild(new LaserTurret(col++, row, true));
+                       
                         break;
                     case 'd':
                         level.AddChild ( new Door ( col++, row, true ) ); //Starting open door
@@ -253,10 +253,11 @@ namespace MadScienceLab
         {
             Dictionary<Type, List<GameObject3D>> gameObjects = new Dictionary<Type, List<GameObject3D>>();
             //gameObjects.Add(typeof(PickableBox), new List<GameObject3D>()); //make a list of PickableBox
-            /*Type[] Types = { typeof(PickableBox), typeof(ToggleSwitch), typeof(Door), typeof(Button), typeof(BasicBlock), typeof(LaserTurret), typeof(Character) };
-            foreach (Type type in Types)
-            {
-            }*/
+            //Type[] Types = { typeof(PickableBox), typeof(ToggleSwitch), typeof(Door), typeof(Button), typeof(BasicBlock), typeof(LaserTurret), typeof(Character) };
+            //foreach (Type type in Types)
+            //{
+            //    gameObjects.Add(type);
+            //}
             foreach (GameObject3D Child in renderContext.Level.Children)
             {
                 if (!gameObjects.ContainsKey(Child.GetType())) //add any object types as found in the level

@@ -97,7 +97,6 @@ namespace MadScienceLab
                 {
                     active = false;
                     TransVelocity = Vector3.Zero;
-                    renderContext.Player.SetHealth(GameConstants.PLAYER_DAMAGE);
                 }
             }
             Position += TransVelocity;

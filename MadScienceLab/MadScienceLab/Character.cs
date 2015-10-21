@@ -48,6 +48,9 @@ namespace MadScienceLab
             health -= damage;
         }
         public int GetHealth()
+        {
+            return health;
+        }
 
 /*        public override Rectangle HitboxF
         {
@@ -59,12 +62,14 @@ namespace MadScienceLab
                 }
                 return base.Hitbox;
             }
-        }*/
+        }
+
+
         public Rectangle CharacterHitbox
 
         {
             return health;
-        }
+        }*/
 
 
         public Character(int startRow, int startCol):base(startRow, startCol)
