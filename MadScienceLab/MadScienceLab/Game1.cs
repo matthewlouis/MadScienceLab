@@ -89,6 +89,7 @@ namespace MadScienceLab
             _models.Add("switch", Content.Load<Model>("Switch"));
             _models.Add("MoveableBox", Content.Load<Model>("MoveableBox"));
             _models.Add("BlockDropper", Content.Load<Model>("BlockDropper"));
+            _models.Add("BlockDropper_Empty", Content.Load<Model>("BlockDropper_Empty"));
             _models.Add("block", Content.Load<Model>("block"));
             _models.Add("Turret", Content.Load<Model>("turret"));
 
@@ -105,6 +106,8 @@ namespace MadScienceLab
             _textures.Add("Tile_Gray", Content.Load<Texture2D>("Textures/Tile_Gray"));
             _textures.Add("WindowBlocks", Content.Load<Texture2D>("Textures/WindowBlocks"));
             _textures.Add("Tile_Fun", Content.Load<Texture2D>("Textures/Tile_Fun"));
+            _textures.Add("Exit", Content.Load<Texture2D>("Textures/EXIT"));
+            _textures.Add("Complete", Content.Load<Texture2D>("Textures/Complete"));
 
             //loads the basic level
             basicLevel = LevelBuilder.MakeBasicLevel ();
@@ -187,6 +190,13 @@ namespace MadScienceLab
             spriteBatch.DrawString(font, boxHitState, new Vector2(50, 150), Color.Black);
             spriteBatch.End();*/
 
+            if (_renderContext.Level.LevelOver)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(Game1._textures["Complete"], new Vector2(GraphicsDevice.Viewport.Width/2 - Game1._textures["Complete"].Width / 2, GraphicsDevice.Viewport.Height/2 - Game1._textures["Complete"].Height / 2), Color.White);
+                spriteBatch.End();
+            }
+            
             // Spritebatch changes graphicsdevice values; sets the oringinal state
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;

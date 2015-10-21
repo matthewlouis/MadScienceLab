@@ -20,6 +20,8 @@ namespace MadScienceLab
 
         GameAnimatedModel charModel;
 
+        bool gameOver = false; //DEBUG- for presentation only
+
         //properties used for picking up a box
         public CellObject InteractiveObj { get; set; }
         public CellObject AdjacentObj { get; set; }
@@ -39,7 +41,7 @@ namespace MadScienceLab
         private bool jumping;
         private Boolean collisionJumping = false;
 
-/*        public override Rectangle Hitbox
+/*        public override Rectangle HitboxF
         {
             get
             {
@@ -478,6 +480,12 @@ namespace MadScienceLab
             {
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
+                    //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
+                    if (levelObject.GetType() == typeof(ExitBlock))
+                    {
+                        renderContext.Level.LevelOver = true;
+                    }
+
                     /**Determining what side was hit**/
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
                              * (((levelObject.Hitbox.Y + levelObject.Hitbox.Height) / 2) - (Hitbox.Y + Hitbox.Height) / 2);
