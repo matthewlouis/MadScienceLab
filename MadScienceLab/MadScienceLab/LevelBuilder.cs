@@ -38,6 +38,7 @@ namespace MadScienceLab
              * [row,col]:[row,col];
              * (It's either this, or not have simple characters for the properties ... I think I may prefer this, unless there is a tool that allows easy parsing of XML data or such.)
              */
+
             string leveltxt = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
                             + "X                           X\n"
                             + "X                           X\n"
@@ -48,7 +49,7 @@ namespace MadScienceLab
                             + "X            XXXXXXXXXXXXX  X\n"
                             + "X            D  D  D     D @X\n"
                             + "X4        XXXXXXXXXXXX   XXXX\n"
-                            + "X         XXX           XXXXX\n"
+                            + "X       E XXX           XXXXX\n"
                             + "XP   T    XXXT         XXXXXX\n"
                             + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
 
@@ -88,6 +89,9 @@ namespace MadScienceLab
                 {
                     case ' ':
                         col++;
+                        break;
+                    case 'E':
+                        level.AddChild(new Enemy(col++, row)); 
                         break;
                     case 'B':
                         level.AddChild ( new PickableBox ( col++, row ) ); //replace BasicBlock with the actual object once implemented
