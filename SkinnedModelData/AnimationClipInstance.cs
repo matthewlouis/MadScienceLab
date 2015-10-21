@@ -33,7 +33,7 @@ namespace SkinnedModelData
         }
 
 
-        public void SetAnimationClip(AnimationClip clip, bool isLooped = true)
+        public void SetAnimationClip(AnimationClip clip, bool isLooped)
         {
             Clip = clip;
             IsLooped = isLooped;
