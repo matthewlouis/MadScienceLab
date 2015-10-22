@@ -15,17 +15,19 @@ using System.Collections;
 
 namespace MadScienceLab
 {
-    class Enemy : CellObject
+    class MovingPlatform : CellObject
     {
         const int FACING_LEFT = 1, FACING_RIGHT = 2;
         byte facingDirection = FACING_RIGHT;
 
-        bool movingLeft = false;
+        float maxDistance = 4 * GameConstants.SINGLE_CELL_SIZE;
+        float currDistance = 0;
+        public bool movingLeft = false;
 
-        public Enemy(int column, int row)
+        public MovingPlatform(int column, int row)
             : base(column, row)
         {
-            base.Model = Game1._models["block"];
+            base.Model = Game1._models["BasicBlock"];
             base.isCollidable = true;
 
             // Provides a hitbox for the block - Steven
@@ -35,7 +37,11 @@ namespace MadScienceLab
         public override void Update(RenderContext renderContext)
         {
             CheckEnemyBoxCollision(renderContext);
-
+            if (currDistance > maxDistance)
+            {
+                movingLeft = !movingLeft;
+                currDistance = 0;
+            }
             base.Update(renderContext);
         }
 
@@ -44,6 +50,7 @@ namespace MadScienceLab
             facingDirection = FACING_LEFT;
             Rotate(0f, -90f, 0f);
             Vector3 newPosition = Position + new Vector3(-movementAmount, 0, 0);
+            currDistance += movementAmount;
             Translate(newPosition);
         }
 
@@ -52,6 +59,7 @@ namespace MadScienceLab
             facingDirection = FACING_RIGHT;
             Rotate(0f, 90f, 0f);
             Vector3 newPosition = Position + new Vector3(movementAmount, 0, 0);
+            currDistance += movementAmount;
             Translate(newPosition);
         }
 
@@ -82,11 +90,13 @@ namespace MadScienceLab
                     {                      
                         //boxHitState = "Box Left";// left
                         movingLeft = false;
+                        currDistance = 0;
                     }
                     if (wy > -hx)
                     {
                         //boxHitState = "Box Right";// right
                         movingLeft = true;
+                        currDistance = 0;
                     }
 
 

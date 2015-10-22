@@ -182,17 +182,17 @@ namespace MadScienceLab
             oldGamePadState = currentGamePadState;
         }
 
-        public override Rectangle Hitbox
-        {
-            get
-            {
-                if (interactState == InteractState.CompletedPickup) //new hitbox if currently carrying a box
-                {
-                    return new Rectangle((int)StoredBox.Position.X, (int)Position.Y, HitboxWidth, HitboxHeight + StoredBox.HitboxHeight);
-                }
-                return base.Hitbox;
-            }
-        }
+        //public override Rectangle Hitbox
+        //{
+        //    get
+        //    {
+        //        if (interactState == InteractState.CompletedPickup) //new hitbox if currently carrying a box
+        //        {
+        //            return new Rectangle((int)StoredBox.Position.X, (int)Position.Y, HitboxWidth, HitboxHeight + StoredBox.HitboxHeight);
+        //        }
+        //        return base.Hitbox;
+        //    }
+        //}
         public Rectangle CharacterHitbox
         {
             get
@@ -567,6 +567,14 @@ namespace MadScienceLab
                                 if (!collisionJumping)
                                     TransVelocity = Vector3.Zero;
                                 jumping = false;
+                                /*
+                                if(levelObject.GetType() == typeof(MovingPlatform)) //move player along the platform
+                                {
+                                    if(((MovingPlatform)levelObject).movingLeft)
+                                        Position += new Vector3(-GameConstants.MOVEAMOUNT, 0, 0);
+                                    else
+                                        Position += new Vector3(GameConstants.MOVEAMOUNT, 0, 0);
+                                }*/
                             }
                         }
                     }
