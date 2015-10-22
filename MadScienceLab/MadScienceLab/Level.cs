@@ -12,6 +12,7 @@ namespace MadScienceLab
         public Dictionary<Type, List<GameObject3D>> gameObjects;
         public bool LevelOver { get; set; }
         public bool GameOver { get; set; }
+
         Type[] types;
 
         public void LoadContent()
@@ -24,6 +25,7 @@ namespace MadScienceLab
             }
             this.types = types;
         }
+
 
         public override void Update(RenderContext renderContext)
         {
@@ -40,6 +42,11 @@ namespace MadScienceLab
         {
             gameObjects.Clear();
             foreach (Type type in types)
+
+            Dictionary<Type, List<GameObject3D>> gameObjects = new Dictionary<Type, List<GameObject3D>>();
+            //gameObjects.Add(typeof(PickableBox), new List<GameObject3D>()); //make a list of PickableBox
+            Type[] Types = { typeof(PickableBox), typeof(ToggleSwitch), typeof(Door), typeof(Button), typeof(BasicBlock), typeof(LaserTurret), typeof(Character) };
+            foreach (Type type in Types)
             {
                 gameObjects.Add(type, new List<GameObject3D>());
             }
@@ -53,6 +60,7 @@ namespace MadScienceLab
             }
             gameObjects[typeof(Character)].Add(renderContext.Player);
 
+            this.gameObjects = gameObjects;
         }
     }
 }

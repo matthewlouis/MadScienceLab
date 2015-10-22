@@ -182,6 +182,7 @@ namespace MadScienceLab
 
         public virtual void CheckCollision(Level level)
         {
+
             foreach (CellObject levelObject in level.Children)
             {
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox) && levelObject != this)

@@ -193,6 +193,7 @@ namespace MadScienceLab
         //        return base.Hitbox;
         //    }
         //}
+
         public Rectangle CharacterHitbox
         {
             get
@@ -513,6 +514,7 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         private void CheckPlayerBoxCollision(RenderContext renderContext)
         {
+
             foreach (CellObject levelObject in renderContext.Level.Children)
             {
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
@@ -529,8 +531,7 @@ namespace MadScienceLab
                     float hx = (Hitbox.Height + levelObject.Hitbox.Height)
                              * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
 
-                    Button tmpButton = levelObject as Button;
-                    if (tmpButton != null) //if it is a button
+                    if (levelObject.GetType() == typeof(Button)) //if it is a button
                     {
                         Button button = (Button)levelObject as Button;
                         button.IsPressed = true;

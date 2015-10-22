@@ -38,12 +38,17 @@ namespace MadScienceLab
         private String boxHitState = "";
         SpriteFont font;
         private Rectangle brick;
+
+        //Debugging - FPS - Matt
+        private FPSCounter fpsCount;
         
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             this.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
+
+            Components.Add(new FPSCounter(this, _renderContext));
 
             Window.Title = "Group_Project";
             graphics.PreferredBackBufferWidth = GameConstants.X_RESOLUTION;
@@ -65,6 +70,9 @@ namespace MadScienceLab
             _camera = new BaseCamera();
             _camera.Translate(new Vector3(0, 0, 10));
             _renderContext.Camera = _camera;
+
+            //init fps counter
+            fpsCount = new FPSCounter(this, _renderContext);
 
             base.Initialize();
         }
@@ -127,6 +135,9 @@ namespace MadScienceLab
             _renderContext.Level = basicLevel;
 
             basicLevel.PopulateTypeList(_renderContext);
+
+            //load fps count content
+            fpsCount.LoadContent(Content);
         }
 
         /// <summary>
@@ -168,6 +179,10 @@ namespace MadScienceLab
                 basicLevel.LoadContent();
             }
 
+
+                basicLevel.PopulateTypeList(_renderContext);
+            }
+
             if (!basicLevel.GameOver && !basicLevel.LevelOver)
             {
                 _renderContext.GameTime = gameTime;
@@ -193,6 +208,9 @@ namespace MadScienceLab
                 _camera.Update(_renderContext);
                 basicLevel.Update(_renderContext);
                 player.Update(_renderContext);
+
+                //fps debug
+                fpsCount.Update(gameTime);
 
                 base.Update(gameTime);
             }
@@ -233,11 +251,15 @@ namespace MadScienceLab
                 spriteBatch.Draw(Game1._textures["GameOver"], new Vector2(GraphicsDevice.Viewport.Width / 2 - Game1._textures["GameOver"].Width / 2, GraphicsDevice.Viewport.Height / 2 - Game1._textures["GameOver"].Height / 2), Color.White);
                 spriteBatch.End();
             }
+
+            fpsCount.Draw(gameTime);
             
             // Spritebatch changes graphicsdevice values; sets the oringinal state
             GraphicsDevice.BlendState = BlendState.AlphaBlend;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+
+            
 
             base.Draw(gameTime);
         }

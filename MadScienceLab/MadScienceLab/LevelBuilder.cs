@@ -83,6 +83,8 @@ namespace MadScienceLab
                            + "7:24|10:18\n"
                            + "6:2|10:18\n"
                            + "10:8|13:13";
+
+
             Dictionary<string, int> _buttons = new Dictionary<string, int>();
             Dictionary<string, int> _doors = new Dictionary<string, int>();
 

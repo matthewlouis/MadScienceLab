@@ -64,6 +64,7 @@ namespace MadScienceLab
                 //projectiles.Add(new LaserProjectile(CellNumber.X, CellNumber.Y, direction));
                 renderContext.Level.AddChild(new LaserProjectile(CellNumber.X, CellNumber.Y, direction));
             }
+
         }
 
         public void RotateLeft()
@@ -75,8 +76,6 @@ namespace MadScienceLab
         {
             base.Rotate(0f, 270f, 0f);
         }
-
-
 
     }
 }

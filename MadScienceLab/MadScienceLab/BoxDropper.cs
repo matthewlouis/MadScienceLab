@@ -21,6 +21,7 @@ namespace MadScienceLab
             NumberOfBoxes = numberOfBoxes;
             isCollidable = true;
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
+
         }
 
         //Drops a box
