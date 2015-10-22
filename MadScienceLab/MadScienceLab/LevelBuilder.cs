@@ -10,6 +10,11 @@ namespace MadScienceLab
 
     public class LevelBuilder
     {
+        //MATT- DEBUG STUFF
+        static Door open, closed;
+        static Button testButton;
+        static ToggleSwitch testSwitch;
+        
         public static int levelwidth = 0;
         public static int startWall = 10;
         public static int startFloor = 1;
@@ -32,6 +37,7 @@ namespace MadScienceLab
              * d - door (open by default); D - door (closed by default) 
              * r - trapdoor (open by default); R - trapdoor (closed by default)
              * P - player; G - goal
+             * L - laser turret
              *   - empty space
              * 
              * In order to match trapdoors/doors with switches, can have at the end of the txt file the (row,col) coordinates of each of the paired objects to be linked, in the following format:
@@ -41,16 +47,16 @@ namespace MadScienceLab
 
             string leveltxt = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
                             + "X                           X\n"
-                            + "X                           X\n"
-                            + "X                2          X\n"
-                            + "X                        X  X\n"
-                            + "X       X                X  X\n"
-                            + "X               S  S   T X  X\n"
+                            + "X                          LX\n"
+                            + "X         XXXXXXX2XXXXXXXXXXX\n"
+                            + "X      X                 X  X\n"
+                            + "X E     X                X  X\n"
+                            + "XXXXXXXXXXX     S  S   T X  X\n"
                             + "X            XXXXXXXXXXXXX  X\n"
-                            + "X            D  D  D     D @X\n"
-                            + "X4        XXXXXXXXXXXX   XXXX\n"
-                            + "X       E XXX           XXXXX\n"
-                            + "XP   T    XXXT         XXXXXX\n"
+                            + "XXX3X        D  D  D     D @X\n"
+                            + "XT        XXXXXXXXXXXX   XXXX\n"
+                            + "XX        XXX           XXXXX\n"
+                            + "XX  P T  BXXXT         XXXXXX\n"
                             + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
 
             string backtxt =  "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
@@ -71,8 +77,9 @@ namespace MadScienceLab
             // The format used to link buttons to doors "ButtonCoord linked to 1 or more DoorCoord" - Steven
             string linktxt = "7:20|5:17\n"
                            + "2:14|5:26\n"
-                           + "7:17|5:14&5:20\n"
-                           + "2:6|4:2\n"
+                           + "7:17|5:14\n"
+                           + "2:7|5:4\n"
+                           + "4:2|5:20\n"
                            + "7:24|10:18";
             Dictionary<string, int> _buttons = new Dictionary<string, int>();
             Dictionary<string, int> _doors = new Dictionary<string, int>();
@@ -112,7 +119,8 @@ namespace MadScienceLab
                         level.AddChild ( new BasicBlock ( col++, row ) );
                         break;
                     case 'L':
-                       level.AddChild(new LaserTurret(col++, row, true));
+                       level.AddChild(new LaserTurret(col++, row, true, GameConstants.DIRECTION.pointLeft));
+                       
                         break;
                     case 'd':
                         level.AddChild ( new Door ( col++, row, true ) ); //Starting open door
@@ -237,5 +245,9 @@ namespace MadScienceLab
 
             return level;
         }
+
+
+        
+
     }
 }
