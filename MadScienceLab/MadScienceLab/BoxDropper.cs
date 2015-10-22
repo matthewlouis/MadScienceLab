@@ -19,6 +19,7 @@ namespace MadScienceLab
             this.column = column;
             base.Model = Game1._models["BlockDropper"];
             NumberOfBoxes = numberOfBoxes;
+            isCollidable = true;
         }
 
         //Drops a box

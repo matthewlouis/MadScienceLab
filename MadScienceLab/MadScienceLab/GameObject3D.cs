@@ -58,6 +58,13 @@ namespace MadScienceLab
             this.verticalOffset = verticalOffset;
         }
 
+        float horizontalOffset;
+        public void SetHorizontalOffset(float horizontalOffset)
+        {
+            this.horizontalOffset = horizontalOffset;
+
+        }
+
         public Matrix GetWorldMatrix()
         {
             return WorldMatrix;
@@ -160,7 +167,7 @@ namespace MadScienceLab
             //Uses helper methods to create compiled WorldMatrix
             WorldMatrix = Matrix.CreateFromQuaternion(LocalRotation) *
                           Matrix.CreateScale(LocalScale) *
-                          Matrix.CreateTranslation(new Vector3(Position.X,Position.Y - verticalOffset, Position.Z));
+                          Matrix.CreateTranslation(new Vector3(Position.X - horizontalOffset,Position.Y - verticalOffset, Position.Z));
 
 
 
@@ -175,6 +182,7 @@ namespace MadScienceLab
 
         public virtual void CheckCollision(Level level)
         {
+
             foreach (CellObject levelObject in level.Children)
             {
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox) && levelObject != this)

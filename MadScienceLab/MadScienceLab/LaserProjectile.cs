@@ -9,17 +9,101 @@ namespace MadScienceLab
 {
     class LaserProjectile:CellObject
     {
+        bool active; // to set inactive if projectile collides with another object projectile should then be removed from list
+        GameConstants.DIRECTION direction;
         
-        public LaserProjectile(int column, int row):base(column, row)
+        public LaserProjectile(int column, int row, GameConstants.DIRECTION direction):base(column, row)
         {
+            base.Model = Game1._models["projectile"];
+            //Rotate(0f, 0f, 90f);
+            SetVerticalOffset(-2);
+            //SetHorizontalOffset(30);
+            active = true;
+            this.direction = direction;
+            isCollidable = false ;
+
+            SetDirection();
+            
+
             // hitbox for collision
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
         }
 
         public override void Update(RenderContext renderContext)
         {
+            if (active)
+            {
+                CheckProjectileCollision(renderContext);
+                Position += TransVelocity;
+            }
+            else
+                renderContext.Level.RemoveChild(this);
             base.Update(renderContext);
         }
+
+        public void SetDirection()
+        {
+            if (direction == GameConstants.DIRECTION.pointLeft)
+            {
+                //SetHorizontalOffset(30);
+                Position += new Vector3(-30,0,0);
+                base.TransVelocity = new Vector3(-GameConstants.PROJECTILE_X_VELOCITY,0f,0f);
+            }
+            else
+                if (direction == GameConstants.DIRECTION.pointRight)
+                {
+                    //SetHorizontalOffset(-30);
+                    Position += new Vector3(30, 0, 0);
+                    base.TransVelocity = new Vector3(GameConstants.PROJECTILE_X_VELOCITY,0f,0f);
+                }
+                else
+                TransVelocity = new Vector3(0);
+        }
+
+        public void CheckProjectileCollision(RenderContext renderContext)
+        {
+            // if collision with player, handle
+           /* if(this.Hitbox.Intersects(renderContext.Player.Hitbox))
+            {
+                active = false;
+                TransVelocity = Vector3.Zero;
+                renderContext.Player.SetHealth(GameConstants.PLAYER_DAMAGE);
+            }*/
+            
+            
+           
+            foreach (GameObject3D worldObject in renderContext.Level.gameObjects[typeof(Character)])
+            {
+                if (Hitbox.Intersects(worldObject.Hitbox) && worldObject.GetType() != typeof(LaserTurret))
+                {
+                    active = false;
+                    TransVelocity = Vector3.Zero;
+                    renderContext.Player.SetHealth(GameConstants.PLAYER_DAMAGE);
+                }
+            }
+
+            foreach (GameObject3D worldObject in renderContext.Level.gameObjects[typeof(BasicBlock)])
+            {
+                if (Hitbox.Intersects(worldObject.Hitbox) && worldObject.GetType() != typeof(LaserTurret))
+                {
+                    active = false;
+                    TransVelocity = Vector3.Zero;
+                }
+            }
+
+            foreach (GameObject3D worldObject in renderContext.Level.gameObjects[typeof(PickableBox)])
+            {
+                if (Hitbox.Intersects(worldObject.Hitbox) && worldObject.GetType() != typeof(LaserTurret))
+                {
+                    active = false;
+                    TransVelocity = Vector3.Zero;
+                }
+            }
+            Position += TransVelocity;
+
+        }
+
+
         
     }
 }

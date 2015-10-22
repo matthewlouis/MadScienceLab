@@ -36,8 +36,21 @@ namespace MadScienceLab
         GamePadState oldGamePadState;
         KeyboardState oldKeyboardState;
 
+        // Jumping support
         private bool jumping;
         private Boolean collisionJumping = false;
+
+
+        // Health Support
+        private int health;
+        public void SetHealth(int damage)
+        {
+            health -= damage;
+        }
+        public int GetHealth()
+        {
+            return health;
+        }
 
 /*        public override Rectangle HitboxF
         {
@@ -49,14 +62,14 @@ namespace MadScienceLab
                 }
                 return base.Hitbox;
             }
-        }*/
-        public Rectangle CharacterHitbox
-        {
-            get
-            {
-                return base.Hitbox;
-            }
         }
+
+
+        public Rectangle CharacterHitbox
+
+        {
+            return health;
+        }*/
 
 
         public Character(int startRow, int startCol):base(startRow, startCol)
@@ -65,6 +78,7 @@ namespace MadScienceLab
             charModel = new GameAnimatedModel("Vampire", startRow, startCol);
             charModel.VerticalOffset = 22;         
             Rotate(0f, 90f, 0f);
+            health = 3;
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
@@ -81,7 +95,10 @@ namespace MadScienceLab
         
         public override void Update(RenderContext renderContext)
         {
-            
+            if (health <= 0)
+            {
+                renderContext.Level.GameOver = true;
+            }
             charModel.Update(renderContext);
             UpdatePhysics();
            
@@ -144,11 +161,15 @@ namespace MadScienceLab
 
             //prevent the player from moving while still in box pickup/putdown animation
             bool NotActiveWithBox = interactState == InteractState.CompletedPickup || interactState == InteractState.HandsEmpty;
-            if ((currentKeyboardState.IsKeyDown ( Keys.Left ) || currentGamePadState.IsButtonDown(Buttons.DPadLeft)) && NotActiveWithBox)
+            if ((currentKeyboardState.IsKeyDown ( Keys.Left ) || 
+                currentGamePadState.IsButtonDown(Buttons.DPadLeft) ||
+                currentGamePadState.IsButtonDown(Buttons.LeftThumbstickLeft)) && NotActiveWithBox)
             {
                 MoveLeft(GameConstants.MOVEAMOUNT);
             }
-            else if ((currentKeyboardState.IsKeyDown ( Keys.Right ) || currentGamePadState.IsButtonDown(Buttons.DPadRight)) && NotActiveWithBox)
+            else if ((currentKeyboardState.IsKeyDown ( Keys.Right ) || 
+                currentGamePadState.IsButtonDown(Buttons.DPadRight) ||
+                currentGamePadState.IsButtonDown(Buttons.LeftThumbstickRight)) && NotActiveWithBox)
             {
                 MoveRight(GameConstants.MOVEAMOUNT);
             }
@@ -161,6 +182,24 @@ namespace MadScienceLab
             oldGamePadState = currentGamePadState;
         }
 
+        public override Rectangle Hitbox
+        {
+            get
+            {
+                if (interactState == InteractState.CompletedPickup) //new hitbox if currently carrying a box
+                {
+                    return new Rectangle((int)StoredBox.Position.X, (int)Position.Y, HitboxWidth, HitboxHeight + StoredBox.HitboxHeight);
+                }
+                return base.Hitbox;
+            }
+        }
+        public Rectangle CharacterHitbox
+        {
+            get
+            {
+                return base.Hitbox;
+            }
+        }
 
         public override void Draw(RenderContext renderContext)
         {
@@ -474,6 +513,7 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         private void CheckPlayerBoxCollision(RenderContext renderContext)
         {
+
             foreach (CellObject levelObject in renderContext.Level.Children)
             {
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
@@ -490,8 +530,7 @@ namespace MadScienceLab
                     float hx = (Hitbox.Height + levelObject.Hitbox.Height)
                              * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
 
-                    Button tmpButton = levelObject as Button;
-                    if (tmpButton != null) //if it is a button
+                    if (levelObject.GetType() == typeof(Button)) //if it is a button
                     {
                         Button button = (Button)levelObject as Button;
                         button.IsPressed = true;
