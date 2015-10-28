@@ -104,6 +104,9 @@ namespace MadScienceLab
                     case 'E':
                         level.AddChild(new Enemy(col++, row)); 
                         break;
+                    case 'M':
+                        level.AddChild(new MovingPlatform(col++, row));
+                        break;
                     case 'B':
                         level.AddChild ( new PickableBox ( col++, row ) ); //replace BasicBlock with the actual object once implemented
                         break;

@@ -52,26 +52,6 @@ namespace MadScienceLab
             return health;
         }
 
-        public override Rectangle HitboxF
-        {
-            get
-            {
-                if (interactState == InteractState.CompletedPickup) //new hitbox if currently carrying a box
-                {
-                    return new Rectangle ( (int)StoredBox.Position.X, (int)Position.Y, HitboxWidth, HitboxHeight+StoredBox.HitboxHeight );
-                }
-                return base.Hitbox;
-            }
-        }
-
-
-        public Rectangle CharacterHitbox
-
-        {
-            return health;
-        }
-
-
         public Character(int startRow, int startCol):base(startRow, startCol)
         {
             // create model with offset of position

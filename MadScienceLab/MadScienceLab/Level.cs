@@ -40,12 +40,10 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         public void PopulateTypeList(RenderContext renderContext)
         {
-            gameObjects.Clear();
+
+            gameObjects = new Dictionary<Type, List<GameObject3D>>();
+            
             foreach (Type type in types)
-            Dictionary<Type, List<GameObject3D>> gameObjects = new Dictionary<Type, List<GameObject3D>>();
-            //gameObjects.Add(typeof(PickableBox), new List<GameObject3D>()); //make a list of PickableBox
-            Type[] Types = { typeof(PickableBox), typeof(ToggleSwitch), typeof(Door), typeof(Button), typeof(BasicBlock), typeof(LaserTurret), typeof(Character) };
-            foreach (Type type in Types)
             {
                 gameObjects.Add(type, new List<GameObject3D>());
             }
