@@ -50,7 +50,7 @@ namespace MadScienceLab
                             + "X                          LX\n"
                             + "X      T  XXXXXXX2XXXXXXXXXXX\n"
                             + "X      X                 X  X\n"
-                            + "X E     XB               X  X\n"
+                            + "X E     X                X  X\n"
                             + "XXXXXXXXXXX     S  S   t X  X\n"
                             + "Xt           XXXXXXXXXXXXX  X\n"
                             + "XXX3M        D  D  D     D @X\n"
@@ -82,8 +82,8 @@ namespace MadScienceLab
                            + "4:2|5:20\n"
                            + "7:24|10:18\n"
                            + "6:2|10:18\n"
-                           + "10:8|13:13";
-
+                           + "10:8|13:13\n"
+                           + "7:24|10:18";
 
             Dictionary<string, int> _buttons = new Dictionary<string, int>();
             Dictionary<string, int> _doors = new Dictionary<string, int>();
@@ -102,10 +102,7 @@ namespace MadScienceLab
                         col++;
                         break;
                     case 'E':
-                        level.AddChild(new Enemy(col++, row));
-                        break;
-                    case 'M':
-                        level.AddChild(new MovingPlatform(col++, row));
+                        level.AddChild(new Enemy(col++, row)); 
                         break;
                     case 'B':
                         level.AddChild ( new PickableBox ( col++, row ) ); //replace BasicBlock with the actual object once implemented

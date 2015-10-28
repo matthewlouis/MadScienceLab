@@ -20,7 +20,7 @@ namespace MadScienceLab
         const int FACING_LEFT = 1, FACING_RIGHT = 2;
         byte facingDirection = FACING_RIGHT;
 
-        bool movingLeft = false;
+        bool movestate = false;
 
         public Enemy(int column, int row)
             : base(column, row)
@@ -68,7 +68,7 @@ namespace MadScienceLab
                     float hx = (Hitbox.Height + levelObject.Hitbox.Height)
                              * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
 
-                    if (movingLeft)
+                    if (movestate)
                     {
                         MoveLeft(GameConstants.MOVEAMOUNT);
 
@@ -81,12 +81,12 @@ namespace MadScienceLab
                     if (wy > hx)
                     {                      
                         //boxHitState = "Box Left";// left
-                        movingLeft = false;
+                        movestate = false;
                     }
                     if (wy > -hx)
                     {
                         //boxHitState = "Box Right";// right
-                        movingLeft = true;
+                        movestate = true;
                     }
 
 

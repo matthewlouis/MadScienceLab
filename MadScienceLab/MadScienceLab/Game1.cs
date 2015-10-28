@@ -123,7 +123,6 @@ namespace MadScienceLab
 
             //loads the basic level
             basicLevel = LevelBuilder.MakeBasicLevel ();
-            basicLevel.LoadContent();
             CurrentLevel = basicLevel; //we can handle this through render context eventually.
 
             player = new Character(basicLevel.PlayerPoint.X, basicLevel.PlayerPoint.Y);
@@ -176,7 +175,7 @@ namespace MadScienceLab
                 font = Content.Load<SpriteFont>("Verdana");
                 _renderContext.Level = basicLevel;
 
-                basicLevel.LoadContent();
+                basicLevel.PopulateTypeList(_renderContext);
             }
 
 

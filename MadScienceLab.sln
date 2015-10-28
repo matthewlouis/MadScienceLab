@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MadScienceLab", "MadScienceLab\MadScienceLab\MadScienceLab.csproj", "{B385F8EA-6050-4D64-B56C-3A0A094E1C61}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3899FB5E-0ED8-4606-81D5-4053C24C52AF} = {3899FB5E-0ED8-4606-81D5-4053C24C52AF}
@@ -74,13 +72,11 @@ Global
 		{BF59049E-656A-43FC-B4F4-506517A98CF1}.Debug|Mixed Platforms.ActiveCfg = Debug|Xbox 360
 		{BF59049E-656A-43FC-B4F4-506517A98CF1}.Debug|Mixed Platforms.Build.0 = Debug|Xbox 360
 		{BF59049E-656A-43FC-B4F4-506517A98CF1}.Debug|x86.ActiveCfg = Debug|Xbox 360
-		{BF59049E-656A-43FC-B4F4-506517A98CF1}.Debug|x86.Build.0 = Debug|Xbox 360
 		{BF59049E-656A-43FC-B4F4-506517A98CF1}.Debug|Xbox 360.ActiveCfg = Debug|Xbox 360
 		{BF59049E-656A-43FC-B4F4-506517A98CF1}.Debug|Xbox 360.Build.0 = Debug|Xbox 360
 		{BF59049E-656A-43FC-B4F4-506517A98CF1}.Release|Mixed Platforms.ActiveCfg = Release|Xbox 360
 		{BF59049E-656A-43FC-B4F4-506517A98CF1}.Release|Mixed Platforms.Build.0 = Release|Xbox 360
 		{BF59049E-656A-43FC-B4F4-506517A98CF1}.Release|x86.ActiveCfg = Release|Xbox 360
-		{BF59049E-656A-43FC-B4F4-506517A98CF1}.Release|x86.Build.0 = Release|Xbox 360
 		{BF59049E-656A-43FC-B4F4-506517A98CF1}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
 		{BF59049E-656A-43FC-B4F4-506517A98CF1}.Release|Xbox 360.Build.0 = Release|Xbox 360
 		{A6C433BC-3FB4-41D5-8B98-1EE94869B5B1}.Debug|Mixed Platforms.ActiveCfg = Debug|Xbox 360

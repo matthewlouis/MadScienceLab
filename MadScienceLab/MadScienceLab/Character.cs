@@ -52,7 +52,7 @@ namespace MadScienceLab
             return health;
         }
 
-/*        public override Rectangle HitboxF
+        public override Rectangle HitboxF
         {
             get
             {
@@ -69,7 +69,7 @@ namespace MadScienceLab
 
         {
             return health;
-        }*/
+        }
 
 
         public Character(int startRow, int startCol):base(startRow, startCol)
@@ -182,6 +182,7 @@ namespace MadScienceLab
             oldGamePadState = currentGamePadState;
         }
 
+
         //public override Rectangle Hitbox
         //{
         //    get
@@ -193,6 +194,7 @@ namespace MadScienceLab
         //        return base.Hitbox;
         //    }
         //}
+
 
         public Rectangle CharacterHitbox
         {
@@ -568,14 +570,6 @@ namespace MadScienceLab
                                 if (!collisionJumping)
                                     TransVelocity = Vector3.Zero;
                                 jumping = false;
-                                /*
-                                if(levelObject.GetType() == typeof(MovingPlatform)) //move player along the platform
-                                {
-                                    if(((MovingPlatform)levelObject).movingLeft)
-                                        Position += new Vector3(-GameConstants.MOVEAMOUNT, 0, 0);
-                                    else
-                                        Position += new Vector3(GameConstants.MOVEAMOUNT, 0, 0);
-                                }*/
                             }
                         }
                     }

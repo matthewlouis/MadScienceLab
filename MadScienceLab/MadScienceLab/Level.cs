@@ -42,7 +42,6 @@ namespace MadScienceLab
         {
             gameObjects.Clear();
             foreach (Type type in types)
-
             Dictionary<Type, List<GameObject3D>> gameObjects = new Dictionary<Type, List<GameObject3D>>();
             //gameObjects.Add(typeof(PickableBox), new List<GameObject3D>()); //make a list of PickableBox
             Type[] Types = { typeof(PickableBox), typeof(ToggleSwitch), typeof(Door), typeof(Button), typeof(BasicBlock), typeof(LaserTurret), typeof(Character) };
