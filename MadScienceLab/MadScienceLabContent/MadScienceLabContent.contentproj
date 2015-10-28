@@ -271,6 +271,7 @@
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
+
   <ItemGroup>
     <Compile Include="Font.spritefont">
       <Name>Font</Name>

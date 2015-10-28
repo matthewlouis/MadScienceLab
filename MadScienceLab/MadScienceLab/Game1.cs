@@ -124,6 +124,7 @@ namespace MadScienceLab
             //loads the basic level
             basicLevel = LevelBuilder.MakeBasicLevel ();
             CurrentLevel = basicLevel; //we can handle this through render context eventually.
+            basicLevel.LoadContent();
 
             player = new Character(basicLevel.PlayerPoint.X, basicLevel.PlayerPoint.Y);
             player.LoadContent(Content);
@@ -177,6 +178,7 @@ namespace MadScienceLab
 
                 basicLevel.PopulateTypeList(_renderContext);
             }
+
 
             if (!basicLevel.GameOver && !basicLevel.LevelOver)
             {

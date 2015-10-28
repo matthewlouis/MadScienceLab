@@ -20,6 +20,7 @@ namespace MadScienceLab
             base.Model = Game1._models["BlockDropper"];
             NumberOfBoxes = numberOfBoxes;
             isCollidable = true;
+            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
         }
 
         //Drops a box
