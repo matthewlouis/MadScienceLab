@@ -48,12 +48,20 @@ namespace MadScienceLab
              */
 
             //Note: The levels' txt files currently have a new line at the very end of it. Don't delete it.
-            string leveltxt = FromFile ( "Level.txt" );
+            string leveltxtfile = FromFile ( "Level.txt" );
             string backtxt = FromFile( "LevelBack.txt" );
 
             //get object pairs (for links between switches and doors/boxes)
             // The format used to link buttons to doors "ButtonCoord linked to 1 or more DoorCoord" - Steven
-            string linktxt = FromFile ("LevelLinks.txt");
+
+            //differentiate level and link strings
+            string leveltxt = null; //everything above the line of "~" in Level.txt
+            string linktxt = null; //everything below the line of "~" in Level.txt
+            //split leveltxtfile into leveltxt and linktxt, with the line containing any number of "~" characters as the delimiter
+            int pos = leveltxtfile.IndexOf("~"); //go to the "~" line
+            leveltxt = leveltxtfile.Substring(0, pos);
+            pos = leveltxtfile.IndexOf("\n", pos)+1; //go to the next line after the "~" line
+            linktxt = leveltxtfile.Substring ( pos );
 
             Dictionary<string, int> _buttons = new Dictionary<string, int>();
             Dictionary<string, int> _doors = new Dictionary<string, int>();
