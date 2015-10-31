@@ -12,8 +12,7 @@ XX        XXX           XXXXX
 XX  P T  BXXXT         XXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Above is level, below are the
-links.
+Above is level, below are links.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 7:20|5:17
 2:14|5:26
