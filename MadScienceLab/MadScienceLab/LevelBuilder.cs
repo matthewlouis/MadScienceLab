@@ -57,10 +57,13 @@ namespace MadScienceLab
             //differentiate level and link strings
             string leveltxt = null; //everything above the line of "~" in Level.txt
             string linktxt = null; //everything below the line of "~" in Level.txt
-            //split leveltxtfile into leveltxt and linktxt, with the line containing any number of "~" characters as the delimiter
-            int pos = leveltxtfile.IndexOf("~"); //go to the "~" line
-            leveltxt = leveltxtfile.Substring(0, pos);
-            pos = leveltxtfile.IndexOf("\n", pos)+1; //go to the next line after the "~" line
+            //split leveltxtfile into leveltxt and linktxt, with the text enclosed by any number of "~" characters as the delimiter
+
+                int pos = leveltxtfile.IndexOf("~"); //go to the "~" line
+            leveltxt = leveltxtfile.Substring(0, pos);            
+            //put pos on the next line after the last "~" line
+            pos = leveltxtfile.LastIndexOf("~"); //go to last ~
+            pos = leveltxtfile.IndexOf ( "\n", pos ) + 1; //go to next line, after the last ~
             linktxt = leveltxtfile.Substring ( pos );
 
             Dictionary<string, int> _buttons = new Dictionary<string, int>();
