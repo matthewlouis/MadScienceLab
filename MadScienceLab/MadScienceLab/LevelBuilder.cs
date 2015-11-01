@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 using Microsoft.Xna.Framework;
+using System.IO;
 
 namespace MadScienceLab
 {
@@ -25,7 +26,8 @@ namespace MadScienceLab
         public static Level MakeBasicLevel()
         {
             Level level = new Level();
-            
+
+
             //read level from text file - width and height of level will depend on the text file's characters
             /*
              Legend:
@@ -45,50 +47,30 @@ namespace MadScienceLab
              * (It's either this, or not have simple characters for the properties ... I think I may prefer this, unless there is a tool that allows easy parsing of XML data or such.)
              */
 
-            string leveltxt = "XXXXXXXXXXXX1XXXXXXXXXXXXXXXX\n"
-                            + "X                           X\n"
-                            + "X                          LX\n"
-                            + "X      T  XXXXXXX2XXXXXXXXXXX\n"
-                            + "X      X                 X  X\n"
-                            + "X E     X                X  X\n"
-                            + "XXXXXXXXXXX     S  S   t X  X\n"
-                            + "Xt           XXXXXXXXXXXXX  X\n"
-                            + "XXX3M        D  D  D     D @X\n"
-                            + "XT        XXXXXXXXXXXX   XXXX\n"
-                            + "XX        XXX           XXXXX\n"
-                            + "XX  P T  BXXXT         XXXXXX\n"
-                            + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
-
-            string backtxt =  "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n"
-                            + "X                           X\n"
-                            + "X                           X\n"
-                            + "X                B  B       X\n"
-                            + "X                        X  X\n"
-                            + "X       X                X  X\n"
-                            + "X               S  S   T X  X\n"
-                            + "X            XXXXXXXXXXXXX  X\n"
-                            + "X BBB        D TD  D     D @X\n"
-                            + "XB        XXXXXXXXXXXX   XXXX\n"
-                            + "X         XXX           XXXXX\n"
-                            + "XP        XXXT         XXXXXX\n"
-                            + "XXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
+            //Note: The levels' txt files currently have a new line at the very end of it. Don't delete it.
+            string leveltxtfile = FromFile ( "Level.txt" );
+            string backtxt = FromFile( "LevelBack.txt" );
 
             //get object pairs (for links between switches and doors/boxes)
             // The format used to link buttons to doors "ButtonCoord linked to 1 or more DoorCoord" - Steven
-            string linktxt = "7:20|5:17\n"
-                           + "2:14|5:26\n"
-                           + "7:17|5:14\n"
-                           + "2:7|5:4\n"
-                           + "4:2|5:20\n"
-                           + "7:24|10:18\n"
-                           + "6:2|10:18\n"
-                           + "10:8|13:13\n"
-                           + "7:24|10:18";
+
+            //differentiate level and link strings
+            string leveltxt = null; //everything above the line of "~" in Level.txt
+            string linktxt = null; //everything below the line of "~" in Level.txt
+            //split leveltxtfile into leveltxt and linktxt, with the text enclosed by any number of "~" characters as the delimiter
+
+                int pos = leveltxtfile.IndexOf("~"); //go to the "~" line
+            leveltxt = leveltxtfile.Substring(0, pos);            
+            //put pos on the next line after the last "~" line
+            pos = leveltxtfile.LastIndexOf("~"); //go to last ~
+            pos = leveltxtfile.IndexOf ( "\n", pos ) + 1; //go to next line, after the last ~
+            linktxt = leveltxtfile.Substring ( pos );
 
             Dictionary<string, int> _buttons = new Dictionary<string, int>();
             Dictionary<string, int> _doors = new Dictionary<string, int>();
 
-            levelheight = leveltxt.Length - leveltxt.Replace("\n", "").Length;
+            String newline = "\r\n"; //in case a newline were to be used
+            levelheight = leveltxt.Length - leveltxt.Replace ("\n", "" ).Length;
             
             
             //there will be walls and floor enclosing the aforementioned level
@@ -153,7 +135,7 @@ namespace MadScienceLab
                     case 'G':
                         level.AddChild ( new BasicBlock ( col++, row ) );
                         break;
-                    case '\n': //new line/row
+                    case '\n': //the '\n' of the new line/row
                         row--;
                         if (col > levelwidth + startWall) //to get max # columns found - check if greater than largest levelwidth found;
                             levelwidth = col - startWall;
@@ -252,6 +234,22 @@ namespace MadScienceLab
 
             return level;
         }
+        private static String FromFile ( String file )
+        {
+            //credit goes to MikeBMcLBob Taco Industries - https://social.msdn.microsoft.com/forums/windowsapps/en-US/7fcea210-8405-4a38-9459-eb0a361681cc/using-txt-file-in-xna-game?forum=wpdevelop for this.
+            String txt = null;
+            using (var stream = TitleContainer.OpenStream ( file ))
+            {
+                using (var reader = new StreamReader ( stream ))
+                {
+                    // Call StreamReader methods like ReadLine, ReadBlock, or ReadToEnd to read in your data, e.g.:  
+                    txt = reader.ReadToEnd ();
+                }
+            }
+            txt = txt.Replace ( "\r\n", "\n" ); //remove all of the \r newlines - as this wasn't accounted for when we were writing the txt file. Note that the strings _did not_ consider these!
+            return txt;
+        }
+        
 
 
         
