@@ -77,6 +77,7 @@
     <Compile Include="LaserProjectile.cs" />
     <Compile Include="MovingPlatform.cs" />
     <Compile Include="PickableBox.cs" />
+    <Compile Include="SoundEffectPlayer.cs" />
     <Compile Include="Switch.cs" />
     <Compile Include="Door.cs" />
     <Compile Include="GameAnimatedModel.cs" />

@@ -20,6 +20,10 @@ namespace MadScienceLab
 
         GameAnimatedModel charModel;
 
+        //For playing sounds
+        //Dictionary<string, SoundEffect> soundFX;
+        SoundEffectPlayer soundEffects;
+
         //properties used for picking up a box
         public CellObject InteractiveObj { get; set; }
         public CellObject AdjacentObj { get; set; }
@@ -46,6 +50,7 @@ namespace MadScienceLab
         public void SetHealth(int damage)
         {
             health -= damage;
+            soundEffects.PlaySound("PlayerHit");
         }
         public int GetHealth()
         {
@@ -70,6 +75,17 @@ namespace MadScienceLab
             // Overriding the hitbox size - Steven
             base.HitboxWidth = 48;
             base.HitboxHeight = 48;
+
+            //Load sound effects
+            //soundFX = new Dictionary<string, SoundEffect>();
+            soundEffects = new SoundEffectPlayer(this);
+            soundEffects.LoadSound("BoxDrop", Game1._sounds["BoxDrop"]);
+            soundEffects.LoadSound("BoxPickup", Game1._sounds["BoxPickup"]);
+            soundEffects.LoadSound("Jump", Game1._sounds["Jump"]);
+            soundEffects.LoadSound("Land", Game1._sounds["Land"]);
+            soundEffects.LoadSound("PlayerHit", Game1._sounds["PlayerHit"]);
+            soundEffects.LoadSound("ToggleSwitch", Game1._sounds["ToggleSwitch"]);
+
         }
 
         
@@ -105,6 +121,8 @@ namespace MadScienceLab
             UpdatePickBox ();
             UpdatePutBox (renderContext);
 
+            //update sound
+            soundEffects.Update(renderContext);
             base.Update(renderContext);
         }
 
@@ -214,6 +232,7 @@ namespace MadScienceLab
             jumping = true;
             base.TransVelocity += new Vector3(0, GameConstants.SINGLE_CELL_SIZE*5, 0);
             charModel.PlayAnimation("Jump",false, 0.2f);
+            soundEffects.PlaySound("Jump");
         }
         public void PutBox()
         {
@@ -277,12 +296,14 @@ namespace MadScienceLab
                         interactState = InteractState.JustPickedUpBox; //state 1
                         StoredBox = (PickableBox)AdjacentObj;
                         StoredBox.isCollidable = false;
+                        soundEffects.PlaySound("BoxPickup");
                     }
                 }
                 else if (InteractiveObj != null && InteractiveObj.GetType() == typeof(ToggleSwitch))
                 {
                     ToggleSwitch currentSwitch = (ToggleSwitch)InteractiveObj;
                     currentSwitch.FlickSwitch();
+                    soundEffects.PlaySound("ToggleSwitch");
                 }
             }     
         }
@@ -398,6 +419,7 @@ namespace MadScienceLab
                     //remove storedBox from player
                     StoredBox.isCollidable = true;
                     StoredBox = null;
+                    soundEffects.PlaySound("BoxDrop");
                 }
             }
         }

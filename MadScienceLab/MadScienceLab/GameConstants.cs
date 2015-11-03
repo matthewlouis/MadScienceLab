@@ -27,5 +27,8 @@ namespace MadScienceLab
         public const int PROJECTILE_X_VELOCITY = 10;
 
         // physics
+
+        //sound
+        public const int DISTANCE_SCALE = 4;
     }
 }
