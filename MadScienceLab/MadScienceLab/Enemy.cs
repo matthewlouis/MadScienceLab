@@ -21,6 +21,7 @@ namespace MadScienceLab
         byte facingDirection = FACING_RIGHT;
 
         bool movestate = false;
+        private SoundEffectPlayer soundEffects;
 
         public Enemy(int column, int row)
             : base(column, row)
@@ -32,9 +33,19 @@ namespace MadScienceLab
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
         }
 
+        public override void LoadContent(ContentManager contentManager)
+        {
+            soundEffects = new SoundEffectPlayer(this);
+            SoundEffect sound = contentManager.Load<SoundEffect>("Sounds/DoombaLoop");
+            soundEffects.LoadSound("Roomba", contentManager.Load<SoundEffect>("Sounds/DoombaLoop"));
+            soundEffects.PlayAndLoopSound("Roomba");
+            base.LoadContent(contentManager);
+        }
+
         public override void Update(RenderContext renderContext)
         {
             CheckEnemyBoxCollision(renderContext);
+            soundEffects.Update(renderContext);
 
             base.Update(renderContext);
         }

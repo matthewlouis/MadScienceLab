@@ -30,6 +30,7 @@ namespace MadScienceLab
         //Note: Add fields for player, background etc. here
         public static Dictionary<String, Model> _models = new Dictionary<string,Model>();
         public static Dictionary<String, Texture2D> _textures = new Dictionary<string, Texture2D>();
+        public static Dictionary<String, SoundEffect> _sounds = new Dictionary<string, SoundEffect>();
 
         Character player;
         Enemy enemy;
@@ -121,10 +122,22 @@ namespace MadScienceLab
             _textures.Add("Complete", Content.Load<Texture2D>("Textures/Complete"));
             _textures.Add("GameOver", Content.Load<Texture2D>("Textures/GameOver"));
 
+            //Loads sound references
+            _sounds.Add("BoxDrop", Content.Load<SoundEffect>("Sounds/BoxDrop"));
+            _sounds.Add("BoxPickup", Content.Load<SoundEffect>("Sounds/BoxPickup"));
+            _sounds.Add("Button", Content.Load<SoundEffect>("Sounds/Button"));
+            _sounds.Add("DoombaLoop", Content.Load<SoundEffect>("Sounds/DoombaLoop"));
+            _sounds.Add("Jump", Content.Load<SoundEffect>("Sounds/Jump"));
+            _sounds.Add("Land", Content.Load<SoundEffect>("Sounds/Land"));
+            _sounds.Add("LaserShoot", Content.Load<SoundEffect>("Sounds/LaserShoot"));
+            _sounds.Add("LaserWhirLoop", Content.Load<SoundEffect>("Sounds/LaserWhirLoop"));
+            _sounds.Add("PlayerHit", Content.Load<SoundEffect>("Sounds/PlayerHit"));
+            _sounds.Add("ToggleSwitch", Content.Load<SoundEffect>("Sounds/ToggleSwitch"));
+
             //loads the basic level
             basicLevel = LevelBuilder.MakeBasicLevel ();
             CurrentLevel = basicLevel; //we can handle this through render context eventually.
-            basicLevel.LoadContent();
+            basicLevel.LoadContent(Content);
 
             player = new Character(basicLevel.PlayerPoint.X, basicLevel.PlayerPoint.Y);
             player.LoadContent(Content);

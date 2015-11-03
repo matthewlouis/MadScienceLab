@@ -11,6 +11,7 @@ namespace MadScienceLab
     {
         bool active; // to set inactive if projectile collides with another object projectile should then be removed from list
         GameConstants.DIRECTION direction;
+        SoundEffectPlayer soundEffects;
         
         public LaserProjectile(int column, int row, GameConstants.DIRECTION direction):base(column, row)
         {
@@ -27,17 +28,27 @@ namespace MadScienceLab
 
             // hitbox for collision
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
+
+            soundEffects = new SoundEffectPlayer(this); //set up sound
+            soundEffects.LoadSound("LaserWhirLoop", Game1._sounds["LaserWhirLoop"]);
+            soundEffects.PlayAndLoopSound("LaserWhirLoop");
         }
 
         public override void Update(RenderContext renderContext)
         {
             if (active)
             {
+                soundEffects.Update(renderContext);
                 CheckProjectileCollision(renderContext);
                 Position += TransVelocity;
             }
             else
+            {
                 renderContext.Level.RemoveChild(this);
+
+                //Stop sound and remove resource
+                soundEffects.SoundInstances["LaserWhirLoop"].Dispose();
+            }
             base.Update(renderContext);
         }
 

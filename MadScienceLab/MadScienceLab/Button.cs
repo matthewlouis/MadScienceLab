@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 namespace MadScienceLab
 {
@@ -12,6 +13,7 @@ namespace MadScienceLab
         public List<SwitchableObject> LinkedDoors { get; set; }
         public Boolean IsPressed { get; set; }
         private Boolean doorsToggled = false;
+        private SoundEffectPlayer soundEffects;
 
         public Button(int column, int row):base(column, row)
         {
@@ -27,11 +29,19 @@ namespace MadScienceLab
 
         }
 
+        public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
+        {
+            soundEffects = new SoundEffectPlayer(this);
+            soundEffects.LoadSound("Button", Game1._sounds["Button"]);
+            base.LoadContent(contentManager);
+        }
+
         public override void Update(RenderContext renderContext)
         {
             
             if (IsPressed && doorsToggled == false)
             {
+                soundEffects.PlaySound("Button");
                 doorsToggled = true;
                 foreach (SwitchableObject door in LinkedDoors)
                 {
@@ -40,6 +50,7 @@ namespace MadScienceLab
             }
             else if (!IsPressed && doorsToggled == true)
             {
+                soundEffects.PlaySound("Button");
                 doorsToggled = false;
                 foreach (SwitchableObject door in LinkedDoors)
                 {
