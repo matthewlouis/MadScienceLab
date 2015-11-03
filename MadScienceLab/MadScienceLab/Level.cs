@@ -15,7 +15,7 @@ namespace MadScienceLab
 
         Type[] types;
 
-        public void LoadContent()
+        public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
         {
             gameObjects = new Dictionary<Type, List<GameObject3D>>();
             Type[] types = { typeof(PickableBox), typeof(ToggleSwitch), typeof(Door), typeof(Button), typeof(BasicBlock), typeof(LaserTurret), typeof(MovingPlatform), typeof(Character) };
@@ -24,6 +24,7 @@ namespace MadScienceLab
                 gameObjects.Add(type, new List<GameObject3D>());
             }
             this.types = types;
+            base.LoadContent(contentManager);
         }
 
 
