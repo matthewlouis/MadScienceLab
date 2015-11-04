@@ -17,7 +17,7 @@ namespace MadScienceLab
         {
             this.row = row;
             this.column = column;
-            base.Model = Game1._models["BlockDropper"];
+            base.Model = GameplayScreen._models["BlockDropper"];
             NumberOfBoxes = numberOfBoxes;
             isCollidable = true;
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
@@ -36,7 +36,7 @@ namespace MadScienceLab
             
             //Show the model as empty if so.
             if(NumberOfBoxes == 0)
-                base.Model = Game1._models["BlockDropper_Empty"];
+                base.Model = GameplayScreen._models["BlockDropper_Empty"];
         }
     }
 }

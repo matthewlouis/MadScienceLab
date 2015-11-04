@@ -17,7 +17,7 @@ namespace MadScienceLab
         public ToggleSwitch(int column, int row, Boolean toggleable):base(column, row)
         {
             LinkedDoors = new List<SwitchableObject>();
-            base.Model = Game1._models["switch"];
+            base.Model = GameplayScreen._models["switch"];
             base.isCollidable = true;
             base.IsPassable = true;
             Toggleable = toggleable;

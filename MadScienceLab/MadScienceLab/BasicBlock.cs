@@ -14,7 +14,7 @@ namespace MadScienceLab
     {
         public BasicBlock(int column, int row):base(column, row)
         {
-            base.Model = Game1._models["BasicBlock"];
+            base.Model = GameplayScreen._models["BasicBlock"];
             base.isCollidable = true;
 
             // Provides a hitbox for the block - Steven
