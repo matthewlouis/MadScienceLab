@@ -190,34 +190,34 @@ namespace MadScienceLab
                 switch (c2) //convert char to level object at the coordinate iterated through
                 {
                     case '1': //Bare Metal Gray
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["BareMetal_Gray"]));
+                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["BareMetal_Gray"]));
                         break;
                     case '2': //Rounded Brushed Gray Metal
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["BrushedRoundMetal_Gray"]));
+                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["BrushedRoundMetal_Gray"]));
                         break;
                     case '3': //Textured Metal Floor Gray
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["MetalFloor_Gray"]));
+                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["MetalFloor_Gray"]));
                         break;
                     case '4': //Dirty Rusted Metal
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["DirtyMetal"]));
+                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["DirtyMetal"]));
                         break;
                     case '5': //White Fiberglass
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Fiberglass_White"]));
+                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["Fiberglass_White"]));
                         break;
                     case '6': //Tile Blue
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_Blue"]));
+                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Blue"]));
                         break;
                     case '7': //Tile Beige
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_Beige"]));
+                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Beige"]));
                         break;
                     case '8': //Tile Multicolored
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_Fun"]));
+                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Fun"]));
                         break;
                     case '9': //Tile Gray
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_DarkGray"]));
+                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_DarkGray"]));
                         break;
                     case '0': //Windowed Glass Blocks
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["WindowBlocks"]));
+                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["WindowBlocks"]));
                         break;
                     case '@':
                         col++;
@@ -227,7 +227,7 @@ namespace MadScienceLab
                         col = startWall;
                         break;
                     default:
-                        level.AddChild(new BackgroundBlock(col++, row, Game1._textures["Tile_Gray"]));
+                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Gray"]));
                         break;
                 }
             }

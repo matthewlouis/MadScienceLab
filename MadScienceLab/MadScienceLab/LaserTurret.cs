@@ -26,7 +26,7 @@ namespace MadScienceLab
         public LaserTurret(int column, int row, bool turretOn, GameConstants.DIRECTION direction):base(column, row)
         {
             // Load and position,rotate model based on level builder direction
-            base.Model = Game1._models["Turret"];
+            base.Model = GameplayScreen._models["Turret"];
             if(direction == GameConstants.DIRECTION.pointLeft)
             {
                 RotateLeft();

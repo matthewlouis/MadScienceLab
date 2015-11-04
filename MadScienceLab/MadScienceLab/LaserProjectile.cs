@@ -15,7 +15,7 @@ namespace MadScienceLab
         
         public LaserProjectile(int column, int row, GameConstants.DIRECTION direction):base(column, row)
         {
-            base.Model = Game1._models["projectile"];
+            base.Model = GameplayScreen._models["projectile"];
             //Rotate(0f, 0f, 90f);
             SetVerticalOffset(-2);
             //SetHorizontalOffset(30);
@@ -30,7 +30,7 @@ namespace MadScienceLab
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
 
             soundEffects = new SoundEffectPlayer(this); //set up sound
-            soundEffects.LoadSound("LaserWhirLoop", Game1._sounds["LaserWhirLoop"]);
+            soundEffects.LoadSound("LaserWhirLoop", GameplayScreen._sounds["LaserWhirLoop"]);
             soundEffects.PlayAndLoopSound("LaserWhirLoop");
         }
 

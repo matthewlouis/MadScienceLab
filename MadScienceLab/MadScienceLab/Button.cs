@@ -18,7 +18,7 @@ namespace MadScienceLab
         public Button(int column, int row):base(column, row)
         {
             LinkedDoors = new List<SwitchableObject>();
-            base.Model = Game1._models["button"];
+            base.Model = GameplayScreen._models["button"];
             base.isCollidable = true;
             base.IsPassable = true;
             HitboxHeightOffset = 10;
@@ -32,7 +32,7 @@ namespace MadScienceLab
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
         {
             soundEffects = new SoundEffectPlayer(this);
-            soundEffects.LoadSound("Button", Game1._sounds["Button"]);
+            soundEffects.LoadSound("Button", GameplayScreen._sounds["Button"]);
             base.LoadContent(contentManager);
         }
 

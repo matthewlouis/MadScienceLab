@@ -26,7 +26,7 @@ namespace MadScienceLab
             {
                 Rectangle areaAbove = new Rectangle((int)Position.X, (int)Position.Y + Hitbox.Height, (int)Hitbox.Width, (int)Hitbox.Height);
                 bool pickuppable = true;
-                foreach (CellObject levelObject in Game1.CurrentLevel.Children) //check to see if it has collision with anything
+                foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
                 {
                     if (levelObject.isCollidable && levelObject.GetType() != typeof(BasicBlock) && areaAbove.Intersects(levelObject.Hitbox))
                     {
@@ -41,7 +41,7 @@ namespace MadScienceLab
         public PickableBox(int column, int row)
             : base(column, row)
         {
-            base.Model = Game1._models["MoveableBox"];
+            base.Model = GameplayScreen._models["MoveableBox"];
             base.isCollidable = true;
 
             // Provides a hitbox for the block - Steven
@@ -51,7 +51,7 @@ namespace MadScienceLab
         public PickableBox(Vector2 coordinates)
             : base(coordinates)
         {
-            base.Model = Game1._models["MoveableBox"];
+            base.Model = GameplayScreen._models["MoveableBox"];
             base.isCollidable = true;
 
             // Provides a hitbox for the block - Steven

@@ -79,12 +79,12 @@ namespace MadScienceLab
             //Load sound effects
             //soundFX = new Dictionary<string, SoundEffect>();
             soundEffects = new SoundEffectPlayer(this);
-            soundEffects.LoadSound("BoxDrop", Game1._sounds["BoxDrop"]);
-            soundEffects.LoadSound("BoxPickup", Game1._sounds["BoxPickup"]);
-            soundEffects.LoadSound("Jump", Game1._sounds["Jump"]);
-            soundEffects.LoadSound("Land", Game1._sounds["Land"]);
-            soundEffects.LoadSound("PlayerHit", Game1._sounds["PlayerHit"]);
-            soundEffects.LoadSound("ToggleSwitch", Game1._sounds["ToggleSwitch"]);
+            soundEffects.LoadSound("BoxDrop", GameplayScreen._sounds["BoxDrop"]);
+            soundEffects.LoadSound("BoxPickup", GameplayScreen._sounds["BoxPickup"]);
+            soundEffects.LoadSound("Jump", GameplayScreen._sounds["Jump"]);
+            soundEffects.LoadSound("Land", GameplayScreen._sounds["Land"]);
+            soundEffects.LoadSound("PlayerHit", GameplayScreen._sounds["PlayerHit"]);
+            soundEffects.LoadSound("ToggleSwitch", GameplayScreen._sounds["ToggleSwitch"]);
 
         }
 
@@ -250,7 +250,7 @@ namespace MadScienceLab
             }
             Rectangle areaSide = new Rectangle((int)sideXPos, (int)Position.Y + 2, (int)StoredBox.Hitbox.Width - (int)leeway, (int)StoredBox.Hitbox.Height);
             bool putdownable = true;
-            foreach (CellObject levelObject in Game1.CurrentLevel.Children) //check to see if it has collision with anything
+            foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
             {
                 if (levelObject.isCollidable && areaSide.Intersects(levelObject.Hitbox))
                 {
@@ -279,7 +279,7 @@ namespace MadScienceLab
                     //check if there is area above the player to pick up the box
                     Rectangle areaTop = new Rectangle ( (int)Position.X, CharacterHitbox.Bottom, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height) );
                     bool pickuppable = true;
-                    foreach (CellObject levelObject in Game1.CurrentLevel.Children) //check to see if it has collision with anything
+                    foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
                     {
                         if (levelObject.isCollidable && areaTop.Intersects ( levelObject.Hitbox ))
                         {

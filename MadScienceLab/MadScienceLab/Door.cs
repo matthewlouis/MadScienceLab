@@ -12,7 +12,7 @@ namespace MadScienceLab
         private Boolean isOpen;
         public Door(int column, int row, Boolean isOpen):base(column, row)
         {
-            base.Model = Game1._models["door"];
+            base.Model = GameplayScreen._models["door"];
             base.isCollidable = true;
 
             this.isOpen = isOpen;
