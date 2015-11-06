@@ -1,16 +1,16 @@
-﻿XXXXXXXXXXXX1XXXXXXXXXXXXXXXX
-X                           X
-X             L             X
-X      T  XXXXXXX2XXXXXXXXXXX
-X      X                 X  X
-X       X                X  X
-XXXXXXXXXXX     S  S   t X  X
-Xt           XXXXXXXXXXXXX  X
-XXX3M        D  D  D     D @X
-XT        XXXXXXXXXXXX   XXXX
-XX        XXX           XXXXX
-XX  P T  BXXXT         XXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+﻿XXXXXXXXXXXX1XXXXXXXXXXXXXXXX               X
+X                           X               X
+X                           X               X
+X      T  XXXXXXX2XXXXXXXXXXX               X
+X      X                 X                  X
+X       X                X                  X
+XXXXXXXXXXX     S  S   t X                  X
+Xt           XXXXXXXXXXXXX                  X
+XXX3M        D  D  D     D          B  S L  X
+XT        XXXXXXXXXXXX   XXXXM     XXXXXXXDDX
+XX E      XXX           XXXXX      X     X  X
+XX  P T  BXXXT        X D       E tX     X @X
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -22,3 +22,5 @@ Above is level, below are links.
 7:24|10:18
 6:2|10:18
 10:8|13:13
+2:35|2:25
+5:40|4:43&4:44

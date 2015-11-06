@@ -70,38 +70,49 @@ namespace MadScienceLab
         {
             foreach (CellObject levelObject in renderContext.Level.Children)
             {
-
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
-                    /**Determining what side was hit**/
-                    float wy = (levelObject.Hitbox.Width + Hitbox.Width)
-                             * (((levelObject.Hitbox.Y + levelObject.Hitbox.Height) / 2) - (Hitbox.Y + Hitbox.Height) / 2);
-                    float hx = (Hitbox.Height + levelObject.Hitbox.Height)
-                             * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
 
-                    if (movestate)
+                    //if (Position.X >= (renderContext.Player.Position.X - HitboxWidth * 2) && (Position.Y - (HitboxHeight/2)) <= renderContext.Player.Position.Y)
+                    //{
+                    //    MoveLeft(GameConstants.MOVEAMOUNT);
+                    //}
+                    if ((Position.Y - HitboxHeight / 2) <= renderContext.Player.Position.Y 
+                        && (Position.Y - HitboxHeight / 2) >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
+                        && Position.X < renderContext.Player.Position.X)
                     {
-                        MoveLeft(GameConstants.MOVEAMOUNT);
-
+                        MoveRight(GameConstants.MOVEAMOUNT * 2);
                     }
                     else
                     {
-                        MoveRight(GameConstants.MOVEAMOUNT);
+                        /**Determining what side was hit**/
+                        float wy = (levelObject.Hitbox.Width + Hitbox.Width)
+                                 * (((levelObject.Hitbox.Y + levelObject.Hitbox.Height) / 2) - (Hitbox.Y + Hitbox.Height) / 2);
+                        float hx = (Hitbox.Height + levelObject.Hitbox.Height)
+                                 * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
+
+                        if (movestate)
+                        {
+                            MoveLeft(GameConstants.MOVEAMOUNT);
+
+                        }
+                        else
+                        {
+                            MoveRight(GameConstants.MOVEAMOUNT);
+                        }
+
+                        if (wy > hx)
+                        {
+                            //boxHitState = "Box Left";// left
+                            movestate = false;
+                        }
+                        if (wy > -hx)
+                        {
+                            //boxHitState = "Box Right";// right
+                            movestate = true;
+                        }
                     }
 
-                    if (wy > hx)
-                    {                      
-                        //boxHitState = "Box Left";// left
-                        movestate = false;
-                    }
-                    if (wy > -hx)
-                    {
-                        //boxHitState = "Box Right";// right
-                        movestate = true;
-                    }
-
-
-                   
                 }
 
             }       
