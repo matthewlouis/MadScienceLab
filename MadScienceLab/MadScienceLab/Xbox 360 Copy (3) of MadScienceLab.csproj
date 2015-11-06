@@ -78,6 +78,7 @@
     <Compile Include="MadLabGame.cs" />
     <Compile Include="MovingPlatform.cs" />
     <Compile Include="PickableBox.cs" />
+    <Compile Include="Quadtree.cs" />
     <Compile Include="ScreenFactory.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
     <Compile Include="Screens\GameplayScreen.cs" />
