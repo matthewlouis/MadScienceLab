@@ -19,6 +19,7 @@ namespace MadScienceLab
     {
         const int FACING_LEFT = 1, FACING_RIGHT = 2;
         byte facingDirection = FACING_RIGHT;
+        int attackRange = 4;
 
         bool movestate = false;
         private SoundEffectPlayer soundEffects;
@@ -72,16 +73,19 @@ namespace MadScienceLab
             {
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
-
-                    //if (Position.X >= (renderContext.Player.Position.X - HitboxWidth * 2) && (Position.Y - (HitboxHeight/2)) <= renderContext.Player.Position.Y)
-                    //{
-                    //    MoveLeft(GameConstants.MOVEAMOUNT);
-                    //}
                     if ((Position.Y - HitboxHeight / 2) <= renderContext.Player.Position.Y 
                         && (Position.Y - HitboxHeight / 2) >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
-                        && Position.X < renderContext.Player.Position.X)
+                        && (Position.X + HitboxWidth) >= (renderContext.Player.Position.X - (HitboxWidth * attackRange))
+                        && (Position.X + HitboxWidth) <= (renderContext.Player.Position.X + renderContext.Player.HitboxWidth))
                     {
                         MoveRight(GameConstants.MOVEAMOUNT * 2);
+                    }
+                    else if ((Position.Y - HitboxHeight / 2) <= renderContext.Player.Position.Y 
+                        && (Position.Y - HitboxHeight / 2) >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
+                        && Position.X <= (renderContext.Player.Position.X + renderContext.Player.HitboxWidth + (HitboxWidth * attackRange))
+                        && Position.X >= (renderContext.Player.Position.X + renderContext.Player.HitboxWidth))
+                    {
+                        MoveLeft(GameConstants.MOVEAMOUNT * 2);
                     }
                     else
                     {
