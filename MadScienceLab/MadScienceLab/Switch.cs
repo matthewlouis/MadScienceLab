@@ -14,7 +14,13 @@ namespace MadScienceLab
         public Boolean IsSwitched { get; set; }
         private Boolean doorsToggled = false;
 
-        public ToggleSwitch(int column, int row, Boolean toggleable):base(column, row)
+        //For resetting non-toggleable switches
+        private static TimeSpan TOGGLE_DELAY = TimeSpan.FromMilliseconds(750);
+        private TimeSpan waitTime = TimeSpan.Zero;
+        public int TimesCanBeToggled { get; set; }
+        private bool ready = true;
+
+        public ToggleSwitch(int column, int row, Boolean toggleable, int timesCanBeToggled = 1):base(column, row)
         {
             LinkedDoors = new List<SwitchableObject>();
             base.Model = GameplayScreen._models["switch"];
@@ -22,6 +28,7 @@ namespace MadScienceLab
             base.IsPassable = true;
             Toggleable = toggleable;
             Translate(Position.X, Position.Y - GameConstants.SINGLE_CELL_SIZE / 2, Position.Z); //Matt: this is for offsetting the model position so it's flat on the floor
+            TimesCanBeToggled = timesCanBeToggled;
 
             // Matt- Steven's code for auto-calculating hitbox not working for this, so I've hardcoded it here.
             HitboxHeight = HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
@@ -29,13 +36,16 @@ namespace MadScienceLab
 
         public void FlickSwitch()
         {
-            if (IsSwitched && Toggleable)
+            if (ready && TimesCanBeToggled > 0) //if ready to be switched, and still has toggles left
             {
-                IsSwitched = false;
-            }
-            else
-            {
-                IsSwitched = true;
+                if (IsSwitched)
+                {
+                    IsSwitched = false;
+                }
+                else
+                {
+                    IsSwitched = true;
+                }
             }
         }
 
@@ -52,23 +62,42 @@ namespace MadScienceLab
                 {
                     door.Toggle(renderContext);
                 }
+
+                if (!Toggleable) //If this is a non-toggle switch, implement logic to reset back to original position
+                {
+                    ready = false;
+                    waitTime = renderContext.GameTime.TotalGameTime; //get time when switched
+                    TimesCanBeToggled--; //reduce toggle count
+                }
             }
             else if (!IsSwitched && doorsToggled == true)
             {
                 Scale(1f, 1f, 1f); //FLIP MODEL BACK
 
                 doorsToggled = false;
-                foreach (SwitchableObject door in LinkedDoors)
+
+                if (Toggleable)
                 {
-                    door.Toggle(renderContext);
+                    foreach (SwitchableObject door in LinkedDoors)
+                    {
+                        door.Toggle(renderContext);
+                    }
                 }
+            }
+
+            //Checks if enough time has passed to switch back to original position
+            if (!ready &&
+                renderContext.GameTime.TotalGameTime - waitTime >= TOGGLE_DELAY)
+            {
+                ready = true;
+                IsSwitched = false;
             }
             base.Update(renderContext);
         }
 
         public override void Draw(RenderContext renderContext)
         {
-            if (IsSwitched)
+            if (IsSwitched) //Because we're flipping model to show change, we have to draw from inside out.
             {
                 RasterizerState prevState = renderContext.GraphicsDevice.RasterizerState;
                 RasterizerState state = new RasterizerState();

@@ -30,6 +30,12 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Button.X">
+      <Name>Button</Name>
+      <Importer>XImporter</Importer>
+      <Processor>SkinnedModelProcessor</Processor>
+      <ProcessorParameters_Scale>96</ProcessorParameters_Scale>
+    </Compile>
     <Compile Include="scientist.fbx">
       <Name>scientist</Name>
       <Importer>FbxImporter</Importer>
@@ -55,12 +61,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Button.fbx">
-      <Name>Button</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-      <ProcessorParameters_Scale>48</ProcessorParameters_Scale>
-    </Compile>
     <Compile Include="Switch.fbx">
       <Name>Switch</Name>
       <Importer>FbxImporter</Importer>
