@@ -10,37 +10,50 @@ namespace MadScienceLab
     class ToggleSwitch:CellObject
     {
         public List<SwitchableObject> LinkedDoors { get; set; }
-        public Boolean Toggleable { get; private set; }
+        public Boolean InfinitelyToggleable { get; private set; } //false means it's not a repeatedly flickable switch
         public Boolean IsSwitched { get; set; }
+        public int RemainingToggles { get; set; }
+        public Boolean IsToggleable { get { return InfinitelyToggleable || RemainingToggles > 0; } }
         private Boolean doorsToggled = false;
 
-        public ToggleSwitch(int column, int row, Boolean toggleable):base(column, row)
+        public ToggleSwitch(int column, int row, Boolean infinitelytoggleable):base(column, row)
         {
             LinkedDoors = new List<SwitchableObject>();
             base.Model = GameplayScreen._models["switch"];
             base.isCollidable = true;
             base.IsPassable = true;
-            Toggleable = toggleable;
+            RemainingToggles = 1;
+            InfinitelyToggleable = infinitelytoggleable;
             Translate(Position.X, Position.Y - GameConstants.SINGLE_CELL_SIZE / 2, Position.Z); //Matt: this is for offsetting the model position so it's flat on the floor
 
             // Matt- Steven's code for auto-calculating hitbox not working for this, so I've hardcoded it here.
             HitboxHeight = HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void FlickSwitch()
         {
-            if (IsSwitched && Toggleable)
+            if (InfinitelyToggleable)
             {
-                IsSwitched = false;
+                IsSwitched = !IsSwitched;
             }
             else
             {
-                IsSwitched = true;
+                if (RemainingToggles > 0)
+                {
+                    IsSwitched = !IsSwitched;
+                    RemainingToggles--;
+                }
             }
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="renderContext"></param>
         public override void Update(RenderContext renderContext)
         {
             if (IsSwitched && doorsToggled == false)

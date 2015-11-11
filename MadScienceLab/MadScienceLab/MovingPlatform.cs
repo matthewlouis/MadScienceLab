@@ -20,7 +20,7 @@ namespace MadScienceLab
         const int FACING_LEFT = 1, FACING_RIGHT = 2;
         byte facingDirection = FACING_RIGHT;
 
-        float maxDistance = 4 * GameConstants.SINGLE_CELL_SIZE;
+        public float maxDistance {get; set;}
         float currDistance = 0;
         public bool movingLeft = false;
 
@@ -29,6 +29,7 @@ namespace MadScienceLab
         {
             base.Model = GameplayScreen._models["BasicBlock"];
             base.isCollidable = true;
+            maxDistance = 2 * GameConstants.SINGLE_CELL_SIZE;
 
             // Provides a hitbox for the block - Steven
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
