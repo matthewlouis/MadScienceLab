@@ -74,6 +74,25 @@ namespace MadScienceLab
             if (clip != null) _animationPlayer.StartClip(clip, loop, blendTime);
         }
 
+        public void PlayAnimationOnceNoLoop(string clipName, float blendTime)
+        {
+            if (_animationPlayer == null)
+            {
+                _initClipName = clipName;
+                _initLoop = false;
+                _initBlendTime = blendTime;
+                return;
+            }
+
+            var clip = _skinningData.AnimationClips[clipName];
+            if (clip != null) _animationPlayer.PlayClipOnceNoLoop(clip, blendTime);
+        }
+
+        public void StopAnimation()
+        {
+            _animationPlayer.StopClip();
+        }
+
         public Matrix GetBoneTransform(string boneName)
         {
             if (_animationPlayer != null)
@@ -111,7 +130,7 @@ namespace MadScienceLab
                     effect.Projection = renderContext.Camera.Projection;
 
                     //effect.SpecularColor = new Vector3(0.25f);
-                    //effect.SpecularPower = 16;
+                    //effect.SpecularPower = 1;
                 }
 
                 mesh.Draw();
