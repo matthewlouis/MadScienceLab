@@ -21,7 +21,7 @@ namespace MadScienceLab
         public int RemainingToggles { get; set; }
         private bool ready = true;
 
-        public ToggleSwitch(int column, int row, Boolean toggleable, int timesCanBeToggled = 1):base(column, row)
+        public ToggleSwitch(int column, int row, Boolean toggleable, int timesCanBeToggled = 99):base(column, row)
         {
             LinkedDoors = new List<SwitchableObject>();
             base.isCollidable = true;
@@ -84,7 +84,7 @@ namespace MadScienceLab
                 {
                     animmodel[0].PlayAnimation("Release", false, 0f);
 
-                    if (renderContext.GameTime.TotalGameTime - waitTime >= READY_DELAY)
+                    if (Toggleable && renderContext.GameTime.TotalGameTime - waitTime >= READY_DELAY)
                     {
                         ready = true;
                     }
