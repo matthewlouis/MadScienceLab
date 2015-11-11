@@ -33,7 +33,7 @@ namespace MadScienceLab
             animmodel[1] = new GameAnimatedModel("LeverEmpty", column, row, this);
 
             Scale(72f, 72f, 48f);
-            RemainingToggles = 3;
+            RemainingToggles = timesCanBeToggled;
 
             // Matt- Steven's code for auto-calculating hitbox not working for this, so I've hardcoded it here.
             HitboxHeight = HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
