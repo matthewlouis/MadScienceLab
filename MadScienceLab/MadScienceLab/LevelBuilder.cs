@@ -185,16 +185,28 @@ namespace MadScienceLab
                     }else if(level.Children[index].GetType() == typeof(ToggleSwitch))
                     {
                         ToggleSwitch toggleSwitch = (ToggleSwitch)level.Children[index];
-                        foreach (string door in LinkedObjects)
+                        if (ObjectAndSettings[1].Contains(':')) //check if the settings are regarding coordinates, or the number of possible toggle times
                         {
-                            index = _linkedobjects[door];
-                            SwitchableObject doorToAdd = (SwitchableObject)level.Children[index];
-                            toggleSwitch.LinkedDoors.Add(doorToAdd);
-
-                            //if linked item is BoxDropper, set the toggle switch's number of possible toggles to the number of boxes that the box dropper has, by default
-                            if (doorToAdd.GetType() == typeof(BoxDropper))
+                            foreach (string door in LinkedObjects) //add each linked object to the doors list
                             {
-                                toggleSwitch.RemainingToggles = ((BoxDropper)doorToAdd).NumberOfBoxes;
+                                index = _linkedobjects[door];
+                                SwitchableObject doorToAdd = (SwitchableObject)level.Children[index];
+                                toggleSwitch.LinkedDoors.Add(doorToAdd);
+
+                                //if linked item is BoxDropper, set the toggle switch's number of possible toggles to the number of boxes that the box dropper has, by default
+                                if (doorToAdd.GetType() == typeof(BoxDropper))
+                                {
+                                    toggleSwitch.RemainingToggles = ((BoxDropper)doorToAdd).NumberOfBoxes;
+                                }
+                            }
+                        }
+                        else 
+                        {   //if the settings are regarding toggle times, parse that as toggle times
+                            int ToggleTimes = 0;
+                            bool isInt = Int32.TryParse(ObjectAndSettings[1], out ToggleTimes);
+                            if (isInt)
+                            {
+                                toggleSwitch.RemainingToggles = ToggleTimes;
                             }
                         }
                     }
@@ -205,6 +217,9 @@ namespace MadScienceLab
                         MovingPlatform movingPlatform = (MovingPlatform)level.Children[index];
                         movingPlatform.maxDistance = Int32.Parse(ObjectAndSettings[1]) * GameConstants.SINGLE_CELL_SIZE;
                     }
+
+
+                    //Message event
                     if (level.Children[index].GetType() == typeof(MessageEvent))
                     {
                         MessageEvent messageEvent = (MessageEvent)level.Children[index];

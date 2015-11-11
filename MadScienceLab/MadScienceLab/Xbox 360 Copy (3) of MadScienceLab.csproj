@@ -76,6 +76,7 @@
     <Compile Include="GameConstants.cs" />
     <Compile Include="LaserProjectile.cs" />
     <Compile Include="MadLabGame.cs" />
+    <Compile Include="MessageEvent.cs" />
     <Compile Include="MovingPlatform.cs" />
     <Compile Include="PickableBox.cs" />
     <Compile Include="ScreenFactory.cs" />
