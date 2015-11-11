@@ -8,6 +8,8 @@ namespace MadScienceLab
 {
     public class GameAnimatedModel : CellObject
     {
+        private CellObject parent;
+
         private string _assetFile;
         private AnimationPlayer _animationPlayer;
         private SkinningData _skinningData;
@@ -19,8 +21,12 @@ namespace MadScienceLab
 
         public int VerticalOffset { get; set; }
 
-        public GameAnimatedModel(string assetFile, int startRow, int startCol):base(startRow, startCol)
+        /**
+         * Matt: Needs to take parent now, so it can move with it (mainly for player)
+         */
+        public GameAnimatedModel(string assetFile, int startRow, int startCol, CellObject parent):base(startRow, startCol)
         {
+            this.parent = parent;
             _assetFile = assetFile;
             VerticalOffset = 0;
         }
@@ -68,6 +74,25 @@ namespace MadScienceLab
             if (clip != null) _animationPlayer.StartClip(clip, loop, blendTime);
         }
 
+        public void PlayAnimationOnceNoLoop(string clipName, float blendTime)
+        {
+            if (_animationPlayer == null)
+            {
+                _initClipName = clipName;
+                _initLoop = false;
+                _initBlendTime = blendTime;
+                return;
+            }
+
+            var clip = _skinningData.AnimationClips[clipName];
+            if (clip != null) _animationPlayer.PlayClipOnceNoLoop(clip, blendTime);
+        }
+
+        public void StopAnimation()
+        {
+            _animationPlayer.StopClip();
+        }
+
         public Matrix GetBoneTransform(string boneName)
         {
             if (_animationPlayer != null)
@@ -81,9 +106,9 @@ namespace MadScienceLab
             /*
              * Matt: there is probably a more efficient way to do this, but my Matrix math is awful. 
              */
-            WorldMatrix = Matrix.CreateFromQuaternion(renderContext.Player.LocalRotation) *
-                          Matrix.CreateScale(renderContext.Player.LocalScale) *
-                          Matrix.CreateTranslation(new Vector3(renderContext.Player.Position.X, renderContext.Player.Position.Y - VerticalOffset, renderContext.Player.Position.Z));
+            WorldMatrix = Matrix.CreateFromQuaternion(parent.LocalRotation) *
+                          Matrix.CreateScale(parent.LocalScale) *
+                          Matrix.CreateTranslation(new Vector3(parent.Position.X, parent.Position.Y - VerticalOffset, parent.Position.Z));
 
             _animationPlayer.Update(renderContext.GameTime.ElapsedGameTime, true, WorldMatrix);
         }
@@ -101,12 +126,11 @@ namespace MadScienceLab
                     effect.SetBoneTransforms(bones);
 
                     effect.EnableDefaultLighting();
-
                     effect.View = renderContext.Camera.View;
                     effect.Projection = renderContext.Camera.Projection;
 
-                    effect.SpecularColor = new Vector3(0.25f);
-                    effect.SpecularPower = 16;
+                    //effect.SpecularColor = new Vector3(0.25f);
+                    //effect.SpecularPower = 1;
                 }
 
                 mesh.Draw();
