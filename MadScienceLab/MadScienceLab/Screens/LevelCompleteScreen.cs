@@ -7,5 +7,6 @@ namespace MadScienceLab
 {
     class LevelCompleteScreen
     {
+
     }
 }

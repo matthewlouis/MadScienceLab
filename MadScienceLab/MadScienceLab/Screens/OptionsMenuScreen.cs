@@ -9,6 +9,8 @@
 
 #region Using Statements
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+
 #endregion
 
 namespace MadScienceLab
@@ -82,6 +84,11 @@ namespace MadScienceLab
         void soundMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             sound = !sound;
+
+            if (!sound)
+                SoundEffect.MasterVolume = 0;
+            else
+                SoundEffect.MasterVolume = 1;
 
             SetMenuEntryText();
         }
