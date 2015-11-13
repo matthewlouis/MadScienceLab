@@ -10,6 +10,7 @@ namespace MadScienceLab
     {
         public Point PlayerPoint;
         public Dictionary<Type, List<GameObject3D>> gameObjects;
+        public List<GameObject3D> collidableObjects;
         public bool LevelOver { get; set; }
         public bool GameOver { get; set; }
 

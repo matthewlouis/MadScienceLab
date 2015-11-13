@@ -36,10 +36,22 @@ namespace MadScienceLab
 
         public override void Update(RenderContext renderContext)
         {
+            List<CellObject> returnObjs = new List<CellObject>();
+
+            renderContext.Quadtree.clear();
+            foreach (CellObject obj in renderContext.Level.collidableObjects)
+            {
+                if (obj.GetType() != typeof(LaserTurret))
+                renderContext.Quadtree.insert(obj);
+            }
+
+            renderContext.Quadtree.retrieve(returnObjs, Hitbox);
+            
+
             if (active)
             {
                 soundEffects.Update(renderContext);
-                CheckProjectileCollision(renderContext);
+                CheckProjectileCollision(renderContext, returnObjs);
                 Position += TransVelocity;
             }
             else
@@ -49,6 +61,9 @@ namespace MadScienceLab
                 //Stop sound and remove resource
                 soundEffects.SoundInstances["LaserWhirLoop"].Dispose();
             }
+
+
+
             base.Update(renderContext);
         }
 
@@ -71,7 +86,7 @@ namespace MadScienceLab
                 TransVelocity = new Vector3(0);
         }
 
-        public void CheckProjectileCollision(RenderContext renderContext)
+        public void CheckProjectileCollision(RenderContext renderContext, List<CellObject> returnObjs)
         {
             // if collision with player, handle
            /* if(this.Hitbox.Intersects(renderContext.Player.Hitbox))
@@ -80,36 +95,53 @@ namespace MadScienceLab
                 TransVelocity = Vector3.Zero;
                 renderContext.Player.SetHealth(GameConstants.PLAYER_DAMAGE);
             }*/
-            
-            
-           
-            foreach (GameObject3D worldObject in renderContext.Level.gameObjects[typeof(Character)])
+
+            // Quad tree collison checks - Steven
+            foreach (CellObject worldObject in returnObjs)
             {
-                if (Hitbox.Intersects(worldObject.Hitbox) && worldObject.GetType() != typeof(LaserTurret))
+                if (Hitbox.Intersects(worldObject.Hitbox))
                 {
-                    active = false;
-                    TransVelocity = Vector3.Zero;
-                    renderContext.Player.SetHealth(GameConstants.PLAYER_DAMAGE);
+                    if (worldObject.GetType() == typeof(Character))
+                    {
+                        active = false;
+                        renderContext.Player.SetHealth(GameConstants.PLAYER_DAMAGE);
+                        TransVelocity = Vector3.Zero;
+                    }
+                    else
+                    {
+                        active = false;
+                        TransVelocity = Vector3.Zero;
+                    }
                 }
             }
 
-            foreach (GameObject3D worldObject in renderContext.Level.gameObjects[typeof(BasicBlock)])
-            {
-                if (Hitbox.Intersects(worldObject.Hitbox) && worldObject.GetType() != typeof(LaserTurret))
-                {
-                    active = false;
-                    TransVelocity = Vector3.Zero;
-                }
-            }
+            //foreach (GameObject3D worldObject in renderContext.Level.gameObjects[typeof(Character)])
+            //{
+            //    if (Hitbox.Intersects(worldObject.Hitbox) && worldObject.GetType() != typeof(LaserTurret))
+            //    {
+            //        active = false;
+            //        TransVelocity = Vector3.Zero;
+            //        renderContext.Player.SetHealth(GameConstants.PLAYER_DAMAGE);
+            //    }
+            //}
 
-            foreach (GameObject3D worldObject in renderContext.Level.gameObjects[typeof(PickableBox)])
-            {
-                if (Hitbox.Intersects(worldObject.Hitbox) && worldObject.GetType() != typeof(LaserTurret))
-                {
-                    active = false;
-                    TransVelocity = Vector3.Zero;
-                }
-            }
+            //foreach (GameObject3D worldObject in renderContext.Level.gameObjects[typeof(BasicBlock)])
+            //{
+            //    if (Hitbox.Intersects(worldObject.Hitbox) && worldObject.GetType() != typeof(LaserTurret))
+            //    {
+            //        active = false;
+            //        TransVelocity = Vector3.Zero;
+            //    }
+            //}
+
+            //foreach (GameObject3D worldObject in renderContext.Level.gameObjects[typeof(PickableBox)])
+            //{
+            //    if (Hitbox.Intersects(worldObject.Hitbox) && worldObject.GetType() != typeof(LaserTurret))
+            //    {
+            //        active = false;
+            //        TransVelocity = Vector3.Zero;
+            //    }
+            //}
             Position += TransVelocity;
 
         }

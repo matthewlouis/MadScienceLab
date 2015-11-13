@@ -148,7 +148,8 @@ namespace MadScienceLab
                     _doors.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                 }
             }
-
+            level.collidableObjects = new List<GameObject3D>();
+            level.collidableObjects.AddRange(level.Children); // All objects that will be colliding with the player in the same Z axis - Steven
             // Interates through the link text to find buttons and their links to the doors - Steven
             if (linktxt.Length != 0)
             {

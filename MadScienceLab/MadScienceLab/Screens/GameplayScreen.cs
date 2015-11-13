@@ -178,6 +178,8 @@ namespace MadScienceLab
                 _renderContext.SpriteFont = font;
                 basicLevel.PopulateTypeList(_renderContext);
 
+                _renderContext.Level.collidableObjects.Add(player); // Adding player to list of collidable objects - Steven
+
                 _timer = new GameTimer(_renderContext);
                 _renderContext.GameTimer = _timer;
 
@@ -248,7 +250,7 @@ namespace MadScienceLab
 
                 foreach (CellObject obj in basicLevel.Children)
                 {
-                    _renderContext.Quadtree.insert(obj.Hitbox);
+                    _renderContext.Quadtree.insert(obj);
                 }
 
                 _renderContext.GameTime = gameTime;
