@@ -9,6 +9,9 @@ namespace MadScienceLab
 {
     class Door:SwitchableObject
     {
+        private static int DOOR_SPEED = 3;
+        private static int DOOR_CLOSED_ZPOSITION = -GameConstants.SINGLE_CELL_SIZE + 2;
+
         private Boolean isOpen;
         public Door(int column, int row, Boolean isOpen):base(column, row)
         {
@@ -24,13 +27,22 @@ namespace MadScienceLab
         //Makes door unCollidable when open
         public override void Update(RenderContext renderContext)
         {
-            
-            if(isOpen){
-                this.Position = new Vector3(Position.X, Position.Y, -GameConstants.SINGLE_CELL_SIZE + 2);
+
+            if (isOpen)
+            {
+                float nextPos = Position.Z - DOOR_SPEED;
+                if (nextPos > DOOR_CLOSED_ZPOSITION)
+                    this.Position = new Vector3(Position.X, Position.Y, nextPos);
+                else
+                    this.Position = new Vector3(Position.X, Position.Y, DOOR_CLOSED_ZPOSITION);
                 isCollidable = false;
             }else
             {
-                this.Position = new Vector3(Position.X, Position.Y, 0);
+                float nextPos = Position.Z + DOOR_SPEED;
+                if (nextPos < 0)
+                    this.Position = new Vector3(Position.X, Position.Y, nextPos);
+                else
+                    this.Position = new Vector3(Position.X, Position.Y, 0);
                 isCollidable = true;
             }
             base.Update(renderContext);
