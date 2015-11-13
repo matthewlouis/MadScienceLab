@@ -49,7 +49,7 @@ namespace MadScienceLab
 
             SetMenuEntryText();
 
-            MenuEntry back = new MenuEntry("Menu/Back");
+            MenuEntry back = new MenuEntry("Main Menu");
 
             // Hook up menu event handlers.
             soundMenuEntry.Selected += soundMenuEntrySelected;

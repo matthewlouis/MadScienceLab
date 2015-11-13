@@ -26,9 +26,10 @@ namespace MadScienceLab
             animmodel[0].SetAnimationSpeed(1.2f);
             animmodel[1].SetAnimationSpeed(1.2f);
 
-            Scale(12f, 12f, 12f);
+            Scale(10f, 10f, 10f);
             NumberOfBoxes = numberOfBoxes;
             isCollidable = true;
+            IsPassable = false;
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)

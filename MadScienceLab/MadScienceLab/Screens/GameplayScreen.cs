@@ -66,6 +66,9 @@ namespace MadScienceLab
 
         InputAction pauseAction;
 
+        // Level selected string to build level
+        string levelSelect;
+
         #endregion
 
         #region Initialization
@@ -74,8 +77,10 @@ namespace MadScienceLab
         /// <summary>
         /// Constructor. Initialize game data here
         /// </summary>
-        public GameplayScreen()
+        public GameplayScreen(string levelSelect)
         {
+            this.levelSelect = levelSelect;
+
             // transition time used for screen transitions
             TransitionOnTime = TimeSpan.FromSeconds(1);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -165,7 +170,7 @@ namespace MadScienceLab
                 _sounds.Add("ToggleSwitch", content.Load<SoundEffect>("Sounds/ToggleSwitch"));
 
                 //loads the basic level
-                basicLevel = LevelBuilder.MakeBasicLevel();
+                basicLevel = LevelBuilder.MakeBasicLevel(levelSelect);
                 CurrentLevel = basicLevel; //we can handle this through render context eventually.
                 basicLevel.LoadContent(content);
 
@@ -223,15 +228,7 @@ namespace MadScienceLab
         /// </summary>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
-        {
-                        // Allows the game to exit
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-              //  Keyboard.GetState().IsKeyDown(Keys.Escape))
-                
-
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed ||
-             //   Keyboard.GetState().IsKeyDown(Keys.Enter))
-            
+        {          
             base.Update(gameTime, otherScreenHasFocus, false);
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.
@@ -275,6 +272,10 @@ namespace MadScienceLab
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
+            // Spritebatch changes graphicsdevice values; sets the oringinal state
+            ScreenManager.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            ScreenManager.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target,
                                                Color.Black, 0, 0);
@@ -295,16 +296,13 @@ namespace MadScienceLab
 
             if (_renderContext.Level.LevelOver)
             {
-                spriteBatch.Begin();
-                spriteBatch.Draw(GameplayScreen._textures["Complete"], new Vector2(ScreenManager.GraphicsDevice.Viewport.Width / 2 - GameplayScreen._textures["Complete"].Width / 2, ScreenManager.GraphicsDevice.Viewport.Height / 2 - GameplayScreen._textures["Complete"].Height / 2), Color.White);
-                spriteBatch.End();
+                
             }
 
             if (_renderContext.Level.GameOver)
             {
-                spriteBatch.Begin();
-                spriteBatch.Draw(GameplayScreen._textures["GameOver"], new Vector2(ScreenManager.GraphicsDevice.Viewport.Width / 2 - GameplayScreen._textures["GameOver"].Width / 2, ScreenManager.GraphicsDevice.Viewport.Height / 2 - GameplayScreen._textures["GameOver"].Height / 2), Color.White);
-                spriteBatch.End();
+                LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                                                           new LevelCompleteScreen());
             }
 
             //fpsCount.Draw(gameTime);

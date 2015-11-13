@@ -75,6 +75,7 @@ namespace MadScienceLab
             screenManager = new ScreenManager(this);
             Components.Add(screenManager);
 
+            
             // On Windows and Xbox we just add the initial screens
             AddInitialScreens();
         }
