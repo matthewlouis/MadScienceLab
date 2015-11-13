@@ -74,6 +74,7 @@
     <Compile Include="ExitBlock.cs" />
     <Compile Include="FPSCounter.cs" />
     <Compile Include="GameConstants.cs" />
+    <Compile Include="GameTimer.cs" />
     <Compile Include="LaserProjectile.cs" />
     <Compile Include="MadLabGame.cs" />
     <Compile Include="MovingPlatform.cs" />

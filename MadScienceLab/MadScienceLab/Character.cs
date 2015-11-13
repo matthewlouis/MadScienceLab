@@ -538,7 +538,6 @@ namespace MadScienceLab
                     if (levelObject.GetType() == typeof(Button)) //if it is a button
                     {
                         Button button = (Button)levelObject as Button;
-                        Console.WriteLine("hi");
                         button.IsPressed = true;
                     }
 
