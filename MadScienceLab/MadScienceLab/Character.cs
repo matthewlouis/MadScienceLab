@@ -60,7 +60,7 @@ namespace MadScienceLab
         public Character(int startRow, int startCol):base(startRow, startCol)
         {
             // create model with offset of position
-            charModel = new GameAnimatedModel("Vampire", startRow, startCol);
+            charModel = new GameAnimatedModel("Vampire", startRow, startCol, this);
             charModel.VerticalOffset = 22;         
             Rotate(0f, 90f, 0f);
             health = 3;
@@ -303,7 +303,6 @@ namespace MadScienceLab
                 {
                     ToggleSwitch currentSwitch = (ToggleSwitch)InteractiveObj;
                     currentSwitch.FlickSwitch();
-                    soundEffects.PlaySound("ToggleSwitch");
                 }
             }     
         }
@@ -426,7 +425,7 @@ namespace MadScienceLab
 
         public void Stop()
         {
-            charModel.PlayAnimation("Idle", true, 0f);
+            charModel.PlayAnimation("Idle", true, 0.2f);
         }
 
         public void InteractWithObject()
