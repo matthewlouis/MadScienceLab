@@ -23,7 +23,7 @@ namespace MadScienceLab
         public static int levelheight; //count \n; (# of "\n")+(1 for floor) is the height. placement; thus, get height first.
 
         //Builds Basic level
-        public static Level MakeBasicLevel()
+        public static Level MakeBasicLevel(string LevelTxtFile, string BackTxtFile)
         {
             Level level = new Level();
 
@@ -51,8 +51,8 @@ namespace MadScienceLab
              */
 
             //Note: The levels' txt files currently have a new line at the very end of it. Don't delete it.
-            string leveltxtfile = FromFile ( "Level.txt" );
-            string backtxt = FromFile( "LevelBack.txt" );
+            string leveltxtfile = FromFile ( LevelTxtFile );
+            string backtxt = FromFile( BackTxtFile );
 
             //get object pairs (for links between switches and doors/boxes)
             // The format used to link buttons to doors "ButtonCoord linked to 1 or more DoorCoord" - Steven
@@ -101,7 +101,7 @@ namespace MadScienceLab
                         level.AddChild ( new PickableBox ( col++, row ) ); //replace BasicBlock with the actual object once implemented
                         break;
                     case 'T': //Toggleable lever switch
-                        level.AddChild ( new ToggleSwitch ( col++, row, true) );
+                        level.AddChild ( new ToggleSwitch ( col++, row, true ) );
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 't': //One-time lever switch
@@ -211,11 +211,21 @@ namespace MadScienceLab
                         }
                     }
 
-                    //Jacob - For moving platform - set moving platform
+                    //Jacob - For moving platform - set moving platform initial direction and distance
                     if (level.Children[index].GetType() == typeof(MovingPlatform))
                     {
+                        string[] Settings = ObjectAndSettings[1].Split(',');
                         MovingPlatform movingPlatform = (MovingPlatform)level.Children[index];
-                        movingPlatform.maxDistance = Int32.Parse(ObjectAndSettings[1]) * GameConstants.SINGLE_CELL_SIZE;
+                        //set initial direction of moving platform
+                        if(Settings[0] == "L") {
+                            movingPlatform.movingLeft = true;
+                        }
+                        else
+                            if (Settings[0] == "R")
+                        {
+                            movingPlatform.movingLeft = false;
+                        }
+                        movingPlatform.maxDistance = Int32.Parse(Settings[1]) * GameConstants.SINGLE_CELL_SIZE;
                     }
 
 

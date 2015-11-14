@@ -115,6 +115,9 @@
     <Compile Include="SwitchableObject.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Level2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>

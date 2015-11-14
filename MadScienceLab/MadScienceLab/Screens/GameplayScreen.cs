@@ -165,7 +165,7 @@ namespace MadScienceLab
                 _sounds.Add("ToggleSwitch", content.Load<SoundEffect>("Sounds/ToggleSwitch"));
 
                 //loads the basic level
-                basicLevel = LevelBuilder.MakeBasicLevel();
+                basicLevel = LevelBuilder.MakeBasicLevel("Level2.txt", "LevelBack.txt");
                 CurrentLevel = basicLevel; //we can handle this through render context eventually.
                 basicLevel.LoadContent(content);
 

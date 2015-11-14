@@ -17,19 +17,21 @@ namespace MadScienceLab
 {
     class MovingPlatform : CellObject
     {
-        const int FACING_LEFT = 1, FACING_RIGHT = 2;
+        const int FACING_LEFT = 1, FACING_RIGHT = 2, FACING_BOTTOM = 3, FACING_TOP = 4;
         byte facingDirection = FACING_RIGHT;
 
         public float maxDistance {get; set;}
         float currDistance = 0;
         public bool movingLeft = false;
+        public bool PlayerOnPlatform = false;
+
 
         public MovingPlatform(int column, int row)
             : base(column, row)
         {
             base.Model = GameplayScreen._models["BasicBlock"];
             base.isCollidable = true;
-            maxDistance = 2 * GameConstants.SINGLE_CELL_SIZE;
+            maxDistance = 2 * GameConstants.SINGLE_CELL_SIZE; //default distance
 
             // Provides a hitbox for the block - Steven
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
@@ -46,22 +48,36 @@ namespace MadScienceLab
             base.Update(renderContext);
         }
 
-        public void MoveLeft(float movementAmount)
+        public void MoveLeft(RenderContext renderContext, float movementAmount)
         {
             facingDirection = FACING_LEFT;
             Rotate(0f, -90f, 0f);
             Vector3 newPosition = Position + new Vector3(-movementAmount, 0, 0);
             currDistance += movementAmount;
             Translate(newPosition);
+
+            //if player is on the platform, move the player just as much as the platform does
+            if (PlayerOnPlatform)
+            {
+                Vector3 newPlayerPosition = renderContext.Player.Position + new Vector3(-movementAmount, 0, 0);
+                renderContext.Player.Translate(newPlayerPosition);
+            }
         }
 
-        public void MoveRight(float movementAmount)
+        public void MoveRight(RenderContext renderContext, float movementAmount)
         {
             facingDirection = FACING_RIGHT;
             Rotate(0f, 90f, 0f);
             Vector3 newPosition = Position + new Vector3(movementAmount, 0, 0);
             currDistance += movementAmount;
             Translate(newPosition);
+
+            //if player is on the platform, move the player just as much as the platform does
+            if (PlayerOnPlatform)
+            {
+                Vector3 newPlayerPosition = renderContext.Player.Position + new Vector3(movementAmount, 0, 0);
+                renderContext.Player.Translate(newPlayerPosition);
+            }
         }
 
         private void CheckEnemyBoxCollision(RenderContext renderContext)
@@ -79,12 +95,12 @@ namespace MadScienceLab
 
                     if (movingLeft)
                     {
-                        MoveLeft(GameConstants.MOVEAMOUNT);
+                        MoveLeft(renderContext, GameConstants.MOVEAMOUNT);
 
                     }
                     else
                     {
-                        MoveRight(GameConstants.MOVEAMOUNT);
+                        MoveRight(renderContext, GameConstants.MOVEAMOUNT);
                     }
 
                     if (wy > hx)
