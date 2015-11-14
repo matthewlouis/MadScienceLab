@@ -29,16 +29,19 @@ namespace MadScienceLab
         {
             // Create our menu entries.
             MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
+            MenuEntry LevelSelectMenuEntry = new MenuEntry("Level Select");
             MenuEntry optionsMenuEntry = new MenuEntry("Options");
             MenuEntry exitMenuEntry = new MenuEntry("Exit");
 
             // Hook up menu event handlers.
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
+            LevelSelectMenuEntry.Selected += LevelSelectMenuEntrySelected;
             optionsMenuEntry.Selected += OptionsMenuEntrySelected;
             exitMenuEntry.Selected += OnCancel;
 
             // Add entries to the menu.
             MenuEntries.Add(playGameMenuEntry);
+            MenuEntries.Add(LevelSelectMenuEntry);
             MenuEntries.Add(optionsMenuEntry);
             MenuEntries.Add(exitMenuEntry);
         }
@@ -55,7 +58,15 @@ namespace MadScienceLab
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen());
+                               new GameplayScreen("level1"));
+        }
+
+        /// <summary>
+        /// Event handler for when the Level Select menu entry is selected.
+        /// </summary>
+        void LevelSelectMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            ScreenManager.AddScreen(new LevelSelectScreen(), e.PlayerIndex);
         }
 
 

@@ -23,7 +23,7 @@ namespace MadScienceLab
         public static int levelheight; //count \n; (# of "\n")+(1 for floor) is the height. placement; thus, get height first.
 
         //Builds Basic level
-        public static Level MakeBasicLevel()
+        public static Level MakeBasicLevel(string levelSelect)
         {
             Level level = new Level();
 
@@ -48,8 +48,9 @@ namespace MadScienceLab
              */
 
             //Note: The levels' txt files currently have a new line at the very end of it. Don't delete it.
-            string leveltxtfile = FromFile ( "Level.txt" );
-            string backtxt = FromFile( "LevelBack.txt" );
+            
+            string leveltxtfile = FromFile ("Levels/" + levelSelect + ".txt" );
+            string backtxt = FromFile( "Levels/" + levelSelect + "Back.txt" );
 
             //get object pairs (for links between switches and doors/boxes)
             // The format used to link buttons to doors "ButtonCoord linked to 1 or more DoorCoord" - Steven
@@ -235,6 +236,7 @@ namespace MadScienceLab
 
             return level;
         }
+
         private static String FromFile ( String file )
         {
             //credit goes to MikeBMcLBob Taco Industries - https://social.msdn.microsoft.com/forums/windowsapps/en-US/7fcea210-8405-4a38-9459-eb0a361681cc/using-txt-file-in-xna-game?forum=wpdevelop for this.
@@ -250,10 +252,5 @@ namespace MadScienceLab
             txt = txt.Replace ( "\r\n", "\n" ); //remove all of the \r newlines - as this wasn't accounted for when we were writing the txt file. Note that the strings _did not_ consider these!
             return txt;
         }
-        
-
-
-        
-
     }
 }
