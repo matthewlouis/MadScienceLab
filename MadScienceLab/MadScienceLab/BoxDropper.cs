@@ -35,10 +35,8 @@ namespace MadScienceLab
         {
             this.row = row;
             this.column = column;
-<<<<<<< HEAD
             this.ReservedBoxes = 0;
             base.Model = GameplayScreen._models["BlockDropper"];
-=======
 
             //Set up animations
             animmodel[0] = new GameAnimatedModel("BoxDropperAnimated", column, row, this);
@@ -47,7 +45,6 @@ namespace MadScienceLab
             animmodel[1].SetAnimationSpeed(1.2f);
 
             Scale(12f, 12f, 12f);
->>>>>>> refs/remotes/origin/master
             NumberOfBoxes = numberOfBoxes;
             isCollidable = true;
         }
@@ -79,17 +76,11 @@ namespace MadScienceLab
 
             if (NumberOfBoxes > 0)
             {
-<<<<<<< HEAD
                 ReservedBoxes++;
                 NumberOfBoxes--;
-=======
-                //Creates new PickableBox underneath dropper.
-                PickableBox newBox = new PickableBox(new Vector2(this.Position.X, this.Position.Y - GameConstants.SINGLE_CELL_SIZE));
-                renderContext.Level.AddChild(newBox);
 
-                if(--NumberOfBoxes == 0)         //if now empty
+                if(NumberOfBoxes == 0)         //if now empty
                     animmodel[0] = animmodel[1]; //replace model with empty one
->>>>>>> refs/remotes/origin/master
             }
             animmodel[0].PlayAnimationOnceNoLoop("Drop", 0f);
         }
