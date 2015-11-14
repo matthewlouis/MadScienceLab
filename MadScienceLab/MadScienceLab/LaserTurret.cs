@@ -11,7 +11,21 @@ namespace MadScienceLab
     class LaserTurret:CellObject
     {
         bool turretOn;
-        GameConstants.DIRECTION direction;
+        public GameConstants.DIRECTION direction {
+            get {
+                return _direction;
+            }
+            set {
+                _direction = value;
+                if (value == GameConstants.DIRECTION.pointLeft) {
+                    RotateLeft ();
+                }
+                else if (value == GameConstants.DIRECTION.pointRight) {
+                    RotateRight ();
+                }
+            }
+        }
+        private GameConstants.DIRECTION _direction;
         int elapsedFireTime = 0;
         int firingDelay = 3000;
 
@@ -27,22 +41,11 @@ namespace MadScienceLab
         {
             // Load and position,rotate model based on level builder direction
             base.Model = GameplayScreen._models["Turret"];
-            if(direction == GameConstants.DIRECTION.pointLeft)
-            {
-                RotateLeft();
-            }
-            else
-                if(direction == GameConstants.DIRECTION.pointRight)
-                {
-                    RotateRight();
-                }
+            this.direction = direction;
             SetVerticalOffset(20);
             
             // set turret to on state
             this.turretOn = turretOn;
-
-            // set turret facing direction
-            this.direction = direction;
 
             // collision handling
             base.isCollidable = true;
@@ -77,7 +80,18 @@ namespace MadScienceLab
                 soundEffects.PlaySound("LaserShoot");
                 elapsedFireTime = 0;
                 //projectiles.Add(new LaserProjectile(CellNumber.X, CellNumber.Y, direction));
-                renderContext.Level.AddChild(new LaserProjectile(CellNumber.X, CellNumber.Y, direction));
+                LaserProjectile projectile = new LaserProjectile(CellNumber.X, CellNumber.Y, direction);
+
+                //Position the projectile according to the position of the turret
+                //Actually, not necessary.
+                /*float projectileX;
+                if (direction == GameConstants.DIRECTION.pointLeft)
+                    projectileX = this.Hitbox.Left;
+                else
+                    projectileX = this.Hitbox.Right - projectile.Hitbox.Width / 2;
+                projectile.Translate ( projectileX, this.Hitbox.Top, this.zPosition ); //position the projectile to be a position relative to the turret
+                 * */
+                renderContext.Level.AddChild(projectile);
             }
 
         }
