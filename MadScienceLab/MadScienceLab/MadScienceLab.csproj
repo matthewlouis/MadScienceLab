@@ -101,7 +101,7 @@
     <Compile Include="Screens\PauseMenuScreen.cs" />
     <Compile Include="Screens\PlayerIndexEventArgs.cs" />
     <Compile Include="SoundEffectPlayer.cs" />
-    <Compile Include="Switch.cs" />
+    <Compile Include="ToggleSwitch.cs" />
     <Compile Include="Door.cs" />
     <Compile Include="GameAnimatedModel.cs" />
     <Compile Include="GameObject3D.cs" />

@@ -302,9 +302,11 @@ namespace MadScienceLab
                 else if (InteractiveObj != null && InteractiveObj.GetType() == typeof(ToggleSwitch))
                 {
                     ToggleSwitch currentSwitch = (ToggleSwitch)InteractiveObj;
-                    if (currentSwitch.IsToggleable)
-                        soundEffects.PlaySound("ToggleSwitch");
-                    currentSwitch.FlickSwitch();
+                    if (currentSwitch.IsToggleable && currentSwitch.IsReady)
+                    {
+                        soundEffects.PlaySound ( "ToggleSwitch" );
+                        currentSwitch.FlickSwitch ();
+                    }
                 }
             }     
         }

@@ -101,7 +101,7 @@ namespace MadScienceLab
                         level.AddChild ( new PickableBox ( col++, row ) ); //replace BasicBlock with the actual object once implemented
                         break;
                     case 'T': //Toggleable lever switch
-                        level.AddChild ( new ToggleSwitch ( col++, row, true ) );
+                        level.AddChild ( new ToggleSwitch ( col++, row, true) );
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 't': //One-time lever switch
