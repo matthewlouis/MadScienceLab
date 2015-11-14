@@ -99,7 +99,7 @@ namespace MadScienceLab
             // Quad tree collison checks - Steven
             foreach (CellObject worldObject in returnObjs)
             {
-                if (Hitbox.Intersects(worldObject.Hitbox))
+                if (!worldObject.IsPassable && Hitbox.Intersects(worldObject.Hitbox))
                 {
                     if (worldObject.GetType() == typeof(Character))
                     {
