@@ -12,6 +12,7 @@ namespace MadScienceLab
         public string Message {get; set;}
         public MessageEvent(int column, int row) : base(column, row)
         {
+            base.isCollidable = false;
             UpdateBoundingBox ( GameplayScreen._models["BasicBlock"], Matrix.CreateTranslation ( base.Position ), false, false ); //use bounding box of a BasicBlock
         }
     }
