@@ -60,7 +60,7 @@ namespace MadScienceLab
         public Character(int startRow, int startCol):base(startRow, startCol)
         {
             // create model with offset of position
-            charModel = new GameAnimatedModel("Vampire", startRow, startCol);
+            charModel = new GameAnimatedModel("Vampire", startRow, startCol, this);
             charModel.VerticalOffset = 22;         
             Rotate(0f, 90f, 0f);
             health = 3;
@@ -72,7 +72,7 @@ namespace MadScienceLab
             charModel.LoadContent(contentManager);
             charModel.PlayAnimation("Idle", true, 0f);
             UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, false);
-            // Overriding the hitbox size, the new model will need to be the height of the cells, for now the vamp model height is overrided - Steven
+            // Overriding the hitbox size - Steven
             base.HitboxWidth = 48;
             base.HitboxHeight = 48;
 
@@ -277,7 +277,7 @@ namespace MadScienceLab
                 if (AdjacentObj != null && AdjacentObj.GetType() == typeof(PickableBox) && (((PickableBox)(AdjacentObj)).IsLiftable))
                 {
                     //check if there is area above the player to pick up the box
-                    Rectangle areaTop = new Rectangle ( (int)Position.X, CharacterHitbox.Bottom + 1, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height) );
+                    Rectangle areaTop = new Rectangle ( (int)Position.X, CharacterHitbox.Bottom, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height) );
                     bool pickuppable = true;
                     foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
                     {
@@ -427,7 +427,7 @@ namespace MadScienceLab
 
         public void Stop()
         {
-            charModel.PlayAnimation("Idle", true, 0f);
+            charModel.PlayAnimation("Idle", true, 0.2f);
         }
 
         public void InteractWithObject()
@@ -467,9 +467,9 @@ namespace MadScienceLab
                 {
                     /**Determining what side was hit**/
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
-                             * (levelObject.Hitbox.Center.Y - StoredBox.Hitbox.Center.Y);
+                             * (((levelObject.Hitbox.Y + levelObject.Hitbox.Height) / 2) - (StoredBox.Hitbox.Y + Hitbox.Height) / 2);
                     float hx = (Hitbox.Height + levelObject.Hitbox.Height)
-                             * (levelObject.Hitbox.Center.X - StoredBox.Hitbox.Center.X);
+                             * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
 
                     Button tmpButton = levelObject as Button;
                     if (tmpButton != null) //if it is a button
@@ -485,7 +485,7 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Top";//top
-                                Position = new Vector3(Position.X, levelObject.Hitbox.Top - this.Hitbox.Height - StoredBox.Hitbox.Height - 1, 0); //clip to the top of the colliding object
+                                Position = new Vector3(Position.X, levelObject.Hitbox.Top - this.Hitbox.Height * 2 - 1, 0); //clip to the top of the colliding object
                                 TransVelocity = Vector3.Zero;
                             }
                             else
@@ -500,7 +500,7 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Right";// right
-                                Position = new Vector3(levelObject.Hitbox.Left - StoredBox.Hitbox.Width, (int)Position.Y, 0);
+                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth, (int)Position.Y, 0);
                                 AdjacentObj = levelObject;
                             }
                         }
@@ -532,14 +532,13 @@ namespace MadScienceLab
 
                     /**Determining what side was hit**/
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
-                             * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
+                             * (((levelObject.Hitbox.Y + levelObject.Hitbox.Height) / 2) - (Hitbox.Y + Hitbox.Height) / 2);
                     float hx = (Hitbox.Height + levelObject.Hitbox.Height)
-                             * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
+                             * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
 
                     if (levelObject.GetType() == typeof(Button)) //if it is a button
                     {
                         Button button = (Button)levelObject as Button;
-                        Console.WriteLine("hi");
                         button.IsPressed = true;
                     }
 
@@ -556,7 +555,7 @@ namespace MadScienceLab
                             else
                             {
                                 //boxHitState = "Box Left";// left
-                                Position = new Vector3(levelObject.Hitbox.Right + 1 - HitboxWidthOffset, (int)Position.Y, 0);
+                                Position = new Vector3(levelObject.Hitbox.Right + 1, (int)Position.Y, 0);
                                 AdjacentObj = levelObject;
                             }
                         }
@@ -565,7 +564,7 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Right";// right
-                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth - HitboxWidthOffset, (int)Position.Y, 0);
+                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth, (int)Position.Y, 0);
                                 AdjacentObj = levelObject;
                             }
                             else

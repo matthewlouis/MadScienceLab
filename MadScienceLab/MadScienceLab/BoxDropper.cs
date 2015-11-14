@@ -28,30 +28,75 @@ namespace MadScienceLab
         private int ReservedBoxes;
         private int row, column;
 
+        private GameAnimatedModel[] animmodel = new GameAnimatedModel[2];
+
         public BoxDropper(int column, int row, int numberOfBoxes)
             : base(column, row)
         {
             this.row = row;
             this.column = column;
+<<<<<<< HEAD
             this.ReservedBoxes = 0;
             base.Model = GameplayScreen._models["BlockDropper"];
+=======
+
+            //Set up animations
+            animmodel[0] = new GameAnimatedModel("BoxDropperAnimated", column, row, this);
+            animmodel[1] = new GameAnimatedModel("BoxDropperEmptyAnimated", column, row, this);
+            animmodel[0].SetAnimationSpeed(1.2f);
+            animmodel[1].SetAnimationSpeed(1.2f);
+
+            Scale(12f, 12f, 12f);
+>>>>>>> refs/remotes/origin/master
             NumberOfBoxes = numberOfBoxes;
             isCollidable = true;
-            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
+        }
+
+        public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
+        {
+            base.LoadContent(contentManager);
+
+            //Loads both empty and full models
+            animmodel[0].LoadContent(contentManager);
+            animmodel[1].LoadContent(contentManager);
+
+            UpdateBoundingBox(animmodel[0].Model, Matrix.CreateTranslation(animmodel[0].Position), false, false);
+        }
+
+        public override void Update(RenderContext renderContext)
+        {
+            animmodel[0].Update(renderContext);
+            base.Update(renderContext);
         }
 
         //Drops a box as soon as it can.
         public override void Toggle(RenderContext renderContext)
         {
+            if (NumberOfBoxes == 0) //if empty don't do anything
+            {
+                return;
+            }
+
             if (NumberOfBoxes > 0)
             {
+<<<<<<< HEAD
                 ReservedBoxes++;
                 NumberOfBoxes--;
+=======
+                //Creates new PickableBox underneath dropper.
+                PickableBox newBox = new PickableBox(new Vector2(this.Position.X, this.Position.Y - GameConstants.SINGLE_CELL_SIZE));
+                renderContext.Level.AddChild(newBox);
+
+                if(--NumberOfBoxes == 0)         //if now empty
+                    animmodel[0] = animmodel[1]; //replace model with empty one
+>>>>>>> refs/remotes/origin/master
             }
-            
-            //Show the model as empty if so.
-            if(NumberOfBoxes == 0)
-                base.Model = GameplayScreen._models["BlockDropper_Empty"];
+            animmodel[0].PlayAnimationOnceNoLoop("Drop", 0f);
+        }
+
+        public override void Draw(RenderContext renderContext)
+        {
+            animmodel[0].Draw(renderContext);
         }
 
         public override void Update(RenderContext renderContext)
