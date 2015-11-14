@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameStateManagement (Window
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xbox 360 Copy of GameStateManagement (Windows)", "GameStateManagement\Xbox 360 Copy of GameStateManagement (Windows).csproj", "{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{20A2DE79-996A-49DA-B956-B724EA03DC90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

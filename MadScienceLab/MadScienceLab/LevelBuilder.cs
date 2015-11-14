@@ -117,8 +117,8 @@ namespace MadScienceLab
                         level.AddChild ( new BasicBlock ( col++, row ) );
                         break;
                     case 'L':
-                       level.AddChild(new LaserTurret(col++, row, true, GameConstants.DIRECTION.pointLeft));
-                       
+                       level.AddChild(new LaserTurret(col++, row, true, GameConstants.DIRECTION.pointLeft)); 
+                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);                      
                         break;
                     case 'd':
                         level.AddChild ( new Door ( col++, row, true ) ); //Starting open door
@@ -167,7 +167,7 @@ namespace MadScienceLab
             // Steven, Jacob
             if (linktxt.Length != 0)
             {
-                string[] buttonLinks = linktxt.Split('\n');
+                string[] buttonLinks = linktxt.Split('\n'); //Each line
 
                 foreach (string links in buttonLinks)
                 {
@@ -229,6 +229,21 @@ namespace MadScienceLab
                             movingPlatform.movingLeft = false;
                         }
                         movingPlatform.maxDistance = Int32.Parse(Settings[1]) * GameConstants.SINGLE_CELL_SIZE;
+                    }
+                    //Jacob - Set Laser turret direction
+                    if (level.Children[index].GetType () == typeof ( LaserTurret ))
+                    {
+                        LaserTurret laserTurret = (LaserTurret)level.Children[index];
+                        //set initial direction of moving platform
+                        if (ObjectAndSettings[1] == "L")
+                        {
+                            laserTurret.direction = GameConstants.DIRECTION.pointLeft;
+                        }
+                        else
+                            if (ObjectAndSettings[1] == "R")
+                            {
+                                laserTurret.direction = GameConstants.DIRECTION.pointRight;
+                            }
                     }
 
 
