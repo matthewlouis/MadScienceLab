@@ -61,12 +61,6 @@ namespace MadScienceLab
             UpdateBoundingBox(animmodel[0].Model, Matrix.CreateTranslation(animmodel[0].Position), false, false);
         }
 
-        public override void Update(RenderContext renderContext)
-        {
-            animmodel[0].Update(renderContext);
-            base.Update(renderContext);
-        }
-
         //Drops a box
         public override void Toggle(RenderContext renderContext)
         {
@@ -83,18 +77,18 @@ namespace MadScienceLab
 
         public override void Update(RenderContext renderContext)
         {
+            animmodel[0].Update ( renderContext );
             if (IsReady && ReservedBoxes > 0)
             {
                 //Creates new PickableBox underneath dropper.
                 PickableBox newBox = new PickableBox(new Vector2(this.Position.X, this.Position.Y - GameConstants.SINGLE_CELL_SIZE));
                 renderContext.Level.AddChild(newBox);
-                NumberOfBoxes--;
+                animmodel[0].PlayAnimationOnceNoLoop ( "Drop", 0f );
 
-                if(NumberOfBoxes == 0)         //if now empty
+                if(NumberOfBoxes == 0 && ReservedBoxes == 0)         //if now empty
                     animmodel[0] = animmodel[1]; //replace model with empty one
                 ReservedBoxes--;
             }
-            animmodel[0].PlayAnimationOnceNoLoop("Drop", 0f);
         }
 
         public override void Draw(RenderContext renderContext)
