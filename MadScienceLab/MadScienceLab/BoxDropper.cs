@@ -10,22 +10,6 @@ namespace MadScienceLab
     class BoxDropper:SwitchableObject
     {
         public int NumberOfBoxes { get; private set; }
-        public bool IsReady { 
-            get {
-                PickableBox newBox = new PickableBox(new Vector2(this.Position.X, this.Position.Y - GameConstants.SINGLE_CELL_SIZE)); //used just for the purposes of getting PickableBox's bounding box.
-                Rectangle areaBelow = new Rectangle((int)Position.X, (int)Position.Y - newBox.Hitbox.Height, (int)newBox.Hitbox.Width, (int)newBox.Hitbox.Height);
-                bool ready = true;
-                foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
-                {
-                    if (levelObject.isCollidable && levelObject.GetType() != typeof(BasicBlock) && areaBelow.Intersects(levelObject.Hitbox))
-                    {
-                        ready = false;
-                    }
-                }
-                return ready;
-            }
-        }
-        private int ReservedBoxes;
         private int row, column;
 
         private GameAnimatedModel[] animmodel = new GameAnimatedModel[2];
@@ -35,7 +19,6 @@ namespace MadScienceLab
         {
             this.row = row;
             this.column = column;
-            this.ReservedBoxes = 0;
             base.Model = GameplayScreen._models["BlockDropper"];
 
             //Set up animations
@@ -66,7 +49,7 @@ namespace MadScienceLab
             base.Update(renderContext);
         }
 
-        //Drops a box as soon as it can.
+        //Drops a box
         public override void Toggle(RenderContext renderContext)
         {
             if (NumberOfBoxes == 0) //if empty don't do anything
@@ -76,7 +59,9 @@ namespace MadScienceLab
 
             if (NumberOfBoxes > 0)
             {
-                ReservedBoxes++;
+                //Creates new PickableBox underneath dropper.
+                PickableBox newBox = new PickableBox(new Vector2(this.Position.X, this.Position.Y - GameConstants.SINGLE_CELL_SIZE));
+                renderContext.Level.AddChild(newBox);
                 NumberOfBoxes--;
 
                 if(NumberOfBoxes == 0)         //if now empty
@@ -88,18 +73,6 @@ namespace MadScienceLab
         public override void Draw(RenderContext renderContext)
         {
             animmodel[0].Draw(renderContext);
-        }
-
-        public override void Update(RenderContext renderContext)
-        {
-            if (IsReady && ReservedBoxes > 0)
-            {
-                //Creates new PickableBox underneath dropper.
-                PickableBox newBox = new PickableBox(new Vector2(this.Position.X, this.Position.Y - GameConstants.SINGLE_CELL_SIZE));
-                renderContext.Level.AddChild(newBox);
-                ReservedBoxes--;
-            }
-            base.Update(renderContext);
         }
     }
 }
