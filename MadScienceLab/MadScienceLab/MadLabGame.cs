@@ -58,7 +58,7 @@ namespace MadScienceLab
 
             // Create Frame Counter
             Components.Add(new FPSCounter(this, _renderContext));
-
+            
             // Setup window
             Window.Title = "MadLab";
             graphics.PreferredBackBufferWidth = GameConstants.X_RESOLUTION;

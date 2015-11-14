@@ -61,7 +61,7 @@ namespace MadScienceLab
                 //Creates new PickableBox underneath dropper.
                 PickableBox newBox = new PickableBox(new Vector2(this.Position.X, this.Position.Y - GameConstants.SINGLE_CELL_SIZE));
                 renderContext.Level.AddChild(newBox);
-
+                renderContext.Level.collidableObjects.Add(newBox); // Adding to the list of collidable objects that Quadtree will be using - Steven
                 if(--NumberOfBoxes == 0)         //if now empty
                     animmodel[0] = animmodel[1]; //replace model with empty one
             }
