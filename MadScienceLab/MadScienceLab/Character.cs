@@ -71,9 +71,10 @@ namespace MadScienceLab
             base.LoadContent(contentManager);
             charModel.LoadContent(contentManager);
             charModel.PlayAnimation("Idle", true, 0f);
-            UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, false);
-            // Overriding the hitbox size - Steven
-            base.HitboxWidth = 48;
+
+            UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, true);
+            // Overriding the hitbox size, the new model will need to be the height of the cells, for now the vamp model height is overrided - Steven
+            //base.HitboxWidth = 48;
             base.HitboxHeight = 48;
 
             //Load sound effects
@@ -277,7 +278,7 @@ namespace MadScienceLab
                 if (AdjacentObj != null && AdjacentObj.GetType() == typeof(PickableBox) && (((PickableBox)(AdjacentObj)).IsLiftable))
                 {
                     //check if there is area above the player to pick up the box
-                    Rectangle areaTop = new Rectangle ( (int)Position.X, CharacterHitbox.Bottom, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height) );
+                    Rectangle areaTop = new Rectangle ( (int)Position.X, CharacterHitbox.Bottom + 1, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height) );
                     bool pickuppable = true;
                     foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
                     {
@@ -469,9 +470,9 @@ namespace MadScienceLab
                 {
                     /**Determining what side was hit**/
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
-                             * (((levelObject.Hitbox.Y + levelObject.Hitbox.Height) / 2) - (StoredBox.Hitbox.Y + Hitbox.Height) / 2);
+                             * (levelObject.Hitbox.Center.Y - StoredBox.Hitbox.Center.Y);
                     float hx = (Hitbox.Height + levelObject.Hitbox.Height)
-                             * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
+                             * (levelObject.Hitbox.Center.X - StoredBox.Hitbox.Center.X);
 
                     Button tmpButton = levelObject as Button;
                     if (tmpButton != null) //if it is a button
@@ -487,7 +488,7 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Top";//top
-                                Position = new Vector3(Position.X, levelObject.Hitbox.Top - this.Hitbox.Height * 2 - 1, 0); //clip to the top of the colliding object
+                                Position = new Vector3(Position.X, levelObject.Hitbox.Top - this.Hitbox.Height - StoredBox.Hitbox.Height - 1, 0); //clip to the top of the colliding object
                                 TransVelocity = Vector3.Zero;
                             }
                             else
@@ -502,7 +503,7 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Right";// right
-                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth, (int)Position.Y, 0);
+                                Position = new Vector3(levelObject.Hitbox.Left - StoredBox.Hitbox.Width, (int)Position.Y, 0);
                                 AdjacentObj = levelObject;
                             }
                         }
@@ -538,9 +539,9 @@ namespace MadScienceLab
 
                     /**Determining what side was hit**/
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
-                             * (((levelObject.Hitbox.Y + levelObject.Hitbox.Height) / 2) - (Hitbox.Y + Hitbox.Height) / 2);
+                             * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
                     float hx = (Hitbox.Height + levelObject.Hitbox.Height)
-                             * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
+                             * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
 
                     if (levelObject.GetType() == typeof(Button)) //if it is a button
                     {
@@ -561,7 +562,7 @@ namespace MadScienceLab
                             else
                             {
                                 //boxHitState = "Box Left";// left
-                                Position = new Vector3(levelObject.Hitbox.Right + 1, (int)Position.Y, 0);
+                                Position = new Vector3(levelObject.Hitbox.Right + 1 - HitboxWidthOffset, (int)Position.Y, 0);
                                 AdjacentObj = levelObject;
                             }
                         }
@@ -570,7 +571,7 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Right";// right
-                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth, (int)Position.Y, 0);
+                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth - HitboxWidthOffset, (int)Position.Y, 0);
                                 AdjacentObj = levelObject;
                             }
                             else

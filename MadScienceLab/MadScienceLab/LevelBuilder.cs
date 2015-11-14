@@ -23,7 +23,11 @@ namespace MadScienceLab
         public static int levelheight; //count \n; (# of "\n")+(1 for floor) is the height. placement; thus, get height first.
 
         //Builds Basic level
+<<<<<<< HEAD
         public static Level MakeBasicLevel(string LevelTxtFile, string BackTxtFile)
+=======
+        public static Level MakeBasicLevel(string levelSelect)
+>>>>>>> refs/remotes/origin/master
         {
             Level level = new Level();
 
@@ -51,8 +55,14 @@ namespace MadScienceLab
              */
 
             //Note: The levels' txt files currently have a new line at the very end of it. Don't delete it.
+<<<<<<< HEAD
             string leveltxtfile = FromFile ( LevelTxtFile );
             string backtxt = FromFile( BackTxtFile );
+=======
+            
+            string leveltxtfile = FromFile ("Levels/" + levelSelect + ".txt" );
+            string backtxt = FromFile( "Levels/" + levelSelect + "Back.txt" );
+>>>>>>> refs/remotes/origin/master
 
             //get object pairs (for links between switches and doors/boxes)
             // The format used to link buttons to doors "ButtonCoord linked to 1 or more DoorCoord" - Steven
@@ -156,12 +166,18 @@ namespace MadScienceLab
                     _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                 }
             }
+<<<<<<< HEAD
 
             // Interates through the link text to find objects, and: 
             // -their links to other objects (eg. doors, boxdroppers)
             // and/or
             // -other properties set to those objects
             // Steven, Jacob
+=======
+            level.collidableObjects = new List<GameObject3D>();
+            level.collidableObjects.AddRange(level.Children); // All objects that will be colliding with the player in the same Z axis - Steven
+            // Interates through the link text to find buttons and their links to the doors - Steven
+>>>>>>> refs/remotes/origin/master
             if (linktxt.Length != 0)
             {
                 string[] buttonLinks = linktxt.Split('\n');
@@ -291,11 +307,14 @@ namespace MadScienceLab
             return level;
         }
 
+<<<<<<< HEAD
         /// <summary>
         /// Retrieves the string from file _and then replaces "\r\n" character pairs with "\n"_.
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
+=======
+>>>>>>> refs/remotes/origin/master
         private static String FromFile ( String file )
         {
             //credit goes to MikeBMcLBob Taco Industries - https://social.msdn.microsoft.com/forums/windowsapps/en-US/7fcea210-8405-4a38-9459-eb0a361681cc/using-txt-file-in-xna-game?forum=wpdevelop for this.
@@ -311,10 +330,5 @@ namespace MadScienceLab
             txt = txt.Replace ( "\r\n", "\n" ); //remove all of the \r newlines - as this wasn't accounted for when we were writing the txt file. Note that the strings _did not_ consider these!
             return txt;
         }
-        
-
-
-        
-
     }
 }

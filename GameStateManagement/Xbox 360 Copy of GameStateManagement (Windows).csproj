@@ -1,23 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{A8CF4EB4-BA4F-4DD6-8AA9-8255CAE46F8F}</ProjectGuid>
+    <ProjectGuid>{ffc4c297-4e56-459f-8aef-9c8359ce6fbd}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MadScienceLab</RootNamespace>
-    <AssemblyName>MadScienceLab</AssemblyName>
+    <RootNamespace>GameStateManagement</RootNamespace>
+    <AssemblyName>GameStateManagement</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Xbox 360</XnaPlatform>
     <XnaProfile>HiDef</XnaProfile>
-    <XnaCrossPlatformGroupID>40131acd-b9a0-4613-9872-12d777b5a979</XnaCrossPlatformGroupID>
-    <XnaOutputType>Game</XnaOutputType>
-    <ApplicationIcon>Game.ico</ApplicationIcon>
-    <Thumbnail>GameThumbnail.png</Thumbnail>
+    <XnaCrossPlatformGroupID>47b9f2af-b3bd-4f04-b7b9-2f30b9242ece</XnaCrossPlatformGroupID>
+    <XnaOutputType>Library</XnaOutputType>
+    <Thumbnail>
+    </Thumbnail>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -58,60 +58,14 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="GameThumbnail.png">
-      <XnaPlatformSpecific>true</XnaPlatformSpecific>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="BackgroundBlock.cs" />
-    <Compile Include="BaseCamera.cs" />
-    <Compile Include="BasicBlock.cs" />
-    <Compile Include="BoxDropper.cs" />
-    <Compile Include="Button.cs" />
-    <Compile Include="CellObject.cs" />
-    <Compile Include="Character.cs" />
-    <Compile Include="Enemy.cs" />
-    <Compile Include="ExitBlock.cs" />
-    <Compile Include="FPSCounter.cs" />
-    <Compile Include="GameConstants.cs" />
-    <Compile Include="GameTimer.cs" />
-    <Compile Include="LaserProjectile.cs" />
-    <Compile Include="MadLabGame.cs" />
-    <Compile Include="MessageEvent.cs" />
-    <Compile Include="MovingPlatform.cs" />
-    <Compile Include="PickableBox.cs" />
-    <Compile Include="Quadtree.cs" />
-    <Compile Include="ScreenFactory.cs" />
-    <Compile Include="Screens\BackgroundScreen.cs" />
-    <Compile Include="Screens\GameplayScreen.cs" />
-    <Compile Include="Screens\LevelCompleteScreen.cs" />
-    <Compile Include="Screens\LevelSelectScreen.cs" />
-    <Compile Include="Screens\LoadingScreen.cs" />
-    <Compile Include="Screens\MainMenuScreen.cs" />
-    <Compile Include="Screens\MenuEntry.cs" />
-    <Compile Include="Screens\MenuScreen.cs" />
-    <Compile Include="Screens\MessageBoxScreen.cs" />
-    <Compile Include="Screens\OptionsMenuScreen.cs" />
-    <Compile Include="Screens\PauseMenuScreen.cs" />
-    <Compile Include="Screens\PlayerIndexEventArgs.cs" />
-    <Compile Include="SoundEffectPlayer.cs" />
-    <Compile Include="Door.cs" />
-    <Compile Include="GameAnimatedModel.cs" />
-    <Compile Include="GameObject3D.cs" />
-    <Compile Include="Level.cs" />
-    <Compile Include="LevelBuilder.cs" />
+    <Compile Include="GameScreen.cs" />
+    <Compile Include="InputAction.cs" />
+    <Compile Include="InputState.cs" />
+    <Compile Include="IScreenFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="RenderContext.cs" />
-    <Compile Include="LaserTurret.cs" />
-    <Compile Include="SwitchableObject.cs" />
-    <Compile Include="ToggleSwitch.cs" />
+    <Compile Include="ScreenManager.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Game.ico" />
-    <Content Include="Level.txt" />
-    <Content Include="LevelBack.txt" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
       <Visible>False</Visible>
@@ -128,28 +82,23 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
       <Visible>False</Visible>
-      <ProductName>Windows Installer 4.5</ProductName>
+      <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\SkinnedModelData\Xbox 360 Copy (3) of SkinnedModelData.csproj">
-      <Project>{b37f0ef3-d77f-4210-8f93-64e4ff3210fd}</Project>
-      <Name>Xbox 360 Copy (3) of SkinnedModelData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MadScienceLabContent\MadScienceLabContent.contentproj">
-      <Project>{3585BE57-612E-4BF8-984B-2E1BD58A51FE}</Project>
-      <Name>MadScienceLabContent</Name>
-      <XnaReferenceType>Content</XnaReferenceType>
-    </ProjectReference>
+    <BootstrapperPackage Include="Microsoft.Xna.Framework.4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft XNA Framework Redistributable 4.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework" />
     <Reference Include="Microsoft.Xna.Framework.Game" />
     <Reference Include="Microsoft.Xna.Framework.GamerServices" />
     <Reference Include="Microsoft.Xna.Framework.Graphics" />
+    <Reference Include="Microsoft.Xna.Framework.Input.Touch" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />

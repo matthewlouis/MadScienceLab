@@ -44,10 +44,14 @@ namespace MadScienceLab
             animmodel[0].SetAnimationSpeed(1.2f);
             animmodel[1].SetAnimationSpeed(1.2f);
 
-            Scale(12f, 12f, 12f);
+            Scale(10f, 10f, 10f);
             NumberOfBoxes = numberOfBoxes;
             isCollidable = true;
+<<<<<<< HEAD
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
+=======
+            IsPassable = false;
+>>>>>>> refs/remotes/origin/master
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
@@ -83,9 +87,13 @@ namespace MadScienceLab
                 //Creates new PickableBox underneath dropper.
                 PickableBox newBox = new PickableBox(new Vector2(this.Position.X, this.Position.Y - GameConstants.SINGLE_CELL_SIZE));
                 renderContext.Level.AddChild(newBox);
+<<<<<<< HEAD
                 animmodel[0].PlayAnimationOnceNoLoop ( "Drop", 0f );
+                renderContext.Level.collidableObjects.Add(newBox); // Adding to the list of collidable objects that Quadtree will be using - Steven
 
                 if(NumberOfBoxes == 0 && ReservedBoxes == 0)         //if now empty
+=======
+>>>>>>> refs/remotes/origin/master
                     animmodel[0] = animmodel[1]; //replace model with empty one
                 ReservedBoxes--;
             }

@@ -58,7 +58,7 @@ namespace MadScienceLab
 
             // Create Frame Counter
             Components.Add(new FPSCounter(this, _renderContext));
-
+            
             // Setup window
             Window.Title = "MadLab";
             graphics.PreferredBackBufferWidth = GameConstants.X_RESOLUTION;
@@ -75,6 +75,7 @@ namespace MadScienceLab
             screenManager = new ScreenManager(this);
             Components.Add(screenManager);
 
+            
             // On Windows and Xbox we just add the initial screens
             AddInitialScreens();
         }

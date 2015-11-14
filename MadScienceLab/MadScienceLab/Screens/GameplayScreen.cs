@@ -41,6 +41,7 @@ namespace MadScienceLab
 
         RenderContext _renderContext;
         BaseCamera _camera;
+        GameTimer _timer;
 
         Level basicLevel;
 
@@ -53,9 +54,7 @@ namespace MadScienceLab
         Enemy enemy;
 
         // Debugging - Steven
-        private String boxHitState = "";
         SpriteFont font;
-        private Rectangle brick;
 
         //Debugging - FPS - Matt
         private FPSCounter fpsCount;
@@ -66,6 +65,9 @@ namespace MadScienceLab
 
         InputAction pauseAction;
 
+        // Level selected string to build level
+        string levelSelect;
+
         #endregion
 
         #region Initialization
@@ -74,8 +76,10 @@ namespace MadScienceLab
         /// <summary>
         /// Constructor. Initialize game data here
         /// </summary>
-        public GameplayScreen()
+        public GameplayScreen(string levelSelect)
         {
+            this.levelSelect = levelSelect;
+
             // transition time used for screen transitions
             TransitionOnTime = TimeSpan.FromSeconds(1);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -99,8 +103,8 @@ namespace MadScienceLab
             random = new Random();
             //init fps counter
             //fpsCount = new FPSCounter(this, _renderContext);
-
-            
+            Quadtree _quadtree = new Quadtree(0, new Rectangle(0, 0, GameConstants.X_RESOLUTION, GameConstants.X_RESOLUTION));
+            _renderContext.Quadtree = _quadtree;
         }
 
 
@@ -165,7 +169,11 @@ namespace MadScienceLab
                 _sounds.Add("ToggleSwitch", content.Load<SoundEffect>("Sounds/ToggleSwitch"));
 
                 //loads the basic level
+<<<<<<< HEAD
                 basicLevel = LevelBuilder.MakeBasicLevel("Level.txt", "LevelBack.txt");
+=======
+                basicLevel = LevelBuilder.MakeBasicLevel(levelSelect);
+>>>>>>> refs/remotes/origin/master
                 CurrentLevel = basicLevel; //we can handle this through render context eventually.
                 basicLevel.LoadContent(content);
 
@@ -176,8 +184,13 @@ namespace MadScienceLab
                 player.TransAccel = new Vector3(0, -GameConstants.SINGLE_CELL_SIZE * 9, 0);
                 font = content.Load<SpriteFont>("Verdana");
                 _renderContext.Level = basicLevel;
-
+                _renderContext.SpriteFont = font;
                 basicLevel.PopulateTypeList(_renderContext);
+
+                _renderContext.Level.collidableObjects.Add(player); // Adding player to list of collidable objects - Steven
+
+                _timer = new GameTimer(_renderContext);
+                _renderContext.GameTimer = _timer;
 
                 //load fps count content
                 //fpsCount.LoadContent(content);
@@ -224,14 +237,6 @@ namespace MadScienceLab
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
         {
-                        // Allows the game to exit
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-              //  Keyboard.GetState().IsKeyDown(Keys.Escape))
-                
-
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed ||
-             //   Keyboard.GetState().IsKeyDown(Keys.Enter))
-            
             base.Update(gameTime, otherScreenHasFocus, false);
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.
@@ -239,8 +244,15 @@ namespace MadScienceLab
                 pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
             else
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
-                         if (IsActive)
+            if (IsActive)
             {
+                _renderContext.Quadtree.clear();
+
+                foreach (CellObject obj in basicLevel.Children)
+                {
+                    _renderContext.Quadtree.insert(obj);
+                }
+
                 _renderContext.GameTime = gameTime;
                 
                 player.Update(_renderContext);
@@ -264,8 +276,10 @@ namespace MadScienceLab
                 basicLevel.Update(_renderContext);
                 player.Update(_renderContext);
 
+                _timer.Update(_renderContext.GameTime);
                 //fps debug
-                //fpsCount.Update(gameTime);              
+                //fpsCount.Update(gameTime);    
+                //timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
         }
 
@@ -275,16 +289,21 @@ namespace MadScienceLab
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
+            // Spritebatch changes graphicsdevice values; sets the oringinal state
+            ScreenManager.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            ScreenManager.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target,
                                                Color.Black, 0, 0);
 
             player.Draw(_renderContext);
             basicLevel.Draw(_renderContext);
-
+            
             spriteBatch.Begin();
             //spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
             spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
+            //spriteBatch.DrawString(font, "Time: " + timer, new Vector2(300, 50), Color.Black);
             //spriteBatch.DrawString(font, "Velocity: " + player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
             //spriteBatch.DrawString(font, "Acceleration: " + player.TransAccel.ToString(), new Vector2(50, 200), Color.Black);
             //spriteBatch.DrawString(font, "Box: " + brick.ToString(), new Vector2(50, 250), Color.Black);
@@ -295,20 +314,17 @@ namespace MadScienceLab
 
             if (_renderContext.Level.LevelOver)
             {
-                spriteBatch.Begin();
-                spriteBatch.Draw(GameplayScreen._textures["Complete"], new Vector2(ScreenManager.GraphicsDevice.Viewport.Width / 2 - GameplayScreen._textures["Complete"].Width / 2, ScreenManager.GraphicsDevice.Viewport.Height / 2 - GameplayScreen._textures["Complete"].Height / 2), Color.White);
-                spriteBatch.End();
+                
             }
 
             if (_renderContext.Level.GameOver)
             {
-                spriteBatch.Begin();
-                spriteBatch.Draw(GameplayScreen._textures["GameOver"], new Vector2(ScreenManager.GraphicsDevice.Viewport.Width / 2 - GameplayScreen._textures["GameOver"].Width / 2, ScreenManager.GraphicsDevice.Viewport.Height / 2 - GameplayScreen._textures["GameOver"].Height / 2), Color.White);
-                spriteBatch.End();
+                LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                                                           new LevelCompleteScreen());
             }
 
             //fpsCount.Draw(gameTime);
-
+            _timer.Draw(_renderContext.GameTime);
             // Spritebatch changes graphicsdevice values; sets the oringinal state
             ScreenManager.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
