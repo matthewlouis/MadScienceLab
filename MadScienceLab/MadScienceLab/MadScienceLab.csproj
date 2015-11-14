@@ -79,6 +79,7 @@
     <Compile Include="Button.cs" />
     <Compile Include="CellObject.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="GameTimer.cs" />
     <Compile Include="MovingPlatform.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="ExitBlock.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="GameConstants.cs" />
     <Compile Include="LaserProjectile.cs" />
     <Compile Include="PickableBox.cs" />
+    <Compile Include="Quadtree.cs" />
     <Compile Include="ScreenFactory.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
     <Compile Include="Screens\GameplayScreen.cs" />
