@@ -26,11 +26,11 @@ namespace MadScienceLab
         #region Fields
 
         // define menu entries and properties
-        MenuEntry levelMenuEntry;
-
-        static bool sound = true;
-        static bool music = false;
-
+        MenuEntry level1MenuEntry;
+        MenuEntry level2MenuEntry;
+        MenuEntry level3MenuEntry;
+        MenuEntry level4MenuEntry;
+        MenuEntry level5MenuEntry;
         
         #endregion
 
@@ -41,33 +41,36 @@ namespace MadScienceLab
         /// Constructor.
         /// </summary>
         public LevelSelectScreen()
-            : base("LevelSelect")
+            : base("Level Select")
         {
             // Create our menu entries.
-            levelMenuEntry = new MenuEntry("Level 1");
+            level1MenuEntry = new MenuEntry("Level 1");
+            level2MenuEntry = new MenuEntry("Level 2");
+            level3MenuEntry = new MenuEntry("Level 3");
+            level4MenuEntry = new MenuEntry("Level 4");
+            level5MenuEntry = new MenuEntry("Level 5");
 
+            
 
-            SetMenuEntryText();
 
             MenuEntry back = new MenuEntry("Main Menu");
 
             // Hook up menu event handlers.
-            levelMenuEntry.Selected += levelMenuEntrySelected;
+            level1MenuEntry.Selected += levelMenuEntrySelected;
+            level2MenuEntry.Selected += levelMenuEntrySelected;
+            level3MenuEntry.Selected += levelMenuEntrySelected;
+            level4MenuEntry.Selected += levelMenuEntrySelected;
+            level5MenuEntry.Selected += levelMenuEntrySelected;
             back.Selected += OnCancel;
 
             // Add entries to the menu.
 
-            MenuEntries.Add(levelMenuEntry);
+            MenuEntries.Add(level1MenuEntry);
+            MenuEntries.Add(level2MenuEntry);
+            MenuEntries.Add(level3MenuEntry);
+            MenuEntries.Add(level4MenuEntry);
+            MenuEntries.Add(level5MenuEntry);
             MenuEntries.Add(back);
-        }
-
-
-        /// <summary>
-        /// Fills in the latest values for the options screen menu text.
-        /// </summary>
-        void SetMenuEntryText()
-        {
-            levelMenuEntry.Text = ("Level 1");
         }
 
         #endregion
@@ -78,6 +81,7 @@ namespace MadScienceLab
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
                                new GameplayScreen("level1"));
+            
         }
 
 

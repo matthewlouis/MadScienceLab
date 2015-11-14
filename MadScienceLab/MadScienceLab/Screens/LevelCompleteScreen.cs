@@ -28,9 +28,6 @@ namespace MadScienceLab
         MenuEntry soundMenuEntry;
         MenuEntry musicMenuEntry;
 
-        static bool sound = true;
-        static bool music = false;
-
 
         #endregion
 
@@ -43,23 +40,7 @@ namespace MadScienceLab
         public LevelCompleteScreen()
             : base("LevelComplete")
         {
-            // Create our menu entries.
-            soundMenuEntry = new MenuEntry(string.Empty);
-            musicMenuEntry = new MenuEntry(string.Empty);
-
-            SetMenuEntryText();
-
-            MenuEntry back = new MenuEntry("Menu/Back");
-
-            // Hook up menu event handlers.
-            soundMenuEntry.Selected += soundMenuEntrySelected;
-            musicMenuEntry.Selected += musicMenuEntrySelected;
-            back.Selected += OnCancel;
-
-            // Add entries to the menu.
-            MenuEntries.Add(soundMenuEntry);
-            MenuEntries.Add(musicMenuEntry);
-            MenuEntries.Add(back);
+            
         }
 
 
@@ -68,8 +49,7 @@ namespace MadScienceLab
         /// </summary>
         void SetMenuEntryText()
         {
-            soundMenuEntry.Text = "Sound: " + (sound ? "on" : "off");
-            musicMenuEntry.Text = "Music: " + (music ? "on" : "off");
+            
         }
 
 
@@ -78,33 +58,7 @@ namespace MadScienceLab
         #region Handle Input
 
 
-        /// <summary>
-        /// Event handler for when the sound menu entry is selected.
-        /// </summary>
-        void soundMenuEntrySelected(object sender, PlayerIndexEventArgs e)
-        {
-            sound = !sound;
-
-            if (!sound)
-                SoundEffect.MasterVolume = 0;
-            else
-                SoundEffect.MasterVolume = 1;
-
-            SetMenuEntryText();
-        }
-
-        /// <summary>
-        /// Event handler for when the music menu entry is selected.
-        /// </summary>
-        void musicMenuEntrySelected(object sender, PlayerIndexEventArgs e)
-        {
-            music = !music;
-
-            SetMenuEntryText();
-        }
-
-
-
+        
 
         #endregion
     }
