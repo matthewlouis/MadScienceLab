@@ -91,18 +91,32 @@ namespace MadScienceLab
         
         public override void Update(RenderContext renderContext)
         {
+            List<CellObject> returnObjs = new List<CellObject>();
+
+            renderContext.Quadtree.clear();
+            foreach (CellObject obj in renderContext.Level.collidableObjects)
+            {
+                renderContext.Quadtree.insert(obj);
+            }
+
+            renderContext.Quadtree.retrieve(returnObjs, Hitbox);
+
             if (health <= 0)
             {
                 renderContext.Level.GameOver = true;
             }
             charModel.Update(renderContext);
             UpdatePhysics();
-           
-            if (interactState == InteractState.CompletedPickup) // Start checking for collisions for the box being carried - Steven
+
+            // Quad tree collision
+            foreach (CellObject worldObject in returnObjs)
             {
-                CheckBoxCarryCollision(renderContext);
+                if (interactState == InteractState.CompletedPickup) // Start checking for collisions for the box being carried - Steven
+                {
+                    CheckBoxCarryCollision(renderContext, worldObject);
+                }
+                CheckPlayerBoxCollision(renderContext, worldObject);   
             }
-            CheckPlayerBoxCollision ( renderContext );
 
             HandleInput();
             if (TransVelocity.Y >= 0)
@@ -457,10 +471,9 @@ namespace MadScienceLab
         /// - Steven
         /// </summary>
         /// <param name="renderContext"></param>
-        private void CheckBoxCarryCollision(RenderContext renderContext)
+        private void CheckBoxCarryCollision(RenderContext renderContext, CellObject levelObject)
         {
-            foreach (CellObject levelObject in renderContext.Level.Children)
-            {
+
                 if (levelObject.isCollidable && StoredBox.Hitbox.Intersects(levelObject.Hitbox))
                 {
                     /**Determining what side was hit**/
@@ -507,7 +520,7 @@ namespace MadScienceLab
                     {
                         InteractiveObj = levelObject;
                     }
-                }
+                
             }
         }
 
@@ -515,69 +528,65 @@ namespace MadScienceLab
         /// Checks for player collision with all collidable objects in the level - Steven
         /// </summary>
         /// <param name="renderContext"></param>
-        private void CheckPlayerBoxCollision(RenderContext renderContext)
+        private void CheckPlayerBoxCollision(RenderContext renderContext, CellObject levelObject)
         {
-
-            foreach (CellObject levelObject in renderContext.Level.Children)
+            if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
             {
-                if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
+                //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
+                if (levelObject.GetType() == typeof(ExitBlock))
                 {
-                    //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
-                    if (levelObject.GetType() == typeof(ExitBlock))
-                    {
-                        renderContext.Level.LevelOver = true;
-                    }
+                    renderContext.Level.LevelOver = true;
+                }
 
-                    /**Determining what side was hit**/
-                    float wy = (levelObject.Hitbox.Width + Hitbox.Width)
-                             * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
-                    float hx = (Hitbox.Height + levelObject.Hitbox.Height)
-                             * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
+                /**Determining what side was hit**/
+                float wy = (levelObject.Hitbox.Width + Hitbox.Width)
+                            * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
+                float hx = (Hitbox.Height + levelObject.Hitbox.Height)
+                            * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
 
-                    if (levelObject.GetType() == typeof(Button)) //if it is a button
-                    {
-                        Button button = (Button)levelObject as Button;
-                        button.IsPressed = true;
-                    }
+                if (levelObject.GetType() == typeof(Button)) //if it is a button
+                {
+                    Button button = (Button)levelObject as Button;
+                    button.IsPressed = true;
+                }
 
-                    if (!levelObject.IsPassable) //if object is not passable, handle physics issues:
+                if (!levelObject.IsPassable) //if object is not passable, handle physics issues:
+                {
+                    if (wy > hx)
                     {
-                        if (wy > hx)
+                        if (wy > -hx)
                         {
-                            if (wy > -hx)
-                            {
-                                //boxHitState = "Box Top";//top
-                                Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
-                                TransVelocity = Vector3.Zero;
-                            }
-                            else
-                            {
-                                //boxHitState = "Box Left";// left
-                                Position = new Vector3(levelObject.Hitbox.Right + 1 - HitboxWidthOffset, (int)Position.Y, 0);
-                                AdjacentObj = levelObject;
-                            }
+                            //boxHitState = "Box Top";//top
+                            Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
+                            TransVelocity = Vector3.Zero;
                         }
                         else
                         {
-                            if (wy > -hx)
-                            {
-                                //boxHitState = "Box Right";// right
-                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth - HitboxWidthOffset, (int)Position.Y, 0);
-                                AdjacentObj = levelObject;
-                            }
-                            else
-                            {
-                                Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
-                                if (!collisionJumping)
-                                    TransVelocity = Vector3.Zero;
-                                jumping = false;
-                            }
+                            //boxHitState = "Box Left";// left
+                            Position = new Vector3(levelObject.Hitbox.Right + 1 - HitboxWidthOffset, (int)Position.Y, 0);
+                            AdjacentObj = levelObject;
                         }
                     }
                     else
                     {
-                        InteractiveObj = levelObject;
+                        if (wy > -hx)
+                        {
+                            //boxHitState = "Box Right";// right
+                            Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth - HitboxWidthOffset, (int)Position.Y, 0);
+                            AdjacentObj = levelObject;
+                        }
+                        else
+                        {
+                            Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+                            if (!collisionJumping)
+                                TransVelocity = Vector3.Zero;
+                            jumping = false;
+                        }
                     }
+                }
+                else
+                {
+                    InteractiveObj = levelObject;
                 }
             }
         }
