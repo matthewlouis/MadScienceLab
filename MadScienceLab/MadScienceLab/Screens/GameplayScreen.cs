@@ -232,20 +232,7 @@ namespace MadScienceLab
         /// </summary>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
-<<<<<<< HEAD
-        {          
-=======
         {
-
-                        // Allows the game to exit
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-              //  Keyboard.GetState().IsKeyDown(Keys.Escape))
-                
-
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed ||
-             //   Keyboard.GetState().IsKeyDown(Keys.Enter))
-            
->>>>>>> refs/remotes/origin/master
             base.Update(gameTime, otherScreenHasFocus, false);
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.

@@ -71,16 +71,10 @@ namespace MadScienceLab
             base.LoadContent(contentManager);
             charModel.LoadContent(contentManager);
             charModel.PlayAnimation("Idle", true, 0f);
-<<<<<<< HEAD
 
-            UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, false);
-            // Overriding the hitbox size - Steven
-            base.HitboxWidth = 48;
-=======
             UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, true);
             // Overriding the hitbox size, the new model will need to be the height of the cells, for now the vamp model height is overrided - Steven
             //base.HitboxWidth = 48;
->>>>>>> refs/remotes/origin/master
             base.HitboxHeight = 48;
 
             //Load sound effects
