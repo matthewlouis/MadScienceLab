@@ -42,7 +42,9 @@ namespace MadScienceLab
             foreach (CellObject obj in renderContext.Level.collidableObjects)
             {
                 if (obj.GetType() != typeof(LaserTurret))
-                renderContext.Quadtree.insert(obj);
+                {
+                    renderContext.Quadtree.insert(obj);
+                }
             }
 
             renderContext.Quadtree.retrieve(returnObjs, Hitbox);

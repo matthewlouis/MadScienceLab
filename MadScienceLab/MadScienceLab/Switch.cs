@@ -36,7 +36,7 @@ namespace MadScienceLab
             RemainingToggles = timesCanBeToggled;
 
             // Matt- Steven's code for auto-calculating hitbox not working for this, so I've hardcoded it here.
-            HitboxHeight = HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
+           // HitboxHeight = HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
         }
 
         public void FlickSwitch()
@@ -106,7 +106,8 @@ namespace MadScienceLab
             animmodel[1].LoadContent(contentManager);
 
             // Provides a hitbox for the block - Steven
-            UpdateBoundingBox(animmodel[0].Model, Matrix.CreateTranslation(animmodel[0].Position), true, false);
+            UpdateBoundingBox(animmodel[0].Model, Matrix.CreateTranslation(base.Position), false, false);
+            base.HitboxWidth = base.HitboxHeight = GameConstants.SINGLE_CELL_SIZE;
         }
     }
 }

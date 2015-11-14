@@ -55,6 +55,8 @@ namespace MadScienceLab
 
         // Debugging - Steven
         SpriteFont font;
+        List<GameObject3D> debugHitbox;
+        Texture2D dummyTexture;
 
         //Debugging - FPS - Matt
         private FPSCounter fpsCount;
@@ -97,8 +99,8 @@ namespace MadScienceLab
 
             random = new Random();
             //init fps counter
-            //fpsCount = new FPSCounter(this, _renderContext);
-            Quadtree _quadtree = new Quadtree(0, new Rectangle(0, 0, GameConstants.X_RESOLUTION, GameConstants.X_RESOLUTION));
+            //fpsCount = new FPSCounter(this, _renderContext); 
+            Quadtree _quadtree = new Quadtree(0, new Rectangle(0, 0, GameConstants.X_RESOLUTION * 2, GameConstants.Y_RESOLUTION * 10));
             _renderContext.Quadtree = _quadtree;
         }
 
@@ -179,6 +181,12 @@ namespace MadScienceLab
                 basicLevel.PopulateTypeList(_renderContext);
 
                 _renderContext.Level.collidableObjects.Add(player); // Adding player to list of collidable objects - Steven
+                
+                // Debugging - Steven
+                debugHitbox = new List<GameObject3D>();
+                debugHitbox.AddRange(_renderContext.Level.collidableObjects);
+                dummyTexture = new Texture2D(_renderContext.GraphicsDevice, 1, 1);
+                dummyTexture.SetData(new Color[] { Color.White * 0.8f});
 
                 _timer = new GameTimer(_renderContext);
                 _renderContext.GameTimer = _timer;
@@ -322,6 +330,44 @@ namespace MadScienceLab
                 spriteBatch.End();
             }
 
+            if (player.MapEnabled)
+            {
+                spriteBatch.Begin();
+                foreach (CellObject obj in basicLevel.collidableObjects)
+                {
+                    Rectangle box = obj.Hitbox;
+                    box.X += 400;
+                    box.Y -= 500;
+                    box.X /= 2;
+                    box.Y /= -2;
+                    box.Width /= 2;
+                    box.Height /= 2;
+                    if (obj.GetType() == typeof(Character))
+                        spriteBatch.Draw(dummyTexture, box, Color.Blue * 0.8f);
+                    else if (obj.GetType() == typeof(BasicBlock))
+                        spriteBatch.Draw(dummyTexture, box, Color.DarkGray * 0.8f);
+                    else if (obj.GetType() == typeof(PickableBox))
+                        spriteBatch.Draw(dummyTexture, box, Color.White * 0.8f);
+                    else if (obj.GetType() == typeof(Door))
+                        spriteBatch.Draw(dummyTexture, box, Color.Black * 0.8f);
+                    else if (obj.GetType() == typeof(Button))
+                        spriteBatch.Draw(dummyTexture, box, Color.Red * 0.8f);
+                    else if (obj.GetType() == typeof(ToggleSwitch))
+                        spriteBatch.Draw(dummyTexture, box, Color.Green * 0.8f);
+                    else
+                        spriteBatch.Draw(dummyTexture, box, Color.Purple * 0.8f);
+                }
+                Rectangle boxhit = _renderContext.Boxhit;
+                boxhit.X += 400;
+                boxhit.Y -= 500;
+                boxhit.X /= 2;
+                boxhit.Y /= -2;
+                boxhit.Width /= 2;
+                boxhit.Height /= 2;
+                spriteBatch.Draw(dummyTexture, boxhit, Color.Yellow * 0.8f);
+                spriteBatch.End();
+            }
+            
             //fpsCount.Draw(gameTime);
             _timer.Draw(_renderContext.GameTime);
             // Spritebatch changes graphicsdevice values; sets the oringinal state

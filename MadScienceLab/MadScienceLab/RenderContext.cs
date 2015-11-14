@@ -24,5 +24,6 @@ namespace MadScienceLab
         public Character      Player { get; set; }
         public Level          Level { get; set; }
         public Quadtree       Quadtree { get; set; }
+        public Rectangle      Boxhit { get; set; }
     }
 }
