@@ -137,10 +137,6 @@
       <Project>{ffc4c297-4e56-459f-8aef-9c8359ce6fbd}</Project>
       <Name>Xbox 360 Copy of GameStateManagement (Windows)</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\SkinnedModelData\Xbox 360 Copy (4) of SkinnedModelData.csproj">
-      <Project>{374f2079-017c-408c-83cd-ca3756bad90f}</Project>
-      <Name>Xbox 360 Copy (4) of SkinnedModelData</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MadScienceLabContent\MadScienceLabContent.contentproj">
       <Project>{3585BE57-612E-4BF8-984B-2E1BD58A51FE}</Project>
       <Name>MadScienceLabContent</Name>

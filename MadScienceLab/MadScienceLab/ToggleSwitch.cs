@@ -10,57 +10,69 @@ namespace MadScienceLab
     class ToggleSwitch:CellObject
     {
         public List<SwitchableObject> LinkedDoors { get; set; }
-        public Boolean Toggleable { get; private set; }
+        public Boolean InfinitelyToggleable { get; private set; } //false means it's not a repeatedly flickable switch
         public Boolean IsSwitched { get; set; }
+        public Boolean IsReady { get { return ready;  } }
+        public int RemainingToggles { get; set; }
+        public Boolean IsToggleable { get { return InfinitelyToggleable || RemainingToggles > 0; } }
+        private Boolean doorsToggled = false;
+
         private GameAnimatedModel[] animmodel = new GameAnimatedModel[2];
 
         //For resetting non-toggleable switches
         private static TimeSpan TOGGLE_DELAY = TimeSpan.FromMilliseconds(300);
         private static TimeSpan READY_DELAY = TimeSpan.FromMilliseconds(750);
         private TimeSpan waitTime = TimeSpan.Zero;
-        public int RemainingToggles { get; set; }
         private bool ready = true;
-
-        public ToggleSwitch(int column, int row, Boolean toggleable, int timesCanBeToggled = 99):base(column, row)
+        
+        public ToggleSwitch(int column, int row, Boolean infinitelytoggleable):base(column, row)
         {
             LinkedDoors = new List<SwitchableObject>();
             base.isCollidable = true;
             base.IsPassable = true;
-            Toggleable = toggleable;
+            RemainingToggles = 1; //Default; # times is not set in the constructor, but is done as a modification of the object after creation in the LevelBuilder
+            InfinitelyToggleable = infinitelytoggleable;
+            Translate(Position.X, Position.Y - GameConstants.SINGLE_CELL_SIZE / 2, Position.Z); //Matt: this is for offsetting the model position so it's flat on the floor
 
             //Load both green (full) and red (empty) models
             animmodel[0] = new GameAnimatedModel("LeverFull", column, row, this);
             animmodel[1] = new GameAnimatedModel("LeverEmpty", column, row, this);
 
             Scale(72f, 72f, 48f);
-            RemainingToggles = timesCanBeToggled;
-
+           
             // Matt- Steven's code for auto-calculating hitbox not working for this, so I've hardcoded it here.
             HitboxHeight = HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void FlickSwitch()
-        {
-            if (ready && RemainingToggles > 0) //if ready to be switched, and still has toggles left
+        {   
+            if (ready) //if ready to be switched, and still has toggles left
             {
-                if (IsSwitched)
+                if (InfinitelyToggleable)
                 {
-                    IsSwitched = false;
+                    IsSwitched = !IsSwitched;
                 }
-                else
+                else if (RemainingToggles > 0)
                 {
-                    IsSwitched = true;
+                    IsSwitched = !IsSwitched;
+                    RemainingToggles--;
                 }
             }
         }
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="renderContext"></param>
         public override void Update(RenderContext renderContext)
         {
             if (ready && IsSwitched)
             {
-                if (!Toggleable || RemainingToggles == 1) //if single use switch or last toggle
+                if (!InfinitelyToggleable && RemainingToggles == 1) //if non-infinitely toggleable switch and last toggle
                     animmodel[0] = animmodel[1]; //switch to red model
 
                 animmodel[0].PlayAnimation("Pull", false, 0f);
@@ -73,8 +85,6 @@ namespace MadScienceLab
                 IsSwitched = false;
                 ready = false;
                 waitTime = renderContext.GameTime.TotalGameTime; //get time when switched
-                if(Toggleable)
-                    RemainingToggles--; //reduce toggle count
             }
 
             //Checks if enough time has passed to switch back to original position
@@ -84,7 +94,7 @@ namespace MadScienceLab
                 {
                     animmodel[0].PlayAnimation("Release", false, 0f);
 
-                    if (Toggleable && renderContext.GameTime.TotalGameTime - waitTime >= READY_DELAY)
+                    if (IsToggleable && renderContext.GameTime.TotalGameTime - waitTime >= READY_DELAY)
                     {
                         ready = true;
                     }
@@ -106,7 +116,7 @@ namespace MadScienceLab
             animmodel[1].LoadContent(contentManager);
 
             // Provides a hitbox for the block - Steven
-            UpdateBoundingBox(animmodel[0].Model, Matrix.CreateTranslation(animmodel[0].Position), true, false);
+            //UpdateBoundingBox(animmodel[0].Model, Matrix.CreateTranslation(animmodel[0].Position), true, false);
         }
     }
 }
