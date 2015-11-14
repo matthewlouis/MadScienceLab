@@ -41,10 +41,13 @@ namespace MadScienceLab
              * P - player; G - goal
              * L - laser turret
              *   - empty space
+             * m - message event
              * 
              * In order to match trapdoors/doors with switches, can have at the end of the txt file the (row,col) coordinates of each of the paired objects to be linked, in the following format:
              * [row,col]:[row,col];
              * (It's either this, or not have simple characters for the properties ... I think I may prefer this, unless there is a tool that allows easy parsing of XML data or such.)
+             * Format for moving platforms:
+             * [row,col]:[platform distance]
              */
 
             //Note: The levels' txt files currently have a new line at the very end of it. Don't delete it.
@@ -67,8 +70,8 @@ namespace MadScienceLab
             pos = leveltxtfile.IndexOf ( "\n", pos ) + 1; //go to next line, after the last ~
             linktxt = leveltxtfile.Substring ( pos );
 
-            Dictionary<string, int> _buttons = new Dictionary<string, int>();
-            Dictionary<string, int> _doors = new Dictionary<string, int>();
+            Dictionary<string, int> _firstobject = new Dictionary<string, int>();
+            Dictionary<string, int> _linkedobjects = new Dictionary<string, int>();
 
             String newline = "\r\n"; //in case a newline were to be used
             levelheight = leveltxt.Length - leveltxt.Replace ("\n", "" ).Length;
@@ -89,21 +92,26 @@ namespace MadScienceLab
                         break;
                     case 'M':
                         level.AddChild(new MovingPlatform(col++, row));
+                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
+                        break;
+                    case 'm':
+                        level.AddChild(new MessageEvent(col++, row));
+                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'B':
                         level.AddChild ( new PickableBox ( col++, row ) ); //replace BasicBlock with the actual object once implemented
                         break;
                     case 'T': //Toggleable lever switch
                         level.AddChild ( new ToggleSwitch ( col++, row, true ) );
-                        _buttons.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
+                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 't': //One-time lever switch
                         level.AddChild ( new ToggleSwitch ( col++, row, false ) );
-                        _buttons.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
+                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 'S':
                         level.AddChild ( new Button ( col++, row ) );
-                        _buttons.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
+                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 'X':
                         level.AddChild ( new BasicBlock ( col++, row ) );
@@ -114,12 +122,12 @@ namespace MadScienceLab
                         break;
                     case 'd':
                         level.AddChild ( new Door ( col++, row, true ) ); //Starting open door
-                        _doors.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
+                        _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'D':
                         //closed = new Door(col++, row, true);
                         level.AddChild ( new Door ( col++, row, false ) ); //Starting closed door
-                        _doors.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
+                        _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'r':
                         level.AddChild ( new BasicBlock ( col++, row ) );
@@ -146,40 +154,89 @@ namespace MadScienceLab
                 if (c >= '1' && c <= '9')
                 { //BoxDropper case
                     level.AddChild(new BoxDropper(col++, row, c - '0')/*new BoxDropper(c - '0')*/ );
-                    _doors.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
+                    _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                 }
             }
+
             level.collidableObjects = new List<GameObject3D>();
             level.collidableObjects.AddRange(level.Children); // All objects that will be colliding with the player in the same Z axis - Steven
-            // Interates through the link text to find buttons and their links to the doors - Steven
+            // Interates through the link text to find objects, and: 
+            // -their links to other objects (eg. doors, boxdroppers)
+            // and/or
+            // -other properties set to those objects
+            // Steven, Jacob
             if (linktxt.Length != 0)
             {
                 string[] buttonLinks = linktxt.Split('\n');
 
                 foreach (string links in buttonLinks)
                 {
-                    string[] buttonAndDoors = links.Split('|');
-                    string[] doors = buttonAndDoors[1].Split('&');
-                    int index = _buttons[buttonAndDoors[0]];
+                    string[] ObjectAndSettings = links.Split('|');
+                    string[] LinkedObjects = ObjectAndSettings[1].Split('&');
+                    int index = _firstobject[ObjectAndSettings[0]];
 
+                    //Parse the links for button and switch
                     if (level.Children[index].GetType() == typeof(Button))
                     {
                         Button button = (Button)level.Children[index];
-                        foreach (string door in doors)
+                        foreach (string door in LinkedObjects)
                         {
-                            index = _doors[door];
+                            index = _linkedobjects[door];
                             SwitchableObject doorToAdd = (SwitchableObject)level.Children[index];
                             button.LinkedDoors.Add(doorToAdd);
                         }
                     }else if(level.Children[index].GetType() == typeof(ToggleSwitch))
                     {
                         ToggleSwitch toggleSwitch = (ToggleSwitch)level.Children[index];
-                        foreach (string door in doors)
+                        if (ObjectAndSettings[1].Contains(':')) //check if the settings are regarding coordinates, or the number of possible toggle times
                         {
-                            index = _doors[door];
-                            SwitchableObject doorToAdd = (SwitchableObject)level.Children[index];
-                            toggleSwitch.LinkedDoors.Add(doorToAdd);
+                            foreach (string door in LinkedObjects) //add each linked object to the doors list
+                            {
+                                index = _linkedobjects[door];
+                                SwitchableObject doorToAdd = (SwitchableObject)level.Children[index];
+                                toggleSwitch.LinkedDoors.Add(doorToAdd);
+
+                                //if linked item is BoxDropper, set the toggle switch's number of possible toggles to the number of boxes that the box dropper has, by default
+                                if (doorToAdd.GetType() == typeof(BoxDropper))
+                                {
+                                    toggleSwitch.RemainingToggles = ((BoxDropper)doorToAdd).NumberOfBoxes;
+                                }
+                            }
                         }
+                        else 
+                        {   //if the settings are regarding toggle times, parse that as toggle times
+                            int ToggleTimes = 0;
+                            bool isInt = Int32.TryParse(ObjectAndSettings[1], out ToggleTimes);
+                            if (isInt)
+                            {
+                                toggleSwitch.RemainingToggles = ToggleTimes;
+                            }
+                        }
+                    }
+
+                    //Jacob - For moving platform - set moving platform initial direction and distance
+                    if (level.Children[index].GetType() == typeof(MovingPlatform))
+                    {
+                        string[] Settings = ObjectAndSettings[1].Split(',');
+                        MovingPlatform movingPlatform = (MovingPlatform)level.Children[index];
+                        //set initial direction of moving platform
+                        if(Settings[0] == "L") {
+                            movingPlatform.movingLeft = true;
+                        }
+                        else
+                            if (Settings[0] == "R")
+                        {
+                            movingPlatform.movingLeft = false;
+                        }
+                        movingPlatform.maxDistance = Int32.Parse(Settings[1]) * GameConstants.SINGLE_CELL_SIZE;
+                    }
+
+
+                    //Message event
+                    if (level.Children[index].GetType() == typeof(MessageEvent))
+                    {
+                        MessageEvent messageEvent = (MessageEvent)level.Children[index];
+                        messageEvent.Message = ObjectAndSettings[1];
                     }
                 }
             }
@@ -237,6 +294,11 @@ namespace MadScienceLab
             return level;
         }
 
+        /// <summary>
+        /// Retrieves the string from file _and then replaces "\r\n" character pairs with "\n"_.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         private static String FromFile ( String file )
         {
             //credit goes to MikeBMcLBob Taco Industries - https://social.msdn.microsoft.com/forums/windowsapps/en-US/7fcea210-8405-4a38-9459-eb0a361681cc/using-txt-file-in-xna-game?forum=wpdevelop for this.

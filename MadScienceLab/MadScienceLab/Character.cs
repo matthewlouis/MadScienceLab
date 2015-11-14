@@ -303,7 +303,11 @@ namespace MadScienceLab
                 else if (InteractiveObj != null && InteractiveObj.GetType() == typeof(ToggleSwitch))
                 {
                     ToggleSwitch currentSwitch = (ToggleSwitch)InteractiveObj;
-                    currentSwitch.FlickSwitch();
+                    if (currentSwitch.IsToggleable && currentSwitch.IsReady)
+                    {
+                        soundEffects.PlaySound ( "ToggleSwitch" );
+                        currentSwitch.FlickSwitch ();
+                    }
                 }
             }     
         }
@@ -521,6 +525,10 @@ namespace MadScienceLab
 
             foreach (CellObject levelObject in renderContext.Level.Children)
             {
+                if (levelObject.GetType() == typeof(MovingPlatform)) //default moving platforms for player to not be on the platform unless it would be found that the player were on it
+                {
+                    ((MovingPlatform)levelObject).PlayerOnPlatform = false;
+                }
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
                     //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
@@ -568,6 +576,10 @@ namespace MadScienceLab
                             }
                             else
                             {
+                                if (levelObject.GetType() == typeof(MovingPlatform))
+                                {
+                                    ((MovingPlatform)levelObject).PlayerOnPlatform = true;
+                                }
                                 Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
                                 if (!collisionJumping)
                                     TransVelocity = Vector3.Zero;

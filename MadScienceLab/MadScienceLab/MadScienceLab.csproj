@@ -79,6 +79,7 @@
     <Compile Include="Button.cs" />
     <Compile Include="CellObject.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="MessageEvent.cs" />
     <Compile Include="GameTimer.cs" />
     <Compile Include="MovingPlatform.cs" />
     <Compile Include="Enemy.cs" />
@@ -103,7 +104,7 @@
     <Compile Include="Screens\PauseMenuScreen.cs" />
     <Compile Include="Screens\PlayerIndexEventArgs.cs" />
     <Compile Include="SoundEffectPlayer.cs" />
-    <Compile Include="Switch.cs" />
+    <Compile Include="ToggleSwitch.cs" />
     <Compile Include="Door.cs" />
     <Compile Include="GameAnimatedModel.cs" />
     <Compile Include="GameObject3D.cs" />
@@ -117,6 +118,9 @@
     <Compile Include="SwitchableObject.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Level2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
