@@ -29,9 +29,10 @@ namespace MadScienceLab
 
         // physics
 
-        //sound
+        // sound
         public const int DISTANCE_SCALE = 4;
 
-        
+        // levels
+        public const int LEVELS = 5;        
     }
 }

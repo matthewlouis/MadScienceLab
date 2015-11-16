@@ -26,9 +26,12 @@ namespace MadScienceLab
 
         // define menu entries and properties
 
-
+        MenuEntry timeCompleteEntry;
+        MenuEntry remaingingHealthEntry;
         MenuEntry mainMenuEntry;
         MenuEntry nextLevelEntry;
+
+        GameplayScreen.LevelData levelData;
 
         #endregion
 
@@ -41,8 +44,14 @@ namespace MadScienceLab
         public LevelCompleteScreen(GameplayScreen.LevelData levelData )
             : base("Level Complete")
         {
-            // Create our menu entries.
+            this.levelData = levelData;
 
+            // Create our menu entries.
+            string time = string.Format("Time Completed: {0}", levelData.time);
+            time = time.Remove(time.Length - 8);
+
+            timeCompleteEntry = new MenuEntry(time);
+            remaingingHealthEntry = new MenuEntry("Remaining Health: " + levelData.remainingHealth.ToString());
             mainMenuEntry = new MenuEntry("Main Menu");
             nextLevelEntry = new MenuEntry("Next Level");
 
@@ -51,21 +60,24 @@ namespace MadScienceLab
             nextLevelEntry.Selected += nextLevelEntrySelected;
 
             // Add entries to the menu.
+            MenuEntries.Add(timeCompleteEntry);
+            MenuEntries.Add(remaingingHealthEntry);
             MenuEntries.Add(mainMenuEntry);
-            MenuEntries.Add(nextLevelEntry);
-        }
 
+            // check to see if there are still levels left
+            if (levelData.currentlevelNum < GameConstants.LEVELS)
+            {
+                MenuEntries.Add(nextLevelEntry);
 
-        /// <summary>
-        /// Fills in the latest values for the options screen menu text.
-        /// </summary>
-        void SetMenuEntryText()
-        {
+            }
+            else if (levelData.currentlevelNum == GameConstants.LEVELS)
+            {
+                // load game complete screen with credits if all levels are finished
+                //LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
+                //               new GameCompleteScreen());
+            }
             
         }
-
-
-
 
         #endregion
 
@@ -80,7 +92,9 @@ namespace MadScienceLab
         void nextLevelEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen(1));
+                           new GameplayScreen(levelData.currentlevelNum++));
+
+            
         }
         
 

@@ -67,6 +67,8 @@ namespace MadScienceLab
         // Level selected string to build level
         int levelNum;
 
+
+        // struct holds the level data passed to be displayed on level complete screen and stored in save file
         public struct LevelData
         {
             public int currentlevelNum; // number of  current level
@@ -309,7 +311,6 @@ namespace MadScienceLab
                     LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
                                                                new LevelCompleteScreen(levelData));
                 }
-
                 if (_renderContext.Level.GameOver)
                 {
                     levelData.time = _timer.ElapsedTime;

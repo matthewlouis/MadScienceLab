@@ -58,7 +58,7 @@ namespace MadScienceLab
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen(2));
+                               new GameplayScreen(1));
         }
 
         /// <summary>
