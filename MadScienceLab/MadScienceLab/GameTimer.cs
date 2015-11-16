@@ -20,10 +20,16 @@ namespace MadScienceLab
         private Vector2 position;
         RenderContext renderContext;
 
-        TimeSpan elapsedTime = TimeSpan.Zero;
+        TimeSpan elapsedTime;
+        public TimeSpan ElapsedTime
+        {
+            get { return elapsedTime; }
+        }
+
 
         public GameTimer(RenderContext renderContext)
         {
+            elapsedTime = TimeSpan.Zero;
             this.renderContext = renderContext;
             string time = string.Format("Time: {0}", elapsedTime);
             //time = time.Remove(time.Length - 5);

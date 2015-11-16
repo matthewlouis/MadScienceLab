@@ -22,11 +22,13 @@ namespace MadScienceLab
          //need height in order to determine object Y position, which would be startFloor + ((levelheight-1) - row), levelheight-1 being the highest row
         public static int levelheight; //count \n; (# of "\n")+(1 for floor) is the height. placement; thus, get height first.
 
+        static string levelSelect;
+
         //Builds Basic level
-        public static Level MakeBasicLevel(string levelSelect)
+        public static Level MakeBasicLevel(int levelNum)
         {
             Level level = new Level();
-
+            levelSelect = "level" + levelNum.ToString();
 
             //read level from text file - width and height of level will depend on the text file's characters
             /*

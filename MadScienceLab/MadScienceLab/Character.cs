@@ -74,7 +74,7 @@ namespace MadScienceLab
             charModel = new GameAnimatedModel("Vampire", startRow, startCol, this);
             charModel.VerticalOffset = 22;         
             Rotate(0f, 90f, 0f);
-            health = 3;
+            health = GameConstants.HEALTH;
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)

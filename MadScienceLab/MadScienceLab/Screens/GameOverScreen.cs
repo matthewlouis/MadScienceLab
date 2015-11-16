@@ -20,64 +20,55 @@ namespace MadScienceLab
     /// allows the player to return to select level screen or progress to
     /// the next level directly
     /// </summary>
-    class LevelCompleteScreen : MenuScreen
+    class GameOverScreen : MenuScreen
     {
         #region Fields
 
         // define menu entries and properties
 
-        MenuEntry timeCompleteEntry;
-        MenuEntry remaingingHealthEntry;
-        MenuEntry mainMenuEntry;
-        MenuEntry nextLevelEntry;
 
-        GameplayScreen.LevelData levelData;
+        MenuEntry mainMenuEntry;
+        MenuEntry retryLevelEntry;
 
         #endregion
 
         #region Initialization
 
+        GameplayScreen.LevelData levelData;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LevelCompleteScreen(GameplayScreen.LevelData levelData )
-            : base("Level Complete")
+        public GameOverScreen(GameplayScreen.LevelData levelData )
+            : base("Game Over")
         {
-            this.levelData = levelData;
-
             // Create our menu entries.
-            string time = string.Format("Time Completed: {0}", levelData.time);
-            time = time.Remove(time.Length - 8);
-
-            timeCompleteEntry = new MenuEntry(time);
-            remaingingHealthEntry = new MenuEntry("Remaining Health: " + levelData.remainingHealth.ToString());
+            retryLevelEntry = new MenuEntry("Retry Level");
             mainMenuEntry = new MenuEntry("Main Menu");
-            nextLevelEntry = new MenuEntry("Next Level");
 
             // Hook up menu event handlers.
             mainMenuEntry.Selected += mainMenuEntrySelected;
-            nextLevelEntry.Selected += nextLevelEntrySelected;
+            retryLevelEntry.Selected += retryLevelEntrySelected;
 
             // Add entries to the menu.
-            MenuEntries.Add(timeCompleteEntry);
-            MenuEntries.Add(remaingingHealthEntry);
+            MenuEntries.Add(retryLevelEntry);
             MenuEntries.Add(mainMenuEntry);
+            
 
-            // check to see if there are still levels left
-            if (levelData.currentlevelNum < GameConstants.LEVELS)
-            {
-                MenuEntries.Add(nextLevelEntry);
+            this.levelData = levelData;
+        }
 
-            }
-            else if (levelData.currentlevelNum == GameConstants.LEVELS)
-            {
-                // load game complete screen with credits if all levels are finished
-                //LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                //               new GameCompleteScreen());
-            }
+
+        /// <summary>
+        /// Fills in the latest values for the options screen menu text.
+        /// </summary>
+        void SetMenuEntryText()
+        {
             
         }
+
+
+
 
         #endregion
 
@@ -89,12 +80,10 @@ namespace MadScienceLab
                                                                new MainMenuScreen());
         }
 
-        void nextLevelEntrySelected(object sender, PlayerIndexEventArgs e)
+        void retryLevelEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                           new GameplayScreen(levelData.currentlevelNum++));
-
-            
+                               new GameplayScreen(levelData.currentlevelNum));
         }
         
 
