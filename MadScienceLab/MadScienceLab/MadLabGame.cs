@@ -54,10 +54,7 @@ namespace MadScienceLab
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            this.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
-
-            // Create Frame Counter
-            Components.Add(new FPSCounter(this, _renderContext));
+            this.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60f);
             
             // Setup window
             Window.Title = "MadLab";
@@ -106,7 +103,6 @@ namespace MadScienceLab
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
-
 
             base.Draw(gameTime);
         }
