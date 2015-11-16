@@ -12,7 +12,7 @@ X    XX      B XXXXX
 X          M DDXXXXX
 X     M        X  X
 X           M  D  X
-X P X      LX  D SX
+X P X   E  LX  D SX
 XXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
