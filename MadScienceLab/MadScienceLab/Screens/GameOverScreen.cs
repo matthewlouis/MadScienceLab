@@ -20,7 +20,7 @@ namespace MadScienceLab
     /// allows the player to return to select level screen or progress to
     /// the next level directly
     /// </summary>
-    class LevelCompleteScreen : MenuScreen
+    class GameOverScreen : MenuScreen
     {
         #region Fields
 
@@ -28,31 +28,34 @@ namespace MadScienceLab
 
 
         MenuEntry mainMenuEntry;
-        MenuEntry nextLevelEntry;
+        MenuEntry retryLevelEntry;
 
         #endregion
 
         #region Initialization
 
+        GameplayScreen.LevelData levelData;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LevelCompleteScreen(GameplayScreen.LevelData levelData )
-            : base("Level Complete")
+        public GameOverScreen(GameplayScreen.LevelData levelData )
+            : base("Game Over")
         {
             // Create our menu entries.
-
+            retryLevelEntry = new MenuEntry("Retry Level");
             mainMenuEntry = new MenuEntry("Main Menu");
-            nextLevelEntry = new MenuEntry("Next Level");
 
             // Hook up menu event handlers.
             mainMenuEntry.Selected += mainMenuEntrySelected;
-            nextLevelEntry.Selected += nextLevelEntrySelected;
+            retryLevelEntry.Selected += retryLevelEntrySelected;
 
             // Add entries to the menu.
+            MenuEntries.Add(retryLevelEntry);
             MenuEntries.Add(mainMenuEntry);
-            MenuEntries.Add(nextLevelEntry);
+            
+
+            this.levelData = levelData;
         }
 
 
@@ -77,10 +80,10 @@ namespace MadScienceLab
                                                                new MainMenuScreen());
         }
 
-        void nextLevelEntrySelected(object sender, PlayerIndexEventArgs e)
+        void retryLevelEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen(1));
+                               new GameplayScreen(levelData.currentlevelNum));
         }
         
 

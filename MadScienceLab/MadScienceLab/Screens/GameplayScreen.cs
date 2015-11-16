@@ -51,7 +51,6 @@ namespace MadScienceLab
         public static Dictionary<String, SoundEffect> _sounds;
 
         Character player;
-        Enemy enemy;
 
         // Debugging - Steven
         SpriteFont font;
@@ -66,7 +65,25 @@ namespace MadScienceLab
         InputAction pauseAction;
 
         // Level selected string to build level
-        string levelSelect;
+        int levelNum;
+
+        public struct LevelData
+        {
+            public int currentlevelNum; // number of  current level
+            public TimeSpan time; // time recorded
+            public TimeSpan levelParTime; // current level par time
+            public int remainingHealth;
+
+            public LevelData(int levelNum, TimeSpan levelParTime)
+            {
+                this.currentlevelNum = levelNum;
+                time = TimeSpan.Zero;
+                this.levelParTime = levelParTime;
+                remainingHealth = 3;
+            }
+        }
+
+        LevelData levelData;
 
         #endregion
 
@@ -76,9 +93,9 @@ namespace MadScienceLab
         /// <summary>
         /// Constructor. Initialize game data here
         /// </summary>
-        public GameplayScreen(string levelSelect)
+        public GameplayScreen(int levelNum)
         {
-            this.levelSelect = levelSelect;
+            this.levelNum = levelNum;
 
             // transition time used for screen transitions
             TransitionOnTime = TimeSpan.FromSeconds(1);
@@ -169,7 +186,7 @@ namespace MadScienceLab
                 _sounds.Add("ToggleSwitch", content.Load<SoundEffect>("Sounds/ToggleSwitch"));
 
                 //loads the basic level
-                basicLevel = LevelBuilder.MakeBasicLevel(levelSelect);
+                basicLevel = LevelBuilder.MakeBasicLevel(levelNum);
                 CurrentLevel = basicLevel; //we can handle this through render context eventually.
                 basicLevel.LoadContent(content);
 
@@ -187,6 +204,10 @@ namespace MadScienceLab
 
                 _timer = new GameTimer(_renderContext);
                 _renderContext.GameTimer = _timer;
+
+
+                // Sets level data to level and sets level par time from file.
+                levelData = new LevelData(levelNum, TimeSpan.Zero);
 
                 //load fps count content
                 //fpsCount.LoadContent(content);
@@ -272,6 +293,21 @@ namespace MadScienceLab
                 basicLevel.Update(_renderContext);
                 player.Update(_renderContext);
 
+                // Check to see if the level is complete or player died game over. Pass level data to levelCompleteScreen
+                if (_renderContext.Level.LevelOver)
+                {
+                    levelData.time = _timer.ElapsedTime;
+                    LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                                                               new LevelCompleteScreen(levelData));
+                }
+
+                if (_renderContext.Level.GameOver)
+                {
+                    levelData.time = _timer.ElapsedTime;
+                    LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                                                               new GameOverScreen(levelData));
+                }
+
                 _timer.Update(_renderContext.GameTime);
                 //fps debug
                 //fpsCount.Update(gameTime);    
@@ -307,17 +343,6 @@ namespace MadScienceLab
             //spriteBatch.DrawString(font, "Projectile: " + basicLevel.Children[basicLevel.Children.Count()-1].Hitbox.ToString(), new Vector2(50, 150), Color.Black);
             //spriteBatch.DrawString(font, "Player pos: " + player.Position.ToString(), new Vector2(50, 300), Color.Black);
             spriteBatch.End();
-
-            if (_renderContext.Level.LevelOver)
-            {
-                
-            }
-
-            if (_renderContext.Level.GameOver)
-            {
-                LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
-                                                           new LevelCompleteScreen());
-            }
 
             //fpsCount.Draw(gameTime);
             _timer.Draw(_renderContext.GameTime);
@@ -362,6 +387,7 @@ namespace MadScienceLab
             {
                 ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
             }
+
         }
 
         #endregion
