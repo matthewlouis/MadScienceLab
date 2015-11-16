@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{DE731999-336D-4DAA-936E-DA3A20CD1B5E}</ProjectGuid>
+    <ProjectGuid>{b356db4b-9bc0-4f98-9a1d-743677e0f135}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
@@ -80,9 +80,11 @@
     <Compile Include="LaserProjectile.cs" />
     <Compile Include="PickableBox.cs" />
     <Compile Include="Quadtree.cs" />
+    <Compile Include="Score.cs" />
     <Compile Include="ScreenFactory.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
     <Compile Include="Screens\GameplayScreen.cs" />
+    <Compile Include="Screens\GameOverScreen.cs" />
     <Compile Include="Screens\LevelCompleteScreen.cs" />
     <Compile Include="Screens\LevelSelectScreen.cs" />
     <Compile Include="Screens\LoadingScreen.cs" />
@@ -170,9 +172,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SkinnedModelData\Xbox 360 Copy of SkinnedModelData.csproj">
-      <Project>{1a8f74ab-9106-47f2-ae91-94eafe3b4671}</Project>
-      <Name>Xbox 360 Copy of SkinnedModelData</Name>
+    <ProjectReference Include="..\..\GameStateManagement\Xbox 360 Copy (2) of GameStateManagement (Windows).csproj">
+      <Project>{707bf776-322c-467d-b11a-99262bd59ac8}</Project>
+      <Name>Xbox 360 Copy (2) of GameStateManagement (Windows)</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SkinnedModelData\Xbox 360 Copy (5) of SkinnedModelData.csproj">
+      <Project>{cefcbd81-cc24-4670-a2c9-7afa565191b0}</Project>
+      <Name>Xbox 360 Copy (5) of SkinnedModelData</Name>
     </ProjectReference>
     <ProjectReference Include="..\MadScienceLabContent\MadScienceLabContent.contentproj">
       <Project>{3585BE57-612E-4BF8-984B-2E1BD58A51FE}</Project>
