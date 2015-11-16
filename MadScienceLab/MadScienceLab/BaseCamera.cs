@@ -8,6 +8,8 @@ namespace MadScienceLab
 {
     public class BaseCamera : GameObject3D
     {
+        private const int ZOOM_AMOUNT = 1;
+
         public Matrix View       { get; protected set; }
         public Matrix Projection { get; protected set; }
         Character followTarget;
@@ -103,6 +105,11 @@ namespace MadScienceLab
             }
 
 
+        }
+        public void ZoomOut()
+        {
+
+            Position = new Vector3(Position.X, Position.Y, Position.Z - ZOOM_AMOUNT);
         }
     }
 }

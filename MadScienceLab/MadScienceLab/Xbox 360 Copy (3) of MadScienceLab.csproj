@@ -74,10 +74,13 @@
     <Compile Include="ExitBlock.cs" />
     <Compile Include="FPSCounter.cs" />
     <Compile Include="GameConstants.cs" />
+    <Compile Include="GameTimer.cs" />
     <Compile Include="LaserProjectile.cs" />
     <Compile Include="MadLabGame.cs" />
+    <Compile Include="MessageEvent.cs" />
     <Compile Include="MovingPlatform.cs" />
     <Compile Include="PickableBox.cs" />
+    <Compile Include="Quadtree.cs" />
     <Compile Include="ScreenFactory.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
     <Compile Include="Screens\GameplayScreen.cs" />
@@ -92,7 +95,6 @@
     <Compile Include="Screens\PauseMenuScreen.cs" />
     <Compile Include="Screens\PlayerIndexEventArgs.cs" />
     <Compile Include="SoundEffectPlayer.cs" />
-    <Compile Include="Switch.cs" />
     <Compile Include="Door.cs" />
     <Compile Include="GameAnimatedModel.cs" />
     <Compile Include="GameObject3D.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="RenderContext.cs" />
     <Compile Include="LaserTurret.cs" />
     <Compile Include="SwitchableObject.cs" />
+    <Compile Include="ToggleSwitch.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

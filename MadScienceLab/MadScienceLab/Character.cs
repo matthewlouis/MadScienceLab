@@ -60,7 +60,7 @@ namespace MadScienceLab
         public Character(int startRow, int startCol):base(startRow, startCol)
         {
             // create model with offset of position
-            charModel = new GameAnimatedModel("Vampire", startRow, startCol);
+            charModel = new GameAnimatedModel("Vampire", startRow, startCol, this);
             charModel.VerticalOffset = 22;         
             Rotate(0f, 90f, 0f);
             health = 3;
@@ -71,9 +71,10 @@ namespace MadScienceLab
             base.LoadContent(contentManager);
             charModel.LoadContent(contentManager);
             charModel.PlayAnimation("Idle", true, 0f);
-            UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, false);
+
+            UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, true);
             // Overriding the hitbox size, the new model will need to be the height of the cells, for now the vamp model height is overrided - Steven
-            base.HitboxWidth = 48;
+            //base.HitboxWidth = 48;
             base.HitboxHeight = 48;
 
             //Load sound effects
@@ -302,8 +303,11 @@ namespace MadScienceLab
                 else if (InteractiveObj != null && InteractiveObj.GetType() == typeof(ToggleSwitch))
                 {
                     ToggleSwitch currentSwitch = (ToggleSwitch)InteractiveObj;
-                    currentSwitch.FlickSwitch();
-                    soundEffects.PlaySound("ToggleSwitch");
+                    if (currentSwitch.IsToggleable && currentSwitch.IsReady)
+                    {
+                        soundEffects.PlaySound ( "ToggleSwitch" );
+                        currentSwitch.FlickSwitch ();
+                    }
                 }
             }     
         }
@@ -426,7 +430,7 @@ namespace MadScienceLab
 
         public void Stop()
         {
-            charModel.PlayAnimation("Idle", true, 0f);
+            charModel.PlayAnimation("Idle", true, 0.2f);
         }
 
         public void InteractWithObject()
@@ -460,7 +464,7 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         private void CheckBoxCarryCollision(RenderContext renderContext)
         {
-            foreach (CellObject levelObject in renderContext.Level.Children)
+            foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
                 if (levelObject.isCollidable && StoredBox.Hitbox.Intersects(levelObject.Hitbox))
                 {
@@ -519,8 +523,12 @@ namespace MadScienceLab
         private void CheckPlayerBoxCollision(RenderContext renderContext)
         {
 
-            foreach (CellObject levelObject in renderContext.Level.Children)
+            foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
+                if (levelObject.GetType() == typeof(MovingPlatform)) //default moving platforms for player to not be on the platform unless it would be found that the player were on it
+                {
+                    ((MovingPlatform)levelObject).PlayerOnPlatform = false;
+                }
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
                     //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
@@ -538,7 +546,6 @@ namespace MadScienceLab
                     if (levelObject.GetType() == typeof(Button)) //if it is a button
                     {
                         Button button = (Button)levelObject as Button;
-                        Console.WriteLine("hi");
                         button.IsPressed = true;
                     }
 
@@ -569,6 +576,10 @@ namespace MadScienceLab
                             }
                             else
                             {
+                                if (levelObject.GetType() == typeof(MovingPlatform))
+                                {
+                                    ((MovingPlatform)levelObject).PlayerOnPlatform = true;
+                                }
                                 Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
                                 if (!collisionJumping)
                                     TransVelocity = Vector3.Zero;

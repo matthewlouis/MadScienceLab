@@ -24,18 +24,25 @@ namespace MadScienceLab
         bool movestate = false;
         private SoundEffectPlayer soundEffects;
 
+        private GameAnimatedModel animmodel;
+
         public Enemy(int column, int row)
             : base(column, row)
         {
-            base.Model = GameplayScreen._models["block"];
+            animmodel = new GameAnimatedModel("Doomba", column, row, this);
+            animmodel.PlayAnimation("Move", true, 0f);
             base.isCollidable = true;
-
-            // Provides a hitbox for the block - Steven
-            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
+            Scale(48f, 48f, 48f);
+            Position = new Vector3(Position.X, Position.Y - 18, Position.Z);
+            MoveLeft(1f);
         }
 
         public override void LoadContent(ContentManager contentManager)
         {
+            animmodel.LoadContent(contentManager);
+            // Provides a hitbox for the block - Steven
+            UpdateBoundingBox(animmodel.Model, Matrix.CreateTranslation(base.Position), false, false);
+
             soundEffects = new SoundEffectPlayer(this);
             SoundEffect sound = contentManager.Load<SoundEffect>("Sounds/DoombaLoop");
             soundEffects.LoadSound("Roomba", contentManager.Load<SoundEffect>("Sounds/DoombaLoop"));
@@ -45,42 +52,57 @@ namespace MadScienceLab
 
         public override void Update(RenderContext renderContext)
         {
-            CheckEnemyBoxCollision(renderContext);
+            checkEnemyBoxCollision(renderContext);
             soundEffects.Update(renderContext);
-
+            animmodel.Update(renderContext);
             base.Update(renderContext);
+        }
+
+        public override void Draw(RenderContext renderContext)
+        {
+            animmodel.Draw(renderContext);
         }
 
         public void MoveLeft(float movementAmount)
         {
             facingDirection = FACING_LEFT;
-            Rotate(0f, -90f, 0f);
             Vector3 newPosition = Position + new Vector3(-movementAmount, 0, 0);
+            Rotate(0, -90f, 0);
             Translate(newPosition);
         }
 
         public void MoveRight(float movementAmount)
         {
             facingDirection = FACING_RIGHT;
-            Rotate(0f, 90f, 0f);
             Vector3 newPosition = Position + new Vector3(movementAmount, 0, 0);
+            Rotate(0, 90f, 0);
             Translate(newPosition);
         }
 
-        private void CheckEnemyBoxCollision(RenderContext renderContext)
+        private void checkEnemyBoxCollision(RenderContext renderContext)
         {
             foreach (CellObject levelObject in renderContext.Level.Children)
             {
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
+<<<<<<< HEAD
                     if ((Position.Y - HitboxHeight / 2) <= renderContext.Player.Position.Y 
+=======
+                    
+
+                    if ((Position.Y - HitboxHeight / 2) <= renderContext.Player.Position.Y
+>>>>>>> refs/remotes/origin/master
                         && (Position.Y - HitboxHeight / 2) >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
                         && (Position.X + HitboxWidth) >= (renderContext.Player.Position.X - (HitboxWidth * attackRange))
                         && (Position.X + HitboxWidth) <= (renderContext.Player.Position.X + renderContext.Player.HitboxWidth))
                     {
                         MoveRight(GameConstants.MOVEAMOUNT * 2);
                     }
+<<<<<<< HEAD
                     else if ((Position.Y - HitboxHeight / 2) <= renderContext.Player.Position.Y 
+=======
+                    else if ((Position.Y - HitboxHeight / 2) <= renderContext.Player.Position.Y
+>>>>>>> refs/remotes/origin/master
                         && (Position.Y - HitboxHeight / 2) >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
                         && Position.X <= (renderContext.Player.Position.X + renderContext.Player.HitboxWidth + (HitboxWidth * attackRange))
                         && Position.X >= (renderContext.Player.Position.X + renderContext.Player.HitboxWidth))
@@ -119,10 +141,10 @@ namespace MadScienceLab
 
                 }
 
-            }       
+            }
         }
     }
 }
 
-    
+
 

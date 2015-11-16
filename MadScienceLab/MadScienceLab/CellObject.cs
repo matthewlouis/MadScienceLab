@@ -22,7 +22,7 @@ namespace MadScienceLab
         public Texture2D Texture { get; protected set; }
 
         public Point CellNumber { get; private set; } //on our grid, the cell number that this object occupies.
-        private int zPosition = 0; //0 is where actual elements in play get put...background objects will be further back.
+        protected int zPosition = 0; //0 is where actual elements in play get put...background objects will be further back.
 
         private float x, y;
 

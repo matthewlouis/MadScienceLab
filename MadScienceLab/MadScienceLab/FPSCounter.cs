@@ -22,8 +22,8 @@ namespace MadScienceLab
             TimeSpan elapsedTime = TimeSpan.Zero;
 
 
-            public FPSCounter(Game game, RenderContext renderContext)
-                : base(game)
+            public FPSCounter(RenderContext renderContext)
+                : base(renderContext.Game)
             {
                 this.renderContext = renderContext;
             }

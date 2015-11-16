@@ -12,20 +12,20 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MadScienceLab
 {
-    class Quadtree
+    public class Quadtree
     {
         private int MAX_OBJECTS = 10;
         private int MAX_LEVELS = 5;
 
         private int level;
-        private List<Rectangle> objects;
+        private List<CellObject> objects;
         private Rectangle bounds;
         private Quadtree[] nodes;
 
         public Quadtree(int pLevel, Rectangle pBounds)
         {
             level = pLevel;
-            objects = new List<Rectangle>();
+            objects = new List<CellObject>();
             bounds = pBounds;
             nodes = new Quadtree[4];
         }
@@ -103,18 +103,18 @@ namespace MadScienceLab
         * exceeds the capacity, it will split and add all
         * objects to their corresponding nodes.
         */
-        public void insert(Rectangle pRect) {
+        public void insert(CellObject obj) {
             if (nodes[0] != null) {
-                int index = getIndex(pRect);
+                int index = getIndex(obj.Hitbox);
 
                 if (index != -1) {
-                    nodes[index].insert(pRect);
+                    nodes[index].insert(obj);
 
                     return;
                 }
             }
 
-            objects.Add(pRect);
+            objects.Add(obj);
 
             if (objects.Count > MAX_OBJECTS && level < MAX_LEVELS) {
                 if (nodes[0] == null) { 
@@ -123,7 +123,7 @@ namespace MadScienceLab
                 
                 int i = 0;
                 while (i < objects.Count) {
-                    int index = getIndex(objects[i]);
+                    int index = getIndex(objects[i].Hitbox);
                     if (index != -1) {
                         nodes[index].insert(objects[i]);
                         objects.RemoveAt(i);
@@ -138,7 +138,7 @@ namespace MadScienceLab
         /*
         * Return all objects that could collide with the given object
         */
-        public List<Rectangle> retrieve(List<Rectangle> returnObjects, Rectangle pRect) {
+        public List<CellObject> retrieve(List<CellObject> returnObjects, Rectangle pRect) {
             int index = getIndex(pRect);
             if (index != -1 && nodes[0] != null) {
                 nodes[index].retrieve(returnObjects, pRect);
