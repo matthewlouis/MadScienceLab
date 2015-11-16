@@ -104,7 +104,7 @@ namespace MadScienceLab
                     if (worldObject.GetType() == typeof(Character))
                     {
                         active = false;
-                        renderContext.Player.SetHealth(GameConstants.PLAYER_DAMAGE);
+                        renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
                         TransVelocity = Vector3.Zero;
                     }
                     else

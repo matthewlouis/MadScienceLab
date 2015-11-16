@@ -22,17 +22,17 @@ namespace MadScienceLab
             List<VertexPositionTexture> vList =
                new List<VertexPositionTexture>();
             vList.Add(new VertexPositionTexture(
-                new Vector3(0 + Position.X, 0 + Position.Y, Position.Z),Vector2.UnitY));
+                new Vector3(0 + Position.X, 0 + Position.Y, Position.Z/2),Vector2.UnitY));
             vList.Add(new VertexPositionTexture(
-                new Vector3(GameConstants.SINGLE_CELL_SIZE + Position.X, 0 + Position.Y, Position.Z), Vector2.One));
+                new Vector3(GameConstants.SINGLE_CELL_SIZE + Position.X, 0 + Position.Y, Position.Z/2), Vector2.One));
             vList.Add(new VertexPositionTexture(
-                new Vector3(0 + Position.X, GameConstants.SINGLE_CELL_SIZE + Position.Y, Position.Z), Vector2.Zero));
+                new Vector3(0 + Position.X, GameConstants.SINGLE_CELL_SIZE + Position.Y, Position.Z/2), Vector2.Zero));
             vList.Add(new VertexPositionTexture(
-                new Vector3(GameConstants.SINGLE_CELL_SIZE + Position.X, 0 + Position.Y, Position.Z), Vector2.One));
+                new Vector3(GameConstants.SINGLE_CELL_SIZE + Position.X, 0 + Position.Y, Position.Z/2), Vector2.One));
             vList.Add(new VertexPositionTexture(
-                new Vector3(GameConstants.SINGLE_CELL_SIZE + Position.X, GameConstants.SINGLE_CELL_SIZE + Position.Y, Position.Z), Vector2.UnitX));
+                new Vector3(GameConstants.SINGLE_CELL_SIZE + Position.X, GameConstants.SINGLE_CELL_SIZE + Position.Y, Position.Z/2), Vector2.UnitX));
             vList.Add(new VertexPositionTexture(
-                new Vector3(0 + Position.X, GameConstants.SINGLE_CELL_SIZE + Position.Y, Position.Z), Vector2.Zero));
+                new Vector3(0 + Position.X, GameConstants.SINGLE_CELL_SIZE + Position.Y, Position.Z/2), Vector2.Zero));
             return vList;
         }
     }

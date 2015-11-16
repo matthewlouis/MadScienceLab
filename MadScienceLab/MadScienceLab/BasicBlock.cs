@@ -12,13 +12,11 @@ namespace MadScienceLab
      */
     class BasicBlock:CellObject
     {
-        //one model for all to conserve memory
         private Model model;
 
         public BasicBlock(int column, int row):base(column, row)
         {
-            if(model == null)
-                model = GameplayScreen._models["BasicBlock"];
+            model = GameplayScreen._models["BasicBlock"];
             base.isCollidable = true;
 
             // Provides a hitbox for the block - Steven
