@@ -163,6 +163,7 @@ namespace MadScienceLab
                 _models.Add("block", content.Load<Model>("block"));
                 _models.Add("Turret", content.Load<Model>("turret"));
                 _models.Add("projectile", content.Load<Model>("projectile"));
+                _models.Add("ExitBlock", content.Load<Model>("ExitBlock"));
 
                 _textures.Add("MoveableBox", content.Load<Texture2D>("WoodPlanks_Color"));
                 _textures.Add("BlockDropper", content.Load<Texture2D>("Textures/dropper"));
