@@ -12,13 +12,48 @@ namespace MadScienceLab
      */
     class BasicBlock:CellObject
     {
+        //one model for all to conserve memory
+        private static Model model;
+
         public BasicBlock(int column, int row):base(column, row)
         {
-            base.Model = GameplayScreen._models["BasicBlock"];
+            if(model == null)
+                model = GameplayScreen._models["BasicBlock"];
             base.isCollidable = true;
 
             // Provides a hitbox for the block - Steven
-            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
+            UpdateBoundingBox(model, Matrix.CreateTranslation(base.Position), false, false);
+        }
+
+        public override void Draw(RenderContext renderContext)
+        {
+            Vector3 screenPos = renderContext.GraphicsDevice.Viewport.Project(WorldPosition, renderContext.Camera.Projection, renderContext.Camera.View, WorldMatrix);
+            Vector2 screenPos2D = new Vector2(screenPos.X, screenPos.Y);
+
+
+            if (screenPos2D.X >= -GameConstants.SINGLE_CELL_SIZE * 2 &&
+                screenPos2D.X <= renderContext.GraphicsDevice.Viewport.Width + GameConstants.SINGLE_CELL_SIZE * 2 &&
+                screenPos2D.Y >= -GameConstants.SINGLE_CELL_SIZE * 2 &&
+                screenPos2D.Y <= renderContext.GraphicsDevice.Viewport.Width * 2)
+            {
+                    foreach (BasicEffect effect in model.Meshes[0].Effects)
+                    {
+                        effect.EnableDefaultLighting();
+
+                        if (Texture != null)
+                        {
+                            renderContext.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
+                            effect.Texture = Texture;
+                            effect.TextureEnabled = true;
+
+                        }
+
+                        effect.View = renderContext.Camera.View;
+                        effect.Projection = renderContext.Camera.Projection;
+                        effect.World = WorldMatrix;
+                    }
+                    model.Meshes[0].Draw();
+                }
         }
     }
 }

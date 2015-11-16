@@ -67,7 +67,7 @@ namespace MadScienceLab
 
         public override void Draw(RenderContext renderContext)
         {
-            animmodel.Draw(renderContext);
+           animmodel.Draw(renderContext);
         }
     }
 }
