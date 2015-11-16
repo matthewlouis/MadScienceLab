@@ -44,13 +44,24 @@ namespace MadScienceLab
         private bool jumping;
         private Boolean collisionJumping = false;
 
+        //For handling damage
+        private static TimeSpan DAMAGE_DELAY = TimeSpan.FromMilliseconds(1000f);
+        private static int BLINK_DELAY = 200;
+
+        private TimeSpan timeHit = TimeSpan.Zero;
+        private bool damageable = true;
 
         // Health Support
         private int health;
-        public void SetHealth(int damage)
+        public void TakeDamage(int damage, GameTime gametime)
         {
-            health -= damage;
-            soundEffects.PlaySound("PlayerHit");
+            if (damageable) //if recently taken damage, don't take damage again
+            {
+                timeHit = gametime.TotalGameTime; //get time when hit
+                health -= damage;
+                damageable = false;
+                soundEffects.PlaySound("PlayerHit");
+            }
         }
         public int GetHealth()
         {
@@ -63,7 +74,7 @@ namespace MadScienceLab
             charModel = new GameAnimatedModel("Vampire", startRow, startCol, this);
             charModel.VerticalOffset = 22;         
             Rotate(0f, 90f, 0f);
-            health = 3;
+            health = GameConstants.HEALTH;
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
@@ -96,6 +107,16 @@ namespace MadScienceLab
             {
                 renderContext.Level.GameOver = true;
             }
+
+            //For temporary invincibility when recently damaged
+            if (!damageable)     
+            {
+                if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
+                {
+                    damageable = true;
+                }
+            }
+
             charModel.Update(renderContext);
             UpdatePhysics();
            
@@ -205,6 +226,12 @@ namespace MadScienceLab
 
         public override void Draw(RenderContext renderContext)
         {
+            //Create blink effect
+            if (!damageable &&
+                (renderContext.GameTime.TotalGameTime - timeHit).Milliseconds % BLINK_DELAY <= BLINK_DELAY/2)
+            {
+                return; //don't draw the player 
+            }
             charModel.Draw(renderContext);
         }
 

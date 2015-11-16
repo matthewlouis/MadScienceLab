@@ -50,9 +50,6 @@ namespace MadScienceLab
             level4MenuEntry = new MenuEntry("Level 4");
             level5MenuEntry = new MenuEntry("Level 5");
 
-            
-
-
             MenuEntry back = new MenuEntry("Main Menu");
 
             // Hook up menu event handlers.
@@ -80,31 +77,32 @@ namespace MadScienceLab
         void level1MenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen("level1"));
+                               new GameplayScreen(1));
         }
+        
 
         void level2MenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen("level2"));
+                               new GameplayScreen(2));
         }
 
         void level3MenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen("level3"));
+                               new GameplayScreen(3));
         }
 
         void level4MenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen("level4"));
+                               new GameplayScreen(4));
         }
 
         void level5MenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen("level5"));
+                               new GameplayScreen(5));
         }
 
 

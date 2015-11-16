@@ -20,6 +20,11 @@ namespace MadScienceLab
     {
         GraphicsDeviceManager graphics;
         ScreenManager screenManager;
+        public ScreenManager ScreenManager
+        {
+            get { return screenManager; }
+            set { screenManager = value; }
+        }
         ScreenFactory screenFactory;
 
         public static Level CurrentLevel { get; private set; }
@@ -70,6 +75,8 @@ namespace MadScienceLab
 
             // Create the screen manager component.
             screenManager = new ScreenManager(this);
+           
+
             Components.Add(screenManager);
 
             

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{de731999-336d-4daa-936e-da3a20cd1b5e}</ProjectGuid>
+    <ProjectGuid>{DE731999-336D-4DAA-936E-DA3A20CD1B5E}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
@@ -170,10 +170,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GameStateManagement\Xbox 360 Copy of GameStateManagement (Windows).csproj">
-      <Project>{28084967-72e5-4290-8e96-463fa821222e}</Project>
-      <Name>Xbox 360 Copy of GameStateManagement (Windows)</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\SkinnedModelData\Xbox 360 Copy of SkinnedModelData.csproj">
       <Project>{1a8f74ab-9106-47f2-ae91-94eafe3b4671}</Project>
       <Name>Xbox 360 Copy of SkinnedModelData</Name>
