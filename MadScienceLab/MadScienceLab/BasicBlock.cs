@@ -13,7 +13,7 @@ namespace MadScienceLab
     class BasicBlock:CellObject
     {
         //one model for all to conserve memory
-        private static Model model;
+        private Model model;
 
         public BasicBlock(int column, int row):base(column, row)
         {
