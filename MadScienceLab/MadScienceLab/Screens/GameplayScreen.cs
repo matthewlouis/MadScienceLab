@@ -354,17 +354,6 @@ namespace MadScienceLab
             spriteBatch.End();
 
             //fpsCount.Draw(gameTime);
-            if (_renderContext.Level.LevelOver)
-            {
-                
-            }
-
-            if (_renderContext.Level.GameOver)
-            {
-                LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
-                                                           new LevelCompleteScreen());
-            }
-
             fpsCount.Draw(gameTime);
             _timer.Draw(_renderContext.GameTime);
             // Spritebatch changes graphicsdevice values; sets the oringinal state
