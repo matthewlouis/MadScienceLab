@@ -41,7 +41,6 @@ namespace MadScienceLab
         {
             if (SoundInstances.ContainsKey(name))
             {
-                Console.Out.WriteLine("{0}: Listener:{1} Emitter:{2}", name, listener.Position, emitter.Position);
                 SoundInstances[name].Dispose();
                 SoundInstances[name] = soundReferences[name].CreateInstance();
                 SoundInstances[name].Apply3D(listener, emitter);

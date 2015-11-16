@@ -97,6 +97,7 @@ namespace MadScienceLab
         {
             this.levelNum = levelNum;
 
+
             // transition time used for screen transitions
             TransitionOnTime = TimeSpan.FromSeconds(1);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -119,7 +120,7 @@ namespace MadScienceLab
 
             random = new Random();
             //init fps counter
-            //fpsCount = new FPSCounter(this, _renderContext);
+            fpsCount = new FPSCounter(_renderContext);
             Quadtree _quadtree = new Quadtree(0, new Rectangle(0, 0, GameConstants.X_RESOLUTION, GameConstants.X_RESOLUTION));
             _renderContext.Quadtree = _quadtree;
         }
@@ -141,6 +142,11 @@ namespace MadScienceLab
 
                 _renderContext.SpriteBatch = spriteBatch;
                 _renderContext.GraphicsDevice = ScreenManager.GraphicsDevice;
+
+                //Set up basic effect for drawing background
+                _renderContext.BasicEffect = new BasicEffect(_renderContext.GraphicsDevice);
+                
+
 
                 // TODO: use this.Content to load your game content here
                 //_models.Add("player", Content.Load<Model>("scientist"));
@@ -172,6 +178,7 @@ namespace MadScienceLab
                 _textures.Add("Exit", content.Load<Texture2D>("Textures/EXIT"));
                 _textures.Add("Complete", content.Load<Texture2D>("Textures/Complete"));
                 _textures.Add("GameOver", content.Load<Texture2D>("Textures/GameOver"));
+                _renderContext.Textures = _textures;
 
                 //Loads sound references
                 _sounds.Add("BoxDrop", content.Load<SoundEffect>("Sounds/BoxDrop"));
@@ -187,6 +194,8 @@ namespace MadScienceLab
 
                 //loads the basic level
                 basicLevel = LevelBuilder.MakeBasicLevel(levelNum);
+                basicLevel.setBackgroundBuffer(_renderContext); //Matt: need to do this now to draw background properly
+
                 CurrentLevel = basicLevel; //we can handle this through render context eventually.
                 basicLevel.LoadContent(content);
 
@@ -210,8 +219,8 @@ namespace MadScienceLab
                 levelData = new LevelData(levelNum, TimeSpan.Zero);
 
                 //load fps count content
-                //fpsCount.LoadContent(content);
-
+                fpsCount.LoadContent(content);
+                
                 // if game takes long to load. Simulate load by delaying for a
                 // while, giving you a chance to admire the beautiful loading screen.
                 Thread.Sleep(500);
@@ -310,7 +319,7 @@ namespace MadScienceLab
 
                 _timer.Update(_renderContext.GameTime);
                 //fps debug
-                //fpsCount.Update(gameTime);    
+                fpsCount.Update(gameTime);    
                 //timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
         }
@@ -345,6 +354,18 @@ namespace MadScienceLab
             spriteBatch.End();
 
             //fpsCount.Draw(gameTime);
+            if (_renderContext.Level.LevelOver)
+            {
+                
+            }
+
+            if (_renderContext.Level.GameOver)
+            {
+                LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                                                           new LevelCompleteScreen());
+            }
+
+            fpsCount.Draw(gameTime);
             _timer.Draw(_renderContext.GameTime);
             // Spritebatch changes graphicsdevice values; sets the oringinal state
             ScreenManager.GraphicsDevice.BlendState = BlendState.AlphaBlend;

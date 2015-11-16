@@ -24,7 +24,7 @@ namespace MadScienceLab
         private static TimeSpan READY_DELAY = TimeSpan.FromMilliseconds(750);
         private TimeSpan waitTime = TimeSpan.Zero;
         private bool ready = true;
-        
+
         public ToggleSwitch(int column, int row, Boolean infinitelytoggleable):base(column, row)
         {
             LinkedDoors = new List<SwitchableObject>();
@@ -38,6 +38,8 @@ namespace MadScienceLab
             animmodel[0] = new GameAnimatedModel("LeverFull", column, row, this);
             animmodel[1] = new GameAnimatedModel("LeverEmpty", column, row, this);
 
+
+            Translate(Position.X, Position.Y + GameConstants.SINGLE_CELL_SIZE/2, Position.Z - GameConstants.SINGLE_CELL_SIZE/2);
             Scale(72f, 72f, 48f);
            
             // Matt- Steven's code for auto-calculating hitbox not working for this, so I've hardcoded it here.
@@ -72,8 +74,10 @@ namespace MadScienceLab
         {
             if (ready && IsSwitched)
             {
-                if (!InfinitelyToggleable && RemainingToggles == 1) //if non-infinitely toggleable switch and last toggle
+                if (!InfinitelyToggleable && RemainingToggles == 0)
+                { //if non-infinitely toggleable switch and last toggle
                     animmodel[0] = animmodel[1]; //switch to red model
+                }
 
                 animmodel[0].PlayAnimation("Pull", false, 0f);
 

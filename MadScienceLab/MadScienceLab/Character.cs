@@ -464,7 +464,7 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         private void CheckBoxCarryCollision(RenderContext renderContext)
         {
-            foreach (CellObject levelObject in renderContext.Level.Children)
+            foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
                 if (levelObject.isCollidable && StoredBox.Hitbox.Intersects(levelObject.Hitbox))
                 {
@@ -523,7 +523,7 @@ namespace MadScienceLab
         private void CheckPlayerBoxCollision(RenderContext renderContext)
         {
 
-            foreach (CellObject levelObject in renderContext.Level.Children)
+            foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
                 if (levelObject.GetType() == typeof(MovingPlatform)) //default moving platforms for player to not be on the platform unless it would be found that the player were on it
                 {

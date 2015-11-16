@@ -23,6 +23,9 @@ namespace MadScienceLab
         public BaseCamera     Camera { get; set; }
         public Character      Player { get; set; }
         public Level          Level { get; set; }
+        public BasicEffect BasicEffect { get; set; }
         public Quadtree       Quadtree { get; set; }
+        public Game Game { get; set; }
+        public Dictionary<String, Texture2D> Textures { get; set; }
     }
 }
