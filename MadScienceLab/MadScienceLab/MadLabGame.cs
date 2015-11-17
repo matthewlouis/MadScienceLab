@@ -91,17 +91,9 @@ namespace MadScienceLab
             // component for screenManager
             Components.Add(screenManager);
 
-
+# if(XBOX)
             Components.Add(new GamerServicesComponent(this));
-
-            
-
-
-            
-
-
-
-            
+#endif 
         }
 
         /// <summary>
