@@ -26,8 +26,6 @@ namespace MadScienceLab
 
         private float x, y;
 
-  
-
         /**
          * Constructor. Takes the column and row where the block will placed on a grid.
          */ 

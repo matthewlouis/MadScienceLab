@@ -143,7 +143,6 @@ namespace MadScienceLab
             //Code used to update any actions occurring with PickBox and PutBox.
             UpdatePickBox ();
             UpdatePutBox (renderContext);
-
             //update sound
             soundEffects.Update(renderContext);
             base.Update(renderContext);

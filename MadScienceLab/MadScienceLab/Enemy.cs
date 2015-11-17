@@ -300,7 +300,7 @@ namespace MadScienceLab
         //{
         //    Vector3 playerPos = renderContext.Player.Position;
         //    Rectangle playerHitBox = renderContext.Player.Hitbox;
-        //    BoundingBox playerBoundingBox = new BoundingBox(new Vector3(playerPos.X, playerPos.Y, 0), new Vector3(playerPos.X, playerPos.Y, 0));
+        //    BoundingBox playerBoundingBox = new BoundingBox(new Vector3(playerPos.X, playerPos.Y, 0), new Vector3(playerPos.X, playerPos.Y, 0)); // try convert rectagle to bounding box
         //    Ray ray;
         //    ray.Position = Position;
         //    Vector3 intersect = ray.Intersects(playerBoundingBox);

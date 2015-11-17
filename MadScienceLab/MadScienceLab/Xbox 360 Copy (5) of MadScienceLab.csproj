@@ -80,7 +80,9 @@
     <Compile Include="GameConstants.cs" />
     <Compile Include="LaserProjectile.cs" />
     <Compile Include="PickableBox.cs" />
+    <Compile Include="PointSort.cs" />
     <Compile Include="Quadtree.cs" />
+    <Compile Include="Ray2D.cs" />
     <Compile Include="Score.cs" />
     <Compile Include="ScreenFactory.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
