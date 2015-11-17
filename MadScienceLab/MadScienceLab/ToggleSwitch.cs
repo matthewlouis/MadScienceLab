@@ -120,8 +120,9 @@ namespace MadScienceLab
             animmodel[1].LoadContent(contentManager);
 
             // Provides a hitbox for the block - Steven
-            UpdateBoundingBox(animmodel[0].Model, Matrix.CreateTranslation(base.Position), false, false);
-            base.HitboxWidth = base.HitboxHeight = GameConstants.SINGLE_CELL_SIZE;
+            base.HitboxWidth = 30;
+            base.HitboxWidthOffset = 12 / 2;
+            base.HitboxHeight = GameConstants.SINGLE_CELL_SIZE;
         }
     }
 }

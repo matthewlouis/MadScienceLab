@@ -47,7 +47,6 @@ namespace MadScienceLab
             Scale(10f, 10f, 10f);
             NumberOfBoxes = numberOfBoxes;
             isCollidable = true;
-            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
             IsPassable = false;
         }
 
@@ -59,7 +58,8 @@ namespace MadScienceLab
             animmodel[0].LoadContent(contentManager);
             animmodel[1].LoadContent(contentManager);
 
-            UpdateBoundingBox(animmodel[0].Model, Matrix.CreateTranslation(animmodel[0].Position), false, false);
+            //UpdateBoundingBox(animmodel[0].Model, Matrix.CreateTranslation(animmodel[0].Position), false, false);
+            base.HitboxHeight = base.HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
         }
 
         //Drops a box

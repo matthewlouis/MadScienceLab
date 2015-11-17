@@ -50,6 +50,7 @@ namespace MadScienceLab
             // collision handling
             base.isCollidable = true;
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), true, true);
+            base.HitboxHeightOffset = 2;
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)

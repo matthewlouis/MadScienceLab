@@ -592,7 +592,7 @@ namespace MadScienceLab
                 }
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
-                    renderContext.Boxhit = levelObject.Hitbox;
+                    //renderContext.Boxhit = levelObject.Hitbox;
                     //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
                     if (levelObject.GetType() == typeof(ExitBlock))
                     {
@@ -644,9 +644,9 @@ namespace MadScienceLab
                                 }
                                 Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
                                 if (levelObject.Hitbox.Y > -25)
-                                    Position = new Vector3((int)Position.X, (int)levelObject.Position.Y + 48, 0);
+                                    Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom, 0);
                                 else
-                                    Position = new Vector3((int)Position.X, (int)levelObject.Position.Y + 47, 0);
+                                    Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
                                 if (!collisionJumping)
                                     TransVelocity = Vector3.Zero;
                                 jumping = false;

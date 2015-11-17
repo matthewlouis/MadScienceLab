@@ -48,7 +48,9 @@ namespace MadScienceLab
             }
 
             renderContext.Quadtree.retrieve(returnObjs, Hitbox);
-            
+
+            renderContext.QuadtreeDebug = new List<CellObject>();
+            renderContext.QuadtreeDebug.AddRange(returnObjs);
 
             if (active)
             {

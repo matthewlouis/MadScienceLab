@@ -26,6 +26,8 @@ namespace MadScienceLab
         public BasicEffect BasicEffect { get; set; }
         public Quadtree       Quadtree { get; set; }
         public Rectangle      Boxhit { get; set; }
+        public List<Rectangle> BoxesHit { get; set; }
+        public List<CellObject> QuadtreeDebug { get; set; }
         public Game Game { get; set; }
         public Dictionary<String, Texture2D> Textures { get; set; }
     }
