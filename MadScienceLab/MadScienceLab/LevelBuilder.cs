@@ -22,11 +22,13 @@ namespace MadScienceLab
          //need height in order to determine object Y position, which would be startFloor + ((levelheight-1) - row), levelheight-1 being the highest row
         public static int levelheight; //count \n; (# of "\n")+(1 for floor) is the height. placement; thus, get height first.
 
+        static string levelSelect;
+
         //Builds Basic level
-        public static Level MakeBasicLevel(string levelSelect)
+        public static Level MakeBasicLevel(int levelNum)
         {
             Level level = new Level();
-
+            levelSelect = "level" + levelNum.ToString();
 
             //read level from text file - width and height of level will depend on the text file's characters
             /*
@@ -117,7 +119,7 @@ namespace MadScienceLab
                         level.AddChild ( new BasicBlock ( col++, row ) );
                         break;
                     case 'L':
-                       level.AddChild(new LaserTurret(col++, row, true, GameConstants.DIRECTION.pointLeft)); 
+                       level.AddChild(new LaserTurret(col++, row, true, GameConstants.POINTDIR.pointLeft)); 
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);                      
                         break;
                     case 'd':
@@ -221,12 +223,19 @@ namespace MadScienceLab
                         MovingPlatform movingPlatform = (MovingPlatform)level.Children[index];
                         //set initial direction of moving platform
                         if(Settings[0] == "L") {
-                            movingPlatform.movingLeft = true;
+                            movingPlatform.movingDirection = GameConstants.DIRECTION.Left;
                         }
-                        else
-                            if (Settings[0] == "R")
+                        else if (Settings[0] == "R")
                         {
-                            movingPlatform.movingLeft = false;
+                            movingPlatform.movingDirection = GameConstants.DIRECTION.Right;
+                        }
+                        else if (Settings[0] == "U")
+                        {
+                            movingPlatform.movingDirection = GameConstants.DIRECTION.Up;
+                        }
+                        else if (Settings[0] == "D")
+                        {
+                            movingPlatform.movingDirection = GameConstants.DIRECTION.Down;
                         }
                         movingPlatform.maxDistance = Int32.Parse(Settings[1]) * GameConstants.SINGLE_CELL_SIZE;
                     }
@@ -237,12 +246,12 @@ namespace MadScienceLab
                         //set initial direction of moving platform
                         if (ObjectAndSettings[1] == "L")
                         {
-                            laserTurret.direction = GameConstants.DIRECTION.pointLeft;
+                            laserTurret.direction = GameConstants.POINTDIR.pointLeft;
                         }
                         else
                             if (ObjectAndSettings[1] == "R")
                             {
-                                laserTurret.direction = GameConstants.DIRECTION.pointRight;
+                                laserTurret.direction = GameConstants.POINTDIR.pointRight;
                             }
                     }
 
@@ -256,7 +265,8 @@ namespace MadScienceLab
                 }
             }
             
-            /**DRAWS BACKGROUND**/
+          
+            //DRAWS BACKGROUND
             row = startFloor + levelheight - 1;
             col = startWall; 
             foreach (char c2 in backtxt)
@@ -264,34 +274,34 @@ namespace MadScienceLab
                 switch (c2) //convert char to level object at the coordinate iterated through
                 {
                     case '1': //Bare Metal Gray
-                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["BareMetal_Gray"]));
+                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["BareMetal_Gray"]));
                         break;
                     case '2': //Rounded Brushed Gray Metal
-                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["BrushedRoundMetal_Gray"]));
+                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["BrushedRoundMetal_Gray"]));
                         break;
                     case '3': //Textured Metal Floor Gray
-                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["MetalFloor_Gray"]));
+                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["MetalFloor_Gray"]));
                         break;
                     case '4': //Dirty Rusted Metal
-                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["DirtyMetal"]));
+                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["DirtyMetal"]));
                         break;
                     case '5': //White Fiberglass
-                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["Fiberglass_White"]));
+                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["Fiberglass_White"]));
                         break;
                     case '6': //Tile Blue
-                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Blue"]));
+                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Blue"]));
                         break;
                     case '7': //Tile Beige
-                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Beige"]));
+                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Beige"]));
                         break;
                     case '8': //Tile Multicolored
-                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Fun"]));
+                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Fun"]));
                         break;
                     case '9': //Tile Gray
-                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_DarkGray"]));
+                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_DarkGray"]));
                         break;
                     case '0': //Windowed Glass Blocks
-                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["WindowBlocks"]));
+                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["WindowBlocks"]));
                         break;
                     case '@':
                         col++;
@@ -301,7 +311,7 @@ namespace MadScienceLab
                         col = startWall;
                         break;
                     default:
-                        level.AddChild(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Gray"]));
+                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Gray"]));
                         break;
                 }
             }

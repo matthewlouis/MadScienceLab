@@ -1,8 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
-MinimumVisualStudioVersion = 10.0.40219.1
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MadScienceLab", "MadScienceLab\MadScienceLab\MadScienceLab.csproj", "{B385F8EA-6050-4D64-B56C-3A0A094E1C61}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3899FB5E-0ED8-4606-81D5-4053C24C52AF} = {3899FB5E-0ED8-4606-81D5-4053C24C52AF}
@@ -15,10 +13,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkinnedModelPipeline", "SkinnedModelPipeline\SkinnedModelPipeline.csproj", "{FDC4EB6B-4FC3-45DC-8E17-7F560C58CD0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameStateManagement (Windows)", "GameStateManagement\GameStateManagement (Windows).csproj", "{0A551D79-F37E-4529-9CA0-3FD2E9EA715E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xbox 360 Copy of GameStateManagement (Windows)", "GameStateManagement\Xbox 360 Copy of GameStateManagement (Windows).csproj", "{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{20A2DE79-996A-49DA-B956-B724EA03DC90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -98,18 +92,6 @@ Global
 		{0A551D79-F37E-4529-9CA0-3FD2E9EA715E}.Release|x86.Build.0 = Release|x86
 		{0A551D79-F37E-4529-9CA0-3FD2E9EA715E}.Release|Xbox 360.ActiveCfg = Release|x86
 		{0A551D79-F37E-4529-9CA0-3FD2E9EA715E}.Release|Xbox 360.Build.0 = Release|x86
-		{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}.Debug|Any CPU.ActiveCfg = Debug|Xbox 360
-		{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}.Debug|Mixed Platforms.ActiveCfg = Debug|Xbox 360
-		{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}.Debug|Mixed Platforms.Build.0 = Debug|Xbox 360
-		{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}.Debug|x86.ActiveCfg = Debug|Xbox 360
-		{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}.Debug|Xbox 360.ActiveCfg = Debug|Xbox 360
-		{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}.Debug|Xbox 360.Build.0 = Debug|Xbox 360
-		{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}.Release|Any CPU.ActiveCfg = Release|Xbox 360
-		{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}.Release|Mixed Platforms.ActiveCfg = Release|Xbox 360
-		{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}.Release|Mixed Platforms.Build.0 = Release|Xbox 360
-		{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}.Release|x86.ActiveCfg = Release|Xbox 360
-		{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}.Release|Xbox 360.ActiveCfg = Release|Xbox 360
-		{FFC4C297-4E56-459F-8AEF-9C8359CE6FBD}.Release|Xbox 360.Build.0 = Release|Xbox 360
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

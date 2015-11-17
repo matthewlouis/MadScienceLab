@@ -17,12 +17,15 @@ namespace MadScienceLab
 {
     class MovingPlatform : CellObject
     {
-        const int FACING_LEFT = 1, FACING_RIGHT = 2, FACING_BOTTOM = 3, FACING_TOP = 4;
-        byte facingDirection = FACING_RIGHT;
+        const GameConstants.DIRECTION //making shorthand for each direction
+            LEFT = GameConstants.DIRECTION.Left, 
+            RIGHT = GameConstants.DIRECTION.Right, 
+            DOWN = GameConstants.DIRECTION.Down, 
+            UP = GameConstants.DIRECTION.Up;
 
         public float maxDistance {get; set;}
         float currDistance = 0;
-        public bool movingLeft = false;
+        public GameConstants.DIRECTION facingDirection, movingDirection;
         public bool PlayerOnPlatform = false;
 
 
@@ -32,6 +35,8 @@ namespace MadScienceLab
             base.Model = GameplayScreen._models["BasicBlock"];
             base.isCollidable = true;
             maxDistance = 2 * GameConstants.SINGLE_CELL_SIZE; //default distance
+            this.facingDirection = RIGHT;
+            this.movingDirection = RIGHT; //default direction
 
             // Provides a hitbox for the block - Steven
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
@@ -42,40 +47,52 @@ namespace MadScienceLab
             CheckEnemyBoxCollision(renderContext);
             if (currDistance > maxDistance)
             {
-                movingLeft = !movingLeft;
+                //reverse direction if exceeding distance
+                if (movingDirection == LEFT)
+                {
+                    movingDirection = RIGHT;
+                }
+                else if (movingDirection == RIGHT)
+                {
+                    movingDirection = LEFT;
+                }
+                else if (movingDirection == UP)
+                {
+                    movingDirection = DOWN;
+                }
+                else if (movingDirection == DOWN)
+                {
+                    movingDirection = UP;
+                }
                 currDistance = 0;
             }
             base.Update(renderContext);
         }
 
-        public void MoveLeft(RenderContext renderContext, float movementAmount)
+        public void Move(RenderContext renderContext, GameConstants.DIRECTION moveDir, float movementAmount)
         {
-            facingDirection = FACING_LEFT;
-            Rotate(0f, -90f, 0f);
-            Vector3 newPosition = Position + new Vector3(-movementAmount, 0, 0);
+            facingDirection = moveDir;
+            //Rotate(0f, -90f, 0f); //No need to rotate moving platform to set its direction
+            Vector3 newPosition;
+            Vector3 PositionChange;
+
+            //Get position change depending on direction
+            if(moveDir == LEFT)
+                PositionChange = new Vector3(-movementAmount, 0, 0);
+            else if (moveDir == RIGHT)
+                PositionChange = new Vector3(movementAmount, 0, 0);
+            else if (moveDir == UP)
+                PositionChange = new Vector3(0, movementAmount, 0);
+            else// if (moveDir == DOWN)
+                PositionChange = new Vector3(0, -movementAmount, 0);
+            newPosition = Position + PositionChange;
             currDistance += movementAmount;
             Translate(newPosition);
 
             //if player is on the platform, move the player just as much as the platform does
             if (PlayerOnPlatform)
             {
-                Vector3 newPlayerPosition = renderContext.Player.Position + new Vector3(-movementAmount, 0, 0);
-                renderContext.Player.Translate(newPlayerPosition);
-            }
-        }
-
-        public void MoveRight(RenderContext renderContext, float movementAmount)
-        {
-            facingDirection = FACING_RIGHT;
-            Rotate(0f, 90f, 0f);
-            Vector3 newPosition = Position + new Vector3(movementAmount, 0, 0);
-            currDistance += movementAmount;
-            Translate(newPosition);
-
-            //if player is on the platform, move the player just as much as the platform does
-            if (PlayerOnPlatform)
-            {
-                Vector3 newPlayerPosition = renderContext.Player.Position + new Vector3(movementAmount, 0, 0);
+                Vector3 newPlayerPosition = renderContext.Player.Position + PositionChange;
                 renderContext.Player.Translate(newPlayerPosition);
             }
         }
@@ -93,28 +110,49 @@ namespace MadScienceLab
                     float hx = (Hitbox.Height + levelObject.Hitbox.Height)
                              * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
 
-                    if (movingLeft)
-                    {
-                        MoveLeft(renderContext, GameConstants.MOVEAMOUNT);
+                    Move(renderContext, movingDirection, GameConstants.MOVEAMOUNT); //Move box in the respective direction
 
-                    }
-                    else
-                    {
-                        MoveRight(renderContext, GameConstants.MOVEAMOUNT);
-                    }
-
-                    if (wy > hx)
+                    /*if (wy > hx)
                     {
                         //boxHitState = "Box Left";// left
-                        movingLeft = false;
+                        movingDirection = RIGHT;
                         currDistance = 0;
                     }
                     if (wy > -hx)
                     {
                         //boxHitState = "Box Right";// right
-                        movingLeft = true;
+                        movingDirection = LEFT;
                         currDistance = 0;
+                    }*/
+                    //Reverse directions based on collision with another object
+                    if (wy > hx)
+                    {
+                        if (movingDirection == UP)
+                        {
+                            movingDirection = DOWN;
+                            currDistance = 0;
+                        }
+                        if (movingDirection == LEFT)
+                        {
+                            movingDirection = RIGHT;
+                            currDistance = 0;
+                        }
                     }
+                    
+                    else if (wy > -hx)
+                    {
+                        if (movingDirection == RIGHT)
+                        {
+                            movingDirection = LEFT;
+                            currDistance = 0;
+                        }
+                        if (movingDirection == DOWN)
+                        {
+                            movingDirection = UP;
+                            currDistance = 0;
+                        }
+                    }
+                    
 
 
 

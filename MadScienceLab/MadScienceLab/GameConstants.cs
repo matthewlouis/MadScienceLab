@@ -21,14 +21,21 @@ namespace MadScienceLab
         // player
         public const float MOVEAMOUNT = 2f;
         public const int PLAYER_DAMAGE = 1;
+        public const int HEALTH = 3;
 
         // projectile 
-        public enum DIRECTION { pointLeft = -1, pointRight = 1 }
+        public enum POINTDIR { pointLeft = -1, pointRight = 1 } //Jacob: Renamed this to POINTDIR, as I decided to use DIRECTION for all 4 directions
         public const int PROJECTILE_X_VELOCITY = 10;
+
+        // platform/enemy
+        public enum DIRECTION { Left = 1, Down = 2, Up = 3, Right = 4 }
 
         // physics
 
-        //sound
+        // sound
         public const int DISTANCE_SCALE = 4;
+
+        // levels
+        public const int LEVELS = 5;        
     }
 }

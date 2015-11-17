@@ -31,7 +31,8 @@ namespace MadScienceLab
         MenuEntry level3MenuEntry;
         MenuEntry level4MenuEntry;
         MenuEntry level5MenuEntry;
-        
+
+        GameData saveGameData;
         #endregion
 
         #region Initialization
@@ -43,6 +44,10 @@ namespace MadScienceLab
         public LevelSelectScreen()
             : base("Level Select")
         {
+            // get save data
+            saveGameData = new GameData();
+            
+
             // Create our menu entries.
             level1MenuEntry = new MenuEntry("Level 1");
             level2MenuEntry = new MenuEntry("Level 2");
@@ -50,17 +55,14 @@ namespace MadScienceLab
             level4MenuEntry = new MenuEntry("Level 4");
             level5MenuEntry = new MenuEntry("Level 5");
 
-            
-
-
             MenuEntry back = new MenuEntry("Main Menu");
 
             // Hook up menu event handlers.
-            level1MenuEntry.Selected += levelMenuEntrySelected;
-            level2MenuEntry.Selected += levelMenuEntrySelected;
-            level3MenuEntry.Selected += levelMenuEntrySelected;
-            level4MenuEntry.Selected += levelMenuEntrySelected;
-            level5MenuEntry.Selected += levelMenuEntrySelected;
+            level1MenuEntry.Selected += level1MenuEntrySelected;
+            level2MenuEntry.Selected += level2MenuEntrySelected;
+            level3MenuEntry.Selected += level3MenuEntrySelected;
+            level4MenuEntry.Selected += level4MenuEntrySelected;
+            level5MenuEntry.Selected += level5MenuEntrySelected;
             back.Selected += OnCancel;
 
             // Add entries to the menu.
@@ -77,11 +79,35 @@ namespace MadScienceLab
 
         #region Handle Input
 
-        void levelMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        void level1MenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen("level1"));
-            
+                               new GameplayScreen(1));
+        }
+        
+
+        void level2MenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
+                               new GameplayScreen(2));
+        }
+
+        void level3MenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
+                               new GameplayScreen(3));
+        }
+
+        void level4MenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
+                               new GameplayScreen(4));
+        }
+
+        void level5MenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
+                               new GameplayScreen(5));
         }
 
 

@@ -10,10 +10,10 @@ namespace MadScienceLab
     class LaserProjectile:CellObject
     {
         bool active; // to set inactive if projectile collides with another object projectile should then be removed from list
-        GameConstants.DIRECTION direction;
+        GameConstants.POINTDIR direction;
         SoundEffectPlayer soundEffects;
         
-        public LaserProjectile(int column, int row, GameConstants.DIRECTION direction):base(column, row)
+        public LaserProjectile(int column, int row, GameConstants.POINTDIR direction):base(column, row)
         {
             base.Model = GameplayScreen._models["projectile"];
             //Rotate(0f, 0f, 90f);
@@ -69,14 +69,14 @@ namespace MadScienceLab
 
         public void SetDirection()
         {
-            if (direction == GameConstants.DIRECTION.pointLeft)
+            if (direction == GameConstants.POINTDIR.pointLeft)
             {
                 //SetHorizontalOffset(30);
                 Position += new Vector3(-30,0,0);
                 base.TransVelocity = new Vector3(-GameConstants.PROJECTILE_X_VELOCITY,0f,0f);
             }
             else
-                if (direction == GameConstants.DIRECTION.pointRight)
+                if (direction == GameConstants.POINTDIR.pointRight)
                 {
                     //SetHorizontalOffset(-30);
                     Position += new Vector3(30, 0, 0);
@@ -104,7 +104,7 @@ namespace MadScienceLab
                     if (worldObject.GetType() == typeof(Character))
                     {
                         active = false;
-                        renderContext.Player.SetHealth(GameConstants.PLAYER_DAMAGE);
+                        renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
                         TransVelocity = Vector3.Zero;
                     }
                     else

@@ -73,7 +73,7 @@ namespace MadScienceLab
             
             //Show the model as empty if so.
             if(NumberOfBoxes == 0)
-                base.Model = GameplayScreen._models["BlockDropper_Empty"];
+                animmodel[0] = animmodel[1];
         }
 
         public override void Update(RenderContext renderContext)

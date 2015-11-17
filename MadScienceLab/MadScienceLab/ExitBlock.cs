@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace MadScienceLab
 {
     class ExitBlock:CellObject
     {
         public ExitBlock(int row, int column)
-            : base(row, column, -GameConstants.SINGLE_CELL_SIZE) //calls overloaded cellobject constructor and places in background
+            : base(row, column) //calls overloaded cellobject constructor and places in background
         {
-            base.Model = GameplayScreen._models["BackgroundBlock"];
+            base.Model = GameplayScreen._models["ExitBlock"];
             Scale(48f, 48f, 48f);
-            Rotate(90f, 0f, 0f);
-            this.Texture = GameplayScreen._textures["Exit"];
+            Position = new Vector3(Position.X, Position.Y - 2, Position.Z - 27);
+            HitboxHeightOffset = 2;
             isCollidable = true;
         }
     }

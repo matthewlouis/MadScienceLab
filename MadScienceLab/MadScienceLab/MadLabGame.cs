@@ -1,13 +1,16 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.GamerServices;
+using System.Xml.Serialization;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Storage;
 using System.Collections;
 using GameStateManagement;
 
@@ -20,6 +23,11 @@ namespace MadScienceLab
     {
         GraphicsDeviceManager graphics;
         ScreenManager screenManager;
+        public ScreenManager ScreenManager
+        {
+            get { return screenManager; }
+            set { screenManager = value; }
+        }
         ScreenFactory screenFactory;
 
         public static Level CurrentLevel { get; private set; }
@@ -47,17 +55,23 @@ namespace MadScienceLab
         //Debugging - FPS - Matt
         private FPSCounter fpsCount;
 
+        // Save data handling
+        StorageDevice device; // HDD saving to
+        GameData saveGameData;
+
+        
+        
         /// <summary>
         /// The main game constructor
         /// </summary>
         public MadLabGame()
         {
+            // Component to handle save game on Xbox
+
+
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            this.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60.0f);
-
-            // Create Frame Counter
-            Components.Add(new FPSCounter(this, _renderContext));
+            this.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60f);
             
             // Setup window
             Window.Title = "MadLab";
@@ -66,19 +80,50 @@ namespace MadScienceLab
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
 
-
             // Create the screen factory and add it to the Services
             screenFactory = new ScreenFactory();
             Services.AddService(typeof(IScreenFactory), screenFactory);
 
             // Create the screen manager component.
             screenManager = new ScreenManager(this);
+
+
+            // component for screenManager
             Components.Add(screenManager);
 
+
+            Components.Add(new GamerServicesComponent(this));
+
             
+
+
+            
+
+
+
+            
+        }
+
+        /// <summary>
+        /// Initializes the game
+        /// </summary>
+        protected override void Initialize()
+        {
+            
+            base.Initialize();
+            
+        }
+
+        protected override void LoadContent()
+        {
             // On Windows and Xbox we just add the initial screens
             AddInitialScreens();
+
+            // load save game data
+            saveGameData = new GameData();
         }
+
+        
 
         private void AddInitialScreens()
         {
@@ -90,6 +135,7 @@ namespace MadScienceLab
             //screenManager.AddScreen(new GameplayScreen(), null);
 
         }
+        
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -97,7 +143,7 @@ namespace MadScienceLab
         /// related content.  Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
-        
+
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -106,10 +152,9 @@ namespace MadScienceLab
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
-
-
             base.Draw(gameTime);
         }
+       
 
     }
 }

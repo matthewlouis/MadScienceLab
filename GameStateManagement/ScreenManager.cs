@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input.Touch;
+using Microsoft.Xna.Framework.GamerServices;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Xml.Linq;
@@ -104,9 +105,8 @@ namespace GameStateManagement
         public ScreenManager(Game game)
             : base(game)
         {
-            // we must set EnabledGestures before we can query for them, but
-            // we don't assume the game wants to read them.
-            TouchPanel.EnabledGestures = GestureType.None;
+            // Component to handle save game on Xbox
+
         }
 
 

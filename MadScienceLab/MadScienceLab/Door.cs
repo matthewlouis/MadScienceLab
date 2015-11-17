@@ -27,6 +27,7 @@ namespace MadScienceLab
         //Makes door unCollidable when open
         public override void Update(RenderContext renderContext)
         {
+            
 
             if (isOpen)
             {
