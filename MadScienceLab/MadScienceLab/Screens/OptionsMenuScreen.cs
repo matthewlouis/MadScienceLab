@@ -100,6 +100,11 @@ namespace MadScienceLab
         {
             music = !music;
 
+            if (!music)
+                MusicPlayer.SetVolume(0);
+            else
+                MusicPlayer.SetVolume(1);
+
             SetMenuEntryText();
         }
 

@@ -64,6 +64,7 @@
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Storage, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -79,6 +80,7 @@
     <Compile Include="Button.cs" />
     <Compile Include="CellObject.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="GameData.cs" />
     <Compile Include="MessageEvent.cs" />
     <Compile Include="GameTimer.cs" />
     <Compile Include="MovingPlatform.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="FPSCounter.cs" />
     <Compile Include="GameConstants.cs" />
     <Compile Include="LaserProjectile.cs" />
+    <Compile Include="MusicPlayer.cs" />
     <Compile Include="PickableBox.cs" />
     <Compile Include="Quadtree.cs" />
     <Compile Include="Score.cs" />

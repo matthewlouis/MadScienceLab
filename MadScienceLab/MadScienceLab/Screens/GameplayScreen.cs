@@ -43,6 +43,8 @@ namespace MadScienceLab
         BaseCamera _camera;
         GameTimer _timer;
 
+        private SoundEffect levelMusic;
+
         Level basicLevel;
 
         //Note: Add fields for player, background etc. here
@@ -87,7 +89,7 @@ namespace MadScienceLab
             }
         }
 
-        LevelData levelData;
+        GameData.LevelData levelData;
 
         #endregion
 
@@ -165,6 +167,7 @@ namespace MadScienceLab
                 _models.Add("block", content.Load<Model>("block"));
                 _models.Add("Turret", content.Load<Model>("turret"));
                 _models.Add("projectile", content.Load<Model>("projectile"));
+                _models.Add("ExitBlock", content.Load<Model>("ExitBlock"));
 
                 _textures.Add("MoveableBox", content.Load<Texture2D>("WoodPlanks_Color"));
                 _textures.Add("BlockDropper", content.Load<Texture2D>("Textures/dropper"));
@@ -226,11 +229,15 @@ namespace MadScienceLab
 
 
                 // Sets level data to level and sets level par time from file.
-                levelData = new LevelData(levelNum, TimeSpan.Zero);
+                levelData = new GameData.LevelData(levelNum, TimeSpan.Zero);
 
                 //load fps count content
                 fpsCount.LoadContent(content);
-
+                
+                //load music
+                levelMusic = content.Load<SoundEffect>("Songs/MusicInGameLoop");
+                MusicPlayer.PlaySong(levelMusic);
+                
                 // if game takes long to load. Simulate load by delaying for a
                 // while, giving you a chance to admire the beautiful loading screen.
                 Thread.Sleep(500);
@@ -315,13 +322,13 @@ namespace MadScienceLab
                 // Check to see if the level is complete or player died game over. Pass level data to levelCompleteScreen
                 if (_renderContext.Level.LevelOver)
                 {
-                    levelData.time = _timer.ElapsedTime;
+                    levelData.time = _timer.ElapsedTime.ToString();
                     LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
                                                                new LevelCompleteScreen(levelData));
                 }
                 if (_renderContext.Level.GameOver)
                 {
-                    levelData.time = _timer.ElapsedTime;
+                    levelData.time = _timer.ElapsedTime.ToString();
                     LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
                                                                new GameOverScreen(levelData));
                 }
