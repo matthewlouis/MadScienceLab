@@ -31,7 +31,8 @@ namespace MadScienceLab
         MenuEntry level3MenuEntry;
         MenuEntry level4MenuEntry;
         MenuEntry level5MenuEntry;
-        
+
+        GameData saveGameData;
         #endregion
 
         #region Initialization
@@ -43,6 +44,10 @@ namespace MadScienceLab
         public LevelSelectScreen()
             : base("Level Select")
         {
+            // get save data
+            saveGameData = new GameData();
+            
+
             // Create our menu entries.
             level1MenuEntry = new MenuEntry("Level 1");
             level2MenuEntry = new MenuEntry("Level 2");
