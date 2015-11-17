@@ -25,6 +25,11 @@ namespace MadScienceLab
         protected int zPosition = 0; //0 is where actual elements in play get put...background objects will be further back.
 
         private float x, y;
+<<<<<<< HEAD
+=======
+        public Vector3 size;
+  
+>>>>>>> refs/remotes/origin/master
 
         /**
          * Constructor. Takes the column and row where the block will placed on a grid.
@@ -132,6 +137,7 @@ namespace MadScienceLab
 
             // Create and return bounding box
             Vector3 size = max - min;
+            this.size = size;
             if (isRotated)
             {
                 HitboxWidth = (int)size.Z;
