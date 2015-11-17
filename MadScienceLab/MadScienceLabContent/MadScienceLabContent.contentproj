@@ -400,14 +400,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Songs\MusicInGameLoop.mp3">
+    <Compile Include="Songs\MusicInGameLoop.wav">
       <Name>MusicInGameLoop</Name>
-      <Importer>Mp3Importer</Importer>
+      <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
-    <Compile Include="Songs\MusicMenuLoop.mp3">
+    <Compile Include="Songs\MusicMenuLoop.wav">
       <Name>MusicMenuLoop</Name>
-      <Importer>Mp3Importer</Importer>
+      <Importer>WavImporter</Importer>
       <Processor>SoundEffectProcessor</Processor>
     </Compile>
   </ItemGroup>
