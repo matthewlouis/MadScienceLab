@@ -34,12 +34,12 @@ namespace MadScienceLab
 
         #region Initialization
 
-        GameplayScreen.LevelData levelData;
+        GameData.LevelData levelData;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public GameOverScreen(GameplayScreen.LevelData levelData )
+        public GameOverScreen(GameData.LevelData levelData )
             : base("Game Over")
         {
             // Create our menu entries.

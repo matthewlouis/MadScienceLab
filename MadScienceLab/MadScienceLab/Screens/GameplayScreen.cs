@@ -85,7 +85,7 @@ namespace MadScienceLab
             }
         }
 
-        LevelData levelData;
+        GameData.LevelData levelData;
 
         #endregion
 
@@ -219,7 +219,7 @@ namespace MadScienceLab
 
 
                 // Sets level data to level and sets level par time from file.
-                levelData = new LevelData(levelNum, TimeSpan.Zero);
+                levelData = new GameData.LevelData(levelNum, TimeSpan.Zero);
 
                 //load fps count content
                 fpsCount.LoadContent(content);
@@ -308,13 +308,13 @@ namespace MadScienceLab
                 // Check to see if the level is complete or player died game over. Pass level data to levelCompleteScreen
                 if (_renderContext.Level.LevelOver)
                 {
-                    levelData.time = _timer.ElapsedTime;
+                    levelData.time = _timer.ElapsedTime.ToString();
                     LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
                                                                new LevelCompleteScreen(levelData));
                 }
                 if (_renderContext.Level.GameOver)
                 {
-                    levelData.time = _timer.ElapsedTime;
+                    levelData.time = _timer.ElapsedTime.ToString();
                     LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
                                                                new GameOverScreen(levelData));
                 }
