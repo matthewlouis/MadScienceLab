@@ -43,6 +43,8 @@ namespace MadScienceLab
         BaseCamera _camera;
         GameTimer _timer;
 
+        private SoundEffect levelMusic;
+
         Level basicLevel;
 
         //Note: Add fields for player, background etc. here
@@ -223,6 +225,10 @@ namespace MadScienceLab
 
                 //load fps count content
                 fpsCount.LoadContent(content);
+
+                //load music
+                levelMusic = content.Load<SoundEffect>("Songs/MusicInGameLoop");
+                MusicPlayer.PlaySong(levelMusic);
                 
                 // if game takes long to load. Simulate load by delaying for a
                 // while, giving you a chance to admire the beautiful loading screen.
