@@ -20,19 +20,34 @@ namespace MadScienceLab
     {
         #region Initialization
 
+        MenuEntry playGameMenuEntry;
+        MenuEntry LevelSelectMenuEntry;
+        MenuEntry optionsMenuEntry;
+        MenuEntry exitMenuEntry;
 
+        GameData saveGameData;
         /// <summary>
         /// Constructor fills in the menu contents.
         /// </summary>
         public MainMenuScreen()
             : base("Main Menu")
         {
+
+            // get save game
+            saveGameData = new GameData();
+
             // Create our menu entries.
-            MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
+           
+            if (saveGameData.saveGameData.currentlevel < GameConstants.LEVELS &&
+                saveGameData.saveGameData.currentlevel > 1)
+                playGameMenuEntry = new MenuEntry("Continue Game");
+            else if(saveGameData.saveGameData.currentlevel == 1)
+                playGameMenuEntry = new MenuEntry("Play Game");
             MenuEntry LevelSelectMenuEntry = new MenuEntry("Level Select");
             MenuEntry optionsMenuEntry = new MenuEntry("Options");
             MenuEntry exitMenuEntry = new MenuEntry("Exit");
 
+            
             // Hook up menu event handlers.
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
             LevelSelectMenuEntry.Selected += LevelSelectMenuEntrySelected;
@@ -51,14 +66,20 @@ namespace MadScienceLab
 
         #region Handle Input
 
+        void SetMenuEntryText()
+        {
+            
+        }
 
         /// <summary>
         /// Event handler for when the Play Game menu entry is selected.
         /// </summary>
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen(1));
+            if (saveGameData.saveGameData.currentlevel < GameConstants.LEVELS &&
+                saveGameData.saveGameData.currentlevel > 0)
+                LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
+                               new GameplayScreen(saveGameData.saveGameData.currentlevel)); // loads next level from currentLevel
         }
 
         /// <summary>
