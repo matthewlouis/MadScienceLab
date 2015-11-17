@@ -12,5 +12,5 @@ X    XX      B XXXXX
 X          M DDXXXXX
 X     M        X  X
 X           M  D  X
-X P X      LX  D SX
+X P X       X  D SX
 XXXXXXXXXXXXXXXXXXX
