@@ -27,5 +27,6 @@ namespace MadScienceLab
         public Quadtree       Quadtree { get; set; }
         public Game Game { get; set; }
         public Dictionary<String, Texture2D> Textures { get; set; }
+        public Dictionary<String, SoundEffect> Songs { get; set; }
     }
 }

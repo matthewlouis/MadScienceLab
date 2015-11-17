@@ -89,6 +89,7 @@
     <Compile Include="FPSCounter.cs" />
     <Compile Include="GameConstants.cs" />
     <Compile Include="LaserProjectile.cs" />
+    <Compile Include="MusicPlayer.cs" />
     <Compile Include="PickableBox.cs" />
     <Compile Include="Quadtree.cs" />
     <Compile Include="Score.cs" />

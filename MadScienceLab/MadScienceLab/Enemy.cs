@@ -37,6 +37,11 @@ namespace MadScienceLab
 
             Scale(48f, 48f, 48f);
             Position = new Vector3(Position.X, Position.Y - 18, Position.Z);
+<<<<<<< HEAD
+=======
+            MoveLeft(1f);
+
+>>>>>>> refs/remotes/origin/master
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -44,7 +49,9 @@ namespace MadScienceLab
             animmodel.LoadContent(contentManager);
             // Provides a hitbox for the block - Steven
             UpdateBoundingBox(animmodel.Model, Matrix.CreateTranslation(base.Position), false, false);
-
+            base.HitboxWidth = 30;
+            base.HitboxHeight = 20;
+            base.HitboxHeightOffset = 20;
             soundEffects = new SoundEffectPlayer(this);
             SoundEffect sound = contentManager.Load<SoundEffect>("Sounds/DoombaLoop");
             soundEffects.LoadSound("Roomba", contentManager.Load<SoundEffect>("Sounds/DoombaLoop"));
@@ -181,6 +188,7 @@ namespace MadScienceLab
 
         private void checkEnemyBoxCollision(RenderContext renderContext)
         {
+<<<<<<< HEAD
             //foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             //{
     
@@ -223,11 +231,44 @@ namespace MadScienceLab
                     float hx = (Hitbox.Height + worldObject.Hitbox.Height)
                              * (worldObject.Hitbox.Center.X - Hitbox.Center.X);
                     // Follow character enemy on left
+=======
+            foreach (CellObject levelObject in renderContext.Level.collidableObjects)
+            {                
+                if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox)
+                    && levelObject.GetType() != typeof(ToggleSwitch))
+                {
+                    float wy = (levelObject.Hitbox.Width + Hitbox.Width)
+                            * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
+                    float hx = ((Hitbox.Height) + levelObject.Hitbox.Height)
+                             * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
+                    
+>>>>>>> refs/remotes/origin/master
                     if (Position.Y <= renderContext.Player.Position.Y
                         && Position.Y >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
-                        && (Position.X + HitboxWidth) <= (renderContext.Player.Position.X + renderContext.Player.HitboxWidth))
+                        && (Position.X + HitboxWidth) <= (renderContext.Player.Position.X))
                     {
-                        MoveRight(GameConstants.MOVEAMOUNT * 2);
+                        if (movestate)
+                        {
+                            MoveLeft(GameConstants.MOVEAMOUNT);
+                        }
+                        if (!movestate)
+                        {
+                            MoveRight(GameConstants.MOVEAMOUNT);
+                        }
+                        if (wy > hx)
+                        {
+                            //boxHitState = "Box Left";// left
+                            movestate = false;
+                        }
+                        if (wy > -hx)
+                        {
+                            //boxHitState = "Box Right";// right
+                            movestate = true;
+                        }
+                        else
+                        {
+                            MoveRight(GameConstants.MOVEAMOUNT * 2);
+                        }
                     }
 
                     // Follow character enemy on right
@@ -235,7 +276,28 @@ namespace MadScienceLab
                         && Position.Y >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
                         && Position.X >= renderContext.Player.Position.X + renderContext.Player.HitboxWidth)
                     {
-                        MoveLeft(GameConstants.MOVEAMOUNT * 2);
+                        if (movestate)
+                        {
+                            MoveLeft(GameConstants.MOVEAMOUNT);
+                        }
+                        if (!movestate)
+                        {
+                            MoveRight(GameConstants.MOVEAMOUNT);
+                        }
+                        if (wy > hx)
+                        {
+                            //boxHitState = "Box Left";// left
+                            movestate = false;
+                        }
+                        if (wy > -hx)
+                        {
+                            //boxHitState = "Box Right";// right
+                            movestate = true;
+                        }
+                        else
+                        {
+                            MoveLeft(GameConstants.MOVEAMOUNT * 2);
+                        }
                     }
                     else
                     {
@@ -243,11 +305,10 @@ namespace MadScienceLab
                         {
                             MoveLeft(GameConstants.MOVEAMOUNT);
                         }
-                        else
+                        if(!movestate)
                         {
                             MoveRight(GameConstants.MOVEAMOUNT);
                         }
-
                         if (wy > hx)
                         {
                             //boxHitState = "Box Left";// left
