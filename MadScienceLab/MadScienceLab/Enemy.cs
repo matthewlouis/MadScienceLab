@@ -20,7 +20,7 @@ namespace MadScienceLab
         const int FACING_LEFT = 1, FACING_RIGHT = 2;
         byte facingDirection = FACING_RIGHT;
         int attackRange = 4;
-        float movementAmount = GameConstants.MOVEAMOUNT;
+        float movementAmount = 1f;
 
         bool movestate = true;
         private SoundEffectPlayer soundEffects;
@@ -69,15 +69,16 @@ namespace MadScienceLab
 
             if (movestate)
             {
-                MoveLeft(GameConstants.MOVEAMOUNT);
+                MoveLeft(movementAmount);
             }
             else
             {
-                MoveRight(GameConstants.MOVEAMOUNT);
+                MoveRight(movementAmount);
             }
 
-            CheckEnemyCollision(renderContext, returnObjs);
-            //checkEnemyBoxCollision(renderContext);
+            //CheckEnemyCollision(renderContext, returnObjs);
+            CheckPlayerNearby(renderContext);
+            CheckEnemyBoxCollision(renderContext);
             soundEffects.Update(renderContext);
             animmodel.Update(renderContext);
 
@@ -160,6 +161,7 @@ namespace MadScienceLab
                         {
                             //boxHitState = "Box Left";// left
                             movestate = false;
+                            
                         }
                         if (wy > -hx)
                         {
@@ -174,102 +176,145 @@ namespace MadScienceLab
             }
         }
 
-            
-
-        private void checkEnemyBoxCollision(RenderContext renderContext)
+        private void CheckEnemyBoxCollision(RenderContext renderContext)
         {
             
             foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {                
-                if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox)
-                    && levelObject.GetType() != typeof(ToggleSwitch))
+                if ((levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox)
+                    && levelObject.GetType() != typeof(ToggleSwitch)) || 
+                    (Hitbox.Intersects(levelObject.Hitbox) && levelObject.GetType() == typeof(Character)))
                 {
+                    if(levelObject.GetType() == typeof(Character))
+                    {
+                        renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
+                        movestate = !movestate;
+                    }
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
                             * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
                     float hx = ((Hitbox.Height) + levelObject.Hitbox.Height)
                              * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
-                    
-                    if (Position.Y <= renderContext.Player.Position.Y
-                        && Position.Y >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
-                        && (Position.X + HitboxWidth) <= (renderContext.Player.Position.X))
-                    {
-                        if (movestate)
-                        {
-                            MoveLeft(GameConstants.MOVEAMOUNT);
-                        }
-                        if (!movestate)
-                        {
-                            MoveRight(GameConstants.MOVEAMOUNT);
-                        }
-                        if (wy > hx)
-                        {
-                            //boxHitState = "Box Left";// left
-                            movestate = false;
-                        }
-                        if (wy > -hx)
-                        {
-                            //boxHitState = "Box Right";// right
-                            movestate = true;
-                        }
-                        else
-                        {
-                            MoveRight(GameConstants.MOVEAMOUNT * 2);
-                        }
-                    }
 
-                    // Follow character enemy on right
-                    else if ( Position.Y <= renderContext.Player.Position.Y
-                        && Position.Y >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
-                        && Position.X >= renderContext.Player.Position.X + renderContext.Player.HitboxWidth)
+                    if (wy > hx)
                     {
-                        if (movestate)
-                        {
-                            MoveLeft(GameConstants.MOVEAMOUNT);
-                        }
-                        if (!movestate)
-                        {
-                            MoveRight(GameConstants.MOVEAMOUNT);
-                        }
-                        if (wy > hx)
-                        {
-                            //boxHitState = "Box Left";// left
-                            movestate = false;
-                        }
-                        if (wy > -hx)
-                        {
-                            //boxHitState = "Box Right";// right
-                            movestate = true;
-                        }
-                        else
-                        {
-                            MoveLeft(GameConstants.MOVEAMOUNT * 2);
-                        }
-                    }
-                    else
-                    {
-                        if (movestate)
-                        {
-                            MoveLeft(GameConstants.MOVEAMOUNT);
-                        }
-                        if(!movestate)
-                        {
-                            MoveRight(GameConstants.MOVEAMOUNT);
-                        }
-                        if (wy > hx)
-                        {
-                            //boxHitState = "Box Left";// left
-                            movestate = false;
-                        }
-                        if (wy > -hx)
-                        {
-                            //boxHitState = "Box Right";// right
-                            movestate = true;
-                        }
+                        //boxHitState = "Box Left";// left
+                        movestate = false;
 
                     }
+                    if (wy > -hx)
+                    {
+                        //boxHitState = "Box Right";// right
+                        movestate = true;
+                    }
+
+                    //if (Position.Y <= renderContext.Player.Position.Y
+                    //    && Position.Y >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
+                    //    && (Position.X + HitboxWidth) <= (renderContext.Player.Position.X))
+                    //{
+                    //    if (movestate)
+                    //    {
+                    //        MoveLeft(GameConstants.MOVEAMOUNT);
+                    //    }
+                    //    if (!movestate)
+                    //    {
+                    //        MoveRight(GameConstants.MOVEAMOUNT);
+                    //    }
+                    //    if (wy > hx)
+                    //    {
+                    //        //boxHitState = "Box Left";// left
+                    //        movestate = false;
+                    //    }
+                    //    if (wy > -hx)
+                    //    {
+                    //        //boxHitState = "Box Right";// right
+                    //        movestate = true;
+                    //    }
+                    //    else
+                    //    {
+                    //        MoveRight(GameConstants.MOVEAMOUNT * 2);
+                    //    }
+                    //}
+
+                    //// Follow character enemy on right
+                    //else if ( Position.Y <= renderContext.Player.Position.Y
+                    //    && Position.Y >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
+                    //    && Position.X >= renderContext.Player.Position.X + renderContext.Player.HitboxWidth)
+                    //{
+                    //    if (movestate)
+                    //    {
+                    //        MoveLeft(GameConstants.MOVEAMOUNT);
+                    //    }
+                    //    if (!movestate)
+                    //    {
+                    //        MoveRight(GameConstants.MOVEAMOUNT);
+                    //    }
+                    //    if (wy > hx)
+                    //    {
+                    //        //boxHitState = "Box Left";// left
+                    //        movestate = false;
+                    //    }
+                    //    if (wy > -hx)
+                    //    {
+                    //        //boxHitState = "Box Right";// right
+                    //        movestate = true;
+                    //    }
+                    //    else
+                    //    {
+                    //        MoveLeft(GameConstants.MOVEAMOUNT * 2);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    if (movestate)
+                    //    {
+                    //        MoveLeft(GameConstants.MOVEAMOUNT);
+                    //    }
+                    //    if(!movestate)
+                    //    {
+                    //        MoveRight(GameConstants.MOVEAMOUNT);
+                    //    }
+                    //    if (wy > hx)
+                    //    {
+                    //        //boxHitState = "Box Left";// left
+                    //        movestate = false;
+                    //    }
+                    //    if (wy > -hx)
+                    //    {
+                    //        //boxHitState = "Box Right";// right
+                    //        movestate = true;
+                    //    }
+
+                    //}
                 }
             }
         }
+
+        private void CheckPlayerNearby(RenderContext renderContext)
+        {
+            if ((renderContext.Player.Position.X - Position.X) > GameConstants.SINGLE_CELL_SIZE * 3)
+                movestate = false;
+        }
+
+        // trying ray casting but it not that straight forward
+        //void LineOfSight(RenderContext renderContext)
+        //{
+        //    Vector3 playerPos = renderContext.Player.Position;
+        //    Rectangle playerHitBox = renderContext.Player.Hitbox;
+        //    BoundingBox playerBoundingBox = new BoundingBox(new Vector3(playerPos.X, playerPos.Y, 0), new Vector3(playerPos.X, playerPos.Y, 0));
+        //    Ray ray;
+        //    ray.Position = Position;
+        //    Vector3 intersect = ray.Intersects(playerBoundingBox);
+                
+        //    Vector3 enemyPosition = Position;
+        //    Vector3 playerPosition = Position;
+        //    foreach (CellObject levelObject in renderContext.Level.collidableObjects)
+        //    {
+        //        //Check linexObstacle(if your using rectangle's look up linexRectangle, for all simple shapes, their's simple formula, for complex shapes, you simple loop though all the edges, and check linexPlane(in 2D, it's basically linexline collision).)
+        //        if (/*intersect check goes here*/)
+        //            playerPosition = Intesect location; //(if we just care if the other tank can't see the player, you could return false for a line of sight function here.
+        //    }
+        //    return playerPosition == PlayerPosition ? 1 : 0;
+        //}
     }
 }
 
