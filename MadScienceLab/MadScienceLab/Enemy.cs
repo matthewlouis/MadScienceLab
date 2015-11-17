@@ -37,11 +37,6 @@ namespace MadScienceLab
 
             Scale(48f, 48f, 48f);
             Position = new Vector3(Position.X, Position.Y - 18, Position.Z);
-<<<<<<< HEAD
-=======
-            MoveLeft(1f);
-
->>>>>>> refs/remotes/origin/master
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -49,7 +44,7 @@ namespace MadScienceLab
             animmodel.LoadContent(contentManager);
             // Provides a hitbox for the block - Steven
             UpdateBoundingBox(animmodel.Model, Matrix.CreateTranslation(base.Position), false, false);
-            base.HitboxWidth = 30;
+            base.HitboxWidth = 48;
             base.HitboxHeight = 20;
             base.HitboxHeightOffset = 20;
             soundEffects = new SoundEffectPlayer(this);
@@ -57,10 +52,7 @@ namespace MadScienceLab
             soundEffects.LoadSound("Roomba", contentManager.Load<SoundEffect>("Sounds/DoombaLoop"));
             soundEffects.PlayAndLoopSound("Roomba");
             base.LoadContent(contentManager);
-
-            base.HitboxHeight = 48;
-            base.HitboxHeight = 12;
-            base.HitboxHeightOffset = 18;
+            
         }
 
         public override void Update(RenderContext renderContext)
@@ -85,6 +77,7 @@ namespace MadScienceLab
             }
 
             CheckEnemyCollision(renderContext, returnObjs);
+            //checkEnemyBoxCollision(renderContext);
             soundEffects.Update(renderContext);
             animmodel.Update(renderContext);
 
@@ -130,15 +123,11 @@ namespace MadScienceLab
                     if (worldObject.GetType() == typeof(Character))
                     {
                         renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
-                        TransVelocity = Vector3.Zero;
-                    }
-                    else
-                    {
-                        TransVelocity = Vector3.Zero;
+                        movestate = !movestate;
                     }
 
                     if (worldObject.GetType() == typeof(BasicBlock) ||
-                        worldObject.GetType() == typeof(PickableBox)) ;
+                        worldObject.GetType() == typeof(PickableBox)) 
                     {
                         /**Determining what side was hit**/
 
@@ -148,7 +137,7 @@ namespace MadScienceLab
                                  * (worldObject.Hitbox.Center.Y - Hitbox.Center.Y);
                         float hx = (Hitbox.Height + worldObject.Hitbox.Height)
                                  * (worldObject.Hitbox.Center.X - Hitbox.Center.X);
-                        
+
                         //// Follow character enemy on left
                         //if (Position.Y <= renderContext.Player.Position.Y
                         //    && Position.Y >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
@@ -171,9 +160,10 @@ namespace MadScienceLab
                         {
                             //boxHitState = "Box Left";// left
                             movestate = false;
-                        } else if (wy > -hx)
+                        }
+                        if (wy > -hx)
                         {
-                            //    //boxHitState = "Box Right";// right
+                            //boxHitState = "Box Right";// right
                             movestate = true;
                         }
 
@@ -188,50 +178,7 @@ namespace MadScienceLab
 
         private void checkEnemyBoxCollision(RenderContext renderContext)
         {
-<<<<<<< HEAD
-            //foreach (CellObject levelObject in renderContext.Level.collidableObjects)
-            //{
-    
-            //    if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
-            //    {
-            //        /**Determining what side was hit**/
-            //        float wy = (levelObject.Hitbox.Width + Hitbox.Width)
-            //                 * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
-            //        float hx = (Hitbox.Height + levelObject.Hitbox.Height)
-            //                 * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
-
-            //        if (!levelObject.IsPassable) //if object is not passable, handle physics issues:
-            //        {
-            //            if (wy > hx)
-            //            {
-            //                //boxHitState = "Box Left";// left
-            //                MoveRight(GameConstants.MOVEAMOUNT);                       
-            //            }
-            //            else
-            //            {
-            //                if (wy > -hx)
-            //                {
-            //                    //boxHitState = "Box Right";// right
-            //                    MoveLeft(GameConstants.MOVEAMOUNT);
-            //                }
-
-            //            }
-            //        }
-            //    }
-            //}
-
-            foreach (CellObject worldObject in renderContext.Level.collidableObjects)
-            {                
-                if (worldObject.isCollidable && Hitbox.Intersects(worldObject.Hitbox)
-                    && worldObject.GetType() != typeof(Enemy))
-                {
-                    /**Determining what side was hit**/
-                    float wy = (worldObject.Hitbox.Width + Hitbox.Width)
-                             * (worldObject.Hitbox.Center.Y - Hitbox.Center.Y);
-                    float hx = (Hitbox.Height + worldObject.Hitbox.Height)
-                             * (worldObject.Hitbox.Center.X - Hitbox.Center.X);
-                    // Follow character enemy on left
-=======
+            
             foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {                
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox)
@@ -242,7 +189,6 @@ namespace MadScienceLab
                     float hx = ((Hitbox.Height) + levelObject.Hitbox.Height)
                              * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
                     
->>>>>>> refs/remotes/origin/master
                     if (Position.Y <= renderContext.Player.Position.Y
                         && Position.Y >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
                         && (Position.X + HitboxWidth) <= (renderContext.Player.Position.X))
