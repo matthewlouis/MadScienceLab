@@ -81,38 +81,66 @@ namespace MadScienceLab
 
         private void checkEnemyBoxCollision(RenderContext renderContext)
         {
-            foreach (CellObject levelObject in renderContext.Level.Children)
-            {
-                if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
-                {
-                    
+            //foreach (CellObject levelObject in renderContext.Level.collidableObjects)
+            //{
+    
+            //    if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
+            //    {
+            //        /**Determining what side was hit**/
+            //        float wy = (levelObject.Hitbox.Width + Hitbox.Width)
+            //                 * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
+            //        float hx = (Hitbox.Height + levelObject.Hitbox.Height)
+            //                 * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
 
-                    if ((Position.Y - HitboxHeight / 2) <= renderContext.Player.Position.Y
-                        && (Position.Y - HitboxHeight / 2) >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
-                        && (Position.X + HitboxWidth) >= (renderContext.Player.Position.X - (HitboxWidth * attackRange))
+            //        if (!levelObject.IsPassable) //if object is not passable, handle physics issues:
+            //        {
+            //            if (wy > hx)
+            //            {
+            //                //boxHitState = "Box Left";// left
+            //                MoveRight(GameConstants.MOVEAMOUNT);                       
+            //            }
+            //            else
+            //            {
+            //                if (wy > -hx)
+            //                {
+            //                    //boxHitState = "Box Right";// right
+            //                    MoveLeft(GameConstants.MOVEAMOUNT);
+            //                }
+
+            //            }
+            //        }
+            //    }
+            //}
+
+            foreach (CellObject levelObject in renderContext.Level.collidableObjects)
+            {                
+                if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox)
+                    && levelObject.GetType() != typeof(Enemy))
+                {
+                    float wy = (levelObject.Hitbox.Width)
+                        * ((levelObject.Hitbox.Y + levelObject.Hitbox.Height) - (Hitbox.Y + Hitbox.Height));
+                    float hx = (Hitbox.Height + levelObject.Hitbox.Height)
+                        * ((levelObject.Hitbox.X + levelObject.Hitbox.Width) - (Hitbox.X + Hitbox.Width));
+
+
+                    if (Position.Y <= renderContext.Player.Position.Y
+                        && Position.Y >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
                         && (Position.X + HitboxWidth) <= (renderContext.Player.Position.X + renderContext.Player.HitboxWidth))
                     {
                         MoveRight(GameConstants.MOVEAMOUNT * 2);
                     }
-                    else if ((Position.Y - HitboxHeight / 2) <= renderContext.Player.Position.Y
-                        && (Position.Y - HitboxHeight / 2) >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
-                        && Position.X <= (renderContext.Player.Position.X + renderContext.Player.HitboxWidth + (HitboxWidth * attackRange))
-                        && Position.X >= (renderContext.Player.Position.X + renderContext.Player.HitboxWidth))
+
+                    else if ( Position.Y <= renderContext.Player.Position.Y
+                        && Position.Y >= renderContext.Player.Position.Y - renderContext.Player.HitboxHeight
+                        && Position.X >= renderContext.Player.Position.X + renderContext.Player.HitboxWidth)
                     {
                         MoveLeft(GameConstants.MOVEAMOUNT * 2);
                     }
                     else
                     {
-                        /**Determining what side was hit**/
-                        float wy = (levelObject.Hitbox.Width + Hitbox.Width)
-                                 * (((levelObject.Hitbox.Y + levelObject.Hitbox.Height) / 2) - (Hitbox.Y + Hitbox.Height) / 2);
-                        float hx = (Hitbox.Height + levelObject.Hitbox.Height)
-                                 * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
-
                         if (movestate)
                         {
                             MoveLeft(GameConstants.MOVEAMOUNT);
-
                         }
                         else
                         {
@@ -129,10 +157,9 @@ namespace MadScienceLab
                             //boxHitState = "Box Right";// right
                             movestate = true;
                         }
+
                     }
-
                 }
-
             }
         }
     }

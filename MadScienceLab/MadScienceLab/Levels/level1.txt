@@ -8,8 +8,8 @@ XXXXXXXXXXX     S  S   t X  X
 Xt           XXXXXXXXXXXXX  X
 XXX3 M       D  D  D     D @X
 XT        XXXXXXXXXXXX   XXXX
-XX        XXX           XXXXX
-XX P  t  BXXXT         XXXXXX
+XX P      XXX           XXXXX
+XX B  t E XXXT         XXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
