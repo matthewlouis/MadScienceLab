@@ -44,13 +44,24 @@ namespace MadScienceLab
         private bool jumping;
         private Boolean collisionJumping = false;
 
+        //For handling damage
+        private static TimeSpan DAMAGE_DELAY = TimeSpan.FromMilliseconds(1000f);
+        private static int BLINK_DELAY = 200;
+
+        private TimeSpan timeHit = TimeSpan.Zero;
+        private bool damageable = true;
 
         // Health Support
         private int health;
-        public void SetHealth(int damage)
+        public void TakeDamage(int damage, GameTime gametime)
         {
+            if (damageable) //if recently taken damage, don't take damage again
+            {
+                timeHit = gametime.TotalGameTime; //get time when hit
             health -= damage;
+                damageable = false;
             soundEffects.PlaySound("PlayerHit");
+        }
         }
         public int GetHealth()
         {
@@ -71,7 +82,7 @@ namespace MadScienceLab
             charModel = new GameAnimatedModel("Vampire", startRow, startCol, this);
             charModel.VerticalOffset = 22;         
             Rotate(0f, 90f, 0f);
-            health = 3;
+            health = GameConstants.HEALTH;
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
@@ -79,6 +90,7 @@ namespace MadScienceLab
             base.LoadContent(contentManager);
             charModel.LoadContent(contentManager);
             charModel.PlayAnimation("Idle", true, 0f);
+
             UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, true);
             // Overriding the hitbox size, the new model will need to be the height of the cells, for now the vamp model height is overrided - Steven
             //base.HitboxWidth = 48;
@@ -113,9 +125,19 @@ namespace MadScienceLab
             {
                 renderContext.Level.GameOver = true;
             }
+
+            //For temporary invincibility when recently damaged
+            if (!damageable)     
+            {
+                if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
+                {
+                    damageable = true;
+                }
+            }
+
             charModel.Update(renderContext);
             UpdatePhysics();
-
+           
             // Quad tree collision
             //foreach (CellObject worldObject in returnObjs)
             //{
@@ -131,7 +153,7 @@ namespace MadScienceLab
                 CheckBoxCarryCollision(renderContext);
             }
             CheckPlayerBoxCollision(renderContext);   
-            
+
 
             HandleInput();
             if (TransVelocity.Y >= 0)
@@ -238,6 +260,12 @@ namespace MadScienceLab
 
         public override void Draw(RenderContext renderContext)
         {
+            //Create blink effect
+            if (!damageable &&
+                (renderContext.GameTime.TotalGameTime - timeHit).Milliseconds % BLINK_DELAY <= BLINK_DELAY/2)
+            {
+                return; //don't draw the player 
+            }
             charModel.Draw(renderContext);
         }
 
@@ -336,7 +364,11 @@ namespace MadScienceLab
                 else if (InteractiveObj != null && InteractiveObj.GetType() == typeof(ToggleSwitch))
                 {
                     ToggleSwitch currentSwitch = (ToggleSwitch)InteractiveObj;
-                    currentSwitch.FlickSwitch();
+                    if (currentSwitch.IsToggleable && currentSwitch.IsReady)
+                    {
+                        soundEffects.PlaySound ( "ToggleSwitch" );
+                        currentSwitch.FlickSwitch ();
+                    }
                 }
             }     
         }
@@ -551,8 +583,13 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         private void CheckPlayerBoxCollision(RenderContext renderContext)
         {
+
             foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
+                if (levelObject.GetType() == typeof(MovingPlatform)) //default moving platforms for player to not be on the platform unless it would be found that the player were on it
+            {
+                    ((MovingPlatform)levelObject).PlayerOnPlatform = false;
+                }
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
                     renderContext.Boxhit = levelObject.Hitbox;
@@ -564,9 +601,9 @@ namespace MadScienceLab
 
                     /**Determining what side was hit**/
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
-                                * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
+                             * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
                     float hx = (Hitbox.Height + levelObject.Hitbox.Height)
-                                * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
+                             * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
 
                     if (levelObject.GetType() == typeof(Button)) //if it is a button
                     {
@@ -601,6 +638,11 @@ namespace MadScienceLab
                             }
                             else
                             {
+                                if (levelObject.GetType() == typeof(MovingPlatform))
+                                {
+                                    ((MovingPlatform)levelObject).PlayerOnPlatform = true;
+                                }
+                                Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
                                 if (levelObject.Hitbox.Y > -25)
                                     Position = new Vector3((int)Position.X, (int)levelObject.Position.Y + 48, 0);
                                 else

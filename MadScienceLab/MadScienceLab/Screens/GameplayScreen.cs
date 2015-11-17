@@ -51,7 +51,6 @@ namespace MadScienceLab
         public static Dictionary<String, SoundEffect> _sounds;
 
         Character player;
-        Enemy enemy;
 
         // Debugging - Steven
         SpriteFont font;
@@ -67,6 +66,29 @@ namespace MadScienceLab
 
         InputAction pauseAction;
 
+        // Level selected string to build level
+        int levelNum;
+
+
+        // struct holds the level data passed to be displayed on level complete screen and stored in save file
+        public struct LevelData
+        {
+            public int currentlevelNum; // number of  current level
+            public TimeSpan time; // time recorded
+            public TimeSpan levelParTime; // current level par time
+            public int remainingHealth;
+
+            public LevelData(int levelNum, TimeSpan levelParTime)
+            {
+                this.currentlevelNum = levelNum;
+                time = TimeSpan.Zero;
+                this.levelParTime = levelParTime;
+                remainingHealth = 3;
+            }
+        }
+
+        LevelData levelData;
+
         #endregion
 
         #region Initialization
@@ -75,8 +97,11 @@ namespace MadScienceLab
         /// <summary>
         /// Constructor. Initialize game data here
         /// </summary>
-        public GameplayScreen()
+        public GameplayScreen(int levelNum)
         {
+            this.levelNum = levelNum;
+
+
             // transition time used for screen transitions
             TransitionOnTime = TimeSpan.FromSeconds(1);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -99,8 +124,8 @@ namespace MadScienceLab
 
             random = new Random();
             //init fps counter
-            //fpsCount = new FPSCounter(this, _renderContext); 
-            Quadtree _quadtree = new Quadtree(0, new Rectangle(0, 0, GameConstants.X_RESOLUTION * 2, GameConstants.Y_RESOLUTION * 10));
+            fpsCount = new FPSCounter(_renderContext);
+            Quadtree _quadtree = new Quadtree(0, new Rectangle(0, 0, GameConstants.X_RESOLUTION, GameConstants.X_RESOLUTION));
             _renderContext.Quadtree = _quadtree;
         }
 
@@ -121,6 +146,11 @@ namespace MadScienceLab
 
                 _renderContext.SpriteBatch = spriteBatch;
                 _renderContext.GraphicsDevice = ScreenManager.GraphicsDevice;
+
+                //Set up basic effect for drawing background
+                _renderContext.BasicEffect = new BasicEffect(_renderContext.GraphicsDevice);
+                
+
 
                 // TODO: use this.Content to load your game content here
                 //_models.Add("player", Content.Load<Model>("scientist"));
@@ -152,6 +182,7 @@ namespace MadScienceLab
                 _textures.Add("Exit", content.Load<Texture2D>("Textures/EXIT"));
                 _textures.Add("Complete", content.Load<Texture2D>("Textures/Complete"));
                 _textures.Add("GameOver", content.Load<Texture2D>("Textures/GameOver"));
+                _renderContext.Textures = _textures;
 
                 //Loads sound references
                 _sounds.Add("BoxDrop", content.Load<SoundEffect>("Sounds/BoxDrop"));
@@ -166,7 +197,9 @@ namespace MadScienceLab
                 _sounds.Add("ToggleSwitch", content.Load<SoundEffect>("Sounds/ToggleSwitch"));
 
                 //loads the basic level
-                basicLevel = LevelBuilder.MakeBasicLevel();
+                basicLevel = LevelBuilder.MakeBasicLevel(levelNum);
+                basicLevel.setBackgroundBuffer(_renderContext); //Matt: need to do this now to draw background properly
+
                 CurrentLevel = basicLevel; //we can handle this through render context eventually.
                 basicLevel.LoadContent(content);
 
@@ -181,7 +214,7 @@ namespace MadScienceLab
                 basicLevel.PopulateTypeList(_renderContext);
 
                 _renderContext.Level.collidableObjects.Add(player); // Adding player to list of collidable objects - Steven
-                
+
                 // Debugging - Steven
                 debugHitbox = new List<GameObject3D>();
                 debugHitbox.AddRange(_renderContext.Level.collidableObjects);
@@ -191,8 +224,12 @@ namespace MadScienceLab
                 _timer = new GameTimer(_renderContext);
                 _renderContext.GameTimer = _timer;
 
+
+                // Sets level data to level and sets level par time from file.
+                levelData = new LevelData(levelNum, TimeSpan.Zero);
+
                 //load fps count content
-                //fpsCount.LoadContent(content);
+                fpsCount.LoadContent(content);
 
                 // if game takes long to load. Simulate load by delaying for a
                 // while, giving you a chance to admire the beautiful loading screen.
@@ -236,15 +273,6 @@ namespace MadScienceLab
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
         {
-
-                        // Allows the game to exit
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-              //  Keyboard.GetState().IsKeyDown(Keys.Escape))
-                
-
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed ||
-             //   Keyboard.GetState().IsKeyDown(Keys.Enter))
-            
             base.Update(gameTime, otherScreenHasFocus, false);
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.
@@ -284,9 +312,23 @@ namespace MadScienceLab
                 basicLevel.Update(_renderContext);
                 player.Update(_renderContext);
 
+                // Check to see if the level is complete or player died game over. Pass level data to levelCompleteScreen
+                if (_renderContext.Level.LevelOver)
+                {
+                    levelData.time = _timer.ElapsedTime;
+                    LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                                                               new LevelCompleteScreen(levelData));
+                }
+                if (_renderContext.Level.GameOver)
+                {
+                    levelData.time = _timer.ElapsedTime;
+                    LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                                                               new GameOverScreen(levelData));
+                }
+
                 _timer.Update(_renderContext.GameTime);
                 //fps debug
-                //fpsCount.Update(gameTime);    
+                fpsCount.Update(gameTime);    
                 //timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
         }
@@ -297,6 +339,10 @@ namespace MadScienceLab
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
+            // Spritebatch changes graphicsdevice values; sets the oringinal state
+            ScreenManager.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            ScreenManager.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target,
                                                Color.Black, 0, 0);
@@ -315,20 +361,6 @@ namespace MadScienceLab
             //spriteBatch.DrawString(font, "Projectile: " + basicLevel.Children[basicLevel.Children.Count()-1].Hitbox.ToString(), new Vector2(50, 150), Color.Black);
             //spriteBatch.DrawString(font, "Player pos: " + player.Position.ToString(), new Vector2(50, 300), Color.Black);
             spriteBatch.End();
-
-            if (_renderContext.Level.LevelOver)
-            {
-                spriteBatch.Begin();
-                spriteBatch.Draw(GameplayScreen._textures["Complete"], new Vector2(ScreenManager.GraphicsDevice.Viewport.Width / 2 - GameplayScreen._textures["Complete"].Width / 2, ScreenManager.GraphicsDevice.Viewport.Height / 2 - GameplayScreen._textures["Complete"].Height / 2), Color.White);
-                spriteBatch.End();
-            }
-
-            if (_renderContext.Level.GameOver)
-            {
-                spriteBatch.Begin();
-                spriteBatch.Draw(GameplayScreen._textures["GameOver"], new Vector2(ScreenManager.GraphicsDevice.Viewport.Width / 2 - GameplayScreen._textures["GameOver"].Width / 2, ScreenManager.GraphicsDevice.Viewport.Height / 2 - GameplayScreen._textures["GameOver"].Height / 2), Color.White);
-                spriteBatch.End();
-            }
 
             if (player.MapEnabled)
             {
@@ -369,6 +401,7 @@ namespace MadScienceLab
             }
             
             //fpsCount.Draw(gameTime);
+            fpsCount.Draw(gameTime);
             _timer.Draw(_renderContext.GameTime);
             // Spritebatch changes graphicsdevice values; sets the oringinal state
             ScreenManager.GraphicsDevice.BlendState = BlendState.AlphaBlend;
@@ -411,6 +444,7 @@ namespace MadScienceLab
             {
                 ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
             }
+
         }
 
         #endregion
