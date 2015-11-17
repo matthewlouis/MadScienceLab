@@ -37,6 +37,8 @@ namespace MadScienceLab
         ContentManager content;
         Texture2D backgroundTexture;
 
+        private SoundEffect menuSong;
+
         #endregion
 
         #region Initialization
@@ -67,8 +69,12 @@ namespace MadScienceLab
                     content = new ContentManager(ScreenManager.Game.Services, "Content");
 
                 backgroundTexture = content.Load<Texture2D>("Menu/background");
+                menuSong = content.Load<SoundEffect>("Songs/MusicMenuLoop");
+                MusicPlayer.Stop();
+                MusicPlayer.PlaySong(menuSong);
             }
         }
+
 
 
         /// <summary>
