@@ -25,13 +25,13 @@ namespace MadScienceLab
         #region Fields
 
         // define menu entries and properties
-
+        MenuEntry currentLevelEntry;
         MenuEntry timeCompleteEntry;
         MenuEntry remaingingHealthEntry;
         MenuEntry mainMenuEntry;
         MenuEntry nextLevelEntry;
 
-        GameplayScreen.LevelData levelData;
+        GameData.LevelData levelData;
 
         #endregion
 
@@ -41,7 +41,7 @@ namespace MadScienceLab
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LevelCompleteScreen(GameplayScreen.LevelData levelData )
+        public LevelCompleteScreen(GameData.LevelData levelData )
             : base("Level Complete")
         {
             this.levelData = levelData;
@@ -50,6 +50,7 @@ namespace MadScienceLab
             string time = string.Format("Time Completed: {0}", levelData.time);
             time = time.Remove(time.Length - 8);
 
+            currentLevelEntry = new MenuEntry("Level " + levelData.currentlevelNum);
             timeCompleteEntry = new MenuEntry(time);
             remaingingHealthEntry = new MenuEntry("Remaining Health: " + levelData.remainingHealth.ToString());
             mainMenuEntry = new MenuEntry("Main Menu");
@@ -60,6 +61,7 @@ namespace MadScienceLab
             nextLevelEntry.Selected += nextLevelEntrySelected;
 
             // Add entries to the menu.
+            MenuEntries.Add(currentLevelEntry);
             MenuEntries.Add(timeCompleteEntry);
             MenuEntries.Add(remaingingHealthEntry);
             MenuEntries.Add(mainMenuEntry);

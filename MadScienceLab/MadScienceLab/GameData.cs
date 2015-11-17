@@ -19,27 +19,81 @@ namespace MadScienceLab
         StorageContainer container; // STFS container to save to
         string containerName = "MadLabGameStorage";
         string filename = "savegame.sav";
-        [Serializable]
+        //[Serializable]
         public struct SaveGameData
         {
             public int levelCompleted;
             public int currentlevel;
             public int score;
+            public LevelData[] levelData;
         }
 
+
+        // struct holds the level data passed to be displayed on level complete screen and stored in save file
+        public struct LevelData
+        {
+            public int currentlevelNum; // number of  current level
+            public string time; // time recorded
+            public string levelParTime; // current level par time
+            public int remainingHealth;
+
+            public LevelData(int levelNum, TimeSpan levelParTime)
+            {
+                
+                this.currentlevelNum = levelNum;
+                time = TimeSpan.Zero.ToString();
+                this.levelParTime = levelParTime.ToString();
+                remainingHealth = 3;
+            }
+        }
+        
         public SaveGameData saveGameData;
 
-        public GameData()
+        public GameData(StorageDevice device)
         {
-
+            this.device = device;
+            
+          
             // initialize score
             saveGameData.levelCompleted = 0;
             saveGameData.currentlevel = 1;
             saveGameData.score = 0;
+            saveGameData.levelData = new LevelData[GameConstants.LEVELS];
+            for (int i = 0; i < GameConstants.LEVELS; i++)
+            {
+                saveGameData.levelData[i].currentlevelNum = i + 1;
+                saveGameData.levelData[i].time = TimeSpan.Zero.ToString();
+                saveGameData.levelData[i].levelParTime = TimeSpan.Zero.ToString();
+                saveGameData.levelData[i].remainingHealth = GameConstants.HEALTH;
+            }
             // 
             GetDevice();
             GetContainer();
-            if(!Load())
+            if (!Load())
+            {
+                GetContainer();
+                Save();
+            }
+        }
+
+        public GameData()
+        {
+            // initialize score
+            saveGameData.levelCompleted = 0;
+            saveGameData.currentlevel = 1;
+            saveGameData.score = 0;
+            saveGameData.levelData = new LevelData[GameConstants.LEVELS];
+            for (int i = 0; i < GameConstants.LEVELS; i++)
+            {
+                saveGameData.levelData[i].currentlevelNum = i + 1;
+                saveGameData.levelData[i].time = TimeSpan.Zero.ToString();
+                saveGameData.levelData[i].levelParTime = TimeSpan.Zero.ToString();
+                saveGameData.levelData[i].remainingHealth = GameConstants.HEALTH;
+            }
+            // 
+            GetDevice();
+            GetContainer();
+            if (!Load())
             {
                 GetContainer();
                 Save();

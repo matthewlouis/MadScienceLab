@@ -56,6 +56,7 @@ namespace MadScienceLab
         private FPSCounter fpsCount;
 
         // Save data handling
+        StorageDevice device; // HDD saving to
         GameData saveGameData;
 
         
@@ -65,6 +66,9 @@ namespace MadScienceLab
         /// </summary>
         public MadLabGame()
         {
+            // Component to handle save game on Xbox
+
+
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             this.TargetElapsedTime = TimeSpan.FromSeconds(1.0f / 60f);
@@ -82,24 +86,44 @@ namespace MadScienceLab
 
             // Create the screen manager component.
             screenManager = new ScreenManager(this);
-           
+
 
             // component for screenManager
             Components.Add(screenManager);
 
-            // Component to handle save game on Xbox
-#if XBOX
+
             Components.Add(new GamerServicesComponent(this));
-#endif
+
+            
 
 
-            saveGameData = new GameData();
+            
 
 
 
+            
+        }
+
+        /// <summary>
+        /// Initializes the game
+        /// </summary>
+        protected override void Initialize()
+        {
+            
+            base.Initialize();
+            
+        }
+
+        protected override void LoadContent()
+        {
             // On Windows and Xbox we just add the initial screens
             AddInitialScreens();
+
+            // load save game data
+            saveGameData = new GameData();
         }
+
+        
 
         private void AddInitialScreens()
         {
