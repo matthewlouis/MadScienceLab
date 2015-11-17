@@ -10,7 +10,9 @@ namespace MadScienceLab
         /// </summary>
         static void Main(string[] args)
         {
-            using (Game1 game = new Game1())
+            MadLabGame game = new MadLabGame();
+
+            using (game)
             {
                 game.Run();
             }

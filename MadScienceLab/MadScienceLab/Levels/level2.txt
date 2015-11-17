@@ -1,0 +1,31 @@
+﻿XXXXXXXXXXXXXXXXXXXX
+X                  X
+X              XXXXX
+X              D  @X 
+XL T           XXXXX
+XXXX       MX      X
+X        B  XX     X
+X        XX  XXDDDDX
+XLT S              X
+XXXXXX       B  XXXX
+X    XX  M   B XXXXX
+X          M DDXXXXX
+X              X  X
+X       M      X  X
+X      M       D  X
+X P X   E  LX  D SX
+XXXXXXXXXXXXXXXXXXX
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Above is level, below are links.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+3:8|L,4
+4:9|U,2
+7:10|D,2
+6:12|D,1
+9:3|6:14&6:15
+9:5|2:16&3:16
+2:18|10:16&10:17&10:18&10:19
+12:12|L,6
+13:4|14:16
+9:2|R
+13:2|R

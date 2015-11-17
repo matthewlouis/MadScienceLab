@@ -22,7 +22,7 @@ namespace MadScienceLab
         public Texture2D Texture { get; protected set; }
 
         public Point CellNumber { get; private set; } //on our grid, the cell number that this object occupies.
-        private int zPosition = 0; //0 is where actual elements in play get put...background objects will be further back.
+        protected int zPosition = 0; //0 is where actual elements in play get put...background objects will be further back.
 
         private float x, y;
 
@@ -34,8 +34,8 @@ namespace MadScienceLab
         public CellObject(int column, int row)
         {
             //Calculate offset where object will be placed.
-            x = (GameConstants.SINGLE_CELL_SIZE * column) - (GameConstants.X_RESOLUTION / 2); // divde by 2 because 4 quadrants
-            y = (GameConstants.SINGLE_CELL_SIZE * row) - (GameConstants.Y_RESOLUTION / 2);
+            x = (GameConstants.SINGLE_CELL_SIZE * column) - (GameConstants.X_RESOLUTION / 2.0f); // divde by 2 because 4 quadrants
+            y = (GameConstants.SINGLE_CELL_SIZE * row) - (GameConstants.Y_RESOLUTION / 2.0f);
             CellNumber = new Point(column, row);
 
             //Place object on grid.
@@ -70,27 +70,35 @@ namespace MadScienceLab
 
         public override void Draw(RenderContext renderContext)
         {
-            //Jacob: These lines don't seem to be used anymore.
-            //var transforms = new Matrix[Model.Bones.Count];
-            //Model.CopyAbsoluteBoneTransformsTo(transforms);
-            foreach (ModelMesh mesh in Model.Meshes)
+            Vector3 screenPos = renderContext.GraphicsDevice.Viewport.Project(WorldPosition, renderContext.Camera.Projection, renderContext.Camera.View, WorldMatrix);
+            Vector2 screenPos2D = new Vector2(screenPos.X, screenPos.Y);
+
+
+            if (screenPos2D.X >= -GameConstants.SINGLE_CELL_SIZE*2 && 
+                screenPos2D.X <= renderContext.GraphicsDevice.Viewport.Width + GameConstants.SINGLE_CELL_SIZE*2 &&
+                screenPos2D.Y >= -GameConstants.SINGLE_CELL_SIZE * 2 &&
+                screenPos2D.Y <= renderContext.GraphicsDevice.Viewport.Width * 2)
             {
-                foreach (BasicEffect effect in mesh.Effects)
+                foreach (ModelMesh mesh in Model.Meshes)
                 {
-                    effect.EnableDefaultLighting();
-
-                    if (Texture != null)
+                    foreach (BasicEffect effect in mesh.Effects)
                     {
-                        renderContext.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
-                        effect.Texture = Texture;
-                        effect.TextureEnabled = true;
-                    }
+                        effect.EnableDefaultLighting();
 
-                    effect.View = renderContext.Camera.View;
-                    effect.Projection = renderContext.Camera.Projection;
-                    effect.World = WorldMatrix;
+                        if (Texture != null)
+                        {
+                            renderContext.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
+                            effect.Texture = Texture;
+                            effect.TextureEnabled = true;
+
+                        }
+
+                        effect.View = renderContext.Camera.View;
+                        effect.Projection = renderContext.Camera.Projection;
+                        effect.World = WorldMatrix;
+                    }
+                    mesh.Draw();
                 }
-                mesh.Draw();
             }
         }
 

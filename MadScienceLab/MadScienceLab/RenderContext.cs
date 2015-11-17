@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 
 namespace MadScienceLab
@@ -15,10 +16,16 @@ namespace MadScienceLab
     public class RenderContext
     {
         public SpriteBatch    SpriteBatch { get; set; }
+        public SpriteFont     SpriteFont { get; set; }
         public GraphicsDevice GraphicsDevice { get; set; }
         public GameTime       GameTime { get; set; }
+        public GameTimer      GameTimer { get; set; }
         public BaseCamera     Camera { get; set; }
         public Character      Player { get; set; }
         public Level          Level { get; set; }
+        public BasicEffect BasicEffect { get; set; }
+        public Quadtree       Quadtree { get; set; }
+        public Game Game { get; set; }
+        public Dictionary<String, Texture2D> Textures { get; set; }
     }
 }

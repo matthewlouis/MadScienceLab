@@ -20,6 +20,10 @@ namespace MadScienceLab
 
         GameAnimatedModel charModel;
 
+        //For playing sounds
+        //Dictionary<string, SoundEffect> soundFX;
+        SoundEffectPlayer soundEffects;
+
         //properties used for picking up a box
         public CellObject InteractiveObj { get; set; }
         public CellObject AdjacentObj { get; set; }
@@ -36,52 +40,83 @@ namespace MadScienceLab
         GamePadState oldGamePadState;
         KeyboardState oldKeyboardState;
 
+        // Jumping support
         private bool jumping;
         private Boolean collisionJumping = false;
 
-/*        public override Rectangle Hitbox
+        //For handling damage
+        private static TimeSpan DAMAGE_DELAY = TimeSpan.FromMilliseconds(1000f);
+        private static int BLINK_DELAY = 200;
+
+        private TimeSpan timeHit = TimeSpan.Zero;
+        private bool damageable = true;
+
+        // Health Support
+        private int health;
+        public void TakeDamage(int damage, GameTime gametime)
         {
-            get
+            if (damageable) //if recently taken damage, don't take damage again
             {
-                if (interactState == InteractState.CompletedPickup) //new hitbox if currently carrying a box
-                {
-                    return new Rectangle ( (int)StoredBox.Position.X, (int)Position.Y, HitboxWidth, HitboxHeight+StoredBox.HitboxHeight );
-                }
-                return base.Hitbox;
-            }
-        }*/
-        public Rectangle CharacterHitbox
-        {
-            get
-            {
-                return base.Hitbox;
+                timeHit = gametime.TotalGameTime; //get time when hit
+                health -= damage;
+                damageable = false;
+                soundEffects.PlaySound("PlayerHit");
             }
         }
-
+        public int GetHealth()
+        {
+            return health;
+        }
 
         public Character(int startRow, int startCol):base(startRow, startCol)
         {
             // create model with offset of position
-            charModel = new GameAnimatedModel("Vampire", startRow, startCol);
+            charModel = new GameAnimatedModel("Vampire", startRow, startCol, this);
             charModel.VerticalOffset = 22;         
             Rotate(0f, 90f, 0f);
+            health = GameConstants.HEALTH;
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
         {
             base.LoadContent(contentManager);
             charModel.LoadContent(contentManager);
-            charModel.PlayAnimation("Idle");
-            UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, false);
-            // Overriding the hitbox size - Steven
-            base.HitboxWidth = 48;
+            charModel.PlayAnimation("Idle", true, 0f);
+
+            UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, true);
+            // Overriding the hitbox size, the new model will need to be the height of the cells, for now the vamp model height is overrided - Steven
+            //base.HitboxWidth = 48;
             base.HitboxHeight = 48;
+
+            //Load sound effects
+            //soundFX = new Dictionary<string, SoundEffect>();
+            soundEffects = new SoundEffectPlayer(this);
+            soundEffects.LoadSound("BoxDrop", GameplayScreen._sounds["BoxDrop"]);
+            soundEffects.LoadSound("BoxPickup", GameplayScreen._sounds["BoxPickup"]);
+            soundEffects.LoadSound("Jump", GameplayScreen._sounds["Jump"]);
+            soundEffects.LoadSound("Land", GameplayScreen._sounds["Land"]);
+            soundEffects.LoadSound("PlayerHit", GameplayScreen._sounds["PlayerHit"]);
+            soundEffects.LoadSound("ToggleSwitch", GameplayScreen._sounds["ToggleSwitch"]);
+
         }
 
         
         public override void Update(RenderContext renderContext)
         {
-            
+            if (health <= 0)
+            {
+                renderContext.Level.GameOver = true;
+            }
+
+            //For temporary invincibility when recently damaged
+            if (!damageable)     
+            {
+                if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
+                {
+                    damageable = true;
+                }
+            }
+
             charModel.Update(renderContext);
             UpdatePhysics();
            
@@ -108,6 +143,8 @@ namespace MadScienceLab
             UpdatePickBox ();
             UpdatePutBox (renderContext);
 
+            //update sound
+            soundEffects.Update(renderContext);
             base.Update(renderContext);
         }
 
@@ -144,11 +181,15 @@ namespace MadScienceLab
 
             //prevent the player from moving while still in box pickup/putdown animation
             bool NotActiveWithBox = interactState == InteractState.CompletedPickup || interactState == InteractState.HandsEmpty;
-            if (currentKeyboardState.IsKeyDown ( Keys.Left ) && NotActiveWithBox)
+            if ((currentKeyboardState.IsKeyDown ( Keys.Left ) || 
+                currentGamePadState.IsButtonDown(Buttons.DPadLeft) ||
+                currentGamePadState.IsButtonDown(Buttons.LeftThumbstickLeft)) && NotActiveWithBox)
             {
                 MoveLeft(GameConstants.MOVEAMOUNT);
             }
-            else if (currentKeyboardState.IsKeyDown ( Keys.Right ) && NotActiveWithBox)
+            else if ((currentKeyboardState.IsKeyDown ( Keys.Right ) || 
+                currentGamePadState.IsButtonDown(Buttons.DPadRight) ||
+                currentGamePadState.IsButtonDown(Buttons.LeftThumbstickRight)) && NotActiveWithBox)
             {
                 MoveRight(GameConstants.MOVEAMOUNT);
             }
@@ -162,8 +203,35 @@ namespace MadScienceLab
         }
 
 
+        //public override Rectangle Hitbox
+        //{
+        //    get
+        //    {
+        //        if (interactState == InteractState.CompletedPickup) //new hitbox if currently carrying a box
+        //        {
+        //            return new Rectangle((int)StoredBox.Position.X, (int)Position.Y, HitboxWidth, HitboxHeight + StoredBox.HitboxHeight);
+        //        }
+        //        return base.Hitbox;
+        //    }
+        //}
+
+
+        public Rectangle CharacterHitbox
+        {
+            get
+            {
+                return base.Hitbox;
+            }
+        }
+
         public override void Draw(RenderContext renderContext)
         {
+            //Create blink effect
+            if (!damageable &&
+                (renderContext.GameTime.TotalGameTime - timeHit).Milliseconds % BLINK_DELAY <= BLINK_DELAY/2)
+            {
+                return; //don't draw the player 
+            }
             charModel.Draw(renderContext);
         }
 
@@ -171,7 +239,7 @@ namespace MadScienceLab
         {
             facingDirection = FACING_LEFT;
             Rotate(0f, -90f, 0f);
-            charModel.PlayAnimation("Run");
+            charModel.PlayAnimation("Run",true,0f);
             Vector3 newPosition = Position + new Vector3(-movementAmount, 0, 0);
             Translate(newPosition);
         }
@@ -180,7 +248,7 @@ namespace MadScienceLab
         {
             facingDirection = FACING_RIGHT;
             Rotate(0f, 90f, 0f);
-            charModel.PlayAnimation("Run");
+            charModel.PlayAnimation("Run", true, 0f);
             Vector3 newPosition = Position + new Vector3(movementAmount,0, 0);
             Translate(newPosition);
         }
@@ -192,6 +260,7 @@ namespace MadScienceLab
             jumping = true;
             base.TransVelocity += new Vector3(0, GameConstants.SINGLE_CELL_SIZE*5, 0);
             charModel.PlayAnimation("Jump",false, 0.2f);
+            soundEffects.PlaySound("Jump");
         }
         public void PutBox()
         {
@@ -209,7 +278,7 @@ namespace MadScienceLab
             }
             Rectangle areaSide = new Rectangle((int)sideXPos, (int)Position.Y + 2, (int)StoredBox.Hitbox.Width - (int)leeway, (int)StoredBox.Hitbox.Height);
             bool putdownable = true;
-            foreach (CellObject levelObject in Game1.CurrentLevel.Children) //check to see if it has collision with anything
+            foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
             {
                 if (levelObject.isCollidable && areaSide.Intersects(levelObject.Hitbox))
                 {
@@ -236,9 +305,9 @@ namespace MadScienceLab
                 if (AdjacentObj != null && AdjacentObj.GetType() == typeof(PickableBox) && (((PickableBox)(AdjacentObj)).IsLiftable))
                 {
                     //check if there is area above the player to pick up the box
-                    Rectangle areaTop = new Rectangle ( (int)Position.X, CharacterHitbox.Bottom, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height) );
+                    Rectangle areaTop = new Rectangle ( (int)Position.X, CharacterHitbox.Bottom + 1, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height) );
                     bool pickuppable = true;
-                    foreach (CellObject levelObject in Game1.CurrentLevel.Children) //check to see if it has collision with anything
+                    foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
                     {
                         if (levelObject.isCollidable && areaTop.Intersects ( levelObject.Hitbox ))
                         {
@@ -255,12 +324,17 @@ namespace MadScienceLab
                         interactState = InteractState.JustPickedUpBox; //state 1
                         StoredBox = (PickableBox)AdjacentObj;
                         StoredBox.isCollidable = false;
+                        soundEffects.PlaySound("BoxPickup");
                     }
                 }
                 else if (InteractiveObj != null && InteractiveObj.GetType() == typeof(ToggleSwitch))
                 {
                     ToggleSwitch currentSwitch = (ToggleSwitch)InteractiveObj;
-                    currentSwitch.FlickSwitch();
+                    if (currentSwitch.IsToggleable && currentSwitch.IsReady)
+                    {
+                        soundEffects.PlaySound ( "ToggleSwitch" );
+                        currentSwitch.FlickSwitch ();
+                    }
                 }
             }     
         }
@@ -376,13 +450,14 @@ namespace MadScienceLab
                     //remove storedBox from player
                     StoredBox.isCollidable = true;
                     StoredBox = null;
+                    soundEffects.PlaySound("BoxDrop");
                 }
             }
         }
 
         public void Stop()
         {
-            charModel.PlayAnimation("Idle");
+            charModel.PlayAnimation("Idle", true, 0.2f);
         }
 
         public void InteractWithObject()
@@ -416,15 +491,15 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         private void CheckBoxCarryCollision(RenderContext renderContext)
         {
-            foreach (CellObject levelObject in renderContext.Level.Children)
+            foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
                 if (levelObject.isCollidable && StoredBox.Hitbox.Intersects(levelObject.Hitbox))
                 {
                     /**Determining what side was hit**/
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
-                             * (((levelObject.Hitbox.Y + levelObject.Hitbox.Height) / 2) - (StoredBox.Hitbox.Y + Hitbox.Height) / 2);
+                             * (levelObject.Hitbox.Center.Y - StoredBox.Hitbox.Center.Y);
                     float hx = (Hitbox.Height + levelObject.Hitbox.Height)
-                             * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
+                             * (levelObject.Hitbox.Center.X - StoredBox.Hitbox.Center.X);
 
                     Button tmpButton = levelObject as Button;
                     if (tmpButton != null) //if it is a button
@@ -440,7 +515,7 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Top";//top
-                                Position = new Vector3(Position.X, levelObject.Hitbox.Top - this.Hitbox.Height * 2 - 1, 0); //clip to the top of the colliding object
+                                Position = new Vector3(Position.X, levelObject.Hitbox.Top - this.Hitbox.Height - StoredBox.Hitbox.Height - 1, 0); //clip to the top of the colliding object
                                 TransVelocity = Vector3.Zero;
                             }
                             else
@@ -455,7 +530,7 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Right";// right
-                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth, (int)Position.Y, 0);
+                                Position = new Vector3(levelObject.Hitbox.Left - StoredBox.Hitbox.Width, (int)Position.Y, 0);
                                 AdjacentObj = levelObject;
                             }
                         }
@@ -474,18 +549,28 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         private void CheckPlayerBoxCollision(RenderContext renderContext)
         {
-            foreach (CellObject levelObject in renderContext.Level.Children)
+
+            foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
+                if (levelObject.GetType() == typeof(MovingPlatform)) //default moving platforms for player to not be on the platform unless it would be found that the player were on it
+                {
+                    ((MovingPlatform)levelObject).PlayerOnPlatform = false;
+                }
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
+                    //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
+                    if (levelObject.GetType() == typeof(ExitBlock))
+                    {
+                        renderContext.Level.LevelOver = true;
+                    }
+
                     /**Determining what side was hit**/
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
-                             * (((levelObject.Hitbox.Y + levelObject.Hitbox.Height) / 2) - (Hitbox.Y + Hitbox.Height) / 2);
+                             * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
                     float hx = (Hitbox.Height + levelObject.Hitbox.Height)
-                             * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
+                             * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
 
-                    Button tmpButton = levelObject as Button;
-                    if (tmpButton != null) //if it is a button
+                    if (levelObject.GetType() == typeof(Button)) //if it is a button
                     {
                         Button button = (Button)levelObject as Button;
                         button.IsPressed = true;
@@ -504,7 +589,7 @@ namespace MadScienceLab
                             else
                             {
                                 //boxHitState = "Box Left";// left
-                                Position = new Vector3(levelObject.Hitbox.Right + 1, (int)Position.Y, 0);
+                                Position = new Vector3(levelObject.Hitbox.Right + 1 - HitboxWidthOffset, (int)Position.Y, 0);
                                 AdjacentObj = levelObject;
                             }
                         }
@@ -513,11 +598,15 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Right";// right
-                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth, (int)Position.Y, 0);
+                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth - HitboxWidthOffset, (int)Position.Y, 0);
                                 AdjacentObj = levelObject;
                             }
                             else
                             {
+                                if (levelObject.GetType() == typeof(MovingPlatform))
+                                {
+                                    ((MovingPlatform)levelObject).PlayerOnPlatform = true;
+                                }
                                 Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
                                 if (!collisionJumping)
                                     TransVelocity = Vector3.Zero;

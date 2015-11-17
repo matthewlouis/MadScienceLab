@@ -74,7 +74,7 @@ namespace SkinnedModelData
         /// <summary>
         /// Starts decoding the specified animation clip.
         /// </summary>
-        public void StartClip(AnimationClip clip, bool loop = true, float blendTime = 0f)
+        public void StartClip(AnimationClip clip, bool loop, float blendTime)
         {
             if(IsPauzed)
             {
@@ -102,6 +102,32 @@ namespace SkinnedModelData
             }
         }
 
+        public void PlayClipOnceNoLoop(AnimationClip clip, float blendTime)
+        {
+            if (IsPauzed)
+            {
+                IsPauzed = false;
+                return;
+            }
+
+            if (clip == null)
+                throw new ArgumentNullException("clip");
+
+            if (blendTime > 0 && _currentAnimationClip.Clip != null)
+            {
+                _currentBlendTime = TimeSpan.Zero;
+                _totalBlendTime = TimeSpan.FromSeconds(blendTime);
+                _targetAnimationClip.SetAnimationClip(clip, false);
+                skinningDataValue.BindPose.CopyTo(_targetAnimationClip.BoneTransforms, 0);
+            }
+            else
+            {
+                _targetAnimationClip.Reset(true);
+                _currentAnimationClip.SetAnimationClip(clip, false);
+                skinningDataValue.BindPose.CopyTo(_currentAnimationClip.BoneTransforms, 0);
+            }
+        }
+
         public void StartClip()
         {
             if(IsPauzed)
@@ -113,6 +139,12 @@ namespace SkinnedModelData
         public void PauzeClip()
         {
             IsPauzed = true;
+        }
+
+        public void StopClip()
+        {
+            _currentAnimationClip.Reset(true);
+            _targetAnimationClip.Reset(true);
         }
 
 
