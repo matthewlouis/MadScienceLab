@@ -58,14 +58,22 @@ namespace MadScienceLab
             if (damageable) //if recently taken damage, don't take damage again
             {
                 timeHit = gametime.TotalGameTime; //get time when hit
-                health -= damage;
+            health -= damage;
                 damageable = false;
-                soundEffects.PlaySound("PlayerHit");
-            }
+            soundEffects.PlaySound("PlayerHit");
+        }
         }
         public int GetHealth()
         {
             return health;
+        }
+
+        private bool mapEnabled = false;
+        // Debug map, can be used as a minimap - Steven
+        public bool MapEnabled 
+        {
+            get { return mapEnabled; }
+            set { mapEnabled = value; }
         }
 
         public Character(int startRow, int startCol):base(startRow, startCol)
@@ -103,6 +111,16 @@ namespace MadScienceLab
         
         public override void Update(RenderContext renderContext)
         {
+            //List<CellObject> returnObjs = new List<CellObject>();
+
+            //renderContext.Quadtree.clear();
+            //foreach (CellObject obj in renderContext.Level.collidableObjects)
+            //{
+            //    renderContext.Quadtree.insert(obj);
+            //}
+
+            //renderContext.Quadtree.retrieve(returnObjs, base.Hitbox);
+
             if (health <= 0)
             {
                 renderContext.Level.GameOver = true;
@@ -120,11 +138,22 @@ namespace MadScienceLab
             charModel.Update(renderContext);
             UpdatePhysics();
            
+            // Quad tree collision
+            //foreach (CellObject worldObject in returnObjs)
+            //{
+            //    if (interactState == InteractState.CompletedPickup) // Start checking for collisions for the box being carried - Steven
+            //    {
+            //        CheckBoxCarryCollision(renderContext, worldObject);
+            //    }
+            //    CheckPlayerBoxCollision(renderContext, worldObject);
+            //}
+
             if (interactState == InteractState.CompletedPickup) // Start checking for collisions for the box being carried - Steven
             {
                 CheckBoxCarryCollision(renderContext);
             }
-            CheckPlayerBoxCollision ( renderContext );
+            CheckPlayerBoxCollision(renderContext);   
+
 
             HandleInput();
             if (TransVelocity.Y >= 0)
@@ -198,6 +227,11 @@ namespace MadScienceLab
                 Stop();
             }
 
+
+            if (currentKeyboardState.IsKeyDown(Keys.M) && oldKeyboardState.IsKeyUp(Keys.M))
+            {
+                MapEnabled = !MapEnabled;
+            }
             oldKeyboardState = currentKeyboardState;
             oldGamePadState = currentGamePadState;
         }
@@ -553,11 +587,12 @@ namespace MadScienceLab
             foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
                 if (levelObject.GetType() == typeof(MovingPlatform)) //default moving platforms for player to not be on the platform unless it would be found that the player were on it
-                {
+            {
                     ((MovingPlatform)levelObject).PlayerOnPlatform = false;
                 }
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
+                    //renderContext.Boxhit = levelObject.Hitbox;
                     //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
                     if (levelObject.GetType() == typeof(ExitBlock))
                     {
@@ -608,6 +643,10 @@ namespace MadScienceLab
                                     ((MovingPlatform)levelObject).PlayerOnPlatform = true;
                                 }
                                 Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+                                if (levelObject.Hitbox.Y > -25)
+                                    Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom, 0);
+                                else
+                                    Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
                                 if (!collisionJumping)
                                     TransVelocity = Vector3.Zero;
                                 jumping = false;

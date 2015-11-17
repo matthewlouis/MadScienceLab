@@ -25,7 +25,7 @@ namespace MadScienceLab
         protected int zPosition = 0; //0 is where actual elements in play get put...background objects will be further back.
 
         private float x, y;
-
+        public Vector3 size;
   
 
         /**
@@ -134,6 +134,7 @@ namespace MadScienceLab
 
             // Create and return bounding box
             Vector3 size = max - min;
+            this.size = size;
             if (isRotated)
             {
                 HitboxWidth = (int)size.Z;

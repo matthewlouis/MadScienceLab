@@ -41,16 +41,16 @@ namespace MadScienceLab
 
             Translate(Position.X, Position.Y + GameConstants.SINGLE_CELL_SIZE/2, Position.Z - GameConstants.SINGLE_CELL_SIZE/2);
             Scale(72f, 72f, 48f);
-           
+
             // Matt- Steven's code for auto-calculating hitbox not working for this, so I've hardcoded it here.
-            HitboxHeight = HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
+           // HitboxHeight = HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
         }
 
         /// <summary>
         /// 
         /// </summary>
         public void FlickSwitch()
-        {   
+        {
             if (ready) //if ready to be switched, and still has toggles left
             {
                 if (InfinitelyToggleable)
@@ -120,7 +120,9 @@ namespace MadScienceLab
             animmodel[1].LoadContent(contentManager);
 
             // Provides a hitbox for the block - Steven
-            //UpdateBoundingBox(animmodel[0].Model, Matrix.CreateTranslation(animmodel[0].Position), true, false);
+            base.HitboxWidth = 30;
+            base.HitboxWidthOffset = 12 / 2;
+            base.HitboxHeight = GameConstants.SINGLE_CELL_SIZE;
         }
     }
 }
