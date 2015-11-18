@@ -345,7 +345,7 @@ namespace MadScienceLab
                     {
                         if (levelObject.isCollidable && areaTop.Intersects ( levelObject.Hitbox ))
                         {
-                            pickuppable = false;
+                            //pickuppable = false;
                         }
                         /*
                          +		The hitboxes (rectangles) are actually upside down - 'bot' is actually the top, 'top' is the bottom,

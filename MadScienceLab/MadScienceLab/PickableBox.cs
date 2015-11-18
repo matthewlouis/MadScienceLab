@@ -30,7 +30,7 @@ namespace MadScienceLab
                 {
                     if (levelObject.isCollidable && levelObject.GetType() != typeof(BasicBlock) && areaAbove.Intersects(levelObject.Hitbox))
                     {
-                        pickuppable = false;
+                        //pickuppable = false;
                     }
                 }
                 return pickuppable;
