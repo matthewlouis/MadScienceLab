@@ -23,11 +23,11 @@ namespace MadScienceLab
 
             // hitbox for collision
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
-            SetVerticalOffset(-30);
+            SetVerticalOffset(-20);
             SetDirection();
-            base.HitboxHeight = 30;
-            base.HitboxWidth = 24;
-            base.HitboxWidthOffset = 48;
+            base.HitboxHeight = 10;
+            //base.HitboxWidth = 24;
+            //base.HitboxWidthOffset = 48;
             base.HitboxHeightOffset = 48;
 
         }
