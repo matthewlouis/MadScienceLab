@@ -144,12 +144,13 @@ namespace MadScienceLab
                 XmlSerializer serializer = new XmlSerializer(typeof(SaveGameData)); // create XML serializer object
                 serializer.Serialize(stream, saveGameData); // pass saveGameData struct to xml stream
             }
+            container.Dispose();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <returns>bool true if loaded from file. false if no file to load</returns>
+        /// <returns>bool true if loaded from file. false if not file to load</returns>
         public bool Load()
         {
             // Check to see whether the save exists.
