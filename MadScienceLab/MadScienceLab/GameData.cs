@@ -144,6 +144,7 @@ namespace MadScienceLab
                 XmlSerializer serializer = new XmlSerializer(typeof(SaveGameData)); // create XML serializer object
                 serializer.Serialize(stream, saveGameData); // pass saveGameData struct to xml stream
             }
+            container.Dispose();
         }
 
         /// <summary>
