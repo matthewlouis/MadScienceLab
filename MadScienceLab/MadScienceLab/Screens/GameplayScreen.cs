@@ -185,6 +185,7 @@ namespace MadScienceLab
                 _textures.Add("Exit", content.Load<Texture2D>("Textures/EXIT"));
                 _textures.Add("Complete", content.Load<Texture2D>("Textures/Complete"));
                 _textures.Add("GameOver", content.Load<Texture2D>("Textures/GameOver"));
+                _textures.Add("Arrow_Up", content.Load<Texture2D>("Textures/Arrow_Up"));
                 _renderContext.Textures = _textures;
 
                 //Loads sound references
@@ -361,6 +362,14 @@ namespace MadScienceLab
             spriteBatch.Begin();
             //spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
             spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
+            if (_renderContext.Player.AdjacentObj != null && _renderContext.Player.AdjacentObj.GetType() == typeof(PickableBox) && _renderContext.Player.interactState == 0)
+            {
+                Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(_renderContext.Player.AdjacentObj.WorldPosition,
+                    _renderContext.Camera.Projection, _renderContext.Camera.View, _renderContext.Player.AdjacentObj.GetWorldMatrix());
+                Vector2 screenPos2D = new Vector2(screenPos.X, screenPos.Y);
+                spriteBatch.Draw(_textures["Arrow_Up"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y, 48, 48), Color.White);
+                Console.WriteLine(screenPos2D);
+            }
             //spriteBatch.DrawString(font, "Time: " + timer, new Vector2(300, 50), Color.Black);
             //spriteBatch.DrawString(font, "Velocity: " + player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
             //spriteBatch.DrawString(font, "Acceleration: " + player.TransAccel.ToString(), new Vector2(50, 200), Color.Black);
@@ -446,7 +455,6 @@ namespace MadScienceLab
                 //}
                     spriteBatch.End();
             }
-            Console.WriteLine(_renderContext.Player.Position.ToString());
             //fpsCount.Draw(gameTime);
             fpsCount.Draw(gameTime);
             _timer.Draw(_renderContext.GameTime);

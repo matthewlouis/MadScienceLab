@@ -153,8 +153,8 @@ namespace MadScienceLab
             {
                 CheckBoxCarryCollision(renderContext);
             }
-            CheckPlayerBoxCollision(renderContext);   
-
+            CheckPlayerBoxCollision(renderContext);
+            CheckPickableBoxVincity(renderContext);
 
             HandleInput();
             if (TransVelocity.Y >= 0)
@@ -515,6 +515,27 @@ namespace MadScienceLab
         {
             TransVelocity += TransAccel / 60; //amt. accel (where TransAccel is in seconds) per frame ...
             Translate(Position + TransVelocity / 60);
+        }
+
+        /// <summary>
+        /// Checks all pickable boxes to see if player is close to the boxes
+        /// </summary>
+        /// <param name="renderContext"></param>
+        private void CheckPickableBoxVincity(RenderContext renderContext)
+        {
+            foreach (CellObject worldObject in renderContext.Level.gameObjects[typeof(PickableBox)])
+            {
+                // Expanding the hitbox to see if player is near the box and flatten it to prevent from being picked up from 1 row above or below
+                Rectangle expandedHitbox = worldObject.Hitbox;
+                expandedHitbox.X -= 15;
+                expandedHitbox.Width += 30;
+                expandedHitbox.Y += 5;
+                expandedHitbox.Width -= 10;
+                if (Hitbox.Intersects(expandedHitbox))
+                {
+                    AdjacentObj = worldObject;
+                }
+            }
         }
 
         /// <summary>
