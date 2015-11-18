@@ -74,8 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnemySonar.cs" />
-    <Compile Include="PointSort.cs" />
-    <Compile Include="Ray2D.cs" />
     <Compile Include="BackgroundBlock.cs" />
     <Compile Include="BaseCamera.cs" />
     <Compile Include="BasicBlock.cs" />
