@@ -9,14 +9,16 @@ namespace MadScienceLab
 {
     public static class MusicPlayer
     {
-        static float volume = 1.0f;
+        public static float masterDefaultVolume = 1.0f;
+        private static float masterVolume = masterDefaultVolume;
+        private static bool masterMuted = false;
         static SoundEffectInstance currentSong;
 
         //Plays the provided song in a loop.
         public static void PlaySong(SoundEffect song){
             Stop();
             currentSong = song.CreateInstance();
-            currentSong.Volume = volume;
+            currentSong.Volume = masterVolume;
             currentSong.IsLooped = true;
             currentSong.Play();
         }
@@ -25,7 +27,7 @@ namespace MadScienceLab
         //Sets volume of player
         public static void SetVolume(float volume)
         {
-            MusicPlayer.volume = volume;
+            MusicPlayer.masterVolume = volume;
 
             if (currentSong != null && !currentSong.IsDisposed)
                 currentSong.Volume = volume;
@@ -37,6 +39,18 @@ namespace MadScienceLab
             if (currentSong != null && !currentSong.IsDisposed)
             {
                 currentSong.Stop();
+            }
+        }
+
+        public static void Mute()
+        {
+            if (currentSong != null && !currentSong.IsDisposed)
+            {
+                masterMuted = !masterMuted;
+                if (masterMuted)
+                    currentSong.Volume = 0;
+                else
+                    currentSong.Volume = masterVolume;
             }
         }
     }

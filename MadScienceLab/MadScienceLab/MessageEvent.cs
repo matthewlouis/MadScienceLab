@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
 namespace MadScienceLab
@@ -16,6 +15,8 @@ namespace MadScienceLab
             Scale(48f, 48f, 48f);
             Position = new Vector3(Position.X, Position.Y - 2, Position.Z - 27); //not sure about this position
             HitboxHeightOffset = 2;
+            HitboxHeight = GameConstants.SINGLE_CELL_SIZE;
+            HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
             isCollidable = true;
         }
     }

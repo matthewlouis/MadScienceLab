@@ -70,6 +70,7 @@
     <Compile Include="Button.cs" />
     <Compile Include="CellObject.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="EnemySonar.cs" />
     <Compile Include="GameData.cs" />
     <Compile Include="MessageEvent.cs" />
     <Compile Include="GameTimer.cs" />

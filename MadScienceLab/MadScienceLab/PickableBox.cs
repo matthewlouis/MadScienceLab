@@ -26,13 +26,15 @@ namespace MadScienceLab
             {
                 Rectangle areaAbove = new Rectangle((int)Position.X, (int)Position.Y + Hitbox.Height, (int)Hitbox.Width, (int)Hitbox.Height);
                 bool pickuppable = true;
-                foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
-                {
-                    if (levelObject.isCollidable && levelObject.GetType() != typeof(BasicBlock) && areaAbove.Intersects(levelObject.Hitbox))
-                    {
-                        //pickuppable = false;
-                    }
-                }
+
+                //// to pick up boxes from under the other this has been commented out
+                //foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
+                //{
+                //    if (levelObject.isCollidable && levelObject.GetType() != typeof(BasicBlock) && areaAbove.Intersects(levelObject.Hitbox))
+                //    {
+                //        //pickuppable = false;
+                //    }
+                //}
                 return pickuppable;
             }
         }
