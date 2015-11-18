@@ -176,7 +176,7 @@ namespace MadScienceLab
                 _textures.Add("DirtyMetal", content.Load<Texture2D>("Textures/DirtyMetal"));
                 _textures.Add("Fiberglass_White", content.Load<Texture2D>("Textures/Fiberglass_White"));
                 _textures.Add("MetalFloor_Gray", content.Load<Texture2D>("Textures/MetalFloor_Gray"));
-                _textures.Add("Tile_Beige", content.Load<Texture2D>("Textures/Tile_Beige_Half"));
+                _textures.Add("Tile_Beige", content.Load<Texture2D>("Textures/Tile_Beige"));
                 _textures.Add("Tile_Blue", content.Load<Texture2D>("Textures/Tile_Blue"));
                 _textures.Add("Tile_DarkGray", content.Load<Texture2D>("Textures/Tile_DarkGray"));
                 _textures.Add("Tile_Gray", content.Load<Texture2D>("Textures/Tile_Gray"));
@@ -411,7 +411,7 @@ namespace MadScienceLab
                 qtbox.X += 400;
                 qtbox.Y += 500;
                 spriteBatch.Draw(dummyTexture, qtbox, Color.Brown * 0.8f);
-                Console.WriteLine(qtbox.ToString());
+                //Console.WriteLine(qtbox.ToString());
                 if (_renderContext.QuadtreeDebug != null)
                 foreach (CellObject qBox in _renderContext.QuadtreeDebug)
                 {
@@ -446,7 +446,7 @@ namespace MadScienceLab
                 //}
                     spriteBatch.End();
             }
-            Console.WriteLine(_renderContext.Player.Position.ToString());
+            //Console.WriteLine(_renderContext.Player.Position.ToString());
             //fpsCount.Draw(gameTime);
             fpsCount.Draw(gameTime);
             _timer.Draw(_renderContext.GameTime);
