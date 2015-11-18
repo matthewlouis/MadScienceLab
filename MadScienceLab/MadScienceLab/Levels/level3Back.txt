@@ -1,17 +1,13 @@
-﻿XXXXXXXXXXXXXXXXXXXX
-X                  X
-X              XXXXX
-X              D  X 
-XL T           XXXXX
-XXXX       MX      X
-X        B  XX     X
-X        XX  XXRRRRX
-XLT S              X
-XXXXXX       B  XXXX
-X    XX  M   B XXXXX
-X          M RRXXXXX
-X              X  XX
-X       M      X  XX
-X   m  M       D  XX
-X@P X      LXE DmSXX
-XXXXXXXXXXXXXXXXXXXX
+﻿XXXXXXXXXXXXXXXXXXXXXXXXX
+X        X             XX
+X        X             XX
+XP      TX             XX
+XXXXXRRRXXXXXXXXXXXXX  XX
+X        XXXXXXXXXX    XX
+X        XXXXXXXXXX    XX
+X        XXXXXXXXXX    XX
+X                      XX
+XL  B            S    MXX
+XXXXXXXXXXXXXX  XXXrrr XX
+XXXXXXXXXXXXXXX    E   XX
+XXXXXXXXXXXXXXXXXXXXXXXXX
