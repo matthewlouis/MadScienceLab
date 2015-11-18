@@ -34,6 +34,7 @@ namespace MadScienceLab
         byte facingDirection = FACING_RIGHT;
         int attackRange = 4;
         float movementAmount = 1f;
+        float speed = 1f;
 
         bool movestate = true;
         private SoundEffectPlayer soundEffects;
@@ -94,11 +95,11 @@ namespace MadScienceLab
 
             if (direction == GameConstants.POINTDIR.pointLeft)
             {
-                MoveLeft(movementAmount);
+                MoveLeft(movementAmount * speed);
             }
             else if(direction == GameConstants.POINTDIR.pointRight)
             {
-                MoveRight(movementAmount);
+                MoveRight(movementAmount * speed);
 
             }
 
@@ -219,6 +220,7 @@ namespace MadScienceLab
                     {
                         renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
                         movestate = !movestate;
+                        return;
                     }
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
                             * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
@@ -360,7 +362,7 @@ namespace MadScienceLab
             {
                 elapsedFireTime = 0;
                 //projectiles.Add(new LaserProjectile(CellNumber.X, CellNumber.Y, direction));
-                EnemySonar sonar = new EnemySonar(new Vector2(Position.X, Position.Y), direction);
+                EnemySonar sonar = new EnemySonar(new Vector2(Position.X, Position.Y), direction, this);
                 //LaserProjectile projectile = new LaserProjectile(CellNumber.X, CellNumber.Y, direction);
                 //Position the projectile according to the position of the turret
                 //Actually, not necessary.
@@ -374,7 +376,20 @@ namespace MadScienceLab
 
                 renderContext.Level.AddChild(sonar);
             }
+        }
 
+        //Speed up and chase player
+        public void AttackMode()
+        {
+            animmodel.SetAnimationSpeed(3f);
+            speed = 3f;
+        }
+
+        //Back to normal
+        public void StandDown()
+        {
+            animmodel.SetAnimationSpeed(1.0f);
+            speed = 1.0f;
         }
     }
 
