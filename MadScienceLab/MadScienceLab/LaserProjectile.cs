@@ -10,6 +10,10 @@ namespace MadScienceLab
     class LaserProjectile:CellObject
     {
         bool active; // to set inactive if projectile collides with another object projectile should then be removed from list
+        GameConstants.POINTDIR direction;
+        SoundEffectPlayer soundEffects;
+        
+        public LaserProjectile(int column, int row, GameConstants.POINTDIR direction):base(column, row)
         GameConstants.DIRECTION direction;
         SoundEffectPlayer soundEffects;
         
@@ -42,15 +46,11 @@ namespace MadScienceLab
             foreach (CellObject obj in renderContext.Level.collidableObjects)
             {
                 if (obj.GetType() != typeof(LaserTurret))
-                {
-                    renderContext.Quadtree.insert(obj);
-                }
+                renderContext.Quadtree.insert(obj);
             }
 
             renderContext.Quadtree.retrieve(returnObjs, Hitbox);
-
-            renderContext.QuadtreeDebug = new List<CellObject>();
-            renderContext.QuadtreeDebug.AddRange(returnObjs);
+            
 
             if (active)
             {
