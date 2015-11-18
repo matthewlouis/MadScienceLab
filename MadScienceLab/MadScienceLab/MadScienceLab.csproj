@@ -73,6 +73,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnemySonar.cs" />
     <Compile Include="PointSort.cs" />
     <Compile Include="Ray2D.cs" />
     <Compile Include="BackgroundBlock.cs" />

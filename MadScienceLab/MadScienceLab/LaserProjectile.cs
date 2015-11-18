@@ -72,14 +72,14 @@ namespace MadScienceLab
             if (direction == GameConstants.POINTDIR.pointLeft)
             {
                 //SetHorizontalOffset(30);
-                Position += new Vector3(-30,0,0);
+                //Position += new Vector3(-30,0,0);
                 base.TransVelocity = new Vector3(-GameConstants.PROJECTILE_X_VELOCITY,0f,0f);
             }
             else
                 if (direction == GameConstants.POINTDIR.pointRight)
                 {
                     //SetHorizontalOffset(-30);
-                    Position += new Vector3(30, 0, 0);
+                    //Position += new Vector3(30, 0, 0);
                     base.TransVelocity = new Vector3(GameConstants.PROJECTILE_X_VELOCITY,0f,0f);
                 }
                 else

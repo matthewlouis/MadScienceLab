@@ -15,8 +15,21 @@ using System.Collections;
 
 namespace MadScienceLab
 {
-    class Enemy : CellObject
+    public class Enemy : CellObject
     {
+        private GameConstants.POINTDIR direction;
+        public GameConstants.POINTDIR Direction
+        {
+            get
+            {
+                return direction;
+            }
+            set
+            {
+                direction = value;
+            }
+        }
+
         const int FACING_LEFT = 1, FACING_RIGHT = 2;
         byte facingDirection = FACING_RIGHT;
         int attackRange = 4;
@@ -26,6 +39,10 @@ namespace MadScienceLab
         private SoundEffectPlayer soundEffects;
 
         private GameAnimatedModel animmodel;
+
+        // Sonar fire handling
+        int elapsedFireTime = 0;
+        int firingDelay = 100;
 
         public Enemy(int column, int row)
             : base(column, row)
@@ -52,6 +69,14 @@ namespace MadScienceLab
             soundEffects.LoadSound("Roomba", contentManager.Load<SoundEffect>("Sounds/DoombaLoop"));
             soundEffects.PlayAndLoopSound("Roomba");
             base.LoadContent(contentManager);
+
+            // generate random direction and initialize
+            Random rand = new Random();
+            if (rand.Next(0, 1) == 0)
+                direction = GameConstants.POINTDIR.pointLeft;
+            else
+                direction = GameConstants.POINTDIR.pointRight;
+           
             
         }
 
@@ -67,15 +92,18 @@ namespace MadScienceLab
 
             renderContext.Quadtree.retrieve(returnObjs, Hitbox);
 
-            if (movestate)
+            if (direction == GameConstants.POINTDIR.pointLeft)
             {
                 MoveLeft(movementAmount);
             }
-            else
+            else if(direction == GameConstants.POINTDIR.pointRight)
             {
                 MoveRight(movementAmount);
+
             }
 
+            FireSonar(renderContext);
+           
             //CheckEnemyCollision(renderContext, returnObjs);
             CheckPlayerNearby(renderContext);
             CheckEnemyBoxCollision(renderContext);
@@ -92,7 +120,7 @@ namespace MadScienceLab
 
         public void MoveLeft(float movementAmount)
         {
-            facingDirection = FACING_LEFT;
+            //facingDirection = FACING_LEFT;
             Vector3 newPosition = Position + new Vector3(-movementAmount, 0, 0);
             Rotate(0, -90f, 0);
             Translate(newPosition);
@@ -100,7 +128,7 @@ namespace MadScienceLab
 
         public void MoveRight(float movementAmount)
         {
-            facingDirection = FACING_RIGHT;
+            //facingDirection = FACING_RIGHT;
             Vector3 newPosition = Position + new Vector3(movementAmount, 0, 0);
             Rotate(0, 90f, 0);
             Translate(newPosition);
@@ -161,12 +189,14 @@ namespace MadScienceLab
                         {
                             //boxHitState = "Box Left";// left
                             movestate = false;
-                            
+                            direction = GameConstants.POINTDIR.pointLeft;
+
                         }
                         if (wy > -hx)
                         {
                             //boxHitState = "Box Right";// right
                             movestate = true;
+                            direction = GameConstants.POINTDIR.pointRight;
                         }
 
                     }
@@ -199,12 +229,14 @@ namespace MadScienceLab
                     {
                         //boxHitState = "Box Left";// left
                         movestate = false;
+                        direction = GameConstants.POINTDIR.pointRight;
 
                     }
                     if (wy > -hx)
                     {
                         //boxHitState = "Box Right";// right
                         movestate = true;
+                        direction = GameConstants.POINTDIR.pointLeft;
                     }
 
                     //if (Position.Y <= renderContext.Player.Position.Y
@@ -291,8 +323,8 @@ namespace MadScienceLab
 
         private void CheckPlayerNearby(RenderContext renderContext)
         {
-            if ((renderContext.Player.Position.X - Position.X) > GameConstants.SINGLE_CELL_SIZE * 3)
-                movestate = false;
+            //if ((renderContext.Player.Position.X - Position.X) > GameConstants.SINGLE_CELL_SIZE * 3)
+            //    movestate = false;
         }
 
         // trying ray casting but it not that straight forward
@@ -304,7 +336,7 @@ namespace MadScienceLab
         //    Ray ray;
         //    ray.Position = Position;
         //    Vector3 intersect = ray.Intersects(playerBoundingBox);
-                
+
         //    Vector3 enemyPosition = Position;
         //    Vector3 playerPosition = Position;
         //    foreach (CellObject levelObject in renderContext.Level.collidableObjects)
@@ -315,7 +347,38 @@ namespace MadScienceLab
         //    }
         //    return playerPosition == PlayerPosition ? 1 : 0;
         //}
+
+        /// <summary>
+        /// Fires "Sonar" to check whether the character is near by/
+        /// </summary>
+        /// <param name="renderContext"></param>
+        private void FireSonar(RenderContext renderContext)
+        {
+            // fire projectile using a delay
+            elapsedFireTime += renderContext.GameTime.ElapsedGameTime.Milliseconds;
+            if (elapsedFireTime > firingDelay)
+            {
+                elapsedFireTime = 0;
+                //projectiles.Add(new LaserProjectile(CellNumber.X, CellNumber.Y, direction));
+                EnemySonar sonar = new EnemySonar(new Vector2(Position.X, Position.Y), direction);
+                //LaserProjectile projectile = new LaserProjectile(CellNumber.X, CellNumber.Y, direction);
+                //Position the projectile according to the position of the turret
+                //Actually, not necessary.
+                /*float projectileX;
+                if (direction == GameConstants.DIRECTION.pointLeft)
+                    projectileX = this.Hitbox.Left;
+                else
+                    projectileX = this.Hitbox.Right - projectile.Hitbox.Width / 2;
+                projectile.Translate ( projectileX, this.Hitbox.Top, this.zPosition ); //position the projectile to be a position relative to the turret
+                 * */
+
+                renderContext.Level.AddChild(sonar);
+            }
+
+        }
     }
+
+
 }
 
 

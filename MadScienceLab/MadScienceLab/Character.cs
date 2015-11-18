@@ -341,17 +341,19 @@ namespace MadScienceLab
                     //check if there is area above the player to pick up the box
                     Rectangle areaTop = new Rectangle ( (int)Position.X, CharacterHitbox.Bottom + 1, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height) );
                     bool pickuppable = true;
-                    foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
-                    {
-                        if (levelObject.isCollidable && areaTop.Intersects ( levelObject.Hitbox ))
-                        {
-                            pickuppable = false;
-                        }
-                        /*
-                         +		The hitboxes (rectangles) are actually upside down - 'bot' is actually the top, 'top' is the bottom,
-                         *      height increases upwards.
-                         */
-                    }
+
+                    // to pick up boxes from under the other this has been commented out
+                    //foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
+                    //{
+                    //    if (levelObject.isCollidable && areaTop.Intersects ( levelObject.Hitbox ))
+                    //    {
+                    //        pickuppable = false;
+                    //    }
+                    //    /*
+                    //     +		The hitboxes (rectangles) are actually upside down - 'bot' is actually the top, 'top' is the bottom,
+                    //     *      height increases upwards.
+                    //     */
+                    //}
                     if (jumping) //disallow putting down when jumping
                         pickuppable = false;
                     if (pickuppable) {

@@ -22,6 +22,7 @@ namespace MadScienceLab
         public GameTimer      GameTimer { get; set; }
         public BaseCamera     Camera { get; set; }
         public Character      Player { get; set; }
+        public Enemy          Doomba { get; set; }
         public Level          Level { get; set; }
         public BasicEffect BasicEffect { get; set; }
         public Quadtree       Quadtree { get; set; }
