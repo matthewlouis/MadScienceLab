@@ -601,6 +601,11 @@ namespace MadScienceLab
                         renderContext.Level.LevelOver = true;
                     }
 
+                    if (levelObject.GetType() == typeof(MessageEvent))
+                    {
+                        
+                    }
+
                     /**Determining what side was hit**/
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
                              * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);

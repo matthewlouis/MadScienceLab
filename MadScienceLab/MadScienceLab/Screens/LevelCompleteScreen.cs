@@ -32,6 +32,7 @@ namespace MadScienceLab
         MenuEntry nextLevelEntry;
 
         GameData.LevelData levelData;
+        GameData gameData;
 
         #endregion
 
@@ -45,6 +46,13 @@ namespace MadScienceLab
             : base("Level Complete")
         {
             this.levelData = levelData;
+            gameData = new GameData();
+            if (gameData.saveGameData.levelCompleted < levelData.currentlevelNum)
+                gameData.saveGameData.levelCompleted = levelData.currentlevelNum;
+            gameData.saveGameData.levelData[levelData.currentlevelNum-1].time = levelData.time.ToString();
+
+            gameData.GetContainer();
+            gameData.Save();
 
             // Create our menu entries.
             string time = string.Format("Time Completed: {0}", levelData.time);
@@ -64,21 +72,26 @@ namespace MadScienceLab
             MenuEntries.Add(currentLevelEntry);
             MenuEntries.Add(timeCompleteEntry);
             MenuEntries.Add(remaingingHealthEntry);
-            MenuEntries.Add(mainMenuEntry);
-
-            // check to see if there are still levels left
+            
+            // check to see if there are still levels left before adding nextLevelEntry
             if (levelData.currentlevelNum < GameConstants.LEVELS)
             {
                 MenuEntries.Add(nextLevelEntry);
-
             }
+            // load credits
             else if (levelData.currentlevelNum == GameConstants.LEVELS)
             {
                 // load game complete screen with credits if all levels are finished
                 //LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
                 //               new GameCompleteScreen());
             }
-            
+
+
+
+            MenuEntries.Add(mainMenuEntry);
+
+
+
         }
 
         #endregion
@@ -94,9 +107,7 @@ namespace MadScienceLab
         void nextLevelEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                           new GameplayScreen(levelData.currentlevelNum++));
-
-            
+                           new GameplayScreen(++levelData.currentlevelNum));            
         }
         
 

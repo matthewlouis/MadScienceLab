@@ -36,6 +36,7 @@ namespace MadScienceLab
             public string time; // time recorded
             public string levelParTime; // current level par time
             public int remainingHealth;
+            public int levelHighScore;
 
             public LevelData(int levelNum, TimeSpan levelParTime)
             {
@@ -44,6 +45,7 @@ namespace MadScienceLab
                 time = TimeSpan.Zero.ToString();
                 this.levelParTime = levelParTime.ToString();
                 remainingHealth = 3;
+                levelHighScore = 0;
             }
         }
         
