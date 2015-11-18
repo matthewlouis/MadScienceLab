@@ -9,16 +9,19 @@ namespace MadScienceLab
 {
     class EnemySonar : CellObject
     {
+        static float SPEED = 4f;
         bool active; // to set inactive if projectile collides with another object projectile should then be removed from list
         GameConstants.POINTDIR direction;
+        Enemy sourceEnemy;
 
-        public EnemySonar(Vector2 position, GameConstants.POINTDIR direction) : base(position)
+        public EnemySonar(Vector2 position, GameConstants.POINTDIR direction, Enemy sourceEnemy) : base(position)
         {
             active = true;
             this.direction = direction;
             isCollidable = false;
 
-            
+            this.sourceEnemy = sourceEnemy;
+
             base.Model = GameplayScreen._models["projectile"];
 
             // hitbox for collision
@@ -50,7 +53,7 @@ namespace MadScienceLab
             {
 
                 CheckSonarCollision(renderContext, returnObjs);
-                Position += TransVelocity;
+                Position += TransVelocity * SPEED;
             }
             else
             {
@@ -65,7 +68,7 @@ namespace MadScienceLab
         public override void Draw(RenderContext renderContext)
         {
 
-            base.Draw(renderContext);
+            return;
         }
 
         public void SetDirection()
@@ -99,11 +102,13 @@ namespace MadScienceLab
                         active = false;
 
                         TransVelocity = Vector3.Zero;
+                        sourceEnemy.AttackMode();
                     }
                     else
                     {
                         active = false;
                         TransVelocity = Vector3.Zero;
+                        sourceEnemy.StandDown();
                     }
                 }
             }
