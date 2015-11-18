@@ -85,10 +85,7 @@ namespace MadScienceLab
         {
             sound = !sound;
 
-            if (!sound)
-                SoundEffect.MasterVolume = 0;
-            else
-                SoundEffect.MasterVolume = 1;
+            SoundEffectPlayer.Mute();
 
             SetMenuEntryText();
         }
@@ -100,10 +97,7 @@ namespace MadScienceLab
         {
             music = !music;
 
-            if (!music)
-                MusicPlayer.SetVolume(0);
-            else
-                MusicPlayer.SetVolume(1);
+            MusicPlayer.Mute();
 
             SetMenuEntryText();
         }
