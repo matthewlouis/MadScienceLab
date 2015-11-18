@@ -36,6 +36,11 @@ namespace MadScienceLab
         public const int DISTANCE_SCALE = 4;
 
         // levels
-        public const int LEVELS = 5;        
+        public const int LEVELS = 5;
+
+        /// <summary>
+        /// used for scoring the player at the end of a level
+        /// </summary>
+        public enum SCORE { fullHealth = 50, medHealth = 30, lowHealth = 10, parTimeComplete = 50, levelComplete = 100 }      
     }
 }

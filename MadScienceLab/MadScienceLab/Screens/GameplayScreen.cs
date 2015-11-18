@@ -102,7 +102,8 @@ namespace MadScienceLab
         public GameplayScreen(int levelNum)
         {
             this.levelNum = levelNum;
-
+            // Sets level data to level and sets level par time from file.
+            levelData = new GameData.LevelData(levelNum, TimeSpan.Zero);
 
             // transition time used for screen transitions
             TransitionOnTime = TimeSpan.FromSeconds(1);
@@ -200,7 +201,7 @@ namespace MadScienceLab
                 _sounds.Add("ToggleSwitch", content.Load<SoundEffect>("Sounds/ToggleSwitch"));
 
                 //loads the basic level
-                basicLevel = LevelBuilder.MakeBasicLevel(levelNum);
+                basicLevel = LevelBuilder.MakeBasicLevel(levelData.currentlevelNum);
                 basicLevel.setBackgroundBuffer(_renderContext); //Matt: need to do this now to draw background properly
 
                 CurrentLevel = basicLevel; //we can handle this through render context eventually.
@@ -226,10 +227,6 @@ namespace MadScienceLab
 
                 _timer = new GameTimer(_renderContext);
                 _renderContext.GameTimer = _timer;
-
-
-                // Sets level data to level and sets level par time from file.
-                levelData = new GameData.LevelData(levelNum, TimeSpan.Zero);
 
                 //load fps count content
                 fpsCount.LoadContent(content);
@@ -489,7 +486,7 @@ namespace MadScienceLab
             PlayerIndex player;
             if (pauseAction.Evaluate(input, ControllingPlayer, out player) || gamePadDisconnected)
             {
-                ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+                ScreenManager.AddScreen(new PauseMenuScreen(levelData.currentlevelNum), ControllingPlayer);
             }
 
         }

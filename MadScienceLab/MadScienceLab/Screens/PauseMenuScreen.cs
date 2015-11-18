@@ -20,24 +20,29 @@ namespace MadScienceLab
     class PauseMenuScreen : MenuScreen
     {
         #region Initialization
-
+        int currentLevelNum;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PauseMenuScreen()
+        public PauseMenuScreen(int currentLevelNum)
             : base("Paused")
         {
+            this.currentLevelNum = currentLevelNum;
             // Create our menu entries.
-            MenuEntry resumeGameMenuEntry = new MenuEntry("Resume Game");
-            MenuEntry quitGameMenuEntry = new MenuEntry("Quit Game");
+            MenuEntry retryGameMenuEntry = new MenuEntry("Retry");
+            MenuEntry resumeGameMenuEntry = new MenuEntry("Resume");
+            MenuEntry quitGameMenuEntry = new MenuEntry("Quit to main menu");
 
             // Hook up menu event handlers.
+            retryGameMenuEntry.Selected += RetryGameMenuEntrySelected;
             resumeGameMenuEntry.Selected += OnCancel;
             quitGameMenuEntry.Selected += QuitGameMenuEntrySelected;
 
             // Add entries to the menu.
             MenuEntries.Add(resumeGameMenuEntry);
+
+            MenuEntries.Add(retryGameMenuEntry);
             MenuEntries.Add(quitGameMenuEntry);
         }
 
@@ -71,6 +76,12 @@ namespace MadScienceLab
         {
             LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
                                                            new MainMenuScreen());
+        }
+
+        void RetryGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
+                               new GameplayScreen(currentLevelNum));
         }
 
 
