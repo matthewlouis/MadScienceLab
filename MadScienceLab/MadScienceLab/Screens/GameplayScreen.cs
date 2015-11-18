@@ -42,7 +42,8 @@ namespace MadScienceLab
         RenderContext _renderContext;
         BaseCamera _camera;
         GameTimer _timer;
-
+        int bob = 0;
+        int num = 1;
         private SoundEffect levelMusic;
 
         Level basicLevel;
@@ -283,7 +284,7 @@ namespace MadScienceLab
                                                        bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
-
+            
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
                 pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
@@ -291,6 +292,13 @@ namespace MadScienceLab
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
             if (IsActive)
             {
+                if (bob > 10)
+                    num = -1;
+                else if (bob < -10)
+                    num = 1;
+
+                bob += (int)(0.1f * gameTime.ElapsedGameTime.Milliseconds) * num;
+
                 _renderContext.Quadtree.clear();
 
                 foreach (CellObject obj in basicLevel.Children)
@@ -362,12 +370,13 @@ namespace MadScienceLab
             spriteBatch.Begin();
             //spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
             spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
-            if (_renderContext.Player.AdjacentObj != null && _renderContext.Player.AdjacentObj.GetType() == typeof(PickableBox) && _renderContext.Player.interactState == 0)
+            if (_renderContext.Player.AdjacentObj != null && _renderContext.Player.AdjacentObj.GetType() == typeof(PickableBox) 
+                && _renderContext.Player.interactState == 0)
             {
                 Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(_renderContext.Player.AdjacentObj.WorldPosition,
                     _renderContext.Camera.Projection, _renderContext.Camera.View, _renderContext.Player.AdjacentObj.GetWorldMatrix());
                 Vector2 screenPos2D = new Vector2(screenPos.X, screenPos.Y);
-                spriteBatch.Draw(_textures["Arrow_Up"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y, 48, 48), Color.White);
+                spriteBatch.Draw(_textures["Arrow_Up"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - bob, 48, 48), Color.White);
                 Console.WriteLine(screenPos2D);
             }
             //spriteBatch.DrawString(font, "Time: " + timer, new Vector2(300, 50), Color.Black);

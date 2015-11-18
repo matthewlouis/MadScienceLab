@@ -41,7 +41,7 @@ namespace MadScienceLab
         KeyboardState oldKeyboardState;
 
         // Jumping support
-        private bool jumping;
+        public bool jumping;
         private Boolean collisionJumping = false;
 
         //For handling damage
@@ -523,17 +523,20 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         private void CheckPickableBoxVincity(RenderContext renderContext)
         {
-            foreach (CellObject worldObject in renderContext.Level.gameObjects[typeof(PickableBox)])
+            if (!jumping)
             {
-                // Expanding the hitbox to see if player is near the box and flatten it to prevent from being picked up from 1 row above or below
-                Rectangle expandedHitbox = worldObject.Hitbox;
-                expandedHitbox.X -= 15;
-                expandedHitbox.Width += 30;
-                expandedHitbox.Y += 5;
-                expandedHitbox.Width -= 10;
-                if (Hitbox.Intersects(expandedHitbox))
+                foreach (CellObject worldObject in renderContext.Level.gameObjects[typeof(PickableBox)])
                 {
-                    AdjacentObj = worldObject;
+                    // Expanding the hitbox to see if player is near the box and flatten it to prevent from being picked up from 1 row above or below
+                    Rectangle expandedHitbox = worldObject.Hitbox;
+                    expandedHitbox.X -= 15;
+                    expandedHitbox.Width += 30;
+                    expandedHitbox.Y += 5;
+                    expandedHitbox.Height -= 30;
+                    if (Hitbox.Intersects(expandedHitbox))
+                    {
+                        AdjacentObj = worldObject;
+                    }
                 }
             }
         }
