@@ -228,6 +228,7 @@ namespace MadScienceLab
 
                 //load music
                 levelMusic = content.Load<SoundEffect>("Songs/MusicInGameLoop");
+                MusicPlayer.SetVolume(1f);
                 MusicPlayer.PlaySong(levelMusic);
                 
                 // if game takes long to load. Simulate load by delaying for a
