@@ -321,7 +321,7 @@ namespace MadScienceLab
                 if (_renderContext.Level.LevelOver)
                 {
                     levelData.time = _timer.ElapsedTime.ToString();
-                    LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                    LoadingScreen.Load(ScreenManager, false, null, new LevelCompleteBackgroundScreen(),
                                                                new LevelCompleteScreen(levelData));
                 }
                 if (_renderContext.Level.GameOver)
