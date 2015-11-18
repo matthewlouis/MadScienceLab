@@ -29,7 +29,7 @@ namespace MadScienceLab
         MenuEntry musicMenuEntry;
 
         static bool sound = true;
-        static bool music = false;
+        static bool music = true;
 
 
         #endregion

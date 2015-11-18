@@ -71,6 +71,7 @@ namespace MadScienceLab
                 backgroundTexture = content.Load<Texture2D>("Menu/background");
                 menuSong = content.Load<SoundEffect>("Songs/MusicMenuLoop");
                 MusicPlayer.Stop();
+                MusicPlayer.SetVolume(0.4f);
                 MusicPlayer.PlaySong(menuSong);
             }
         }

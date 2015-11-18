@@ -32,7 +32,7 @@ namespace MadScienceLab
     class GameplayScreen : GameScreen
     {
         #region Fields
-
+        Rectangle quadRect = new Rectangle(-200, 280, 1600, -720);
         public static Level CurrentLevel { get; private set; }
 
         SpriteBatch spriteBatch;
@@ -56,6 +56,8 @@ namespace MadScienceLab
 
         // Debugging - Steven
         SpriteFont font;
+        List<GameObject3D> debugHitbox;
+        Texture2D dummyTexture;
 
         //Debugging - FPS - Matt
         private FPSCounter fpsCount;
@@ -125,7 +127,7 @@ namespace MadScienceLab
             random = new Random();
             //init fps counter
             fpsCount = new FPSCounter(_renderContext);
-            Quadtree _quadtree = new Quadtree(0, new Rectangle(0, 0, GameConstants.X_RESOLUTION, GameConstants.X_RESOLUTION));
+            Quadtree _quadtree = new Quadtree(0, quadRect);
             _renderContext.Quadtree = _quadtree;
         }
 
@@ -216,6 +218,12 @@ namespace MadScienceLab
 
                 _renderContext.Level.collidableObjects.Add(player); // Adding player to list of collidable objects - Steven
 
+                // Debugging - Steven
+                debugHitbox = new List<GameObject3D>();
+                debugHitbox.AddRange(_renderContext.Level.collidableObjects);
+                dummyTexture = new Texture2D(_renderContext.GraphicsDevice, 1, 1);
+                dummyTexture.SetData(new Color[] { Color.White * 0.8f});
+
                 _timer = new GameTimer(_renderContext);
                 _renderContext.GameTimer = _timer;
 
@@ -225,9 +233,10 @@ namespace MadScienceLab
 
                 //load fps count content
                 fpsCount.LoadContent(content);
-
+                
                 //load music
                 levelMusic = content.Load<SoundEffect>("Songs/MusicInGameLoop");
+                MusicPlayer.SetVolume(1f);
                 MusicPlayer.PlaySong(levelMusic);
                 
                 // if game takes long to load. Simulate load by delaying for a
@@ -361,6 +370,83 @@ namespace MadScienceLab
             //spriteBatch.DrawString(font, "Player pos: " + player.Position.ToString(), new Vector2(50, 300), Color.Black);
             spriteBatch.End();
 
+            if (player.MapEnabled)
+            {
+                spriteBatch.Begin();
+                foreach (CellObject obj in basicLevel.collidableObjects)
+                {
+                    Rectangle box = obj.Hitbox;
+                    box.X /= 2;
+                    box.Y /= 2;
+                    box.Width /= 2;
+                    box.Height /= 2;
+                    box.X += 400;
+                    box.Y += 500;
+                    if (obj.GetType() == typeof(Character))
+                        spriteBatch.Draw(dummyTexture, box, Color.Blue * 0.8f);
+                    else if (obj.GetType() == typeof(BasicBlock))
+                        spriteBatch.Draw(dummyTexture, box, Color.DarkSlateGray * 0.8f);
+                    else if (obj.GetType() == typeof(PickableBox))
+                        spriteBatch.Draw(dummyTexture, box, Color.White * 0.8f);
+                    else if (obj.GetType() == typeof(Door))
+                        spriteBatch.Draw(dummyTexture, box, Color.Black * 0.8f);
+                    else if (obj.GetType() == typeof(Button))
+                        spriteBatch.Draw(dummyTexture, box, Color.ForestGreen * 0.8f);
+                    else if (obj.GetType() == typeof(ToggleSwitch))
+                        spriteBatch.Draw(dummyTexture, box, Color.Green * 0.8f);
+                    else if (obj.GetType() == typeof(Enemy))
+                        spriteBatch.Draw(dummyTexture, box, Color.Red * 0.8f);
+                    else if (obj.GetType() == typeof(LaserTurret))
+                        spriteBatch.Draw(dummyTexture, box, Color.DarkRed * 0.8f);
+                    else
+                        spriteBatch.Draw(dummyTexture, box, Color.Purple * 0.8f);
+                }
+
+                Rectangle qtbox = quadRect;
+                
+                qtbox.X /= 2;
+                qtbox.Y /= 2;
+                qtbox.Width /= 2;
+                qtbox.Height /= 2;
+                qtbox.X += 400;
+                qtbox.Y += 500;
+                spriteBatch.Draw(dummyTexture, qtbox, Color.Brown * 0.8f);
+                Console.WriteLine(qtbox.ToString());
+                if (_renderContext.QuadtreeDebug != null)
+                foreach (CellObject qBox in _renderContext.QuadtreeDebug)
+                {
+                    Rectangle box = qBox.Hitbox;
+                    box.X /= 2;
+                    box.Y /= 2;
+                    box.Width /= 2;
+                    box.Height /= 2;
+                    box.X += 400;
+                    box.Y += 500;
+                    spriteBatch.Draw(dummyTexture, box, Color.Black * 0.8f);
+                    
+                }
+                int i = 0;
+                //foreach (Rectangle box in _renderContext.BoxesHit)
+                //{
+
+                //    Rectangle boxhit = box;
+                //    boxhit.X += 400;
+                //    boxhit.Y -= 500;
+                //    boxhit.X /= 2;
+                //    boxhit.Y /= -2;
+                //    boxhit.Width /= 2;
+                //    boxhit.Height /= 2;
+                //    if (i == 0)
+                //        spriteBatch.Draw(dummyTexture, boxhit, Color.Red * 0.8f);
+                //    if (i == 1)
+                //        spriteBatch.Draw(dummyTexture, boxhit, Color.Purple * 0.8f);
+                //    if (i == 2)
+                //        spriteBatch.Draw(dummyTexture, boxhit, Color.Blue * 0.8f);
+                //    i++;
+                //}
+                    spriteBatch.End();
+            }
+            Console.WriteLine(_renderContext.Player.Position.ToString());
             //fpsCount.Draw(gameTime);
             fpsCount.Draw(gameTime);
             _timer.Draw(_renderContext.GameTime);

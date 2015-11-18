@@ -26,6 +26,7 @@ namespace MadScienceLab
 
         private float x, y;
 
+        public Vector3 size;
   
 
         /**
@@ -134,6 +135,7 @@ namespace MadScienceLab
 
             // Create and return bounding box
             Vector3 size = max - min;
+            this.size = size;
             if (isRotated)
             {
                 HitboxWidth = (int)size.Z;

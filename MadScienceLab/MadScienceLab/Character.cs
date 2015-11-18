@@ -51,6 +51,8 @@ namespace MadScienceLab
         private TimeSpan timeHit = TimeSpan.Zero;
         private bool damageable = true;
 
+       
+
         // Health Support
         private int health;
         public void TakeDamage(int damage, GameTime gametime)
@@ -58,14 +60,22 @@ namespace MadScienceLab
             if (damageable) //if recently taken damage, don't take damage again
             {
                 timeHit = gametime.TotalGameTime; //get time when hit
-                health -= damage;
+            health -= damage;
                 damageable = false;
-                soundEffects.PlaySound("PlayerHit");
-            }
+            soundEffects.PlaySound("PlayerHit");
+        }
         }
         public int GetHealth()
         {
             return health;
+        }
+
+        private bool mapEnabled = false;
+        // Debug map, can be used as a minimap - Steven
+        public bool MapEnabled 
+        {
+            get { return mapEnabled; }
+            set { mapEnabled = value; }
         }
 
         public Character(int startRow, int startCol):base(startRow, startCol)
@@ -82,7 +92,6 @@ namespace MadScienceLab
             base.LoadContent(contentManager);
             charModel.LoadContent(contentManager);
             charModel.PlayAnimation("Idle", true, 0f);
-
             UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, true);
             // Overriding the hitbox size, the new model will need to be the height of the cells, for now the vamp model height is overrided - Steven
             //base.HitboxWidth = 48;
@@ -103,6 +112,16 @@ namespace MadScienceLab
         
         public override void Update(RenderContext renderContext)
         {
+            //List<CellObject> returnObjs = new List<CellObject>();
+
+            //renderContext.Quadtree.clear();
+            //foreach (CellObject obj in renderContext.Level.collidableObjects)
+            //{
+            //    renderContext.Quadtree.insert(obj);
+            //}
+
+            //renderContext.Quadtree.retrieve(returnObjs, base.Hitbox);
+
             if (health <= 0)
             {
                 renderContext.Level.GameOver = true;
@@ -120,11 +139,22 @@ namespace MadScienceLab
             charModel.Update(renderContext);
             UpdatePhysics();
            
+            // Quad tree collision
+            //foreach (CellObject worldObject in returnObjs)
+            //{
+            //    if (interactState == InteractState.CompletedPickup) // Start checking for collisions for the box being carried - Steven
+            //    {
+            //        CheckBoxCarryCollision(renderContext, worldObject);
+            //    }
+            //    CheckPlayerBoxCollision(renderContext, worldObject);
+            //}
+
             if (interactState == InteractState.CompletedPickup) // Start checking for collisions for the box being carried - Steven
             {
                 CheckBoxCarryCollision(renderContext);
             }
-            CheckPlayerBoxCollision ( renderContext );
+            CheckPlayerBoxCollision(renderContext);   
+
 
             HandleInput();
             if (TransVelocity.Y >= 0)
@@ -142,7 +172,6 @@ namespace MadScienceLab
             //Code used to update any actions occurring with PickBox and PutBox.
             UpdatePickBox ();
             UpdatePutBox (renderContext);
-
             //update sound
             soundEffects.Update(renderContext);
             base.Update(renderContext);
@@ -198,6 +227,11 @@ namespace MadScienceLab
                 Stop();
             }
 
+
+            if (currentKeyboardState.IsKeyDown(Keys.M) && oldKeyboardState.IsKeyUp(Keys.M))
+            {
+                MapEnabled = !MapEnabled;
+            }
             oldKeyboardState = currentKeyboardState;
             oldGamePadState = currentGamePadState;
         }
@@ -307,17 +341,19 @@ namespace MadScienceLab
                     //check if there is area above the player to pick up the box
                     Rectangle areaTop = new Rectangle ( (int)Position.X, CharacterHitbox.Bottom + 1, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height) );
                     bool pickuppable = true;
-                    foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
-                    {
-                        if (levelObject.isCollidable && areaTop.Intersects ( levelObject.Hitbox ))
-                        {
-                            pickuppable = false;
-                        }
-                        /*
-                         +		The hitboxes (rectangles) are actually upside down - 'bot' is actually the top, 'top' is the bottom,
-                         *      height increases upwards.
-                         */
-                    }
+
+                    // to pick up boxes from under the other this has been commented out
+                    //foreach (CellObject levelObject in GameplayScreen.CurrentLevel.Children) //check to see if it has collision with anything
+                    //{
+                    //    if (levelObject.isCollidable && areaTop.Intersects ( levelObject.Hitbox ))
+                    //    {
+                    //        pickuppable = false;
+                    //    }
+                    //    /*
+                    //     +		The hitboxes (rectangles) are actually upside down - 'bot' is actually the top, 'top' is the bottom,
+                    //     *      height increases upwards.
+                    //     */
+                    //}
                     if (jumping) //disallow putting down when jumping
                         pickuppable = false;
                     if (pickuppable) {
@@ -553,11 +589,12 @@ namespace MadScienceLab
             foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
                 if (levelObject.GetType() == typeof(MovingPlatform)) //default moving platforms for player to not be on the platform unless it would be found that the player were on it
-                {
+            {
                     ((MovingPlatform)levelObject).PlayerOnPlatform = false;
                 }
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
+                    //renderContext.Boxhit = levelObject.Hitbox;
                     //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
                     if (levelObject.GetType() == typeof(ExitBlock))
                     {
@@ -608,6 +645,10 @@ namespace MadScienceLab
                                     ((MovingPlatform)levelObject).PlayerOnPlatform = true;
                                 }
                                 Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+                                if (levelObject.Hitbox.Y > -25)
+                                    Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom, 0);
+                                else
+                                    Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
                                 if (!collisionJumping)
                                     TransVelocity = Vector3.Zero;
                                 jumping = false;

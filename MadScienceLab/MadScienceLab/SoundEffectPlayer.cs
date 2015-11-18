@@ -9,6 +9,8 @@ namespace MadScienceLab
 {
     class SoundEffectPlayer
     {
+        private static float volume = 0.5f;
+
         private const int distanceScale = GameConstants.SINGLE_CELL_SIZE;
         private CellObject emitterTarget; //what makes the sound
         private Dictionary<String, SoundEffect> soundReferences = new Dictionary<string,SoundEffect>(); //stores the actual sound effect reference
@@ -43,6 +45,7 @@ namespace MadScienceLab
             {
                 SoundInstances[name].Dispose();
                 SoundInstances[name] = soundReferences[name].CreateInstance();
+                SoundInstances[name].Volume = volume;
                 SoundInstances[name].Apply3D(listener, emitter);
                 SoundInstances[name].Play();
             }
@@ -55,6 +58,7 @@ namespace MadScienceLab
             {
                 SoundInstances[name].IsLooped = true;
                 loopedSounds.Add(SoundInstances[name]);
+                SoundInstances[name].Volume = volume;
                 SoundInstances[name].Apply3D(listener, emitter);
                 SoundInstances[name].Play();
             }
