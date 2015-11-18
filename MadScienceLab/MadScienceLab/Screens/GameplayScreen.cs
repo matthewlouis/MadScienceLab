@@ -411,7 +411,7 @@ namespace MadScienceLab
                 qtbox.X += 400;
                 qtbox.Y += 500;
                 spriteBatch.Draw(dummyTexture, qtbox, Color.Brown * 0.8f);
-                Console.WriteLine(qtbox.ToString());
+                //Console.WriteLine(qtbox.ToString());
                 if (_renderContext.QuadtreeDebug != null)
                 foreach (CellObject qBox in _renderContext.QuadtreeDebug)
                 {
@@ -446,7 +446,7 @@ namespace MadScienceLab
                 //}
                     spriteBatch.End();
             }
-            Console.WriteLine(_renderContext.Player.Position.ToString());
+            //Console.WriteLine(_renderContext.Player.Position.ToString());
             //fpsCount.Draw(gameTime);
             fpsCount.Draw(gameTime);
             _timer.Draw(_renderContext.GameTime);
