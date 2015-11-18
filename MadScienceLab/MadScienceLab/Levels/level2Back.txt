@@ -3,14 +3,15 @@ X                  X
 X              XXXXX
 X              D  @X 
 XL T           XXXXX
-XXXX       M       X
-X           XX     X
-X        B   XXDDDDX
-XLT S    XX        X
+XXXX       MX      X
+X        B  XX     X
+X        XX  XXDDDDX
+XLT S              X
 XXXXXX       B  XXXX
-X    XX      B XXXXX
-X          M DDXXXXX
-X     M        X  X
-X           M  D  X
-X P X      LX  D SX
-XXXXXXXXXXXXXXXXXXX
+X    XX  M   B XXXXX
+X          M RRXXXXX
+X              X  XX
+X       M      X  XX
+X   m  M       D  XX
+X P X      LXE DmSXX
+XXXXXXXXXXXXXXXXXXXX
