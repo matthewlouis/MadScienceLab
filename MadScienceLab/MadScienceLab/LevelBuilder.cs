@@ -120,7 +120,6 @@ namespace MadScienceLab
                         break;
                     case 'L':
                        level.AddChild(new LaserTurret(col++, row, true, GameConstants.POINTDIR.pointLeft)); 
-                       level.AddChild(new LaserTurret(col++, row, true, GameConstants.DIRECTION.pointLeft)); 
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);                      
                         break;
                     case 'd':
@@ -133,10 +132,12 @@ namespace MadScienceLab
                         _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'r':
-                        level.AddChild ( new BasicBlock ( col++, row ) );
+                        level.AddChild ( new Trapdoor ( col++, row, true ) );
+                        _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'R':
-                        level.AddChild ( new BasicBlock ( col++, row ) );
+                        level.AddChild(new Trapdoor(col++, row, false));
+                        _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'P':
                         level.PlayerPoint = new Point (col++, row); //set player position
@@ -237,12 +238,6 @@ namespace MadScienceLab
                         else if (Settings[0] == "D")
                         {
                             movingPlatform.movingDirection = GameConstants.DIRECTION.Down;
-                            movingPlatform.movingLeft = true;
-                        }
-                        else
-                            if (Settings[0] == "R")
-                        {
-                            movingPlatform.movingLeft = false;
                         }
                         movingPlatform.maxDistance = Int32.Parse(Settings[1]) * GameConstants.SINGLE_CELL_SIZE;
                     }
@@ -254,13 +249,11 @@ namespace MadScienceLab
                         if (ObjectAndSettings[1] == "L")
                         {
                             laserTurret.direction = GameConstants.POINTDIR.pointLeft;
-                            laserTurret.direction = GameConstants.DIRECTION.pointLeft;
                         }
                         else
                             if (ObjectAndSettings[1] == "R")
                             {
                                 laserTurret.direction = GameConstants.POINTDIR.pointRight;
-                                laserTurret.direction = GameConstants.DIRECTION.pointRight;
                             }
                     }
 

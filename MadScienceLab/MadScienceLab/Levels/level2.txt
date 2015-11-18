@@ -3,34 +3,21 @@ X                  X
 X              XXXXX
 X              D  @X 
 XL T           XXXXX
-<<<<<<< HEAD
 XXXX       MX      X
 X        B  XX     X
 X        XX  XXDDDDX
 XLT S              X
 XXXXXX       B  XXXX
 X    XX  M   B XXXXX
-X          M DDXXXXX
-X              X  X
-X       M      X  X
-X      M       D  X
-=======
-XXXX       M       X
-X           XX     X
-X        B   XXDDDDX
-XLT S    XX        X
-XXXXXX       B  XXXX
-X    XX      B XXXXX
-X          M DDXXXXX
-X     M        X  X
-X           M  D  X
->>>>>>> refs/remotes/origin/master
-X P X   E  LX  D SX
-XXXXXXXXXXXXXXXXXXX
+X          M RRXXXXX
+X              X  XX
+X       M      X  XX
+X   m  M       D  XX
+X P X      LXE DmSXX
+XXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-<<<<<<< HEAD
 3:8|L,4
 4:9|U,2
 7:10|D,2
@@ -42,15 +29,5 @@ Above is level, below are links.
 13:4|14:16
 9:2|R
 13:2|R
-=======
-3:13|L,7
-4:7|R,6
-5:12|L,4
-8:3|5:14&5:15
-8:5|2:16&3:16
-2:18|9:16&9:17&9:18&9:19
-11:12|L,6
-12:4|13:16
-8:2|R
-12:2|R
->>>>>>> refs/remotes/origin/master
+3:5|Welcome to level 2
+2:17|You accessed this area!

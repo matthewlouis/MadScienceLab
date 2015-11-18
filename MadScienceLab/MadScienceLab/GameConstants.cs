@@ -29,8 +29,6 @@ namespace MadScienceLab
 
         // platform/enemy
         public enum DIRECTION { Left = 1, Down = 2, Up = 3, Right = 4 }
-        public enum DIRECTION { pointLeft = -1, pointRight = 1 }
-        public const int PROJECTILE_X_VELOCITY = 10;
 
         // physics
 

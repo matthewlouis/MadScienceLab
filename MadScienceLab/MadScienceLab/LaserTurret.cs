@@ -12,7 +12,6 @@ namespace MadScienceLab
     {
         bool turretOn;
         public GameConstants.POINTDIR direction {
-        public GameConstants.DIRECTION direction {
             get {
                 return _direction;
             }
@@ -22,16 +21,11 @@ namespace MadScienceLab
                     RotateLeft ();
                 }
                 else if (value == GameConstants.POINTDIR.pointRight) {
-                if (value == GameConstants.DIRECTION.pointLeft) {
-                    RotateLeft ();
-                }
-                else if (value == GameConstants.DIRECTION.pointRight) {
                     RotateRight ();
                 }
             }
         }
         private GameConstants.POINTDIR _direction;
-        private GameConstants.DIRECTION _direction;
         int elapsedFireTime = 0;
         int firingDelay = 3000;
 
@@ -44,7 +38,6 @@ namespace MadScienceLab
         }
 
         public LaserTurret(int column, int row, bool turretOn, GameConstants.POINTDIR direction):base(column, row)
-        public LaserTurret(int column, int row, bool turretOn, GameConstants.DIRECTION direction):base(column, row)
         {
             // Load and position,rotate model based on level builder direction
             base.Model = GameplayScreen._models["Turret"];

@@ -17,7 +17,6 @@ namespace MadScienceLab
 {
     class MovingPlatform : CellObject
     {
-<<<<<<< HEAD
         const GameConstants.DIRECTION //making shorthand for each direction
             LEFT = GameConstants.DIRECTION.Left, 
             RIGHT = GameConstants.DIRECTION.Right, 
@@ -27,14 +26,6 @@ namespace MadScienceLab
         public float maxDistance {get; set;}
         float currDistance = 0;
         public GameConstants.DIRECTION facingDirection, movingDirection;
-=======
-        const int FACING_LEFT = 1, FACING_RIGHT = 2, FACING_BOTTOM = 3, FACING_TOP = 4;
-        byte facingDirection = FACING_RIGHT;
-
-        public float maxDistance {get; set;}
-        float currDistance = 0;
-        public bool movingLeft = false;
->>>>>>> refs/remotes/origin/master
         public bool PlayerOnPlatform = false;
 
 
@@ -44,11 +35,8 @@ namespace MadScienceLab
             base.Model = GameplayScreen._models["BasicBlock"];
             base.isCollidable = true;
             maxDistance = 2 * GameConstants.SINGLE_CELL_SIZE; //default distance
-<<<<<<< HEAD
             this.facingDirection = RIGHT;
             this.movingDirection = RIGHT; //default direction
-=======
->>>>>>> refs/remotes/origin/master
 
             // Provides a hitbox for the block - Steven
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
@@ -59,7 +47,6 @@ namespace MadScienceLab
             CheckEnemyBoxCollision(renderContext);
             if (currDistance > maxDistance)
             {
-<<<<<<< HEAD
                 //reverse direction if exceeding distance
                 if (movingDirection == LEFT)
                 {
@@ -77,15 +64,11 @@ namespace MadScienceLab
                 {
                     movingDirection = UP;
                 }
-=======
-                movingLeft = !movingLeft;
->>>>>>> refs/remotes/origin/master
                 currDistance = 0;
             }
             base.Update(renderContext);
         }
 
-<<<<<<< HEAD
         public void Move(RenderContext renderContext, GameConstants.DIRECTION moveDir, float movementAmount)
         {
             facingDirection = moveDir;
@@ -103,40 +86,13 @@ namespace MadScienceLab
             else// if (moveDir == DOWN)
                 PositionChange = new Vector3(0, -movementAmount, 0);
             newPosition = Position + PositionChange;
-=======
-        public void MoveLeft(RenderContext renderContext, float movementAmount)
-        {
-            facingDirection = FACING_LEFT;
-            Rotate(0f, -90f, 0f);
-            Vector3 newPosition = Position + new Vector3(-movementAmount, 0, 0);
->>>>>>> refs/remotes/origin/master
             currDistance += movementAmount;
             Translate(newPosition);
 
             //if player is on the platform, move the player just as much as the platform does
             if (PlayerOnPlatform)
             {
-<<<<<<< HEAD
                 Vector3 newPlayerPosition = renderContext.Player.Position + PositionChange;
-=======
-                Vector3 newPlayerPosition = renderContext.Player.Position + new Vector3(-movementAmount, 0, 0);
-                renderContext.Player.Translate(newPlayerPosition);
-            }
-        }
-
-        public void MoveRight(RenderContext renderContext, float movementAmount)
-        {
-            facingDirection = FACING_RIGHT;
-            Rotate(0f, 90f, 0f);
-            Vector3 newPosition = Position + new Vector3(movementAmount, 0, 0);
-            currDistance += movementAmount;
-            Translate(newPosition);
-
-            //if player is on the platform, move the player just as much as the platform does
-            if (PlayerOnPlatform)
-            {
-                Vector3 newPlayerPosition = renderContext.Player.Position + new Vector3(movementAmount, 0, 0);
->>>>>>> refs/remotes/origin/master
                 renderContext.Player.Translate(newPlayerPosition);
             }
         }
@@ -154,35 +110,17 @@ namespace MadScienceLab
                     float hx = (Hitbox.Height + levelObject.Hitbox.Height)
                              * (((levelObject.Hitbox.X + levelObject.Hitbox.Width) / 2) - (Hitbox.X + Hitbox.Width) / 2);
 
-<<<<<<< HEAD
                     Move(renderContext, movingDirection, GameConstants.MOVEAMOUNT); //Move box in the respective direction
 
                     /*if (wy > hx)
                     {
                         //boxHitState = "Box Left";// left
                         movingDirection = RIGHT;
-=======
-                    if (movingLeft)
-                    {
-                        MoveLeft(renderContext, GameConstants.MOVEAMOUNT);
-
-                    }
-                    else
-                    {
-                        MoveRight(renderContext, GameConstants.MOVEAMOUNT);
-                    }
-
-                    if (wy > hx)
-                    {
-                        //boxHitState = "Box Left";// left
-                        movingLeft = false;
->>>>>>> refs/remotes/origin/master
                         currDistance = 0;
                     }
                     if (wy > -hx)
                     {
                         //boxHitState = "Box Right";// right
-<<<<<<< HEAD
                         movingDirection = LEFT;
                         currDistance = 0;
                     }*/
@@ -214,12 +152,6 @@ namespace MadScienceLab
                             currDistance = 0;
                         }
                     }
-                    
-=======
-                        movingLeft = true;
-                        currDistance = 0;
-                    }
->>>>>>> refs/remotes/origin/master
 
 
 

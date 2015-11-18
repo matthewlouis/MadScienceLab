@@ -14,10 +14,6 @@ namespace MadScienceLab
         SoundEffectPlayer soundEffects;
         
         public LaserProjectile(int column, int row, GameConstants.POINTDIR direction):base(column, row)
-        GameConstants.DIRECTION direction;
-        SoundEffectPlayer soundEffects;
-        
-        public LaserProjectile(int column, int row, GameConstants.DIRECTION direction):base(column, row)
         {
             base.Model = GameplayScreen._models["projectile"];
             //Rotate(0f, 0f, 90f);
@@ -73,14 +69,14 @@ namespace MadScienceLab
 
         public void SetDirection()
         {
-            if (direction == GameConstants.DIRECTION.pointLeft)
+            if (direction == GameConstants.POINTDIR.pointLeft)
             {
                 //SetHorizontalOffset(30);
                 Position += new Vector3(-30,0,0);
                 base.TransVelocity = new Vector3(-GameConstants.PROJECTILE_X_VELOCITY,0f,0f);
             }
             else
-                if (direction == GameConstants.DIRECTION.pointRight)
+                if (direction == GameConstants.POINTDIR.pointRight)
                 {
                     //SetHorizontalOffset(-30);
                     Position += new Vector3(30, 0, 0);
