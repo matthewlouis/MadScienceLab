@@ -9,7 +9,9 @@ namespace MadScienceLab
 {
     class SoundEffectPlayer
     {
-        private static float volume = 0.5f;
+        private static float masterSetVolume = 0.5f;
+        private static float masterVolume = masterSetVolume;
+        private static bool masterMuted = false;
 
         private const int distanceScale = GameConstants.SINGLE_CELL_SIZE;
         private CellObject emitterTarget; //what makes the sound
@@ -45,7 +47,7 @@ namespace MadScienceLab
             {
                 SoundInstances[name].Dispose();
                 SoundInstances[name] = soundReferences[name].CreateInstance();
-                SoundInstances[name].Volume = volume;
+                SoundInstances[name].Volume = masterVolume;
                 SoundInstances[name].Apply3D(listener, emitter);
                 SoundInstances[name].Play();
             }
@@ -58,7 +60,7 @@ namespace MadScienceLab
             {
                 SoundInstances[name].IsLooped = true;
                 loopedSounds.Add(SoundInstances[name]);
-                SoundInstances[name].Volume = volume;
+                SoundInstances[name].Volume = masterVolume;
                 SoundInstances[name].Apply3D(listener, emitter);
                 SoundInstances[name].Play();
             }
@@ -76,6 +78,19 @@ namespace MadScienceLab
                 {
                     soundFXInstance.Apply3D(listener, emitter);
                 }
+            }
+        }
+
+        public static void Mute()
+        {
+            masterMuted = !masterMuted;
+            if (masterMuted)
+            {
+                masterVolume = 0;
+            }
+            else
+            {
+                masterVolume = masterSetVolume;
             }
         }
     }
