@@ -119,6 +119,7 @@ namespace MadScienceLab
                         level.AddChild ( new BasicBlock ( col++, row ) );
                         break;
                     case 'L':
+                       level.AddChild(new LaserTurret(col++, row, true, GameConstants.POINTDIR.pointLeft)); 
                        level.AddChild(new LaserTurret(col++, row, true, GameConstants.DIRECTION.pointLeft)); 
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);                      
                         break;
@@ -223,6 +224,19 @@ namespace MadScienceLab
                         MovingPlatform movingPlatform = (MovingPlatform)level.Children[index];
                         //set initial direction of moving platform
                         if(Settings[0] == "L") {
+                            movingPlatform.movingDirection = GameConstants.DIRECTION.Left;
+                        }
+                        else if (Settings[0] == "R")
+                        {
+                            movingPlatform.movingDirection = GameConstants.DIRECTION.Right;
+                        }
+                        else if (Settings[0] == "U")
+                        {
+                            movingPlatform.movingDirection = GameConstants.DIRECTION.Up;
+                        }
+                        else if (Settings[0] == "D")
+                        {
+                            movingPlatform.movingDirection = GameConstants.DIRECTION.Down;
                             movingPlatform.movingLeft = true;
                         }
                         else
@@ -239,11 +253,13 @@ namespace MadScienceLab
                         //set initial direction of moving platform
                         if (ObjectAndSettings[1] == "L")
                         {
+                            laserTurret.direction = GameConstants.POINTDIR.pointLeft;
                             laserTurret.direction = GameConstants.DIRECTION.pointLeft;
                         }
                         else
                             if (ObjectAndSettings[1] == "R")
                             {
+                                laserTurret.direction = GameConstants.POINTDIR.pointRight;
                                 laserTurret.direction = GameConstants.DIRECTION.pointRight;
                             }
                     }
