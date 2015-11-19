@@ -1,25 +1,56 @@
-﻿XXXXXXXXXXXX1XXXXXXXXXXXXXXXX
-X                           X
-X             L             X
-X      T  XXXXXXX2XXXXXXXXXXX
-X      X                 X  X
-X       X                X  X
-XXXXXXXXXXX     S  S   t X  X
-Xt           XXXXXXXXXXXXX  X
-XXX3 M       D  D  D     D @X
-XT        XXXXXXXXXXXX   XXXX
-XX       @XXX           XXXXX
-XX P  t  BXXXT         XXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+﻿X         X               X
+X         X               X
+X         X               X
+X         X               X
+X         X               X
+X         X               X
+X   B     X   1           X
+XS  B     X               X
+XXXXX  B  X         @     X
+X     XX  X    XXXXXXXXXXXX
+X L   X   X    Xt         X
+X X   X   X  MXXX  M      X
+XL    X   XM   X   X      X
+XX    X   XXRRXX B        X
+X     X  TXRRRRX SS     L X
+X L   X  XX    XRXX     X X
+X X   XT  XRRRRXS         X
+XL    XX  X   MXXX       LX
+XX           X       S   XX
+X   XR     M        RX    X
+X E XM     P     T  MX E  X
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Above is level, below are links.
+Want it so that:
+1. bringing 1/3 boxes to middle, the other boxes occupied in order to bring the box to the middle
+	(though, this box would have to not require a middle ground box)
+2. this leading to not having to have both the other boxes occupied in order to ascend, so can bring another box to middle ground
+If I can make walking up but not bringing up a box require a middle ground box ... then could just use 3 boxes.
+So, if having a surplus of boxes, ...what could I do with it ...
+Maybe make the UR box then have to be used for the DR switch after being available
+	-ie. require a switch in side
+		-how?
+-Or, make the box used for another set of trapdoors. Done.
+3. 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-7:20|5:17
-2:14|5:26
-7:17|5:14
-2:7|5:4
-4:2|5:20
-7:24|10:18
-6:2|10:18
-10:8|13:13
-5:6|R,4
+8:10|8:12&8:13|Coordinates of UL trapdoors-lever
+6:8|6:12&6:13
+6:17|6:14&6:15
+8:19|8:14&8:15|end trapdoor coords
+8:18|9:13&9:14|Topmost trapdoor
+4:22|7:17|Internal trapdoor ...
+5:2|R|Laser turrets to be right
+7:3|R,1500
+10:2|R
+12:3|R,1500
+5:26|L,1500|laser turret facing left with new offset
+2:18|3:6|Moving platform blocker trapdoor
+15:2|3:21|PlatformBlocker#2
+12:17|16:15|boxdropper switch
+2:6|U,13|start of moving platforms - along the sides
+2:21|U,8
+11:20|L,2
+3:12|R,3|center moving platforms
+5:15|L,3
+10:12|R,3
+11:14|L,2
