@@ -103,7 +103,8 @@ namespace MadScienceLab
         public GameplayScreen(int levelNum)
         {
             this.levelNum = levelNum;
-
+            // Sets level data to level and sets level par time from file.
+            levelData = new GameData.LevelData(levelNum, TimeSpan.Zero);
 
             // transition time used for screen transitions
             TransitionOnTime = TimeSpan.FromSeconds(1);
@@ -177,7 +178,7 @@ namespace MadScienceLab
                 _textures.Add("DirtyMetal", content.Load<Texture2D>("Textures/DirtyMetal"));
                 _textures.Add("Fiberglass_White", content.Load<Texture2D>("Textures/Fiberglass_White"));
                 _textures.Add("MetalFloor_Gray", content.Load<Texture2D>("Textures/MetalFloor_Gray"));
-                _textures.Add("Tile_Beige", content.Load<Texture2D>("Textures/Tile_Beige_Half"));
+                _textures.Add("Tile_Beige", content.Load<Texture2D>("Textures/Tile_Beige"));
                 _textures.Add("Tile_Blue", content.Load<Texture2D>("Textures/Tile_Blue"));
                 _textures.Add("Tile_DarkGray", content.Load<Texture2D>("Textures/Tile_DarkGray"));
                 _textures.Add("Tile_Gray", content.Load<Texture2D>("Textures/Tile_Gray"));
@@ -202,7 +203,7 @@ namespace MadScienceLab
                 _sounds.Add("ToggleSwitch", content.Load<SoundEffect>("Sounds/ToggleSwitch"));
 
                 //loads the basic level
-                basicLevel = LevelBuilder.MakeBasicLevel(levelNum);
+                basicLevel = LevelBuilder.MakeBasicLevel(levelData.currentlevelNum);
                 basicLevel.setBackgroundBuffer(_renderContext); //Matt: need to do this now to draw background properly
 
                 CurrentLevel = basicLevel; //we can handle this through render context eventually.
@@ -228,10 +229,6 @@ namespace MadScienceLab
 
                 _timer = new GameTimer(_renderContext);
                 _renderContext.GameTimer = _timer;
-
-
-                // Sets level data to level and sets level par time from file.
-                levelData = new GameData.LevelData(levelNum, TimeSpan.Zero);
 
                 //load fps count content
                 fpsCount.LoadContent(content);
@@ -284,7 +281,7 @@ namespace MadScienceLab
                                                        bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
-            
+
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
                 pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
@@ -429,7 +426,7 @@ namespace MadScienceLab
                 qtbox.X += 400;
                 qtbox.Y += 500;
                 spriteBatch.Draw(dummyTexture, qtbox, Color.Brown * 0.8f);
-                Console.WriteLine(qtbox.ToString());
+                //Console.WriteLine(qtbox.ToString());
                 if (_renderContext.QuadtreeDebug != null)
                 foreach (CellObject qBox in _renderContext.QuadtreeDebug)
                 {
@@ -464,6 +461,7 @@ namespace MadScienceLab
                 //}
                     spriteBatch.End();
             }
+            //Console.WriteLine(_renderContext.Player.Position.ToString());
             //fpsCount.Draw(gameTime);
             fpsCount.Draw(gameTime);
             _timer.Draw(_renderContext.GameTime);
@@ -506,7 +504,7 @@ namespace MadScienceLab
             PlayerIndex player;
             if (pauseAction.Evaluate(input, ControllingPlayer, out player) || gamePadDisconnected)
             {
-                ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+                ScreenManager.AddScreen(new PauseMenuScreen(levelData.currentlevelNum), ControllingPlayer);
             }
 
         }

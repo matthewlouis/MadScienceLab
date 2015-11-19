@@ -218,3 +218,4 @@ pip-log.txt
 .svn
 MadScienceLab/MadScienceLab/BoxDropper.cs
 MadScienceLab/MadScienceLab/BoxDropper.cs
+*.DS_Store
