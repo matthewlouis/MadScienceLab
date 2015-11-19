@@ -43,7 +43,7 @@ namespace MadScienceLab
 
         // Sonar fire handling
         int elapsedFireTime = 0;
-        int firingDelay = 100;
+        int firingDelay = 400;
 
         public Enemy(int column, int row)
             : base(column, row)

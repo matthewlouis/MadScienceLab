@@ -22,16 +22,16 @@ namespace MadScienceLab
 
             this.sourceEnemy = sourceEnemy;
 
-            base.Model = GameplayScreen._models["projectile"];
+            //base.Model = GameplayScreen._models["projectile"];
 
             // hitbox for collision
-            UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
+            //UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
             SetVerticalOffset(-20);
             SetDirection();
-            base.HitboxHeight = 10;
-            //base.HitboxWidth = 24;
+            base.HitboxHeight = 40;
+            base.HitboxWidth = 48;
             //base.HitboxWidthOffset = 48;
-            base.HitboxHeightOffset = 48;
+            base.HitboxHeightOffset = 20;
 
         }
 
@@ -77,14 +77,14 @@ namespace MadScienceLab
             {
                 //SetVerticalOffset(-30);
                 //Position += new Vector3(0, 0, 0);
-                base.TransVelocity = new Vector3(-GameConstants.PROJECTILE_X_VELOCITY, 0f, 0f);
+                base.TransVelocity = new Vector3(-2, 0f, 0f);
             }
             else
                 if (direction == GameConstants.POINTDIR.pointRight)
             {
                 //SetVerticalOffset(-30);
                 //Position += new Vector3(0, 0, 0);
-                base.TransVelocity = new Vector3(GameConstants.PROJECTILE_X_VELOCITY, 0f, 0f);
+                base.TransVelocity = new Vector3(2, 0f, 0f);
             }
             else
                 TransVelocity = new Vector3(0);
