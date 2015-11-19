@@ -4,11 +4,11 @@ X         X               X
 X         X               X
 X         X               X
 X         X               X
-X   B     X   1           X
-XS  B     X               X
-XXXXX  B  X    XXXXXXXXXXXX
+X   B     X   1      @    X
+XS  B     X      XXXXXXXXXX
+XXXXX  B  X     X         X
 X     XX  X    Xt         X
-X L   X   X   XXX  M      X
+X L   X   X    XX  M      X
 X X   X   X  MXX   X      X
 XL    X   XM   X          X
 XX    X   XXRRXX B        X
