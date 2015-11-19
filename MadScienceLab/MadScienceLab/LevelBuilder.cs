@@ -164,6 +164,10 @@ namespace MadScienceLab
 
             level.collidableObjects = new List<GameObject3D>();
             level.collidableObjects.AddRange(level.Children); // All objects that will be colliding with the player in the same Z axis - Steven
+            level.Position = new Vector3(-185, -350, 0);
+            level.HitboxWidth = levelwidth * 48;
+            level.HitboxHeight = -levelheight * 48 * 2;
+
             // Interates through the link text to find objects, and: 
             // -their links to other objects (eg. doors, boxdroppers)
             // and/or

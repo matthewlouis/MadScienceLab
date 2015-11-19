@@ -32,7 +32,7 @@ namespace MadScienceLab
     class GameplayScreen : GameScreen
     {
         #region Fields
-        Rectangle quadRect = new Rectangle(-200, 280, 1600, -720);
+        Rectangle quadRect;
         public static Level CurrentLevel { get; private set; }
 
         SpriteBatch spriteBatch;
@@ -129,8 +129,6 @@ namespace MadScienceLab
             random = new Random();
             //init fps counter
             fpsCount = new FPSCounter(_renderContext);
-            Quadtree _quadtree = new Quadtree(0, quadRect);
-            _renderContext.Quadtree = _quadtree;
         }
 
 
@@ -237,6 +235,11 @@ namespace MadScienceLab
                 levelMusic = content.Load<SoundEffect>("Songs/MusicInGameLoop");
                 MusicPlayer.SetVolume(1f);
                 MusicPlayer.PlaySong(levelMusic);
+
+                Console.WriteLine(_renderContext.Level.Hitbox);
+
+                Quadtree _quadtree = new Quadtree(0, _renderContext.Level.Hitbox);
+                _renderContext.Quadtree = _quadtree;
                 
                 // if game takes long to load. Simulate load by delaying for a
                 // while, giving you a chance to admire the beautiful loading screen.
@@ -281,6 +284,8 @@ namespace MadScienceLab
                                                        bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
+            Console.WriteLine(_renderContext.Player.Position);
+
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
@@ -440,6 +445,17 @@ namespace MadScienceLab
                     spriteBatch.Draw(dummyTexture, box, Color.Black * 0.8f);
                     
                 }
+
+                Rectangle lbox = _renderContext.Level.Hitbox;
+                lbox.X /= 2;
+                lbox.Y /= 2;
+                lbox.Width /= 2;
+                lbox.Height /= 2;
+                lbox.X += 400;
+                lbox.Y += 500;
+                spriteBatch.Draw(dummyTexture, lbox, Color.Black * 0.8f);
+
+
                 int i = 0;
                 //foreach (Rectangle box in _renderContext.BoxesHit)
                 //{
