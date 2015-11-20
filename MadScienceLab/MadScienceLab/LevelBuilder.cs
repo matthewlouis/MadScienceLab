@@ -133,10 +133,12 @@ namespace MadScienceLab
                         break;
                     case 'r':
                         level.AddChild ( new Trapdoor ( col++, row, true ) );
+                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'R':
                         level.AddChild(new Trapdoor(col++, row, false));
+                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);   
                         _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'P':
@@ -269,6 +271,16 @@ namespace MadScienceLab
                     {
                         MessageEvent messageEvent = (MessageEvent)level.Children[index];
                         messageEvent.Message = ObjectAndSettings[1];
+                    }
+                    
+                    //Trapdoor
+                    if (level.Children[index].GetType () == typeof ( Trapdoor ))
+                    {
+                        Trapdoor trapDoor = (Trapdoor)level.Children[index];
+
+                        //Update trapdoors to face the bottom instead
+                        if (ObjectAndSettings[1] == "B")
+                            trapDoor.faceBottom();
                     }
                 }
             }
