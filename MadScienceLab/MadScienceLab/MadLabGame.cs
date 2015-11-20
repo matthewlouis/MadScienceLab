@@ -121,7 +121,6 @@ namespace MadScienceLab
 
             // temp go to game screen
             //screenManager.AddScreen(new GameplayScreen(), null);
-
         }
         
 
