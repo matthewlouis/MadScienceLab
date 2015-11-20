@@ -320,7 +320,8 @@ namespace MadScienceLab
                 // Check to see if the level is complete or player died game over. Pass level data to levelCompleteScreen
                 if (_renderContext.Level.LevelOver)
                 {
-                    levelData.time = _timer.ElapsedTime.ToString();
+                    levelData.time = _timer.ElapsedTime.ToString ();
+                    levelData.remainingHealth = _renderContext.Player.GetHealth();
                     LoadingScreen.Load(ScreenManager, false, null, new LevelCompleteBackgroundScreen(),
                                                                new LevelCompleteScreen(levelData));
                 }

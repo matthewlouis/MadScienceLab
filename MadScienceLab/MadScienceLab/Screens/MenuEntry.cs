@@ -29,7 +29,7 @@ namespace MadScienceLab
         /// <summary>
         /// The text rendered for this entry.
         /// </summary>
-        string text;
+        protected string text;
 
         /// <summary>
         /// Tracks a fading selection effect on the entry.
@@ -37,13 +37,13 @@ namespace MadScienceLab
         /// <remarks>
         /// The entries transition out of the selection effect when they are deselected.
         /// </remarks>
-        float selectionFade;
+        protected float selectionFade;
 
         /// <summary>
         /// The position at which the entry is drawn. This is set by the MenuScreen
         /// each frame in Update.
         /// </summary>
-        Vector2 position;
+        protected Vector2 position;
 
         #endregion
 
@@ -84,10 +84,10 @@ namespace MadScienceLab
         /// <summary>
         /// Method for raising the Selected event.
         /// </summary>
-        protected internal virtual void OnSelectEntry(PlayerIndex playerIndex)
+        protected internal virtual void OnSelectEntry ( PlayerIndex playerIndex )
         {
             if (Selected != null)
-                Selected(this, new PlayerIndexEventArgs(playerIndex));
+                Selected ( this, new PlayerIndexEventArgs ( playerIndex ) );
         }
 
 
@@ -99,7 +99,7 @@ namespace MadScienceLab
         /// <summary>
         /// Constructs a new menu entry with the specified text.
         /// </summary>
-        public MenuEntry(string text)
+        public MenuEntry ( string text )
         {
             this.text = text;
         }
@@ -113,7 +113,7 @@ namespace MadScienceLab
         /// <summary>
         /// Updates the menu entry.
         /// </summary>
-        public virtual void Update(MenuScreen screen, bool isSelected, GameTime gameTime)
+        public virtual void Update ( MenuScreen screen, bool isSelected, GameTime gameTime )
         {
             // there is no such thing as a selected item on Windows Phone, so we always
             // force isSelected to be false
@@ -127,16 +127,16 @@ namespace MadScienceLab
             float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
 
             if (isSelected)
-                selectionFade = Math.Min(selectionFade + fadeSpeed, 1);
+                selectionFade = Math.Min ( selectionFade + fadeSpeed, 1 );
             else
-                selectionFade = Math.Max(selectionFade - fadeSpeed, 0);
+                selectionFade = Math.Max ( selectionFade - fadeSpeed, 0 );
         }
 
 
         /// <summary>
         /// Draws the menu entry. This can be overridden to customize the appearance.
         /// </summary>
-        public virtual void Draw(MenuScreen screen, bool isSelected, GameTime gameTime)
+        public virtual void Draw ( MenuScreen screen, bool isSelected, GameTime gameTime )
         {
             // there is no such thing as a selected item on Windows Phone, so we always
             // force isSelected to be false
@@ -150,7 +150,7 @@ namespace MadScienceLab
             // Pulsate the size of the selected menu entry.
             double time = gameTime.TotalGameTime.TotalSeconds;
 
-            float pulsate = (float)Math.Sin(time * 6) + 1;
+            float pulsate = (float)Math.Sin ( time * 6 ) + 1;
 
             float scale = 1 + pulsate * 0.05f * selectionFade;
 
@@ -162,17 +162,17 @@ namespace MadScienceLab
             SpriteBatch spriteBatch = screenManager.SpriteBatch;
             SpriteFont font = screenManager.Font;
 
-            Vector2 origin = new Vector2(0, font.LineSpacing / 2);
+            Vector2 origin = new Vector2 ( 0, font.LineSpacing / 2 );
 
-            spriteBatch.DrawString(font, text, position, color, 0,
-                                   origin, scale, SpriteEffects.None, 0);
+            spriteBatch.DrawString ( font, text, position, color, 0,
+                                   origin, scale, SpriteEffects.None, 0 );
         }
 
 
         /// <summary>
         /// Queries how much space this menu entry requires.
         /// </summary>
-        public virtual int GetHeight(MenuScreen screen)
+        public virtual int GetHeight ( MenuScreen screen )
         {
             return screen.ScreenManager.Font.LineSpacing;
         }
@@ -181,9 +181,9 @@ namespace MadScienceLab
         /// <summary>
         /// Queries how wide the entry is, used for centering on the screen.
         /// </summary>
-        public virtual int GetWidth(MenuScreen screen)
+        public virtual int GetWidth ( MenuScreen screen )
         {
-            return (int)screen.ScreenManager.Font.MeasureString(Text).X;
+            return (int)screen.ScreenManager.Font.MeasureString ( Text ).X;
         }
 
 
