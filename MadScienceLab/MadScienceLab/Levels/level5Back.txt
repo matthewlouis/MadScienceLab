@@ -1,19 +1,4 @@
-<<<<<<< HEAD
-﻿XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-X                           X
-X                           X
-X                B  B       X
-X                        X  X
-X       X                X  X
-X               S  S   T X  X
-X            XXXXXXXXXXXXX  X
-X BBB        D TD  D     D  X
-XB        XXXXXXXXXXXX   XXXX
-X         XXX           XXXXX
-XP        XXXT         XXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXX	
-=======
-﻿X         X               X
+X         X               X
 X         X               X
 X         X               X
 X         X               X
@@ -21,11 +6,11 @@ X         X               X
 X         X               X
 X   B     X   1           X
 XS  B     X               X
-XXXXX  B  X         @     X
-X     XX  X    XXXXXXXXXXXX
-X L   X   X    Xt         X
-X X   X   X  MXXX  M      X
-XL    X   XM   X   X      X
+XXXXX  B  X    XXXXXXXXXXXX
+X     XX  X    Xt         X
+X L   X   X   XXX  M      X
+X X   X   X  MXX   X      X
+XL    X   XM   X          X
 XX    X   XXRRXX B        X
 X     X  TXRRRRX SS     L X
 X L   X  XX    XRXX     X X
@@ -35,4 +20,3 @@ XX           X       S   XX
 X   XR     M        RX    X
 X E XM     P     T  MX E  X
 XXXXXXXXXXXXXXXXXXXXXXXXXXX
->>>>>>> refs/remotes/origin/master
