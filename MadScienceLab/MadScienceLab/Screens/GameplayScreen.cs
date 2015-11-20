@@ -370,18 +370,69 @@ namespace MadScienceLab
             //spriteBatch.DrawString(font, "Player pos: " + player.Position.ToString(), new Vector2(50, 300), Color.Black);
             spriteBatch.End();
 
+            //Jacob: Added some tweaks to minimap positioning.
             if (player.MapEnabled)
             {
-                spriteBatch.Begin();
+                spriteBatch.Begin ();
+                Point MinimapSize = new Point ( 200, 200 ); //Can set size of minimap
+
+                const int TOP_RIGHT = 1, BOTTOM_RIGHT = 2;
+
+                //Jacob: Added a couple of customizations to the minimap. Can set it accordingly to positons of the screen.
+                int MinimapPosition = BOTTOM_RIGHT; //Can set position of minimap
+                int MinimapBorder = 5; //Can also set border thickness of minimap
+
+                //Draw border
+                switch (MinimapPosition) {
+                    case TOP_RIGHT:
+                    spriteBatch.Draw ( dummyTexture, new Rectangle ( GameConstants.X_RESOLUTION - (MinimapSize.X + MinimapBorder), 0, (MinimapSize.X + MinimapBorder), (MinimapSize.Y + MinimapBorder) ), Color.Black * 0.8f );
+                    spriteBatch.Draw ( dummyTexture, new Rectangle ( GameConstants.X_RESOLUTION - MinimapSize.X, 0, MinimapSize.X, MinimapSize.Y ), Color.LightGray * 0.8f );
+                    break;
+                    case BOTTOM_RIGHT:
+                    spriteBatch.Draw ( dummyTexture, new Rectangle ( GameConstants.X_RESOLUTION - (MinimapSize.X + MinimapBorder), GameConstants.Y_RESOLUTION - (MinimapSize.Y + MinimapBorder), (MinimapSize.X + MinimapBorder), (MinimapSize.Y + MinimapBorder) ), Color.Black * 0.8f );
+                    spriteBatch.Draw ( dummyTexture, new Rectangle ( GameConstants.X_RESOLUTION - MinimapSize.Y, GameConstants.Y_RESOLUTION - (MinimapSize.Y), MinimapSize.X, MinimapSize.Y ), Color.LightGray * 0.8f );
+                    break;
+                }
+
+                const int CELL = GameConstants.SINGLE_CELL_SIZE;
+                int xLeftWall = (GameConstants.SINGLE_CELL_SIZE * LevelBuilder.startWall) - (GameConstants.X_RESOLUTION / 2);
+                int xRightWall = (GameConstants.SINGLE_CELL_SIZE * (LevelBuilder.levelwidth - 1 + LevelBuilder.startWall)) - (GameConstants.X_RESOLUTION / 2); //x value derived from CellObject implementation, BaseCamera
+                int yCeilingBlock = CELL * ((LevelBuilder.startFloor + 1) + LevelBuilder.levelheight - 1) - (GameConstants.Y_RESOLUTION / 2); //not
+                int yFloor = (GameConstants.SINGLE_CELL_SIZE * (LevelBuilder.startFloor + 1)) - (GameConstants.Y_RESOLUTION / 2); //y value derived from CellObject implementation
+                int LevelXSize = xRightWall - xLeftWall + CELL;
+                int LevelYSize = yCeilingBlock - yFloor + CELL;
                 foreach (CellObject obj in basicLevel.collidableObjects)
                 {
+                    //Move minimap to the top right of the screen
+                    //convert yFloor position to the bottom of the screen, xRightWall to the right of the screen
+                    //everything a fraction of (yCeilingBlock - yFloor + 1 cell) and (xRightWall - xLeftWall + 1 cell)
+                    // so (converting level to minimap:) box X position = XRightScreen (ie. GameConstants.X_RESOLUTION) - (1 - fraction of that) * minimapSize.X
+                    // box Y position = YTopScreen + MinimapSize - (1 - fraction of that) * minimapSize.Y
+                    // For bottom of the screen, 
+
                     Rectangle box = obj.Hitbox;
-                    box.X /= 2;
-                    box.Y /= 2;
-                    box.Width /= 2;
-                    box.Height /= 2;
+                    box.Width = (box.Width * MinimapSize.X / LevelXSize); //convert width from level to minimap size
+                    box.Height = (box.Height * MinimapSize.Y / LevelYSize); //convert height from level to minimap size
+                    int XPositionOfLevel = (box.X - (xLeftWall-CELL)); //position of level when normalized as a proportion of its size
+                    int YPositionOfLevel = (box.Y - (yFloor - CELL));
+
+                    switch (MinimapPosition) {
+                        case TOP_RIGHT:
+                            box.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - box.Width; //convert from position in level to position in minimap
+                            box.Y = MinimapSize.Y - YPositionOfLevel * MinimapSize.Y / LevelYSize - box.Height;
+                            break;
+                        case BOTTOM_RIGHT:
+                            box.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - box.Width; //convert from position in level to position in minimap
+                            box.Y = GameConstants.Y_RESOLUTION - YPositionOfLevel * MinimapSize.Y / LevelYSize - box.Height;
+                            break;
+                        }
+/*                    box.X /= 4;
+                    box.Y /= 4;
+                    box.Width /= 4;
+                    box.Height /= 4;
                     box.X += 400;
-                    box.Y += 500;
+                    box.Y += 300;*/
+                    //box.Y = GameConstants.Y_RESOLUTION - box.Y; //Jacob: convert game logic coords (+ is up, 0 is floor) to screen coords (+ is down, 0 is top)
                     if (obj.GetType() == typeof(Character))
                         spriteBatch.Draw(dummyTexture, box, Color.Blue * 0.8f);
                     else if (obj.GetType() == typeof(BasicBlock))
