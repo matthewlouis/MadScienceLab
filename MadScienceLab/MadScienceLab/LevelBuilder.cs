@@ -116,7 +116,9 @@ namespace MadScienceLab
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 'X':
-                        level.AddChild ( new BasicBlock ( col++, row ) );
+                        BasicBlock blockToAdd = new BasicBlock(col++, row);
+                        level.AddChild(blockToAdd);
+                        level.ForegroundBlocks.Add(blockToAdd);
                         break;
                     case 'L':
                        level.AddChild(new LaserTurret(col++, row, true, GameConstants.POINTDIR.pointLeft)); 

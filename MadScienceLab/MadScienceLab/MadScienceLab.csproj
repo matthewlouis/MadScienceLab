@@ -13,7 +13,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaProfile>Reach</XnaProfile>
+    <XnaProfile>HiDef</XnaProfile>
     <XnaCrossPlatformGroupID>40131acd-b9a0-4613-9872-12d777b5a979</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
@@ -191,6 +191,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\InstancedModelSample\InstancedModelPipeline\InstancedModelPipeline.csproj">
+      <Project>{ff69fd90-8834-4f60-ada5-36387f112437}</Project>
+      <Name>InstancedModelPipeline</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\GameStateManagement\GameStateManagement %28Windows%29.csproj">
       <Project>{0a551d79-f37e-4529-9ca0-3fd2e9ea715e}</Project>
       <Name>GameStateManagement %28Windows%29</Name>

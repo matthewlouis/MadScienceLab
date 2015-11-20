@@ -10,7 +10,7 @@ namespace MadScienceLab
     /**
      * This is the basic block object that will make up floors, walls etc of our level.
      */
-    class BasicBlock:CellObject
+    public class BasicBlock:CellObject
     {
         private Model model;
 
@@ -25,6 +25,7 @@ namespace MadScienceLab
 
         public override void Draw(RenderContext renderContext)
         {
+            /*
             Vector3 screenPos = renderContext.GraphicsDevice.Viewport.Project(WorldPosition, renderContext.Camera.Projection, renderContext.Camera.View, WorldMatrix);
             Vector2 screenPos2D = new Vector2(screenPos.X, screenPos.Y);
 
@@ -51,7 +52,7 @@ namespace MadScienceLab
                         effect.World = WorldMatrix;
                     }
                     model.Meshes[0].Draw();
-                }
+            }*/
         }
     }
 }

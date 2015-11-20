@@ -84,10 +84,8 @@
     <Compile Include="BasicBlock.fbx">
       <Name>BasicBlock</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
-      <ProcessorParameters_Scale>4</ProcessorParameters_Scale>
-      <ProcessorParameters_ResizeTexturesToPowerOfTwo>True</ProcessorParameters_ResizeTexturesToPowerOfTwo>
-      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+      <Processor>InstancedModelProcessor</Processor>
+      <ProcessorParameters_Scale>48</ProcessorParameters_Scale>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +127,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\InstancedModelSample\InstancedModelPipeline\InstancedModelPipeline.csproj">
+      <Project>{ff69fd90-8834-4f60-ada5-36387f112437}</Project>
+      <Name>InstancedModelPipeline</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SkinnedModelData\SkinnedModelData.csproj">
       <Project>{3899fb5e-0ed8-4606-81d5-4053c24c52af}</Project>
       <Name>SkinnedModelData</Name>
@@ -406,6 +408,21 @@
       <Name>background_levelcomplete</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="InstancedModel.fx">
+      <Name>InstancedModel</Name>
+      <Importer>EffectImporter</Importer>
+      <Processor>EffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MovingBlock.fbx">
+      <Name>MovingBlock</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>ModelProcessor</Processor>
+      <ProcessorParameters_Scale>2</ProcessorParameters_Scale>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
