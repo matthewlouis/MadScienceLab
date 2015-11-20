@@ -22,14 +22,14 @@ namespace MadScienceLab
 
             this.sourceEnemy = sourceEnemy;
 
-            //base.Model = GameplayScreen._models["projectile"];
+            base.Model = GameplayScreen._models["projectile"];
 
             // hitbox for collision
             //UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
             SetVerticalOffset(-20);
             SetDirection();
             base.HitboxHeight = 40;
-            base.HitboxWidth = 48;
+            base.HitboxWidth = 300;
             //base.HitboxWidthOffset = 48;
             base.HitboxHeightOffset = 20;
 
@@ -65,11 +65,11 @@ namespace MadScienceLab
             base.Update(renderContext);
         }
 
-        public override void Draw(RenderContext renderContext)
-        {
+        //public override void Draw(RenderContext renderContext)
+        //{
 
-            return;
-        }
+        //    return;
+        //}
 
         public void SetDirection()
         {
@@ -102,13 +102,13 @@ namespace MadScienceLab
                         active = false;
 
                         TransVelocity = Vector3.Zero;
-                        sourceEnemy.AttackMode();
+                        //sourceEnemy.AttackMode();
                     }
                     else
                     {
                         active = false;
                         TransVelocity = Vector3.Zero;
-                        sourceEnemy.StandDown();
+                        //sourceEnemy.StandDown();
                     }
                 }
             }
