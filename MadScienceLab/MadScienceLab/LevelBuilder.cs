@@ -245,16 +245,22 @@ namespace MadScienceLab
                     if (level.Children[index].GetType () == typeof ( LaserTurret ))
                     {
                         LaserTurret laserTurret = (LaserTurret)level.Children[index];
+                        string[] Settings = ObjectAndSettings[1].Split ( ',' );
                         //set initial direction of moving platform
-                        if (ObjectAndSettings[1] == "L")
+                        if (Settings[0] == "L")
                         {
                             laserTurret.direction = GameConstants.POINTDIR.pointLeft;
                         }
                         else
-                            if (ObjectAndSettings[1] == "R")
+                            if (Settings[0] == "R")
                             {
                                 laserTurret.direction = GameConstants.POINTDIR.pointRight;
                             }
+                        //optional 2nd setting - set starting offset of laser turret, in milliseconds.
+                        if (Settings.Length >= 2)
+                        {
+                            laserTurret.elapsedFireTimeOffset = Int32.Parse(Settings[1]);
+                        }
                     }
 
 

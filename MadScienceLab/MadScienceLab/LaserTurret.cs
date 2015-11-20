@@ -26,9 +26,13 @@ namespace MadScienceLab
             }
         }
         private GameConstants.POINTDIR _direction;
+
         int elapsedFireTime = 0;
         int firingDelay = 3000;
 
+        //intended to be only assigned once - or, used as a method to increment the fire time.
+        public int elapsedFireTimeOffset { set { elapsedFireTime += value; } }
+        
         private SoundEffectPlayer soundEffects;
 
         //List<LaserProjectile> projectiles = new List<LaserProjectile>();
