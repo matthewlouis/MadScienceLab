@@ -74,8 +74,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnemySonar.cs" />
-    <Compile Include="PointSort.cs" />
-    <Compile Include="Ray2D.cs" />
     <Compile Include="BackgroundBlock.cs" />
     <Compile Include="BaseCamera.cs" />
     <Compile Include="BasicBlock.cs" />
@@ -100,6 +98,7 @@
     <Compile Include="Screens\BackgroundScreen.cs" />
     <Compile Include="Screens\GameplayScreen.cs" />
     <Compile Include="Screens\GameOverScreen.cs" />
+    <Compile Include="Screens\LevelCompleteBackgoundScreen.cs" />
     <Compile Include="Screens\LevelCompleteScreen.cs" />
     <Compile Include="Screens\LevelSelectScreen.cs" />
     <Compile Include="Screens\LoadingScreen.cs" />

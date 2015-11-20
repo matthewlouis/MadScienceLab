@@ -85,7 +85,7 @@ namespace MadScienceLab
                 soundEffects.PlaySound("LaserShoot");
                 elapsedFireTime = 0;
                 //projectiles.Add(new LaserProjectile(CellNumber.X, CellNumber.Y, direction));
-                LaserProjectile projectile = new LaserProjectile(CellNumber.X, CellNumber.Y, direction);
+                LaserProjectile projectile = new LaserProjectile(CellNumber.X, CellNumber.Y, _direction);
 
                 //Position the projectile according to the position of the turret
                 //Actually, not necessary.

@@ -1,4 +1,4 @@
-﻿X         X               X
+X         X               X
 X         X               X
 X         X               X
 X         X               X
@@ -6,11 +6,11 @@ X         X               X
 X         X               X
 X   B     X   1           X
 XS  B     X               X
-XXXXX  B  X         @     X
-X     XX  X    XXXXXXXXXXXX
-X L   X   X    Xt         X
-X X   X   X  MXXX  M      X
-XL    X   XM   X   X      X
+XXXXX  B  X    XXXXXXXXXXXX
+X     XX  X    Xt         X
+X L   X   X   XXX  M      X
+X X   X   X  MXX   X      X
+XL    X   XM   X          X
 XX    X   XXRRXX B        X
 X     X  TXRRRRX SS     L X
 X L   X  XX    XRXX     X X

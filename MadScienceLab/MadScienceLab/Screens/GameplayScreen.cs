@@ -321,7 +321,7 @@ namespace MadScienceLab
                 if (_renderContext.Level.LevelOver)
                 {
                     levelData.time = _timer.ElapsedTime.ToString();
-                    LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                    LoadingScreen.Load(ScreenManager, false, null, new LevelCompleteBackgroundScreen(),
                                                                new LevelCompleteScreen(levelData));
                 }
                 if (_renderContext.Level.GameOver)
@@ -446,7 +446,7 @@ namespace MadScienceLab
             //Console.WriteLine(_renderContext.Player.Position.ToString());
             //fpsCount.Draw(gameTime);
             fpsCount.Draw(gameTime);
-            _timer.Draw(_renderContext.GameTime);
+            //_timer.Draw(_renderContext.GameTime);
             // Spritebatch changes graphicsdevice values; sets the oringinal state
             ScreenManager.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;

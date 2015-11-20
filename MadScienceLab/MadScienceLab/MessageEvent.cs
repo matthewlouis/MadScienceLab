@@ -18,6 +18,7 @@ namespace MadScienceLab
             HitboxHeight = GameConstants.SINGLE_CELL_SIZE;
             HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
             isCollidable = true;
+            IsPassable = true;
         }
     }
 }
