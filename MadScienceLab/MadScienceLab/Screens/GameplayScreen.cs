@@ -321,7 +321,7 @@ namespace MadScienceLab
                 if (_renderContext.Level.LevelOver)
                 {
                     levelData.time = _timer.ElapsedTime.ToString();
-                    LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                    LoadingScreen.Load(ScreenManager, false, null, new LevelCompleteBackgroundScreen(),
                                                                new LevelCompleteScreen(levelData));
                 }
                 if (_renderContext.Level.GameOver)
@@ -362,6 +362,8 @@ namespace MadScienceLab
             //spriteBatch.DrawString(font, "Velocity: " + player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
             //spriteBatch.DrawString(font, "Acceleration: " + player.TransAccel.ToString(), new Vector2(50, 200), Color.Black);
             //spriteBatch.DrawString(font, "Box: " + brick.ToString(), new Vector2(50, 250), Color.Black);
+            //if (_renderContext.CurrMsgEvent != null)
+            //    spriteBatch.DrawString(font, "MessageEvent: " + _renderContext.CurrMsgEvent.typedMessage, new Vector2(50, 250), Color.Black);
             //spriteBatch.DrawString(font, boxHitState, new Vector2(50, 150), Color.Black);
             //spriteBatch.DrawString(font, "Projectile: " + basicLevel.Children[basicLevel.Children.Count()-1].Hitbox.ToString(), new Vector2(50, 150), Color.Black);
             //spriteBatch.DrawString(font, "Player pos: " + player.Position.ToString(), new Vector2(50, 300), Color.Black);
@@ -446,7 +448,7 @@ namespace MadScienceLab
             //Console.WriteLine(_renderContext.Player.Position.ToString());
             //fpsCount.Draw(gameTime);
             fpsCount.Draw(gameTime);
-            _timer.Draw(_renderContext.GameTime);
+            //_timer.Draw(_renderContext.GameTime);
             // Spritebatch changes graphicsdevice values; sets the oringinal state
             ScreenManager.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;

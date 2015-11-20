@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{E7DFD474-A036-4C1C-ABA4-6442A790E361}</ProjectGuid>
+    <ProjectGuid>{2F2DC3D2-EA9D-4D08-A3E0-EC108CEFBA03}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
@@ -63,6 +63,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnemySonar.cs" />
     <Compile Include="BackgroundBlock.cs" />
     <Compile Include="BaseCamera.cs" />
     <Compile Include="BasicBlock.cs" />
@@ -70,7 +71,6 @@
     <Compile Include="Button.cs" />
     <Compile Include="CellObject.cs" />
     <Compile Include="Character.cs" />
-    <Compile Include="EnemySonar.cs" />
     <Compile Include="GameData.cs" />
     <Compile Include="MessageEvent.cs" />
     <Compile Include="GameTimer.cs" />
@@ -80,6 +80,7 @@
     <Compile Include="FPSCounter.cs" />
     <Compile Include="GameConstants.cs" />
     <Compile Include="LaserProjectile.cs" />
+    <Compile Include="MusicPlayer.cs" />
     <Compile Include="PickableBox.cs" />
     <Compile Include="Quadtree.cs" />
     <Compile Include="Score.cs" />
@@ -112,14 +113,12 @@
     <Compile Include="RenderContext.cs" />
     <Compile Include="LaserTurret.cs" />
     <Compile Include="SwitchableObject.cs" />
+    <Compile Include="Trapdoor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="Levels\level1.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Levels\level2.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Levels\level2Back.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -128,9 +127,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Levels\level2.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Levels\level2Back.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Levels\level3.txt">
@@ -175,9 +171,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SkinnedModelData\Xbox 360 Copy (6) of SkinnedModelData.csproj">
-      <Project>{2f63b08b-b371-48bd-9487-db9b0e0a8ba0}</Project>
-      <Name>Xbox 360 Copy (6) of SkinnedModelData</Name>
+    <ProjectReference Include="..\..\GameStateManagement\Xbox 360 Copy (5) of GameStateManagement (Windows).csproj">
+      <Project>{77b8c0fa-45d4-467d-9e83-a04f087c36ec}</Project>
+      <Name>Xbox 360 Copy (5) of GameStateManagement (Windows)</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SkinnedModelData\Xbox 360 Copy (8) of SkinnedModelData.csproj">
+      <Project>{e7e91f02-1cda-4e52-9a99-0cf900e2954d}</Project>
+      <Name>Xbox 360 Copy (8) of SkinnedModelData</Name>
     </ProjectReference>
     <ProjectReference Include="..\MadScienceLabContent\MadScienceLabContent.contentproj">
       <Project>{3585BE57-612E-4BF8-984B-2E1BD58A51FE}</Project>
