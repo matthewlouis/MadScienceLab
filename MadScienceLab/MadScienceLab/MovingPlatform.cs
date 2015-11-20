@@ -32,7 +32,7 @@ namespace MadScienceLab
         public MovingPlatform(int column, int row)
             : base(column, row)
         {
-            base.Model = GameplayScreen._models["BasicBlock"];
+            base.Model = GameplayScreen._models["MovingBlock"];
             base.isCollidable = true;
             maxDistance = 2 * GameConstants.SINGLE_CELL_SIZE; //default distance
             this.facingDirection = RIGHT;
