@@ -28,9 +28,10 @@ namespace MadScienceLab
     {
         #region Fields
 
-        List<MenuEntry> menuEntries = new List<MenuEntry>();
-        int selectedEntry = 0;
-        string menuTitle;
+        //Jacob: Made these protected in order to update LevelSelectScreen.
+        protected List<MenuEntry> menuEntries = new List<MenuEntry>();
+        protected int selectedEntry = 0;
+        protected string menuTitle;
 
         InputAction menuUp;
         InputAction menuDown;

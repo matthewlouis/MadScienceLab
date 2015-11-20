@@ -3,19 +3,19 @@ X         X               X
 X         X               X
 X         X               X
 X         X               X
-X         X               X
-X   B     X   1      @    X
-XS  B     X      XXXXXXXXXX
-XXXXX  B  X     X         X
-X     XX  X    Xt         X
-X L   X   X    XX  M      X
+X  B      X               X
+XS B      X   1      @    X
+XXXX      X      XXXXXXXXXX
+X      B  X     X         X
+X     XX  X    Xt        L 
+X L   X   X    XX  M     XX
 X X   X   X  MXX   X      X
 XL    X   XM   X B        X
 XX    X   XXRRXX SS       X
 X     X  TXRRRRXRXXX    L X
 X L   X  XX    X   X    X X
 X X   XT  XRRRRXS  X      X
-XL    XX  X   MXXX X     LX
+XL    XX  X   MXXX X     L 
 XX   R       X      RS   XX
 X   X      M         X    X
 X E XM       P   T  MX E  X
@@ -44,8 +44,9 @@ Maybe make the UR box then have to be used for the DR switch after being availab
 10:2|R
 12:3|R,1500
 5:26|L,1500|laser turret facing left with new offset
+13:26|L,1500|laser turret facing left with new offset
 2:18|4:6|Moving platform blocker trapdoor
-15:2|4:21|PlatformBlocker#2
+16:2|4:21|PlatformBlocker#2
 4:6|B|make trapdoor face down
 4:21|B
 13:17|16:15|boxdropper switch
