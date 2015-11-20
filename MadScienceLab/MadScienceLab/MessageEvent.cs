@@ -42,11 +42,8 @@ namespace MadScienceLab
             //HitboxHeightOffset = 2;
             HitboxHeight = GameConstants.SINGLE_CELL_SIZE;
             HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
-<<<<<<< HEAD
-=======
             isCollidable = true;
             IsPassable = true;
->>>>>>> refs/remotes/origin/master
         }
         /*
          make length of text shown (as a substring) proportional to the (elapsed time) / (total timelength of text).
