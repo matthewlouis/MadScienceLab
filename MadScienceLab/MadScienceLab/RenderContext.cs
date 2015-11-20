@@ -24,6 +24,7 @@ namespace MadScienceLab
         public Character      Player { get; set; }
         public Enemy          Doomba { get; set; }
         public Level          Level { get; set; }
+        public MessageEvent   CurrMsgEvent { get; set; }
         public BasicEffect BasicEffect { get; set; }
         public Quadtree       Quadtree { get; set; }
         public Rectangle      Boxhit { get; set; }
