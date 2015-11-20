@@ -65,6 +65,9 @@
   <ItemGroup>
     <Compile Include="EnemySonar.cs" />
     <Compile Include="PointSort.cs" />
+    <Compile Include="QuadTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Ray2D.cs" />
     <Compile Include="BackgroundBlock.cs" />
     <Compile Include="BaseCamera.cs" />
@@ -84,7 +87,6 @@
     <Compile Include="LaserProjectile.cs" />
     <Compile Include="MusicPlayer.cs" />
     <Compile Include="PickableBox.cs" />
-    <Compile Include="Quadtree.cs" />
     <Compile Include="Score.cs" />
     <Compile Include="ScreenFactory.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
