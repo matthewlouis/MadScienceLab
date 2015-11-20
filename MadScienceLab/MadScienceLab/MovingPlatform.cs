@@ -111,8 +111,9 @@ namespace MadScienceLab
         {
             foreach (CellObject levelObject in renderContext.Level.Children)
             {
-
-                if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox) && levelObject != this)
+                bool typeAllowed = levelObject.GetType () == typeof ( BasicBlock ) || levelObject.GetType () == typeof ( Door ) || levelObject.GetType () == typeof ( Trapdoor );
+                //Collide only with BasicBlocks; other objects will not influence MovingPlatform's position
+                if (levelObject.isCollidable && typeAllowed && Hitbox.Intersects(levelObject.Hitbox) && levelObject != this)
                 {
                     Rectangle intersect = Rectangle.Intersect(Hitbox, levelObject.Hitbox);
 
