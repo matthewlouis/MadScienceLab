@@ -186,6 +186,25 @@ namespace MadScienceLab
                 _textures.Add("Complete", content.Load<Texture2D>("Textures/Complete"));
                 _textures.Add("GameOver", content.Load<Texture2D>("Textures/GameOver"));
                 _textures.Add("Arrow", content.Load<Texture2D>("Textures/Arrow"));
+                _textures.Add("A_Button", content.Load<Texture2D>("Textures/Controller/A_Button"));
+                _textures.Add("B_Button", content.Load<Texture2D>("Textures/Controller/B_Button"));
+                _textures.Add("X_Button", content.Load<Texture2D>("Textures/Controller/X_Button"));
+                _textures.Add("Y_Button", content.Load<Texture2D>("Textures/Controller/Y_Button"));
+                _textures.Add("Back_Button", content.Load<Texture2D>("Textures/Controller/Back_Button"));
+                _textures.Add("Start_Button", content.Load<Texture2D>("Textures/Controller/Start_Button"));
+                //_textures.Add("Left_Button", content.Load<Texture2D>("Textures/Controller/Left_Button"));
+                _textures.Add("Right_Button", content.Load<Texture2D>("Textures/Controller/Right_Button"));
+                _textures.Add("DPad", content.Load<Texture2D>("Textures/Controller/DPad"));
+                _textures.Add("Left_DPad", content.Load<Texture2D>("Textures/Controller/Left_DPad"));
+                _textures.Add("Right_DPad", content.Load<Texture2D>("Textures/Controller/Right_DPad"));
+                _textures.Add("Up_DPad", content.Load<Texture2D>("Textures/Controller/Up_DPad"));
+                _textures.Add("Down_DPad", content.Load<Texture2D>("Textures/Controller/Down_DPad"));
+                _textures.Add("UpDown_DPad", content.Load<Texture2D>("Textures/Controller/UpDown_DPad"));
+                _textures.Add("LeftRight_DPad", content.Load<Texture2D>("Textures/Controller/LeftRight_DPad"));
+                _textures.Add("Left_Stick", content.Load<Texture2D>("Textures/Controller/Left_Stick"));
+                _textures.Add("Right_Stick", content.Load<Texture2D>("Textures/Controller/Right_Stick"));
+                _textures.Add("Right_Trigger", content.Load<Texture2D>("Textures/Controller/Right_Trigger"));
+                _textures.Add("LeftRight_Trigger", content.Load<Texture2D>("Textures/Controller/LeftRight_Trigger"));
                 _renderContext.Textures = _textures;
 
                 //Loads sound references
