@@ -91,7 +91,6 @@ namespace MadScienceLab
                             renderContext.GraphicsDevice.SamplerStates[0] = SamplerState.LinearClamp;
                             effect.Texture = Texture;
                             effect.TextureEnabled = true;
-
                         }
 
                         effect.View = renderContext.Camera.View;
