@@ -85,7 +85,7 @@
       <Name>BasicBlock</Name>
       <Importer>FbxImporter</Importer>
       <Processor>InstancedModelProcessor</Processor>
-      <ProcessorParameters_Scale>48</ProcessorParameters_Scale>
+      <ProcessorParameters_Scale>4</ProcessorParameters_Scale>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -422,7 +422,7 @@
       <Name>MovingBlock</Name>
       <Importer>FbxImporter</Importer>
       <Processor>ModelProcessor</Processor>
-      <ProcessorParameters_Scale>2</ProcessorParameters_Scale>
+      <ProcessorParameters_Scale>4</ProcessorParameters_Scale>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

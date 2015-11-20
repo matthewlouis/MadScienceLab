@@ -25,6 +25,8 @@ namespace MadScienceLab
         Model instancedModel;
         Matrix[] instancedModelBones;
         DynamicVertexBuffer instanceVertexBuffer;
+        // Set renderstates for drawing 3D models.
+        RasterizerState drawState = new RasterizerState();
 
 
         // To store instance transform matrices in a vertex buffer, we use this custom
@@ -43,6 +45,7 @@ namespace MadScienceLab
         {
             Background = new List<BackgroundBlock>();
             ForegroundBlocks = new List<BasicBlock>();
+            drawState.CullMode = CullMode.None;
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
@@ -66,7 +69,6 @@ namespace MadScienceLab
         //Overridden to include buffered draw for background
         public override void Draw(RenderContext renderContext)
         {
-
             drawBackground(renderContext);
             drawForeground(renderContext);
 
@@ -158,6 +160,9 @@ namespace MadScienceLab
 
         private void drawForeground(RenderContext renderContext)
         {
+            RasterizerState oldState = renderContext.GraphicsDevice.RasterizerState;
+            renderContext.GraphicsDevice.RasterizerState = drawState;
+
             // Gather instance transform matrices into a single array.
             Array.Resize(ref instanceTransforms, instances.Count);
 
@@ -215,6 +220,7 @@ namespace MadScienceLab
                                                                meshPart.PrimitiveCount, instanceTransforms.Length);
                     }
                 }
+                renderContext.GraphicsDevice.RasterizerState = oldState; //set back to original
             }
         }
     }
