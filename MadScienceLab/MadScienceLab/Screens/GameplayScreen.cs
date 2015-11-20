@@ -374,7 +374,9 @@ namespace MadScienceLab
             if (player.MapEnabled)
             {
                 spriteBatch.Begin ();
-                Point MinimapSize = new Point ( LevelBuilder.levelwidth*10, LevelBuilder.levelheight*10); //Can set size of minimap
+                //Can set size of minimap and it will scale accordingly.
+                //It can be a fixed size (eg. 300x300, and the level objects would resize accordingly), or size dependent on level, etc.
+                Point MinimapSize = new Point ( LevelBuilder.levelwidth*10, LevelBuilder.levelheight*10);
 
                 const int TOP_RIGHT = 1, BOTTOM_RIGHT = 2, BOTTOM_LEFT = 3;
 
