@@ -70,7 +70,7 @@ namespace MadScienceLab
             return health;
         }
 
-        private bool mapEnabled = true;
+        private bool mapEnabled = false;
         // Debug map, can be used as a minimap - Steven
         public bool MapEnabled 
         {

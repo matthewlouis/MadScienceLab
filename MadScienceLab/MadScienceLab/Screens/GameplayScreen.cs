@@ -374,25 +374,36 @@ namespace MadScienceLab
             if (player.MapEnabled)
             {
                 spriteBatch.Begin ();
-                Point MinimapSize = new Point ( 200, 200 ); //Can set size of minimap
+                Point MinimapSize = new Point ( LevelBuilder.levelwidth*10, LevelBuilder.levelheight*10); //Can set size of minimap
 
-                const int TOP_RIGHT = 1, BOTTOM_RIGHT = 2;
+                const int TOP_RIGHT = 1, BOTTOM_RIGHT = 2, BOTTOM_LEFT = 3;
 
                 //Jacob: Added a couple of customizations to the minimap. Can set it accordingly to positons of the screen.
-                int MinimapPosition = BOTTOM_RIGHT; //Can set position of minimap
+                int MinimapPosition = TOP_RIGHT; //Can set position of minimap
                 int MinimapBorder = 5; //Can also set border thickness of minimap
+                Rectangle BorderBox, InnerBox;
 
                 //Draw border
                 switch (MinimapPosition) {
                     case TOP_RIGHT:
-                    spriteBatch.Draw ( dummyTexture, new Rectangle ( GameConstants.X_RESOLUTION - (MinimapSize.X + MinimapBorder), 0, (MinimapSize.X + MinimapBorder), (MinimapSize.Y + MinimapBorder) ), Color.Black * 0.8f );
-                    spriteBatch.Draw ( dummyTexture, new Rectangle ( GameConstants.X_RESOLUTION - MinimapSize.X, 0, MinimapSize.X, MinimapSize.Y ), Color.LightGray * 0.8f );
+                        BorderBox = new Rectangle ( GameConstants.X_RESOLUTION - (MinimapSize.X + MinimapBorder), 0, (MinimapSize.X + MinimapBorder), (MinimapSize.Y + MinimapBorder) );
+                        InnerBox = new Rectangle ( GameConstants.X_RESOLUTION - MinimapSize.X, 0, MinimapSize.X, MinimapSize.Y );
                     break;
                     case BOTTOM_RIGHT:
-                    spriteBatch.Draw ( dummyTexture, new Rectangle ( GameConstants.X_RESOLUTION - (MinimapSize.X + MinimapBorder), GameConstants.Y_RESOLUTION - (MinimapSize.Y + MinimapBorder), (MinimapSize.X + MinimapBorder), (MinimapSize.Y + MinimapBorder) ), Color.Black * 0.8f );
-                    spriteBatch.Draw ( dummyTexture, new Rectangle ( GameConstants.X_RESOLUTION - MinimapSize.Y, GameConstants.Y_RESOLUTION - (MinimapSize.Y), MinimapSize.X, MinimapSize.Y ), Color.LightGray * 0.8f );
+                        BorderBox = new Rectangle ( GameConstants.X_RESOLUTION - (MinimapSize.X + MinimapBorder), GameConstants.Y_RESOLUTION - (MinimapSize.Y + MinimapBorder), (MinimapSize.X + MinimapBorder), (MinimapSize.Y + MinimapBorder) );
+                        InnerBox = new Rectangle ( GameConstants.X_RESOLUTION - MinimapSize.X, GameConstants.Y_RESOLUTION - (MinimapSize.Y), MinimapSize.X, MinimapSize.Y );
+                        break;
+                    case BOTTOM_LEFT:
+                        BorderBox = new Rectangle ( 0, GameConstants.Y_RESOLUTION - (MinimapSize.Y + MinimapBorder), (MinimapSize.X + MinimapBorder), (MinimapSize.Y + MinimapBorder) );
+                        InnerBox = new Rectangle ( 0, GameConstants.Y_RESOLUTION - (MinimapSize.Y), MinimapSize.X, MinimapSize.Y );
+                        break;
+                    default:
+                    BorderBox = new Rectangle ( GameConstants.X_RESOLUTION - (MinimapSize.X + MinimapBorder), GameConstants.Y_RESOLUTION - (MinimapSize.Y + MinimapBorder), (MinimapSize.X + MinimapBorder), (MinimapSize.Y + MinimapBorder) );
+                    InnerBox = new Rectangle ( GameConstants.X_RESOLUTION - MinimapSize.X, GameConstants.Y_RESOLUTION - (MinimapSize.Y), MinimapSize.X, MinimapSize.Y );
                     break;
                 }
+                spriteBatch.Draw ( dummyTexture, BorderBox, Color.Black * 0.8f );
+                spriteBatch.Draw ( dummyTexture, InnerBox, Color.LightGray * 0.8f );
 
                 const int CELL = GameConstants.SINGLE_CELL_SIZE;
                 int xLeftWall = (GameConstants.SINGLE_CELL_SIZE * LevelBuilder.startWall) - (GameConstants.X_RESOLUTION / 2);
@@ -423,6 +434,10 @@ namespace MadScienceLab
                             break;
                         case BOTTOM_RIGHT:
                             box.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - box.Width; //convert from position in level to position in minimap
+                            box.Y = GameConstants.Y_RESOLUTION - YPositionOfLevel * MinimapSize.Y / LevelYSize - box.Height;
+                            break;
+                        case BOTTOM_LEFT:
+                            box.X = XPositionOfLevel * MinimapSize.X / LevelXSize; //convert from position in level to position in minimap
                             box.Y = GameConstants.Y_RESOLUTION - YPositionOfLevel * MinimapSize.Y / LevelYSize - box.Height;
                             break;
                         }
