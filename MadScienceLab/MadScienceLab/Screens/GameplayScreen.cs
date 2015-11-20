@@ -32,7 +32,7 @@ namespace MadScienceLab
     class GameplayScreen : GameScreen
     {
         #region Fields
-        Rectangle quadRect = new Rectangle(-200, 280, 1600, -720);
+        Rectangle quadRect;
         public static Level CurrentLevel { get; private set; }
 
         SpriteBatch spriteBatch;
@@ -42,7 +42,8 @@ namespace MadScienceLab
         RenderContext _renderContext;
         BaseCamera _camera;
         GameTimer _timer;
-
+        int bob = 0;
+        int num = 1;
         private SoundEffect levelMusic;
 
         Level basicLevel;
@@ -128,8 +129,6 @@ namespace MadScienceLab
             random = new Random();
             //init fps counter
             fpsCount = new FPSCounter(_renderContext);
-            Quadtree _quadtree = new Quadtree(0, quadRect);
-            _renderContext.Quadtree = _quadtree;
         }
 
 
@@ -187,6 +186,7 @@ namespace MadScienceLab
                 _textures.Add("Exit", content.Load<Texture2D>("Textures/EXIT"));
                 _textures.Add("Complete", content.Load<Texture2D>("Textures/Complete"));
                 _textures.Add("GameOver", content.Load<Texture2D>("Textures/GameOver"));
+                _textures.Add("Arrow", content.Load<Texture2D>("Textures/Arrow"));
                 _renderContext.Textures = _textures;
 
                 //Loads sound references
@@ -236,6 +236,9 @@ namespace MadScienceLab
                 levelMusic = content.Load<SoundEffect>("Songs/MusicInGameLoop");
                 MusicPlayer.SetVolume(1f);
                 MusicPlayer.PlaySong(levelMusic);
+
+                Quadtree _quadtree = new Quadtree(0, _renderContext.Level.Hitbox);
+                _renderContext.Quadtree = _quadtree;
                 
                 // if game takes long to load. Simulate load by delaying for a
                 // while, giving you a chance to admire the beautiful loading screen.
@@ -281,6 +284,7 @@ namespace MadScienceLab
         {
             base.Update(gameTime, otherScreenHasFocus, false);
 
+
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
                 pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
@@ -288,6 +292,13 @@ namespace MadScienceLab
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
             if (IsActive)
             {
+                if (bob > 10)
+                    num = -1;
+                else if (bob < -10)
+                    num = 1;
+
+                bob += (int)(0.1f * gameTime.ElapsedGameTime.Milliseconds) * num;
+
                 _renderContext.Quadtree.clear();
 
                 foreach (CellObject obj in basicLevel.Children)
@@ -360,6 +371,52 @@ namespace MadScienceLab
             spriteBatch.Begin();
             //spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
             spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
+            if (_renderContext.Player.AdjacentObj != null && _renderContext.Player.AdjacentObj.GetType() == typeof(PickableBox) 
+                && _renderContext.Player.interactState == 0)
+            {
+                Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(_renderContext.Player.AdjacentObj.WorldPosition,
+                    _renderContext.Camera.Projection, _renderContext.Camera.View, _renderContext.Player.AdjacentObj.GetWorldMatrix());
+                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - bob, 48, 48), Color.LawnGreen);
+            }
+            if (_renderContext.Player.interactState != 0 && (!_renderContext.Player.jumping || !_renderContext.Player.falling))
+            {
+                Vector3 arrowPos; 
+                if (_renderContext.Player.GetFacingDirection == 1)
+                    arrowPos = _renderContext.Player.Position - new Vector3(24, 0, 0);
+                else
+                    arrowPos = _renderContext.Player.Position + new Vector3(24, 0, 0);
+
+
+
+                //if (_renderContext.Player.GetFacingDirection == 1)
+                //    arrowPos += new Vector3(0, 0, _renderContext.Player.Position.X % GameConstants.SINGLE_CELL_SIZE);
+                //else
+                //    arrowPos -= new Vector3(0, 0, (_renderContext.Player.Position.X) % GameConstants.SINGLE_CELL_SIZE - 48);
+
+                float startX = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.X_RESOLUTION / 2);
+                float startY = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.Y_RESOLUTION / 2);
+                Vector3 CELLREMAINDER = new Vector3((arrowPos.X - startX) % GameConstants.SINGLE_CELL_SIZE,
+                                                    (arrowPos.Y - startY) % GameConstants.SINGLE_CELL_SIZE,
+                                                    arrowPos.Z);
+                //Move positions to the nearest cell
+
+                if (CELLREMAINDER.X < GameConstants.SINGLE_CELL_SIZE / 2)
+                    arrowPos = new Vector3(arrowPos.X - CELLREMAINDER.X, arrowPos.Y, arrowPos.Z);
+                else
+                    arrowPos = new Vector3(arrowPos.X - CELLREMAINDER.X + GameConstants.SINGLE_CELL_SIZE, arrowPos.Y, arrowPos.Z);
+
+                Matrix arrowWorldMatrix = _renderContext.Player.GetWorldMatrix();
+                arrowWorldMatrix.Translation = arrowPos;
+                Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(_renderContext.Player.WorldPosition,
+                    _renderContext.Camera.Projection, _renderContext.Camera.View, arrowWorldMatrix);
+                Color color;
+ 
+                color = Color.LawnGreen;
+
+                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X - 6, (int)screenPos.Y - bob, 48, 48), null, color,
+                    0f, new Vector2(_textures["Arrow"].Bounds.Width /2, _textures["Arrow"].Bounds.Height /2), SpriteEffects.FlipVertically, 0f);
+            }
+
             //spriteBatch.DrawString(font, "Time: " + timer, new Vector2(300, 50), Color.Black);
             //spriteBatch.DrawString(font, "Velocity: " + player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
             //spriteBatch.DrawString(font, "Acceleration: " + player.TransAccel.ToString(), new Vector2(50, 200), Color.Black);
@@ -371,18 +428,87 @@ namespace MadScienceLab
             //spriteBatch.DrawString(font, "Player pos: " + player.Position.ToString(), new Vector2(50, 300), Color.Black);
             spriteBatch.End();
 
+            //Jacob: Added some tweaks to minimap positioning.
             if (player.MapEnabled)
             {
-                spriteBatch.Begin();
+                spriteBatch.Begin ();
+                //Can set size of minimap and it will scale accordingly.
+                //It can be a fixed size (eg. 300x300, and the level objects would resize accordingly), or size dependent on level, etc.
+                Point MinimapSize = new Point ( LevelBuilder.levelwidth*10, LevelBuilder.levelheight*10);
+
+                const int TOP_RIGHT = 1, BOTTOM_RIGHT = 2, BOTTOM_LEFT = 3;
+
+                //Jacob: Added a couple of customizations to the minimap. Can set it accordingly to positons of the screen.
+                int MinimapPosition = TOP_RIGHT; //Can set position of minimap
+                int MinimapBorder = 5; //Can also set border thickness of minimap
+                int MinimapSideOffset = 10;
+                Rectangle BorderBox, InnerBox;
+
+                //Draw border
+                switch (MinimapPosition) {
+                    case TOP_RIGHT:
+                        BorderBox = new Rectangle ( GameConstants.X_RESOLUTION - (MinimapSize.X + MinimapBorder) - MinimapSideOffset, MinimapSideOffset - MinimapBorder, (MinimapSize.X + MinimapBorder * 2), (MinimapSize.Y + MinimapBorder * 2) );
+                        InnerBox = new Rectangle ( GameConstants.X_RESOLUTION - MinimapSize.X - MinimapSideOffset, MinimapSideOffset, MinimapSize.X, MinimapSize.Y );
+                    break;
+                    case BOTTOM_RIGHT:
+                    BorderBox = new Rectangle ( GameConstants.X_RESOLUTION - (MinimapSize.X + MinimapBorder) - MinimapSideOffset, GameConstants.Y_RESOLUTION - (MinimapSize.Y + MinimapBorder) - MinimapSideOffset, (MinimapSize.X + MinimapBorder * 2), (MinimapSize.Y + MinimapBorder * 2) );
+                    InnerBox = new Rectangle ( GameConstants.X_RESOLUTION - MinimapSize.X - MinimapSideOffset, GameConstants.Y_RESOLUTION - (MinimapSize.Y) - MinimapSideOffset, MinimapSize.X, MinimapSize.Y );
+                        break;
+                    case BOTTOM_LEFT:
+                        BorderBox = new Rectangle ( MinimapSideOffset - MinimapBorder, GameConstants.Y_RESOLUTION - (MinimapSize.Y + MinimapBorder) - MinimapSideOffset, (MinimapSize.X + MinimapBorder * 2), (MinimapSize.Y + MinimapBorder * 2) );
+                        InnerBox = new Rectangle ( MinimapSideOffset, GameConstants.Y_RESOLUTION - (MinimapSize.Y) - MinimapSideOffset, MinimapSize.X, MinimapSize.Y );
+                        break;
+                    default:
+                        BorderBox = new Rectangle ( MinimapSideOffset - MinimapBorder, GameConstants.Y_RESOLUTION - (MinimapSize.Y + MinimapBorder) - MinimapSideOffset, (MinimapSize.X + MinimapBorder * 2), (MinimapSize.Y + MinimapBorder * 2) );
+                        InnerBox = new Rectangle ( MinimapSideOffset, GameConstants.Y_RESOLUTION - (MinimapSize.Y) - MinimapSideOffset, MinimapSize.X, MinimapSize.Y );
+                    break;
+                }
+                spriteBatch.Draw ( dummyTexture, BorderBox, Color.Black * 0.8f );
+                spriteBatch.Draw ( dummyTexture, InnerBox, Color.LightGray * 0.8f );
+
+                const int CELL = GameConstants.SINGLE_CELL_SIZE;
+                int xLeftWall = (GameConstants.SINGLE_CELL_SIZE * LevelBuilder.startWall) - (GameConstants.X_RESOLUTION / 2);
+                int xRightWall = (GameConstants.SINGLE_CELL_SIZE * (LevelBuilder.levelwidth - 1 + LevelBuilder.startWall)) - (GameConstants.X_RESOLUTION / 2); //x value derived from CellObject implementation, BaseCamera
+                int yCeilingBlock = CELL * ((LevelBuilder.startFloor + 1) + LevelBuilder.levelheight - 1) - (GameConstants.Y_RESOLUTION / 2); //not
+                int yFloor = (GameConstants.SINGLE_CELL_SIZE * (LevelBuilder.startFloor + 1)) - (GameConstants.Y_RESOLUTION / 2); //y value derived from CellObject implementation
+                int LevelXSize = xRightWall - xLeftWall + CELL;
+                int LevelYSize = yCeilingBlock - yFloor + CELL;
                 foreach (CellObject obj in basicLevel.collidableObjects)
                 {
+                    //Move minimap to the top right of the screen
+                    //convert yFloor position to the bottom of the screen, xRightWall to the right of the screen
+                    //everything a fraction of (yCeilingBlock - yFloor + 1 cell) and (xRightWall - xLeftWall + 1 cell)
+                    // so (converting level to minimap:) box X position = XRightScreen (ie. GameConstants.X_RESOLUTION) - (1 - fraction of that) * minimapSize.X
+                    // box Y position = YTopScreen + MinimapSize - (1 - fraction of that) * minimapSize.Y
+
                     Rectangle box = obj.Hitbox;
-                    box.X /= 2;
-                    box.Y /= 2;
-                    box.Width /= 2;
-                    box.Height /= 2;
+                    box.Width = (box.Width * MinimapSize.X / LevelXSize); //convert width from level to minimap size
+                    box.Height = (box.Height * MinimapSize.Y / LevelYSize); //convert height from level to minimap size
+                    int XPositionOfLevel = (box.X - (xLeftWall-CELL)); //position of level when normalized as a proportion of its size
+                    int YPositionOfLevel = (box.Y - (yFloor - CELL));
+
+                    switch (MinimapPosition) {
+                        case TOP_RIGHT:
+                            box.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - box.Width - MinimapSideOffset; //convert from position in level to position in minimap
+                            box.Y = MinimapSize.Y - YPositionOfLevel * MinimapSize.Y / LevelYSize - box.Height + MinimapSideOffset;
+                            break;
+                        case BOTTOM_RIGHT:
+                            box.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - box.Width - MinimapSideOffset; //convert from position in level to position in minimap
+                            box.Y = GameConstants.Y_RESOLUTION - YPositionOfLevel * MinimapSize.Y / LevelYSize - box.Height - MinimapSideOffset;
+                            break;
+                        case BOTTOM_LEFT:
+                            box.X = XPositionOfLevel * MinimapSize.X / LevelXSize - box.Width + MinimapSideOffset; //convert from position in level to position in minimap
+                            box.Y = GameConstants.Y_RESOLUTION - YPositionOfLevel * MinimapSize.Y / LevelYSize - box.Height -
+                                MinimapSideOffset;
+                            break;
+                        }
+/*                    box.X /= 4;
+                    box.Y /= 4;
+                    box.Width /= 4;
+                    box.Height /= 4;
                     box.X += 400;
-                    box.Y += 500;
+                    box.Y += 300;*/
+                    //box.Y = GameConstants.Y_RESOLUTION - box.Y; //Jacob: convert game logic coords (+ is up, 0 is floor) to screen coords (+ is down, 0 is top)
                     if (obj.GetType() == typeof(Character))
                         spriteBatch.Draw(dummyTexture, box, Color.Blue * 0.8f);
                     else if (obj.GetType() == typeof(BasicBlock))
@@ -426,6 +552,17 @@ namespace MadScienceLab
                     spriteBatch.Draw(dummyTexture, box, Color.Black * 0.8f);
                     
                 }
+
+                Rectangle lbox = _renderContext.Level.Hitbox;
+                lbox.X /= 2;
+                lbox.Y /= 2;
+                lbox.Width /= 2;
+                lbox.Height /= 2;
+                lbox.X += 400;
+                lbox.Y += 500;
+                spriteBatch.Draw(dummyTexture, lbox, Color.Black * 0.8f);
+
+
                 int i = 0;
                 //foreach (Rectangle box in _renderContext.BoxesHit)
                 //{
