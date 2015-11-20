@@ -185,7 +185,7 @@ namespace MadScienceLab
                 _textures.Add("Exit", content.Load<Texture2D>("Textures/EXIT"));
                 _textures.Add("Complete", content.Load<Texture2D>("Textures/Complete"));
                 _textures.Add("GameOver", content.Load<Texture2D>("Textures/GameOver"));
-                _textures.Add("Arrow_Up", content.Load<Texture2D>("Textures/Arrow_Up"));
+                _textures.Add("Arrow", content.Load<Texture2D>("Textures/Arrow"));
                 _renderContext.Textures = _textures;
 
                 //Loads sound references
@@ -236,8 +236,6 @@ namespace MadScienceLab
                 MusicPlayer.SetVolume(1f);
                 MusicPlayer.PlaySong(levelMusic);
 
-                Console.WriteLine(_renderContext.Level.Hitbox);
-
                 Quadtree _quadtree = new Quadtree(0, _renderContext.Level.Hitbox);
                 _renderContext.Quadtree = _quadtree;
                 
@@ -284,7 +282,6 @@ namespace MadScienceLab
                                                        bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
-            Console.WriteLine(_renderContext.Player.Position);
 
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.
@@ -377,10 +374,47 @@ namespace MadScienceLab
             {
                 Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(_renderContext.Player.AdjacentObj.WorldPosition,
                     _renderContext.Camera.Projection, _renderContext.Camera.View, _renderContext.Player.AdjacentObj.GetWorldMatrix());
-                Vector2 screenPos2D = new Vector2(screenPos.X, screenPos.Y);
-                spriteBatch.Draw(_textures["Arrow_Up"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - bob, 48, 48), Color.White);
-                Console.WriteLine(screenPos2D);
+                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - bob, 48, 48), Color.LawnGreen);
             }
+            if (_renderContext.Player.interactState != 0 && (!_renderContext.Player.jumping || !_renderContext.Player.falling))
+            {
+                Vector3 arrowPos; 
+                if (_renderContext.Player.GetFacingDirection == 1)
+                    arrowPos = _renderContext.Player.Position - new Vector3(24, 0, 0);
+                else
+                    arrowPos = _renderContext.Player.Position + new Vector3(24, 0, 0);
+
+
+
+                //if (_renderContext.Player.GetFacingDirection == 1)
+                //    arrowPos += new Vector3(0, 0, _renderContext.Player.Position.X % GameConstants.SINGLE_CELL_SIZE);
+                //else
+                //    arrowPos -= new Vector3(0, 0, (_renderContext.Player.Position.X) % GameConstants.SINGLE_CELL_SIZE - 48);
+
+                float startX = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.X_RESOLUTION / 2);
+                float startY = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.Y_RESOLUTION / 2);
+                Vector3 CELLREMAINDER = new Vector3((arrowPos.X - startX) % GameConstants.SINGLE_CELL_SIZE,
+                                                    (arrowPos.Y - startY) % GameConstants.SINGLE_CELL_SIZE,
+                                                    arrowPos.Z);
+                //Move positions to the nearest cell
+
+                if (CELLREMAINDER.X < GameConstants.SINGLE_CELL_SIZE / 2)
+                    arrowPos = new Vector3(arrowPos.X - CELLREMAINDER.X, arrowPos.Y, arrowPos.Z);
+                else
+                    arrowPos = new Vector3(arrowPos.X - CELLREMAINDER.X + GameConstants.SINGLE_CELL_SIZE, arrowPos.Y, arrowPos.Z);
+
+                Matrix arrowWorldMatrix = _renderContext.Player.GetWorldMatrix();
+                arrowWorldMatrix.Translation = arrowPos;
+                Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(_renderContext.Player.WorldPosition,
+                    _renderContext.Camera.Projection, _renderContext.Camera.View, arrowWorldMatrix);
+                Color color;
+ 
+                color = Color.LawnGreen;
+
+                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X - 6, (int)screenPos.Y - bob, 48, 48), null, color,
+                    0f, new Vector2(_textures["Arrow"].Bounds.Width /2, _textures["Arrow"].Bounds.Height /2), SpriteEffects.FlipVertically, 0f);
+            }
+
             //spriteBatch.DrawString(font, "Time: " + timer, new Vector2(300, 50), Color.Black);
             //spriteBatch.DrawString(font, "Velocity: " + player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
             //spriteBatch.DrawString(font, "Acceleration: " + player.TransAccel.ToString(), new Vector2(50, 200), Color.Black);

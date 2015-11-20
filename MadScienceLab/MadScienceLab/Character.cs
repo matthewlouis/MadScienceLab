@@ -33,6 +33,7 @@ namespace MadScienceLab
 
         public int putDownAnimationAngle = 90;
         byte facingDirection = FACING_RIGHT;
+        public byte GetFacingDirection { get { return facingDirection;  } }
         byte putFacingDirection = FACING_RIGHT; //direction when the player puts down the box
         const int FACING_LEFT = 1, FACING_RIGHT = 2;
 
@@ -43,6 +44,7 @@ namespace MadScienceLab
         // Jumping support
         public bool jumping;
         private Boolean collisionJumping = false;
+        public bool falling;
 
         //For handling damage
         private static TimeSpan DAMAGE_DELAY = TimeSpan.FromMilliseconds(1000f);
@@ -163,8 +165,11 @@ namespace MadScienceLab
                 collisionJumping = false;
 
             // Allows for one jump and prevents jumping when falling off a brick - Steven
+            //if (TransVelocity.Y != 0)
+            //    jumping = true;
+
             if (TransVelocity.Y != 0)
-                jumping = true;
+                falling = true;
 
             //Ensures we're checking what the player is in front of each frame
             InteractiveObj = null;
@@ -186,7 +191,7 @@ namespace MadScienceLab
             //Setting up basic controls
 
             // Jumping on keyboard Space or gamepad A button
-            if (!jumping && 
+            if (!jumping && !falling &&
                 ((currentKeyboardState.IsKeyDown(Keys.Space) &&
                 oldKeyboardState.IsKeyUp(Keys.Space)) || 
                 (currentGamePadState.Buttons.A == ButtonState.Pressed &&
@@ -308,7 +313,7 @@ namespace MadScienceLab
             }
             else //facing left
             {
-                sideXPos = Position.X - StoredBox.Hitbox.Width + leeway;
+                sideXPos = Position.X - StoredBox.Hitbox.Width + leeway * 3;
             }
             Rectangle areaSide = new Rectangle((int)sideXPos, (int)Position.Y + 2, (int)StoredBox.Hitbox.Width - (int)leeway, (int)StoredBox.Hitbox.Height);
             bool putdownable = true;
@@ -325,7 +330,7 @@ namespace MadScienceLab
                  *      height increases upwards.
                  */
             }
-            if (jumping) //disallow putting down when jumping
+            if (jumping || falling) //disallow putting down when jumping
                 putdownable = false;
             if (putdownable)
                 interactState = InteractState.StartingDropBox; //state for while the player begins putting down the box
@@ -334,7 +339,7 @@ namespace MadScienceLab
 
         public void PickBox()
         {
-            if (interactState == InteractState.HandsEmpty/*state 0*/ && !jumping)
+            if (interactState == InteractState.HandsEmpty/*state 0*/ && !jumping && !falling)
             {
                 if (AdjacentObj != null && AdjacentObj.GetType() == typeof(PickableBox) && (((PickableBox)(AdjacentObj)).IsLiftable))
                 {
@@ -354,7 +359,7 @@ namespace MadScienceLab
                     //     *      height increases upwards.
                     //     */
                     //}
-                    if (jumping) //disallow putting down when jumping
+                    if (jumping || falling) //disallow putting down when jumping
                         pickuppable = false;
                     if (pickuppable) {
                         interactState = InteractState.JustPickedUpBox; //state 1
@@ -525,7 +530,7 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         private void CheckPickableBoxVincity(RenderContext renderContext)
         {
-            if (!jumping)
+            if (!jumping || !falling)
             {
                 foreach (CellObject worldObject in renderContext.Level.gameObjects[typeof(PickableBox)])
                 {
@@ -537,7 +542,14 @@ namespace MadScienceLab
                     expandedHitbox.Height -= 30;
                     if (Hitbox.Intersects(expandedHitbox))
                     {
-                        AdjacentObj = worldObject;
+                        if (Hitbox.Center.X < expandedHitbox.Center.X && facingDirection == FACING_RIGHT)
+                        {
+                            AdjacentObj = worldObject;
+                        }
+                        else if (Hitbox.Center.X > expandedHitbox.Center.X && facingDirection == FACING_LEFT)
+                        {
+                            AdjacentObj = worldObject;
+                        }
                     }
                 }
             }
@@ -681,6 +693,7 @@ namespace MadScienceLab
                                 if (!collisionJumping)
                                     TransVelocity = Vector3.Zero;
                                 jumping = false;
+                                falling = false;
                             }
                         }
                     }
