@@ -127,7 +127,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\InstancedModelSample\InstancedModelPipeline\InstancedModelPipeline.csproj">
+    <ProjectReference Include="..\..\InstancedModelPipeline\InstancedModelPipeline.csproj">
       <Project>{ff69fd90-8834-4f60-ada5-36387f112437}</Project>
       <Name>InstancedModelPipeline</Name>
     </ProjectReference>
