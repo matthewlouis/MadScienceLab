@@ -32,7 +32,7 @@ namespace MadScienceLab
     class GameplayScreen : GameScreen
     {
         #region Fields
-        Rectangle quadRect = new Rectangle(-200, 280, 1600, -720);
+        Rectangle quadRect;
         public static Level CurrentLevel { get; private set; }
 
         SpriteBatch spriteBatch;
@@ -42,7 +42,8 @@ namespace MadScienceLab
         RenderContext _renderContext;
         BaseCamera _camera;
         GameTimer _timer;
-
+        int bob = 0;
+        int num = 1;
         private SoundEffect levelMusic;
 
         Level basicLevel;
@@ -128,8 +129,6 @@ namespace MadScienceLab
             random = new Random();
             //init fps counter
             fpsCount = new FPSCounter(_renderContext);
-            Quadtree _quadtree = new Quadtree(0, quadRect);
-            _renderContext.Quadtree = _quadtree;
         }
 
 
@@ -186,6 +185,7 @@ namespace MadScienceLab
                 _textures.Add("Exit", content.Load<Texture2D>("Textures/EXIT"));
                 _textures.Add("Complete", content.Load<Texture2D>("Textures/Complete"));
                 _textures.Add("GameOver", content.Load<Texture2D>("Textures/GameOver"));
+                _textures.Add("Arrow", content.Load<Texture2D>("Textures/Arrow"));
                 _renderContext.Textures = _textures;
 
                 //Loads sound references
@@ -235,6 +235,9 @@ namespace MadScienceLab
                 levelMusic = content.Load<SoundEffect>("Songs/MusicInGameLoop");
                 MusicPlayer.SetVolume(1f);
                 MusicPlayer.PlaySong(levelMusic);
+
+                Quadtree _quadtree = new Quadtree(0, _renderContext.Level.Hitbox);
+                _renderContext.Quadtree = _quadtree;
                 
                 // if game takes long to load. Simulate load by delaying for a
                 // while, giving you a chance to admire the beautiful loading screen.
@@ -280,6 +283,7 @@ namespace MadScienceLab
         {
             base.Update(gameTime, otherScreenHasFocus, false);
 
+
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
                 pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
@@ -287,6 +291,13 @@ namespace MadScienceLab
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
             if (IsActive)
             {
+                if (bob > 10)
+                    num = -1;
+                else if (bob < -10)
+                    num = 1;
+
+                bob += (int)(0.1f * gameTime.ElapsedGameTime.Milliseconds) * num;
+
                 _renderContext.Quadtree.clear();
 
                 foreach (CellObject obj in basicLevel.Children)
@@ -359,6 +370,52 @@ namespace MadScienceLab
             spriteBatch.Begin();
             //spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
             spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
+            if (_renderContext.Player.AdjacentObj != null && _renderContext.Player.AdjacentObj.GetType() == typeof(PickableBox) 
+                && _renderContext.Player.interactState == 0)
+            {
+                Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(_renderContext.Player.AdjacentObj.WorldPosition,
+                    _renderContext.Camera.Projection, _renderContext.Camera.View, _renderContext.Player.AdjacentObj.GetWorldMatrix());
+                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - bob, 48, 48), Color.LawnGreen);
+            }
+            if (_renderContext.Player.interactState != 0 && (!_renderContext.Player.jumping || !_renderContext.Player.falling))
+            {
+                Vector3 arrowPos; 
+                if (_renderContext.Player.GetFacingDirection == 1)
+                    arrowPos = _renderContext.Player.Position - new Vector3(24, 0, 0);
+                else
+                    arrowPos = _renderContext.Player.Position + new Vector3(24, 0, 0);
+
+
+
+                //if (_renderContext.Player.GetFacingDirection == 1)
+                //    arrowPos += new Vector3(0, 0, _renderContext.Player.Position.X % GameConstants.SINGLE_CELL_SIZE);
+                //else
+                //    arrowPos -= new Vector3(0, 0, (_renderContext.Player.Position.X) % GameConstants.SINGLE_CELL_SIZE - 48);
+
+                float startX = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.X_RESOLUTION / 2);
+                float startY = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.Y_RESOLUTION / 2);
+                Vector3 CELLREMAINDER = new Vector3((arrowPos.X - startX) % GameConstants.SINGLE_CELL_SIZE,
+                                                    (arrowPos.Y - startY) % GameConstants.SINGLE_CELL_SIZE,
+                                                    arrowPos.Z);
+                //Move positions to the nearest cell
+
+                if (CELLREMAINDER.X < GameConstants.SINGLE_CELL_SIZE / 2)
+                    arrowPos = new Vector3(arrowPos.X - CELLREMAINDER.X, arrowPos.Y, arrowPos.Z);
+                else
+                    arrowPos = new Vector3(arrowPos.X - CELLREMAINDER.X + GameConstants.SINGLE_CELL_SIZE, arrowPos.Y, arrowPos.Z);
+
+                Matrix arrowWorldMatrix = _renderContext.Player.GetWorldMatrix();
+                arrowWorldMatrix.Translation = arrowPos;
+                Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(_renderContext.Player.WorldPosition,
+                    _renderContext.Camera.Projection, _renderContext.Camera.View, arrowWorldMatrix);
+                Color color;
+ 
+                color = Color.LawnGreen;
+
+                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X - 6, (int)screenPos.Y - bob, 48, 48), null, color,
+                    0f, new Vector2(_textures["Arrow"].Bounds.Width /2, _textures["Arrow"].Bounds.Height /2), SpriteEffects.FlipVertically, 0f);
+            }
+
             //spriteBatch.DrawString(font, "Time: " + timer, new Vector2(300, 50), Color.Black);
             //spriteBatch.DrawString(font, "Velocity: " + player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
             //spriteBatch.DrawString(font, "Acceleration: " + player.TransAccel.ToString(), new Vector2(50, 200), Color.Black);
@@ -494,6 +551,17 @@ namespace MadScienceLab
                     spriteBatch.Draw(dummyTexture, box, Color.Black * 0.8f);
                     
                 }
+
+                Rectangle lbox = _renderContext.Level.Hitbox;
+                lbox.X /= 2;
+                lbox.Y /= 2;
+                lbox.Width /= 2;
+                lbox.Height /= 2;
+                lbox.X += 400;
+                lbox.Y += 500;
+                spriteBatch.Draw(dummyTexture, lbox, Color.Black * 0.8f);
+
+
                 int i = 0;
                 //foreach (Rectangle box in _renderContext.BoxesHit)
                 //{
