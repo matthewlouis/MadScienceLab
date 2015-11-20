@@ -23,7 +23,7 @@ namespace MadScienceLab
     {
 
         /// <summary>
-        /// Font size used for text.
+        /// Font size used for text. This is the particular modification of the MenuEntry.
         /// </summary>
         float scalept2 = 0.9f; //Jacob: Scale size of each menu item in level select
 
