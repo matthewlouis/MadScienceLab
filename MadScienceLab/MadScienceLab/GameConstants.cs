@@ -39,7 +39,7 @@ namespace MadScienceLab
         public const int DISTANCE_SCALE = 4;
 
         // levels
-        public const int LEVELS = 5;
+        public const int LEVELS = 6;
 
 
         /// <summary>
