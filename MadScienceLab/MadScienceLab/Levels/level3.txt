@@ -5,16 +5,17 @@ XP      TX   @         XX
 XXXXXRRRXXXXXXXXXXXXX  XX
 X        XXXXXXXXXX    XX
 X        XXXXXXXXXX    XX
-X        XXXXXXXXXX    XX
+X        XXXXX         XX
 X                      XX
-XL  B            S    MXX
-XXXXXXXXXXXXXX  XXXrrr XX
-XXXXXXXXXXXXXXX    E   XX
+XL  B            S     XX
+XXXXXXXXXXXXXX  XXXrrrMXX
+XXXXXXXXXXXXXXX        XX
+XXXXXXXXXXXXXXXX   E   XX
 XXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-4:23|U,6
-10:9|9:6&9:7&9:8
-4:18|3:20&3:21&3:22
-4:2|R
+4:23|U,7
+11:9|10:6&10:7&10:8
+5:18|4:20&4:21&4:22
+5:2|R
