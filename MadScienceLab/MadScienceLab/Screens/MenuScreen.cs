@@ -28,9 +28,10 @@ namespace MadScienceLab
     {
         #region Fields
 
-        List<MenuEntry> menuEntries = new List<MenuEntry>();
-        int selectedEntry = 0;
-        string menuTitle;
+        //Jacob: Made these protected in order to update LevelSelectScreen.
+        protected List<MenuEntry> menuEntries = new List<MenuEntry>();
+        protected int selectedEntry = 0;
+        protected string menuTitle;
 
         InputAction menuUp;
         InputAction menuDown;
@@ -177,7 +178,7 @@ namespace MadScienceLab
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
             // start at Y = 175; each X value is generated per entry
-            Vector2 position = new Vector2(0f, 370f);
+            Vector2 position = new Vector2(0f, 330f);
 
             // update each menu entry's location in turn
             for (int i = 0; i < menuEntries.Count; i++)

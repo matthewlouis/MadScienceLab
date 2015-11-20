@@ -1,25 +1,37 @@
-﻿XXXXXXXXXXXX1XXXXXXXXXXXXXXXX
-X                           X
-X             L             X
-X      T  XXXXXXX2XXXXXXXXXXX
-X      X                 X  X
-X       X                X  X
-XXXXXXXXXXX     S  S   t X  X
-Xt           XXXXXXXXXXXXX  X
-XXX3 M       D  D  D     D @X
-XT        XXXXXXXXXXXX   XXXX
-XX       @XXX           XXXXX
-XX P  t  BXXXT         XXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+﻿XXXXXXXXXXXXXXXXXXXX
+X                  X
+X               XXXX
+X               D @X 
+XL T            XXXX
+XXXX       MX      X
+X        B  XX     X
+X        XX  XXRRRRX
+XLT S              X
+XXXXXX       B  XXXX
+X    XX  M   B XXXXX
+X          M RRXXXXX
+X              X  XX
+X       M      X  XX
+X   m  M       D  XX
+X P X      LXE DmSXX
+XXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-7:20|5:17
-2:14|5:26
-7:17|5:14
-2:7|5:4
-4:2|5:20
-7:24|10:18
-6:2|10:18
-10:8|13:13
-5:6|R,4
+3:8|L,4
+4:9|U,2
+7:10|D,2
+6:12|D,1
+9:3|6:14&6:15
+9:5|2:16&3:16
+2:18|10:16&10:17&10:18&10:19
+10:16|B
+10:17|B
+10:18|B
+10:19|B
+12:12|L,6
+13:4|14:17
+9:2|R
+13:2|R
+3:5|Welcome to level 2
+2:17|You accessed this area!

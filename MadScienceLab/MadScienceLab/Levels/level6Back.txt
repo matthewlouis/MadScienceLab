@@ -1,0 +1,22 @@
+﻿X         X               X
+X         X               X
+X         X               X
+X         X               X
+X         X               X
+X         X               X
+X   B     X   1      @    X
+XS  B     X      XXXXXXXXXX
+XXXXX  B  X     X         X
+X     XX  X    Xt         X
+X L   X   X    XX  M      X
+X X   X   X  MXX   X      X
+XL    X   XM   X B        X
+XX    X   XXRRXX SS       X
+X     X  TXRRRRXRXXX    L X
+X L   X  XX    X   X    X X
+X X   XT  XRRRRXS  X      X
+XL    XX  X   MXXX X     LX
+XX   R       X      RS   XX
+X   X      M         X    X
+X E XM       P   T  MX E  X
+XXXXXXXXXXXXXXXXXXXXXXXXXXX

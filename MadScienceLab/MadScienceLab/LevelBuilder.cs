@@ -133,10 +133,12 @@ namespace MadScienceLab
                         break;
                     case 'r':
                         level.AddChild ( new Trapdoor ( col++, row, true ) );
+                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'R':
                         level.AddChild(new Trapdoor(col++, row, false));
+                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);   
                         _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'P':
@@ -249,16 +251,22 @@ namespace MadScienceLab
                     if (level.Children[index].GetType () == typeof ( LaserTurret ))
                     {
                         LaserTurret laserTurret = (LaserTurret)level.Children[index];
+                        string[] Settings = ObjectAndSettings[1].Split ( ',' );
                         //set initial direction of moving platform
-                        if (ObjectAndSettings[1] == "L")
+                        if (Settings[0] == "L")
                         {
                             laserTurret.direction = GameConstants.POINTDIR.pointLeft;
                         }
                         else
-                            if (ObjectAndSettings[1] == "R")
+                            if (Settings[0] == "R")
                             {
                                 laserTurret.direction = GameConstants.POINTDIR.pointRight;
                             }
+                        //optional 2nd setting - set starting offset of laser turret, in milliseconds.
+                        if (Settings.Length >= 2)
+                        {
+                            laserTurret.elapsedFireTimeOffset = Int32.Parse(Settings[1]);
+                        }
                     }
 
 
@@ -267,6 +275,16 @@ namespace MadScienceLab
                     {
                         MessageEvent messageEvent = (MessageEvent)level.Children[index];
                         messageEvent.Message = ObjectAndSettings[1];
+                    }
+                    
+                    //Trapdoor
+                    if (level.Children[index].GetType () == typeof ( Trapdoor ))
+                    {
+                        Trapdoor trapDoor = (Trapdoor)level.Children[index];
+
+                        //Update trapdoors to face the bottom instead
+                        if (ObjectAndSettings[1] == "B")
+                            trapDoor.faceBottom();
                     }
                 }
             }

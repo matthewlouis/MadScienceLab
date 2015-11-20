@@ -135,6 +135,18 @@ namespace MadScienceLab
 
         #region Handle Input
 
+
+        /// <summary>
+        /// As the main menu screen was removed from the stack due to LoadingScreen,
+        /// Make this the action of Cancel, re-instating the menu this way.
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        protected override void OnCancel ( PlayerIndex playerIndex )
+        {
+            LoadingScreen.Load ( ScreenManager, false, null, new BackgroundScreen (),
+                                                               new MainMenuScreen () );
+        }
+
         void mainMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
