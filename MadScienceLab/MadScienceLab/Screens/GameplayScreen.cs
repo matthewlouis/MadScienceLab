@@ -362,6 +362,8 @@ namespace MadScienceLab
             //spriteBatch.DrawString(font, "Velocity: " + player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
             //spriteBatch.DrawString(font, "Acceleration: " + player.TransAccel.ToString(), new Vector2(50, 200), Color.Black);
             //spriteBatch.DrawString(font, "Box: " + brick.ToString(), new Vector2(50, 250), Color.Black);
+            //if (_renderContext.CurrMsgEvent != null)
+            //    spriteBatch.DrawString(font, "MessageEvent: " + _renderContext.CurrMsgEvent.typedMessage, new Vector2(50, 250), Color.Black);
             //spriteBatch.DrawString(font, boxHitState, new Vector2(50, 150), Color.Black);
             //spriteBatch.DrawString(font, "Projectile: " + basicLevel.Children[basicLevel.Children.Count()-1].Hitbox.ToString(), new Vector2(50, 150), Color.Black);
             //spriteBatch.DrawString(font, "Player pos: " + player.Position.ToString(), new Vector2(50, 300), Color.Black);

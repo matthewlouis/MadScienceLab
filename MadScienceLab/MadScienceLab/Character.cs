@@ -601,9 +601,13 @@ namespace MadScienceLab
                         renderContext.Level.LevelOver = true;
                     }
 
+                    //Trigger MessageEvents if passed over
                     if (levelObject.GetType() == typeof(MessageEvent))
                     {
-                        
+                        MessageEvent msgEvent = (MessageEvent)levelObject as MessageEvent;
+                        renderContext.CurrMsgEvent = msgEvent;
+                        if (msgEvent.typingState == GameConstants.TYPING_STATE.NotTyped)
+                            msgEvent.StartTyping ();
                     }
 
                     /**Determining what side was hit**/

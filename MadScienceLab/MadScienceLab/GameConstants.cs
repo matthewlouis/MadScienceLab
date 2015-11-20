@@ -32,11 +32,15 @@ namespace MadScienceLab
 
         // physics
 
+        // message events
+        public enum TYPING_STATE { NotTyped = 1, Typing = 2, DoneTyping = 3 }
+
         // sound
         public const int DISTANCE_SCALE = 4;
 
         // levels
         public const int LEVELS = 5;
+
 
         /// <summary>
         /// used for scoring the player at the end of a level
