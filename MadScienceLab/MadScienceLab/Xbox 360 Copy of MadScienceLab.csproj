@@ -89,7 +89,6 @@
     <Compile Include="Screens\GameplayScreen.cs" />
     <Compile Include="Screens\GameOverScreen.cs" />
     <Compile Include="Screens\LevelCompleteBackgoundScreen.cs" />
-    <Compile Include="Screens\LevelCompleteScreen - Copy.cs" />
     <Compile Include="Screens\LevelCompleteScreen.cs" />
     <Compile Include="Screens\LevelSelectScreen.cs" />
     <Compile Include="Screens\LoadingScreen.cs" />
@@ -99,9 +98,11 @@
     <Compile Include="Screens\MenuEntry.cs" />
     <Compile Include="Screens\MenuScreen.cs" />
     <Compile Include="Screens\MessageBoxScreen.cs" />
+    <Compile Include="Screens\NextLevelScreen.cs" />
     <Compile Include="Screens\OptionsMenuScreen.cs" />
     <Compile Include="Screens\PauseMenuScreen.cs" />
     <Compile Include="Screens\PlayerIndexEventArgs.cs" />
+    <Compile Include="Screens\StoryScreen.cs" />
     <Compile Include="SoundEffectPlayer.cs" />
     <Compile Include="ToggleSwitch.cs" />
     <Compile Include="Door.cs" />

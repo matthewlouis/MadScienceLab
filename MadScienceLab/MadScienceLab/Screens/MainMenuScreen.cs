@@ -9,6 +9,8 @@
 
 #region Using Statements
 using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
 #endregion
 
 namespace MadScienceLab
@@ -77,9 +79,20 @@ namespace MadScienceLab
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             if (saveGameData.saveGameData.currentlevel < GameConstants.LEVELS &&
-                saveGameData.saveGameData.currentlevel > 0)
-                LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen(saveGameData.saveGameData.currentlevel)); // loads next level from currentLevel
+                saveGameData.saveGameData.currentlevel > 1)
+            {
+                LoadingScreen.Load ( ScreenManager, true, e.PlayerIndex,
+                               new GameplayScreen ( saveGameData.saveGameData.currentlevel ) ); // loads next level from currentLevel
+            }
+            else
+            {
+                List<String> storytext = new List<String>();
+                storytext.Add("It's a dark and stormy Friday night. Or maybe it's Saturday- when you're as mad a scientist as Dr.Frankenbuns, it's easy to lose track. Deep in the depths of his 100-floor evil laboratory, Dr.Frankenbuns is hard at work, scheming new ways to take over the world.");
+                storytext.Add("Suddenly, lightning strikes the Securitron-Combobulator on the roof of the lab (it was probably a dumb place to put it.)");
+                storytext.Add("The security systems have gone rogue- the very devices created to keep pesky intruders out are now keeping Dr.Frankenbuns inside. Even Doomba, his typically helpful robot vacuum cleaner, has acquired a thirst for destruction.");
+                storytext.Add("One thing's for sure- it's going to be a long night.");
+                ScreenManager.AddScreen ( new StoryScreen ( storytext, saveGameData ), e.PlayerIndex );
+            }
         }
 
         /// <summary>

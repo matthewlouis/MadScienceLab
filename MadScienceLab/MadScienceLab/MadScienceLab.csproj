@@ -99,8 +99,9 @@
     <Compile Include="Screens\GameplayScreen.cs" />
     <Compile Include="Screens\GameOverScreen.cs" />
     <Compile Include="Screens\LevelCompleteBackgoundScreen.cs" />
-    <Compile Include="Screens\LevelCompleteScreen - Copy.cs" />
+    <Compile Include="Screens\NextLevelScreen.cs" />
     <Compile Include="Screens\LevelCompleteScreen.cs" />
+    <Compile Include="Screens\StoryScreen.cs" />
     <Compile Include="Screens\LevelSelectScreen.cs" />
     <Compile Include="Screens\LoadingScreen.cs" />
     <Compile Include="Screens\MainMenuScreen.cs" />
