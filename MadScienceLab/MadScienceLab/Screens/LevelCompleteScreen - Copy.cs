@@ -27,19 +27,17 @@ namespace MadScienceLab
     /// allows the player to return to select level screen or progress to
     /// the next level directly
     /// </summary>
-    class LevelCompleteScreen : MenuScreen
+    class NextLevelScreen : MenuScreen
     {
         #region Fields
 
         // define menu entries and properties
+        MenuEntry levelNumEntry;
         MenuEntry currentLevelEntry;
-        MenuEntry timeCompleteEntry;
-        MenuEntry remaingingHealthEntry;
-        MenuEntry levelScoreEntry;
-        MenuEntry highScoreEntry;
         MenuEntry blankEntry;
         MenuEntry mainMenuEntry;
-        MenuEntry continueEntry;
+        MenuEntry scoreScreenEntry;
+        MenuEntry nextLevelEntry;
 
         GameData.LevelData levelData;
         GameData gameData;
@@ -52,72 +50,35 @@ namespace MadScienceLab
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LevelCompleteScreen(GameData.LevelData levelData )
-            : base("Level Complete")
+        public NextLevelScreen(GameData.LevelData levelData )
+            : base("Next Level")
         {
             this.levelData = levelData;
-            gameData = new GameData();
-            if (gameData.saveGameData.levelCompleted < levelData.currentlevelNum)
-                gameData.saveGameData.levelCompleted = levelData.currentlevelNum;
-            gameData.saveGameData.levelData[levelData.currentlevelNum-1].time = levelData.time.ToString();
-
-            int levelScore = 0;
-            levelScore += (int)GameConstants.SCORE.levelComplete; // add score for completing level
-            // Score for health
-            if(levelData.remainingHealth == GameConstants.HEALTH)
-            {
-                levelScore += (int)GameConstants.SCORE.fullHealth;
-            }
-            if (levelData.remainingHealth == GameConstants.HEALTH-1)
-            {
-                levelScore += (int)GameConstants.SCORE.medHealth;
-            }
-            if (levelData.remainingHealth == GameConstants.HEALTH-2)
-            {
-                levelScore += (int)GameConstants.SCORE.lowHealth;
-            }
-
-            //if(new TimeSpan( levelData.time < levelData.levelParTime)
-            //{
-            //    score += GameConstants.SCORE.parTimeComplete;
-            //}
-            
-
-            gameData.saveGameData.score += levelScore;
-            if(gameData.saveGameData.levelData[levelData.currentlevelNum - 1].levelHighScore < levelScore)
-                gameData.saveGameData.levelData[levelData.currentlevelNum - 1].levelHighScore = levelScore;
-            gameData.GetContainer();
-            gameData.Save();
-
             // Create our menu entries.
-            string time = string.Format("Time Completed: {0}", levelData.time);
-            time = time.Remove(time.Length - 8);
-
-            currentLevelEntry = new MenuEntry("\""+GameConstants.LEVELNAMES[levelData.currentlevelNum-1]+"\"");
+            
+            levelNumEntry = new MenuEntry("Level "+(levelData.currentlevelNum+1)+":");
+            currentLevelEntry = new MenuEntry("\""+GameConstants.LEVELNAMES[levelData.currentlevelNum+1]+"\"");
             //timeCompleteEntry = new MenuEntry(time);
-            remaingingHealthEntry = new MenuEntry("Remaining Health: " + levelData.remainingHealth.ToString());
-            levelScoreEntry = new MenuEntry("Level Score: " + levelScore);
-            highScoreEntry = new MenuEntry("Game Score: " + gameData.saveGameData.score.ToString());
             blankEntry = new MenuEntry ( "" );
-            continueEntry = new MenuEntry("Continue");
-            mainMenuEntry = new MenuEntry ( "Back to Main Menu" );
+            nextLevelEntry = new MenuEntry ( "Start" );
+            scoreScreenEntry = new MenuEntry ( "Score Screen" );
+            mainMenuEntry = new MenuEntry ( "Main Menu" );
 
             // Hook up menu event handlers.
             mainMenuEntry.Selected += mainMenuEntrySelected;
-            continueEntry.Selected += continueEntrySelected;
+            scoreScreenEntry.Selected += scoreScreenEntrySelected;
+            nextLevelEntry.Selected += nextLevelEntrySelected;
 
             // Add entries to the menu.
+            MenuEntries.Add ( levelNumEntry );
             MenuEntries.Add(currentLevelEntry);
-            //MenuEntries.Add(timeCompleteEntry);
-            MenuEntries.Add(remaingingHealthEntry);
-            MenuEntries.Add(levelScoreEntry);
-            MenuEntries.Add ( highScoreEntry );
+            MenuEntries.Add ( blankEntry );
             MenuEntries.Add ( blankEntry );
             
             // check to see if there are still levels left before adding nextLevelEntry
             if (levelData.currentlevelNum < GameConstants.LEVELS)
             {
-                MenuEntries.Add(continueEntry);
+                MenuEntries.Add(nextLevelEntry);
             }
             // load credits
             else if (levelData.currentlevelNum == GameConstants.LEVELS)
@@ -128,7 +89,7 @@ namespace MadScienceLab
             }
 
 
-
+            MenuEntries.Add ( scoreScreenEntry );
             MenuEntries.Add(mainMenuEntry);
 
             //Select the first selectable entry
@@ -143,7 +104,7 @@ namespace MadScienceLab
         #endregion
 
         #region Handle Input
-        /*
+
         public override void HandleInput ( GameTime gameTime, InputState input )
         {
             // For input tests we pass in our ControllingPlayer, which may
@@ -186,16 +147,13 @@ namespace MadScienceLab
                 OnCancel ( playerIndex );
             }
         }
-        */
         /// <summary>
-        /// As the main menu screen was removed from the stack due to LoadingScreen,
-        /// Make this the action of Cancel, re-instating the menu this way.
+        /// Cancel exits the Next Level screen.
         /// </summary>
         /// <param name="playerIndex"></param>
         protected override void OnCancel ( PlayerIndex playerIndex )
         {
-            LoadingScreen.Load ( ScreenManager, false, null, new BackgroundScreen (),
-                                                               new MainMenuScreen () );
+            ExitScreen ();
         }
 
         void mainMenuEntrySelected(object sender, PlayerIndexEventArgs e)
@@ -203,10 +161,15 @@ namespace MadScienceLab
             LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
                                                                new MainMenuScreen());
         }
-
-        void continueEntrySelected(object sender, PlayerIndexEventArgs e)
+        void scoreScreenEntrySelected ( object sender, PlayerIndexEventArgs e )
         {
-            ScreenManager.AddScreen(new NextLevelScreen(this.levelData), e.PlayerIndex);
+            ExitScreen ();
+        }
+
+        void nextLevelEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
+                           new GameplayScreen(++levelData.currentlevelNum));            
         }
         
 

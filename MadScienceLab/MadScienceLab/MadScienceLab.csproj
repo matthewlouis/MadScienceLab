@@ -99,6 +99,7 @@
     <Compile Include="Screens\GameplayScreen.cs" />
     <Compile Include="Screens\GameOverScreen.cs" />
     <Compile Include="Screens\LevelCompleteBackgoundScreen.cs" />
+    <Compile Include="Screens\LevelCompleteScreen - Copy.cs" />
     <Compile Include="Screens\LevelCompleteScreen.cs" />
     <Compile Include="Screens\LevelSelectScreen.cs" />
     <Compile Include="Screens\LoadingScreen.cs" />
@@ -167,6 +168,7 @@
     <Content Include="Levels\level6Back.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SkinnedModelPipeline.csproj" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -191,10 +193,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\InstancedModelSample\InstancedModelPipeline\InstancedModelPipeline.csproj">
-      <Project>{ff69fd90-8834-4f60-ada5-36387f112437}</Project>
-      <Name>InstancedModelPipeline</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\GameStateManagement\GameStateManagement %28Windows%29.csproj">
       <Project>{0a551d79-f37e-4529-9ca0-3fd2e9ea715e}</Project>
       <Name>GameStateManagement %28Windows%29</Name>
@@ -202,10 +200,6 @@
     <ProjectReference Include="..\..\SkinnedModelData\SkinnedModelData.csproj">
       <Project>{3899fb5e-0ed8-4606-81d5-4053c24c52af}</Project>
       <Name>SkinnedModelData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SkinnedModelPipeline\SkinnedModelPipeline.csproj">
-      <Project>{fdc4eb6b-4fc3-45dc-8e17-7f560c58cd0c}</Project>
-      <Name>SkinnedModelPipeline</Name>
     </ProjectReference>
     <ProjectReference Include="..\MadScienceLabContent\MadScienceLabContent.contentproj">
       <Project>{3585BE57-612E-4BF8-984B-2E1BD58A51FE}</Project>
