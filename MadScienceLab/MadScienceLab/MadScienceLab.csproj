@@ -106,7 +106,7 @@
     <Compile Include="Screens\LoadingScreen.cs" />
     <Compile Include="Screens\MainMenuScreen.cs" />
     <Compile Include="Screens\LevelEntry.cs" />
-    <Compile Include="Screens\LevelSelectMenuEntry.cs" />
+    <Compile Include="Screens\VarSizeMenuEntry.cs" />
     <Compile Include="Screens\MenuEntry.cs" />
     <Compile Include="Screens\MenuScreen.cs" />
     <Compile Include="Screens\MessageBoxScreen.cs" />

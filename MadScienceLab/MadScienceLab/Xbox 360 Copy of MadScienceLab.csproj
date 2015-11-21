@@ -94,7 +94,6 @@
     <Compile Include="Screens\LoadingScreen.cs" />
     <Compile Include="Screens\MainMenuScreen.cs" />
     <Compile Include="Screens\LevelEntry.cs" />
-    <Compile Include="Screens\LevelSelectMenuEntry.cs" />
     <Compile Include="Screens\MenuEntry.cs" />
     <Compile Include="Screens\MenuScreen.cs" />
     <Compile Include="Screens\MessageBoxScreen.cs" />
@@ -103,6 +102,7 @@
     <Compile Include="Screens\PauseMenuScreen.cs" />
     <Compile Include="Screens\PlayerIndexEventArgs.cs" />
     <Compile Include="Screens\StoryScreen.cs" />
+    <Compile Include="Screens\VarSizeMenuEntry.cs" />
     <Compile Include="SoundEffectPlayer.cs" />
     <Compile Include="ToggleSwitch.cs" />
     <Compile Include="Door.cs" />

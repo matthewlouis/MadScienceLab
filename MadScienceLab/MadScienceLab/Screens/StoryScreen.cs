@@ -36,6 +36,7 @@ namespace MadScienceLab
         VarSizeMenuEntry BlankEntry;
         VarSizeMenuEntry ContinueEntry;
         List<String> Storyline;
+        List<String> StoryTitles;
         bool lastStoryScreen;
 
         GameData saveGameData;
@@ -47,14 +48,15 @@ namespace MadScienceLab
         /// <summary>
         /// Constructor.
         /// </summary>
-        public StoryScreen ( List<String> storytext, GameData saveData)
-            : base("Story")
+        public StoryScreen ( List<String> storytext, List<String> titletext, GameData saveData)
+            : base(titletext[0])
         {
             saveGameData = saveData;
 
             //SpriteFont font = ScreenManager.Font; //Get font of the ScreenManager
             // Create our menu entries.
             Storyline = storytext;
+            StoryTitles = titletext;
 
             StorylineEntry = new VarSizeMenuEntry ( Storyline[0] , 0.6f);
             BlankEntry = new VarSizeMenuEntry ( " ", 0.5f);
@@ -178,8 +180,10 @@ namespace MadScienceLab
 
         void continueSelected(object sender, PlayerIndexEventArgs e)
         {
-            List<String> RestOfStoryline = new List<String>(Storyline);
+            List<String> RestOfStoryline = new List<String> ( Storyline );
+            List<String> RestOfTitles = new List<String> ( StoryTitles );
             RestOfStoryline.RemoveAt ( 0 );
+            RestOfTitles.RemoveAt ( 0 );
             if (RestOfStoryline.Count == 0)
             {
                 LoadingScreen.Load ( ScreenManager, true, e.PlayerIndex,
@@ -187,8 +191,13 @@ namespace MadScienceLab
             }
             else
             {
-                ScreenManager.AddScreen ( new StoryScreen ( RestOfStoryline, saveGameData ), e.PlayerIndex );
+                ScreenManager.AddScreen ( new StoryScreen ( RestOfStoryline, RestOfTitles, saveGameData ), e.PlayerIndex );
             }
+        }
+
+        protected override void OnCancel ( PlayerIndex playerIndex )
+        {
+            //Do nothing. The player should go through the story without skipping or going back.
         }
 
         #endregion
