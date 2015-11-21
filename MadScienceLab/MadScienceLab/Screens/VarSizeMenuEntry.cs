@@ -110,14 +110,26 @@ namespace MadScienceLab
             SpriteFont font = screenManager.Font;
             string trimmableText = text;
             List<String> lines = new List<String>();
+            char[] indexChars = new char[] { ' ', '\n' };
             while (trimmableText.Length >= 1) {
                 int c = 1;
                 while (c < trimmableText.Length &&
-                    font.MeasureString ( trimmableText.Substring ( 0, ((trimmableText.IndexOf(" ", c+1)!=-1)?trimmableText.IndexOf(" ", c+1):trimmableText.Length) ) ).X*scalept2 < width) //so ends at trimmableText.Length or when the width when adding another char would exceed the width
+                    font.MeasureString ( 
+                        trimmableText.Substring ( 0, 
+                            ((trimmableText.IndexOfAny(indexChars, c+1)!=-1)?
+                                trimmableText.IndexOfAny ( indexChars, c + 1 ) :
+                                trimmableText.Length)
+                        )
+                    ).X * scalept2 < width) //so ends at trimmableText.Length or when the width when adding another word (before space or EOL) would exceed the width
                 {
-                    c = ((trimmableText.IndexOf ( " ", c + 1 ) != -1) ? trimmableText.IndexOf ( " ", c + 1 ) : trimmableText.Length); //Set to the next space or the end of the string if that doesn't exist.
+                    c = ((trimmableText.IndexOfAny ( indexChars, c + 1 ) != -1) ?
+                            trimmableText.IndexOfAny ( indexChars, c + 1 ) :
+                            trimmableText.Length); //Set to the next space or the end of the string if that doesn't exist.
+                    if (c < trimmableText.Length && trimmableText[c] == '\n') //If what was found was a '\n' then end the line there
+                        break;
+                    //otherwise, can continue the line
                 }
-                String linestring = trimmableText.Substring ( 0, c ).TrimStart(' ');
+                String linestring = trimmableText.Substring ( 0, c ).TrimStart(' ', '\n');
                 lines.Add(linestring);
                 trimmableText = trimmableText.Substring ( c );
                 if (LineWidth(screen, linestring) > TextWidth)

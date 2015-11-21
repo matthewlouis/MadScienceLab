@@ -83,7 +83,7 @@ namespace MadScienceLab
             // load credits
             else if (levelData.currentlevelNum == GameConstants.LEVELS)
             {
-                // load game complete screen with credits if all levels are finished
+                //load game complete screen with credits if all levels are finished
                 //LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
                 //               new GameCompleteScreen());
             }

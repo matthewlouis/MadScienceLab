@@ -113,11 +113,12 @@ namespace MadScienceLab
             MenuEntries.Add(levelScoreEntry);
             MenuEntries.Add ( highScoreEntry );
             MenuEntries.Add ( blankEntry );
+            MenuEntries.Add ( continueEntry );
             
+            /*
             // check to see if there are still levels left before adding nextLevelEntry
             if (levelData.currentlevelNum < GameConstants.LEVELS)
             {
-                MenuEntries.Add(continueEntry);
             }
             // load credits
             else if (levelData.currentlevelNum == GameConstants.LEVELS)
@@ -126,7 +127,7 @@ namespace MadScienceLab
                 //LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
                 //               new GameCompleteScreen());
             }
-
+            */
 
 
             MenuEntries.Add(mainMenuEntry);
@@ -206,7 +207,24 @@ namespace MadScienceLab
 
         void continueEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            ScreenManager.AddScreen(new NextLevelScreen(this.levelData), e.PlayerIndex);
+
+            // check to see if there are still levels left before going to the next level screen
+            if (levelData.currentlevelNum < GameConstants.LEVELS)
+            {
+                ScreenManager.AddScreen ( new NextLevelScreen ( this.levelData ), e.PlayerIndex );
+            }
+            // load credits if there would be no next level
+            else if (levelData.currentlevelNum == GameConstants.LEVELS)
+            {
+                // load game complete screen with credits if all levels are finished
+                //LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
+                //               new GameCompleteScreen());
+                List<String> StoryText = new List<String> ();
+                List<String> TitleText = new List<String> ();
+                StoryText.Add ( "Jarred Jardine\nSteven Chen\nLee Ji\nJacob Lim\nMatthew Moldowan" );
+                TitleText.Add ( "Credits" );
+                ScreenManager.AddScreen ( new StoryScreen ( StoryText, TitleText, 0.9f, gameData, new BackgroundScreen (), new MainMenuScreen () ), e.PlayerIndex );
+            }
         }
         
 

@@ -37,7 +37,8 @@ namespace MadScienceLab
         VarSizeMenuEntry ContinueEntry;
         List<String> Storyline;
         List<String> StoryTitles;
-        GameScreen DestScreen;
+        float fontScale;
+        GameScreen[] DestScreensToLoad;
         bool lastStoryScreen;
 
         GameData saveGameData;
@@ -49,19 +50,20 @@ namespace MadScienceLab
         /// <summary>
         /// Constructor.
         /// </summary>
-        public StoryScreen ( List<String> storytext, List<String> titletext, GameScreen DestScreen, GameData saveData)
+        public StoryScreen ( List<String> storytext, List<String> titletext, float fontScale, GameData saveData, params GameScreen[] DestScreensToLoad )
             : base(titletext[0])
         {
             saveGameData = saveData;
-            this.DestScreen = DestScreen;
+            this.DestScreensToLoad = DestScreensToLoad;
+            this.fontScale = fontScale;
 
             //SpriteFont font = ScreenManager.Font; //Get font of the ScreenManager
             // Create our menu entries.
             Storyline = storytext;
             StoryTitles = titletext;
 
-            StorylineEntry = new VarSizeMenuEntry ( Storyline[0] , 0.6f);
-            BlankEntry = new VarSizeMenuEntry ( " ", 0.5f);
+            StorylineEntry = new VarSizeMenuEntry ( Storyline[0] , fontScale);
+            BlankEntry = new VarSizeMenuEntry ( " ", (fontScale * 5/6));
             MenuEntry ContinueEntry = new VarSizeMenuEntry ( "Continue", 1f);
 
             // Hook up menu event handlers.
@@ -189,11 +191,11 @@ namespace MadScienceLab
             if (RestOfStoryline.Count == 0)
             {
                 LoadingScreen.Load ( ScreenManager, true, e.PlayerIndex,
-                               DestScreen ); // loads next level from currentLevel
+                               DestScreensToLoad ); // loads next level from currentLevel
             }
             else
             {
-                ScreenManager.AddScreen ( new StoryScreen ( RestOfStoryline, RestOfTitles, this.DestScreen, saveGameData ), e.PlayerIndex );
+                ScreenManager.AddScreen ( new StoryScreen ( RestOfStoryline, RestOfTitles, fontScale, saveGameData, this.DestScreensToLoad ), e.PlayerIndex );
             }
         }
 
