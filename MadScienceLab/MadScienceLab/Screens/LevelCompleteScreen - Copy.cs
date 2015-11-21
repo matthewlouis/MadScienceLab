@@ -57,7 +57,7 @@ namespace MadScienceLab
             // Create our menu entries.
             
             levelNumEntry = new MenuEntry("Level "+(levelData.currentlevelNum+1)+":");
-            currentLevelEntry = new MenuEntry("\""+GameConstants.LEVELNAMES[levelData.currentlevelNum+1]+"\"");
+            currentLevelEntry = new MenuEntry("\""+GameConstants.LEVELNAMES[levelData.currentlevelNum]+"\"");
             //timeCompleteEntry = new MenuEntry(time);
             blankEntry = new MenuEntry ( "" );
             nextLevelEntry = new MenuEntry ( "Start" );
