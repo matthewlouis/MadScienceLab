@@ -172,7 +172,7 @@ namespace MadScienceLab
                 falling = true;
 
             //Ensures we're checking what the player is in front of each frame
-            InteractiveObj = null;
+            //InteractiveObj = null;
 
             //Code used to update any actions occurring with PickBox and PutBox.
             UpdatePickBox ();
@@ -525,7 +525,7 @@ namespace MadScienceLab
         }
 
         /// <summary>
-        /// Checks all pickable boxes to see if player is close to the boxes
+        /// Checks all pickable boxes to see if player is close to the boxes - Steven
         /// </summary>
         /// <param name="renderContext"></param>
         private void CheckPickableBoxVincity(RenderContext renderContext)
@@ -625,7 +625,7 @@ namespace MadScienceLab
             foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
                 if (levelObject.GetType() == typeof(MovingPlatform)) //default moving platforms for player to not be on the platform unless it would be found that the player were on it
-            {
+                {
                     ((MovingPlatform)levelObject).PlayerOnPlatform = false;
                 }
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
