@@ -286,6 +286,7 @@
       <Name>gamefont</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
+      <SubType>Designer</SubType>
     </Compile>
     <Compile Include="Menu\menufont.spritefont">
       <Name>menufont</Name>
