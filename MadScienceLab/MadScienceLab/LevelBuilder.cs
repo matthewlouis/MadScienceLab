@@ -17,8 +17,8 @@ namespace MadScienceLab
         static ToggleSwitch testSwitch;
         
         public static int levelwidth = 0;
-        public static int startWall = 10;
-        public static int startFloor = 1;
+        public const int startWall = 10;
+        public const int startFloor = 1;
          //need height in order to determine object Y position, which would be startFloor + ((levelheight-1) - row), levelheight-1 being the highest row
         public static int levelheight; //count \n; (# of "\n")+(1 for floor) is the height. placement; thus, get height first.
 
@@ -77,7 +77,7 @@ namespace MadScienceLab
 
             String newline = "\r\n"; //in case a newline were to be used
             levelheight = leveltxt.Length - leveltxt.Replace ("\n", "" ).Length;
-            
+            levelwidth = 0; //reset this each time a new level is made
             
             //there will be walls and floor enclosing the aforementioned level
             //iterate through level string, find the level height and width from iterating through the txt file
@@ -116,7 +116,9 @@ namespace MadScienceLab
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 'X':
-                        level.AddChild ( new BasicBlock ( col++, row ) );
+                        BasicBlock blockToAdd = new BasicBlock(col++, row);
+                        level.AddChild(blockToAdd);
+                        level.ForegroundBlocks.Add(blockToAdd);
                         break;
                     case 'L':
                        level.AddChild(new LaserTurret(col++, row, true, GameConstants.POINTDIR.pointLeft)); 

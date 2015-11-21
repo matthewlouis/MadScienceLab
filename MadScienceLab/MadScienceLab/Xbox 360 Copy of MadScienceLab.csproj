@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{DE731999-336D-4DAA-936E-DA3A20CD1B5E}</ProjectGuid>
+    <ProjectGuid>{98B3CB2A-11A5-4435-B2D6-25496DF0C105}</ProjectGuid>
     <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">Xbox 360</Platform>
@@ -63,6 +63,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EnemySonar.cs" />
     <Compile Include="BackgroundBlock.cs" />
     <Compile Include="BaseCamera.cs" />
     <Compile Include="BasicBlock.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Button.cs" />
     <Compile Include="CellObject.cs" />
     <Compile Include="Character.cs" />
+    <Compile Include="GameData.cs" />
     <Compile Include="MessageEvent.cs" />
     <Compile Include="GameTimer.cs" />
     <Compile Include="MovingPlatform.cs" />
@@ -78,11 +80,15 @@
     <Compile Include="FPSCounter.cs" />
     <Compile Include="GameConstants.cs" />
     <Compile Include="LaserProjectile.cs" />
+    <Compile Include="MusicPlayer.cs" />
     <Compile Include="PickableBox.cs" />
     <Compile Include="Quadtree.cs" />
+    <Compile Include="Score.cs" />
     <Compile Include="ScreenFactory.cs" />
     <Compile Include="Screens\BackgroundScreen.cs" />
     <Compile Include="Screens\GameplayScreen.cs" />
+    <Compile Include="Screens\GameOverScreen.cs" />
+    <Compile Include="Screens\LevelCompleteBackgoundScreen.cs" />
     <Compile Include="Screens\LevelCompleteScreen.cs" />
     <Compile Include="Screens\LevelSelectScreen.cs" />
     <Compile Include="Screens\LoadingScreen.cs" />
@@ -91,9 +97,12 @@
     <Compile Include="Screens\MenuEntry.cs" />
     <Compile Include="Screens\MenuScreen.cs" />
     <Compile Include="Screens\MessageBoxScreen.cs" />
+    <Compile Include="Screens\NextLevelScreen.cs" />
     <Compile Include="Screens\OptionsMenuScreen.cs" />
     <Compile Include="Screens\PauseMenuScreen.cs" />
     <Compile Include="Screens\PlayerIndexEventArgs.cs" />
+    <Compile Include="Screens\StoryScreen.cs" />
+    <Compile Include="Screens\VarSizeMenuEntry.cs" />
     <Compile Include="SoundEffectPlayer.cs" />
     <Compile Include="ToggleSwitch.cs" />
     <Compile Include="Door.cs" />
@@ -107,14 +116,12 @@
     <Compile Include="RenderContext.cs" />
     <Compile Include="LaserTurret.cs" />
     <Compile Include="SwitchableObject.cs" />
+    <Compile Include="Trapdoor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="Levels\level1.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Levels\level2.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Levels\level2Back.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -123,9 +130,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Levels\level2.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Levels\level2Back.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Levels\level3.txt">
@@ -146,6 +150,13 @@
     <Content Include="Levels\level5Back.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Levels\level6.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Levels\level6Back.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SkinnedModelPipeline.csproj" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -170,8 +181,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\GameStateManagement\Xbox 360 Copy of GameStateManagement (Windows).csproj">
+      <Project>{4bfc7ccf-56c2-42f6-b316-2fc18ccea2e2}</Project>
+      <Name>Xbox 360 Copy of GameStateManagement (Windows)</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SkinnedModelData\Xbox 360 Copy of SkinnedModelData.csproj">
-      <Project>{1a8f74ab-9106-47f2-ae91-94eafe3b4671}</Project>
+      <Project>{83f00e8a-6149-4982-bc83-b15221e023d4}</Project>
       <Name>Xbox 360 Copy of SkinnedModelData</Name>
     </ProjectReference>
     <ProjectReference Include="..\MadScienceLabContent\MadScienceLabContent.contentproj">
@@ -186,12 +201,14 @@
     <Reference Include="Microsoft.Xna.Framework.Game" />
     <Reference Include="Microsoft.Xna.Framework.GamerServices" />
     <Reference Include="Microsoft.Xna.Framework.Graphics" />
+    <Reference Include="Microsoft.Xna.Framework.Storage" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

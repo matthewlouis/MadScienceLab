@@ -13,7 +13,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaProfile>Reach</XnaProfile>
+    <XnaProfile>HiDef</XnaProfile>
     <XnaCrossPlatformGroupID>40131acd-b9a0-4613-9872-12d777b5a979</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
@@ -99,12 +99,14 @@
     <Compile Include="Screens\GameplayScreen.cs" />
     <Compile Include="Screens\GameOverScreen.cs" />
     <Compile Include="Screens\LevelCompleteBackgoundScreen.cs" />
+    <Compile Include="Screens\NextLevelScreen.cs" />
     <Compile Include="Screens\LevelCompleteScreen.cs" />
+    <Compile Include="Screens\StoryScreen.cs" />
     <Compile Include="Screens\LevelSelectScreen.cs" />
     <Compile Include="Screens\LoadingScreen.cs" />
     <Compile Include="Screens\MainMenuScreen.cs" />
     <Compile Include="Screens\LevelEntry.cs" />
-    <Compile Include="Screens\LevelSelectMenuEntry.cs" />
+    <Compile Include="Screens\VarSizeMenuEntry.cs" />
     <Compile Include="Screens\MenuEntry.cs" />
     <Compile Include="Screens\MenuScreen.cs" />
     <Compile Include="Screens\MessageBoxScreen.cs" />
@@ -167,6 +169,7 @@
     <Content Include="Levels\level6Back.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="SkinnedModelPipeline.csproj" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
@@ -198,10 +201,6 @@
     <ProjectReference Include="..\..\SkinnedModelData\SkinnedModelData.csproj">
       <Project>{3899fb5e-0ed8-4606-81d5-4053c24c52af}</Project>
       <Name>SkinnedModelData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SkinnedModelPipeline\SkinnedModelPipeline.csproj">
-      <Project>{fdc4eb6b-4fc3-45dc-8e17-7f560c58cd0c}</Project>
-      <Name>SkinnedModelPipeline</Name>
     </ProjectReference>
     <ProjectReference Include="..\MadScienceLabContent\MadScienceLabContent.contentproj">
       <Project>{3585BE57-612E-4BF8-984B-2E1BD58A51FE}</Project>

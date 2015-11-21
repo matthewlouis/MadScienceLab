@@ -32,7 +32,7 @@ namespace MadScienceLab
         public MovingPlatform(int column, int row)
             : base(column, row)
         {
-            base.Model = GameplayScreen._models["BasicBlock"];
+            base.Model = GameplayScreen._models["MovingBlock"];
             base.isCollidable = true;
             maxDistance = 2 * GameConstants.SINGLE_CELL_SIZE; //default distance
             this.facingDirection = RIGHT;
@@ -111,8 +111,8 @@ namespace MadScienceLab
         {
             foreach (CellObject levelObject in renderContext.Level.Children)
             {
-                bool typeAllowed = levelObject.GetType () == typeof ( BasicBlock ) || levelObject.GetType () == typeof ( Door ) || levelObject.GetType () == typeof ( Trapdoor );
-                //Collide only with BasicBlocks; other objects will not influence MovingPlatform's position
+                bool typeAllowed = levelObject.GetType () == typeof ( BasicBlock ) || levelObject.GetType () == typeof ( MovingPlatform ) || levelObject.GetType () == typeof ( Door ) || levelObject.GetType () == typeof ( Trapdoor );
+                //Collide only with objects under typeAllowed; other objects will not influence MovingPlatform's position
                 if (levelObject.isCollidable && typeAllowed && Hitbox.Intersects(levelObject.Hitbox) && levelObject != this)
                 {
                     Rectangle intersect = Rectangle.Intersect(Hitbox, levelObject.Hitbox);

@@ -15,10 +15,10 @@ XX    X   XXRRXX SS       X
 X     X  TXRRRRXRXXX    L X
 X L   X  XX    X   X    X X
 X X   XT  XRRRRXS  X      X
-XL    XX  X   MXXX X     L 
+XL     X  X   MXXX       L 
 XX   R       X      RS   XX
 X   X      M         X    X
-X E XM       P   T  MX E  X
+X E XM       P   t  MX E  X
 XXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Want it so that:
@@ -32,6 +32,7 @@ Maybe make the UR box then have to be used for the DR switch after being availab
 		-how?
 -Or, make the box used for another set of trapdoors. Done.
 3. 
+Note: It's possible for players to clip through moving platforms, and it might expose the trapdoor's true hitbox, but nonetheless, there isn't really a reward for doing that.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 8:10|8:12&8:13|Coordinates of UL trapdoors-lever
 6:8|6:12&6:13

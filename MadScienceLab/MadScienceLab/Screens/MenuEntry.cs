@@ -80,6 +80,7 @@ namespace MadScienceLab
         /// </summary>
         public event EventHandler<PlayerIndexEventArgs> Selected;
 
+        public bool HasNoHandle { get { return Selected == null; } }
 
         /// <summary>
         /// Method for raising the Selected event.
@@ -161,16 +162,15 @@ namespace MadScienceLab
             ScreenManager screenManager = screen.ScreenManager;
             SpriteBatch spriteBatch = screenManager.SpriteBatch;
             SpriteFont font = screenManager.Font;
-
             Vector2 origin = new Vector2 ( 0, font.LineSpacing / 2 );
 
             spriteBatch.DrawString ( font, text, position, color, 0,
                                    origin, scale, SpriteEffects.None, 0 );
         }
 
-
         /// <summary>
         /// Queries how much space this menu entry requires.
+        /// Jacob: This may consist of multiple lines.
         /// </summary>
         public virtual int GetHeight ( MenuScreen screen )
         {
