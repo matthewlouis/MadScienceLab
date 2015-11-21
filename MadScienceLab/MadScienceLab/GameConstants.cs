@@ -40,7 +40,7 @@ namespace MadScienceLab
 
         // levels
         public const int LEVELS = 6;
-
+        public static string[] LEVELNAMES = { "Storage Room", "Security Front", "Lab Hallway", "Top-Secret Exit", "Elevator to B1", "Exit Shaft" };
 
         /// <summary>
         /// used for scoring the player at the end of a level

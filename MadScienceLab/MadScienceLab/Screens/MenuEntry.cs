@@ -80,6 +80,7 @@ namespace MadScienceLab
         /// </summary>
         public event EventHandler<PlayerIndexEventArgs> Selected;
 
+        public bool HasNoHandle { get { return Selected == null; } }
 
         /// <summary>
         /// Method for raising the Selected event.

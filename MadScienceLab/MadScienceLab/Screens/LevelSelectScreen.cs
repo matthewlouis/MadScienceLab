@@ -56,14 +56,14 @@ namespace MadScienceLab
             
 
             // Create our menu entries.
-            level1MenuEntry = new LevelSelectMenuEntry ( "Level 1" );
-            level2MenuEntry = new LevelSelectMenuEntry ( "Level 2" );
-            level3MenuEntry = new LevelSelectMenuEntry ( "Level 3" );
-            level4MenuEntry = new LevelSelectMenuEntry ( "Level 4" );
-            level5MenuEntry = new LevelSelectMenuEntry ( "Level 5" );
-            level6MenuEntry = new LevelSelectMenuEntry ( "Level 6" );
+            level1MenuEntry = new LevelSelectMenuEntry ( "1 - "+GameConstants.LEVELNAMES[0] );
+            level2MenuEntry = new LevelSelectMenuEntry ( "2 - "+GameConstants.LEVELNAMES[1] );
+            level3MenuEntry = new LevelSelectMenuEntry ( "3 - " + GameConstants.LEVELNAMES[2] );
+            level4MenuEntry = new LevelSelectMenuEntry ( "4 - " + GameConstants.LEVELNAMES[3] );
+            level5MenuEntry = new LevelSelectMenuEntry ( "5 - " + GameConstants.LEVELNAMES[4] );
+            level6MenuEntry = new LevelSelectMenuEntry ( "6 - " + GameConstants.LEVELNAMES[5] );
 
-            MenuEntry back = new LevelSelectMenuEntry ( "Main Menu" );
+            MenuEntry back = new LevelSelectMenuEntry ( "Back to Main Menu" );
 
             // Hook up menu event handlers.
             level1MenuEntry.Selected += level1MenuEntrySelected;
@@ -104,12 +104,13 @@ namespace MadScienceLab
             Vector2 position = new Vector2 ( 0f, 310f ); //Modified from 330f, which was the original value
 
             // update each menu entry's location in turn
-            for (int i = 0; i < menuEntries.Count; i++)
+            int i;
+            for (i=0; i < menuEntries.Count; i++) //iterate for all entries except for [i].
             {
                 LevelSelectMenuEntry menuEntry = (LevelSelectMenuEntry)menuEntries[i];
 
-                // each entry is to be centered horizontally
-                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth ( this ) / 2;
+                // each entry is to be centered horizontally, but not in LevelSelect - alignment is to be left.
+                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - 120/*menuEntry.GetWidth ( this ) / 2*/;
 
                 if (ScreenState == ScreenState.TransitionOn)
                     position.X -= transitionOffset * 256;
@@ -122,6 +123,21 @@ namespace MadScienceLab
                 // move down for the next entry the size of this entry
                 position.Y += menuEntry.GetHeight ( this );
             }
+                /*LevelSelectMenuEntry menuBackEntry = (LevelSelectMenuEntry)menuEntries[i];
+
+                // the Back is to be centered horizontally.
+                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuBackEntry.GetWidth ( this ) / 2;
+
+                if (ScreenState == ScreenState.TransitionOn)
+                    position.X -= transitionOffset * 256;
+                else
+                    position.X += transitionOffset * 512;
+
+                // set the entry's position
+                menuBackEntry.Position = position;
+
+                // move down for the next entry the size of this entry
+                position.Y += menuBackEntry.GetHeight ( this );*/
         }
 
         /// <summary>

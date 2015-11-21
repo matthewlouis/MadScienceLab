@@ -17,8 +17,8 @@ namespace MadScienceLab
         static ToggleSwitch testSwitch;
         
         public static int levelwidth = 0;
-        public static int startWall = 10;
-        public static int startFloor = 1;
+        public const int startWall = 10;
+        public const int startFloor = 1;
          //need height in order to determine object Y position, which would be startFloor + ((levelheight-1) - row), levelheight-1 being the highest row
         public static int levelheight; //count \n; (# of "\n")+(1 for floor) is the height. placement; thus, get height first.
 
