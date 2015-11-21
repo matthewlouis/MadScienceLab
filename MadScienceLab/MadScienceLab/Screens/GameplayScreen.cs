@@ -205,6 +205,11 @@ namespace MadScienceLab
                 _textures.Add("Right_Stick", content.Load<Texture2D>("Textures/Controller/Right_Stick"));
                 _textures.Add("Right_Trigger", content.Load<Texture2D>("Textures/Controller/Right_Trigger"));
                 _textures.Add("LeftRight_Trigger", content.Load<Texture2D>("Textures/Controller/LeftRight_Trigger"));
+                _textures.Add("Gear", content.Load<Texture2D>("Textures/GearTest"));
+                _textures.Add("LaserRed", content.Load<Texture2D>("Textures/LaserRed"));
+                _textures.Add("LaserOrange", content.Load<Texture2D>("Textures/LaserOrange"));
+                _textures.Add("LaserGreen", content.Load<Texture2D>("Textures/LaserGreen"));
+
                 _renderContext.Textures = _textures;
 
                 //Loads sound references
@@ -388,7 +393,7 @@ namespace MadScienceLab
             basicLevel.Draw(_renderContext);
             
             spriteBatch.Begin();
-            spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
+            DrawPlayerHealth(_renderContext);
             DrawInteractiveUI(_renderContext);
             DrawDebugMap(_renderContext);
             spriteBatch.End();
@@ -406,6 +411,25 @@ namespace MadScienceLab
                 float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);
 
                 ScreenManager.FadeBackBufferToBlack(alpha);
+            }
+        }
+
+        public void DrawPlayerHealth(RenderContext _renderContext)
+        {
+            spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
+            spriteBatch.Draw(_textures["Gear"], new Rectangle(50, 50, 150, 150), Color.White);
+            spriteBatch.Draw(_textures["Gear"], new Rectangle(195, 60, 100, 100), Color.White);
+            if (player.GetHealth() == GameConstants.HEALTH)
+            {
+                spriteBatch.Draw(_textures["LaserGreen"], new Rectangle(195, 150, 250, 30), Color.White);
+            } 
+            else if (player.GetHealth() < GameConstants.HEALTH && player.GetHealth() > 1)
+            {
+                spriteBatch.Draw(_textures["LaserOrange"], new Rectangle(195, 150, 250, 30), Color.White);
+            }
+            else
+            {
+                spriteBatch.Draw(_textures["LaserRed"], new Rectangle(195, 150, 250, 30), Color.White);
             }
         }
 
