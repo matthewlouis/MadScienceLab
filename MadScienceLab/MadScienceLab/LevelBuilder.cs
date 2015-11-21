@@ -77,7 +77,7 @@ namespace MadScienceLab
 
             String newline = "\r\n"; //in case a newline were to be used
             levelheight = leveltxt.Length - leveltxt.Replace ("\n", "" ).Length;
-            levelwidth = 0; //reset this each time a new level is made
+            
             
             //there will be walls and floor enclosing the aforementioned level
             //iterate through level string, find the level height and width from iterating through the txt file
