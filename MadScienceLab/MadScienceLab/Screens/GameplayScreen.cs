@@ -484,20 +484,20 @@ namespace MadScienceLab
                     Rectangle box = obj.Hitbox;
                     box.Width = (box.Width * MinimapSize.X / LevelXSize); //convert width from level to minimap size
                     box.Height = (box.Height * MinimapSize.Y / LevelYSize); //convert height from level to minimap size
-                    int XPositionOfLevel = (box.X - (xLeftWall-CELL)); //position of level when normalized as a proportion of its size
-                    int YPositionOfLevel = (box.Y - (yFloor - CELL));
+                    int XPositionOfLevel = (box.X - xLeftWall); //position of level when normalized as a proportion of its size
+                    int YPositionOfLevel = (box.Y - (yFloor - CELL)); //returns distance of bottom (in game coords) of box from bottom of level
 
                     switch (MinimapPosition) {
                         case TOP_RIGHT:
-                            box.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - box.Width - MinimapSideOffset; //convert from position in level to position in minimap
+                            box.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - MinimapSideOffset; //convert from position in level to position in minimap
                             box.Y = MinimapSize.Y - YPositionOfLevel * MinimapSize.Y / LevelYSize - box.Height + MinimapSideOffset;
                             break;
                         case BOTTOM_RIGHT:
-                            box.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - box.Width - MinimapSideOffset; //convert from position in level to position in minimap
+                            box.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - MinimapSideOffset; //convert from position in level to position in minimap
                             box.Y = GameConstants.Y_RESOLUTION - YPositionOfLevel * MinimapSize.Y / LevelYSize - box.Height - MinimapSideOffset;
                             break;
                         case BOTTOM_LEFT:
-                            box.X = XPositionOfLevel * MinimapSize.X / LevelXSize - box.Width + MinimapSideOffset; //convert from position in level to position in minimap
+                            box.X = XPositionOfLevel * MinimapSize.X / LevelXSize+ MinimapSideOffset; //convert from position in level to position in minimap
                             box.Y = GameConstants.Y_RESOLUTION - YPositionOfLevel * MinimapSize.Y / LevelYSize - box.Height -
                                 MinimapSideOffset;
                             break;

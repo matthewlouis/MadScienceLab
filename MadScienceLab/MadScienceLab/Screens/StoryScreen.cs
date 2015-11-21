@@ -37,6 +37,7 @@ namespace MadScienceLab
         VarSizeMenuEntry ContinueEntry;
         List<String> Storyline;
         List<String> StoryTitles;
+        GameScreen DestScreen;
         bool lastStoryScreen;
 
         GameData saveGameData;
@@ -48,10 +49,11 @@ namespace MadScienceLab
         /// <summary>
         /// Constructor.
         /// </summary>
-        public StoryScreen ( List<String> storytext, List<String> titletext, GameData saveData)
+        public StoryScreen ( List<String> storytext, List<String> titletext, GameScreen DestScreen, GameData saveData)
             : base(titletext[0])
         {
             saveGameData = saveData;
+            this.DestScreen = DestScreen;
 
             //SpriteFont font = ScreenManager.Font; //Get font of the ScreenManager
             // Create our menu entries.
@@ -187,11 +189,11 @@ namespace MadScienceLab
             if (RestOfStoryline.Count == 0)
             {
                 LoadingScreen.Load ( ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen ( saveGameData.saveGameData.currentlevel ) ); // loads next level from currentLevel
+                               DestScreen ); // loads next level from currentLevel
             }
             else
             {
-                ScreenManager.AddScreen ( new StoryScreen ( RestOfStoryline, RestOfTitles, saveGameData ), e.PlayerIndex );
+                ScreenManager.AddScreen ( new StoryScreen ( RestOfStoryline, RestOfTitles, this.DestScreen, saveGameData ), e.PlayerIndex );
             }
         }
 
