@@ -341,6 +341,7 @@ namespace MadScienceLab
                 }
                              
                 player.AdjacentObj = null; //reset to null after checking PickBox, and before the adjacentObj is updated
+                player.InteractiveObj = null;
 
                 _renderContext.GameTime = gameTime;
                 _camera.Update(_renderContext);
@@ -387,68 +388,35 @@ namespace MadScienceLab
             basicLevel.Draw(_renderContext);
             
             spriteBatch.Begin();
-            //spriteBatch.DrawString(font, DebugCheckPlayerBoxCollision().ToString(), new Vector2(50, 50), Color.Black);
             spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
-            if (_renderContext.Player.AdjacentObj != null && _renderContext.Player.AdjacentObj.GetType() == typeof(PickableBox) 
-                && _renderContext.Player.interactState == 0)
-            {
-                Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(_renderContext.Player.AdjacentObj.WorldPosition,
-                    _renderContext.Camera.Projection, _renderContext.Camera.View, _renderContext.Player.AdjacentObj.GetWorldMatrix());
-                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - bob, 48, 48), Color.LawnGreen);
-            }
-            if (_renderContext.Player.interactState != 0 && (!_renderContext.Player.jumping || !_renderContext.Player.falling))
-            {
-                Vector3 arrowPos; 
-                if (_renderContext.Player.GetFacingDirection == 1)
-                    arrowPos = _renderContext.Player.Position - new Vector3(24, 0, 0);
-                else
-                    arrowPos = _renderContext.Player.Position + new Vector3(24, 0, 0);
-
-
-
-                //if (_renderContext.Player.GetFacingDirection == 1)
-                //    arrowPos += new Vector3(0, 0, _renderContext.Player.Position.X % GameConstants.SINGLE_CELL_SIZE);
-                //else
-                //    arrowPos -= new Vector3(0, 0, (_renderContext.Player.Position.X) % GameConstants.SINGLE_CELL_SIZE - 48);
-
-                float startX = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.X_RESOLUTION / 2);
-                float startY = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.Y_RESOLUTION / 2);
-                Vector3 CELLREMAINDER = new Vector3((arrowPos.X - startX) % GameConstants.SINGLE_CELL_SIZE,
-                                                    (arrowPos.Y - startY) % GameConstants.SINGLE_CELL_SIZE,
-                                                    arrowPos.Z);
-                //Move positions to the nearest cell
-
-                if (CELLREMAINDER.X < GameConstants.SINGLE_CELL_SIZE / 2)
-                    arrowPos = new Vector3(arrowPos.X - CELLREMAINDER.X, arrowPos.Y, arrowPos.Z);
-                else
-                    arrowPos = new Vector3(arrowPos.X - CELLREMAINDER.X + GameConstants.SINGLE_CELL_SIZE, arrowPos.Y, arrowPos.Z);
-
-                Matrix arrowWorldMatrix = _renderContext.Player.GetWorldMatrix();
-                arrowWorldMatrix.Translation = arrowPos;
-                Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(_renderContext.Player.WorldPosition,
-                    _renderContext.Camera.Projection, _renderContext.Camera.View, arrowWorldMatrix);
-                Color color;
- 
-                color = Color.LawnGreen;
-
-                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X - 6, (int)screenPos.Y - bob, 48, 48), null, color,
-                    0f, new Vector2(_textures["Arrow"].Bounds.Width /2, _textures["Arrow"].Bounds.Height /2), SpriteEffects.FlipVertically, 0f);
-            }
-
-            //spriteBatch.DrawString(font, "Time: " + timer, new Vector2(300, 50), Color.Black);
-            //spriteBatch.DrawString(font, "Velocity: " + player.TransVelocity.ToString(), new Vector2(50, 100), Color.Black);
-            //spriteBatch.DrawString(font, "Acceleration: " + player.TransAccel.ToString(), new Vector2(50, 200), Color.Black);
-            //spriteBatch.DrawString(font, "Box: " + brick.ToString(), new Vector2(50, 250), Color.Black);
-            //if (_renderContext.CurrMsgEvent != null)
-            //    spriteBatch.DrawString(font, "MessageEvent: " + _renderContext.CurrMsgEvent.typedMessage, new Vector2(50, 250), Color.Black);
-            //spriteBatch.DrawString(font, boxHitState, new Vector2(50, 150), Color.Black);
-            //spriteBatch.DrawString(font, "Projectile: " + basicLevel.Children[basicLevel.Children.Count()-1].Hitbox.ToString(), new Vector2(50, 150), Color.Black);
-            //spriteBatch.DrawString(font, "Player pos: " + player.Position.ToString(), new Vector2(50, 300), Color.Black);
+            DrawInteractiveUI(_renderContext);
+            DrawDebugMap(_renderContext);
             spriteBatch.End();
+            
+            fpsCount.Draw(gameTime);
+            
+            // Spritebatch changes graphicsdevice values; sets the oringinal state
+            ScreenManager.GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            ScreenManager.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
+            // If the game is transitioning on or off, fade it out to black.
+            if (TransitionPosition > 0 || pauseAlpha > 0)
+            {
+                float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);
+
+                ScreenManager.FadeBackBufferToBlack(alpha);
+            }
+        }
+
+        /// <summary>
+        /// Used for debugging hitboxes - Steven
+        /// </summary>
+        /// <param name="_renderContext"></param>
+        public void DrawDebugMap(RenderContext _renderContext)
+        {
             if (player.MapEnabled)
             {
-                spriteBatch.Begin();
                 foreach (CellObject obj in basicLevel.collidableObjects)
                 {
                     Rectangle box = obj.Hitbox;
@@ -479,7 +447,7 @@ namespace MadScienceLab
                 }
 
                 Rectangle qtbox = quadRect;
-                
+
                 qtbox.X /= 2;
                 qtbox.Y /= 2;
                 qtbox.Width /= 2;
@@ -489,18 +457,18 @@ namespace MadScienceLab
                 spriteBatch.Draw(dummyTexture, qtbox, Color.Brown * 0.8f);
                 //Console.WriteLine(qtbox.ToString());
                 if (_renderContext.QuadtreeDebug != null)
-                foreach (CellObject qBox in _renderContext.QuadtreeDebug)
-                {
-                    Rectangle box = qBox.Hitbox;
-                    box.X /= 2;
-                    box.Y /= 2;
-                    box.Width /= 2;
-                    box.Height /= 2;
-                    box.X += 400;
-                    box.Y += 500;
-                    spriteBatch.Draw(dummyTexture, box, Color.Black * 0.8f);
-                    
-                }
+                    foreach (CellObject qBox in _renderContext.QuadtreeDebug)
+                    {
+                        Rectangle box = qBox.Hitbox;
+                        box.X /= 2;
+                        box.Y /= 2;
+                        box.Width /= 2;
+                        box.Height /= 2;
+                        box.X += 400;
+                        box.Y += 500;
+                        spriteBatch.Draw(dummyTexture, box, Color.Black * 0.8f);
+
+                    }
 
                 Rectangle lbox = _renderContext.Level.Hitbox;
                 lbox.X /= 2;
@@ -511,7 +479,7 @@ namespace MadScienceLab
                 lbox.Y += 500;
                 spriteBatch.Draw(dummyTexture, lbox, Color.Black * 0.8f);
 
-
+                // Comparing certain collision between two objects
                 int i = 0;
                 //foreach (Rectangle box in _renderContext.BoxesHit)
                 //{
@@ -531,23 +499,79 @@ namespace MadScienceLab
                 //        spriteBatch.Draw(dummyTexture, boxhit, Color.Blue * 0.8f);
                 //    i++;
                 //}
-                    spriteBatch.End();
             }
-            //Console.WriteLine(_renderContext.Player.Position.ToString());
-            //fpsCount.Draw(gameTime);
-            fpsCount.Draw(gameTime);
-            //_timer.Draw(_renderContext.GameTime);
-            // Spritebatch changes graphicsdevice values; sets the oringinal state
-            ScreenManager.GraphicsDevice.BlendState = BlendState.AlphaBlend;
-            ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            ScreenManager.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+        }
 
-            // If the game is transitioning on or off, fade it out to black.
-            if (TransitionPosition > 0 || pauseAlpha > 0)
+        /// <summary>
+        /// Draws the visual feedback for the player
+        /// </summary>
+        /// <param name="_renderContext"></param>
+        public void DrawInteractiveUI(RenderContext _renderContext)
+        {
+            Character player = _renderContext.Player;
+
+            // Provides a visual feedback if the user is able to pick up a box - Steven
+            if (player.AdjacentObj != null && player.AdjacentObj.GetType() == typeof(PickableBox) && player.interactState == 0)
             {
-                float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, pauseAlpha / 2);
+                Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(
+                    player.AdjacentObj.WorldPosition,
+                    _renderContext.Camera.Projection, 
+                    _renderContext.Camera.View, 
+                    player.AdjacentObj.GetWorldMatrix());
+                int offset = 30;
+                spriteBatch.Draw(_textures["B_Button"], new Rectangle((int)screenPos.X - offset, (int)screenPos.Y, 48, 48), Color.White);
+                // Added a bob to the arrow
+                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X, (int)screenPos.Y - bob, 48, 48), Color.LawnGreen);
+            }
+             
+            if (player.InteractiveObj != null && player.InteractiveObj.GetType() == typeof(ToggleSwitch))
+            {
+                Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(
+                    player.InteractiveObj.WorldPosition,
+                    _renderContext.Camera.Projection,
+                    _renderContext.Camera.View,
+                    player.InteractiveObj.GetWorldMatrix());
+                
+                spriteBatch.Draw(_textures["B_Button"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - 96, 48, 48), Color.White);
+            }
 
-                ScreenManager.FadeBackBufferToBlack(alpha);
+            // Provides visual feedback for where the box will be placed - Steven
+            if (player.interactState != 0 && (!player.jumping || !player.falling))
+            {
+                Vector3 arrowPos;
+                if (player.GetFacingDirection == 1) // Left
+                    arrowPos = player.Position - new Vector3(24, 0, 0);
+                else
+                    arrowPos = player.Position + new Vector3(24, 0, 0);
+
+                // Using Jacob's logic for readjusting the placed box - Steven
+                float startX = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.X_RESOLUTION / 2);
+                float startY = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.Y_RESOLUTION / 2);
+                Vector3 CELLREMAINDER = new Vector3((arrowPos.X - startX) % GameConstants.SINGLE_CELL_SIZE,
+                                                    (arrowPos.Y - startY) % GameConstants.SINGLE_CELL_SIZE,
+                                                    arrowPos.Z);
+                
+                //Move positions to the nearest cell
+                if (CELLREMAINDER.X < GameConstants.SINGLE_CELL_SIZE / 2)
+                    arrowPos = new Vector3(arrowPos.X - CELLREMAINDER.X, arrowPos.Y, arrowPos.Z);
+                else
+                    arrowPos = new Vector3(arrowPos.X - CELLREMAINDER.X + GameConstants.SINGLE_CELL_SIZE, arrowPos.Y, arrowPos.Z);
+
+                // Grabs the screen position for arrow in the world - Steven
+                Matrix arrowWorldMatrix = player.GetWorldMatrix();
+                arrowWorldMatrix.Translation = arrowPos;
+                Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(player.WorldPosition,
+                    _renderContext.Camera.Projection, _renderContext.Camera.View, arrowWorldMatrix);
+                
+                // Determines what color the arrow will be, will add logic to check whether the player can place the block - Steven
+                Color color;
+                color = Color.LawnGreen * 0.6f;
+                
+                int offset = 6;
+                Vector2 origin = new Vector2(_textures["Arrow"].Bounds.Width / 2, _textures["Arrow"].Bounds.Height / 2);
+                
+                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X - offset, (int)screenPos.Y - bob, GameConstants.SINGLE_CELL_SIZE, GameConstants.SINGLE_CELL_SIZE), null, color,
+                    0f, origin, SpriteEffects.FlipVertically, 0f);
             }
         }
 
