@@ -97,7 +97,7 @@ namespace MadScienceLab
                 storytext.Add ( "The security systems have gone rogue- the very devices created to keep pesky intruders out are now keeping Dr.Frankenbuns inside. Even Doomba, his typically helpful robot vacuum cleaner, has acquired a thirst for destruction." );
                 storytitle.Add ( "Well..." );
                 storytext.Add("One thing's for sure- it's going to be a long night.");
-                ScreenManager.AddScreen ( new StoryScreen ( storytext, storytitle, saveGameData ), e.PlayerIndex );
+                ScreenManager.AddScreen ( new StoryScreen ( storytext, storytitle, new GameplayScreen ( saveGameData.saveGameData.currentlevel ), saveGameData ), e.PlayerIndex );
             }
         }
 
