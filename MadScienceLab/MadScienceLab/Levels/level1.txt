@@ -4,7 +4,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                       @X
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX2XX                   XXXXXX
 X        X                X          XXXXX M        MXXXXXX
 X        X       X        X          XXXXXB          XXXXXX
-X  P   T D   B   X    S B D  t      BXXXXXBB         XXXXXX 
+X  P   T D   B   X    S B D  t      BXXXXXBB         XXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
