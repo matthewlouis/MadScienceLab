@@ -111,16 +111,18 @@ namespace MadScienceLab
             string trimmableText = text;
             List<String> lines = new List<String>();
             char[] indexChars = new char[] { ' ', '\n' };
+
             while (trimmableText.Length >= 1) {
                 int c = 1;
                 while (c < trimmableText.Length &&
-                    font.MeasureString ( 
+
+                    LineWidth( screen,
                         trimmableText.Substring ( 0, 
-                            ((trimmableText.IndexOfAny(indexChars, c+1)!=-1)?
-                                trimmableText.IndexOfAny ( indexChars, c + 1 ) :
-                                trimmableText.Length)
-                        )
-                    ).X * scalept2 < width) //so ends at trimmableText.Length or when the width when adding another word (before space or EOL) would exceed the width
+                                ((trimmableText.IndexOfAny(indexChars, c+1)!=-1)?
+                                    trimmableText.IndexOfAny ( indexChars, c + 1 ) :
+                                    trimmableText.Length)
+                            )
+                    ) < width) //so ends at trimmableText.Length or when the width when adding another word (before space or EOL) would exceed the width
                 {
                     c = ((trimmableText.IndexOfAny ( indexChars, c + 1 ) != -1) ?
                             trimmableText.IndexOfAny ( indexChars, c + 1 ) :
@@ -129,11 +131,14 @@ namespace MadScienceLab
                         break;
                     //otherwise, can continue the line
                 }
+                
                 String linestring = trimmableText.Substring ( 0, c ).TrimStart(' ', '\n');
                 lines.Add(linestring);
                 trimmableText = trimmableText.Substring ( c );
+
+                //To make TextWidth store highest LineWidth
                 if (LineWidth(screen, linestring) > TextWidth)
-                    TextWidth = font.MeasureString ( linestring ).X * scalept2;
+                    TextWidth = LineWidth(screen, linestring);
             }
 
             return lines;
