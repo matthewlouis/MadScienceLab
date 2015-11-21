@@ -124,7 +124,7 @@ namespace MadScienceLab
                 {
                     c = ((trimmableText.IndexOfAny ( indexChars, c + 1 ) != -1) ?
                             trimmableText.IndexOfAny ( indexChars, c + 1 ) :
-                            trimmableText.Length); //Set to the next space or the end of the string if that doesn't exist.
+                            trimmableText.Length); //Set to the next space or the end of the string if that doesn't exist (presumably to get the last char prior).
                     if (c < trimmableText.Length && trimmableText[c] == '\n') //If what was found was a '\n' then end the line there
                         break;
                     //otherwise, can continue the line
