@@ -26,18 +26,18 @@ namespace MadScienceLab
     /// the level has been unlocked or not.
     /// Level Select aslo indicated time trial mode and shows the time and par times for each level
     /// </summary>
-    class LevelSelectScreen : MenuScreen
+    class StoryScreen : MenuScreen
     {
         #region Fields
         //protected List<LevelSelectMenuEntry> menuEntries = new List<LevelSelectMenuEntry> ();
 
         // define menu entries and properties
-        VarSizeMenuEntry level1MenuEntry;
-        VarSizeMenuEntry level2MenuEntry;
-        VarSizeMenuEntry level3MenuEntry;
-        VarSizeMenuEntry level4MenuEntry;
-        VarSizeMenuEntry level5MenuEntry;
-        VarSizeMenuEntry level6MenuEntry;
+        VarSizeMenuEntry StorylineEntry;
+        VarSizeMenuEntry BlankEntry;
+        VarSizeMenuEntry ContinueEntry;
+        List<String> Storyline;
+        List<String> StoryTitles;
+        bool lastStoryScreen;
 
         GameData saveGameData;
         #endregion
@@ -48,41 +48,32 @@ namespace MadScienceLab
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LevelSelectScreen()
-            : base("Level Select")
+        public StoryScreen ( List<String> storytext, List<String> titletext, GameData saveData)
+            : base(titletext[0])
         {
-            // get save data
-            saveGameData = new GameData();
-            
+            saveGameData = saveData;
 
+            //SpriteFont font = ScreenManager.Font; //Get font of the ScreenManager
             // Create our menu entries.
-            level1MenuEntry = new VarSizeMenuEntry ( "1 - "+GameConstants.LEVELNAMES[0], 0.9f );
-            level2MenuEntry = new VarSizeMenuEntry ( "2 - "+GameConstants.LEVELNAMES[1], 0.9f );
-            level3MenuEntry = new VarSizeMenuEntry ( "3 - " + GameConstants.LEVELNAMES[2], 0.9f );
-            level4MenuEntry = new VarSizeMenuEntry ( "4 - " + GameConstants.LEVELNAMES[3], 0.9f );
-            level5MenuEntry = new VarSizeMenuEntry ( "5 - " + GameConstants.LEVELNAMES[4], 0.9f );
-            level6MenuEntry = new VarSizeMenuEntry ( "6 - " + GameConstants.LEVELNAMES[5], 0.9f );
+            Storyline = storytext;
+            StoryTitles = titletext;
 
-            MenuEntry back = new VarSizeMenuEntry ( "Back to Main Menu", 0.9f );
+            StorylineEntry = new VarSizeMenuEntry ( Storyline[0] , 0.6f);
+            BlankEntry = new VarSizeMenuEntry ( " ", 0.5f);
+            MenuEntry ContinueEntry = new VarSizeMenuEntry ( "Continue", 1f);
 
             // Hook up menu event handlers.
-            level1MenuEntry.Selected += level1MenuEntrySelected;
-            level2MenuEntry.Selected += level2MenuEntrySelected;
-            level3MenuEntry.Selected += level3MenuEntrySelected;
-            level4MenuEntry.Selected += level4MenuEntrySelected;
-            level5MenuEntry.Selected += level5MenuEntrySelected;
-            level6MenuEntry.Selected += level6MenuEntrySelected;
-            back.Selected += OnCancel;
+            ContinueEntry.Selected += continueSelected;
 
             // Add entries to the menu.
-
-            MenuEntries.Add(level1MenuEntry);
-            MenuEntries.Add(level2MenuEntry);
-            MenuEntries.Add(level3MenuEntry);
-            MenuEntries.Add(level4MenuEntry);
-            MenuEntries.Add ( level5MenuEntry );
-            MenuEntries.Add ( level6MenuEntry );
-            MenuEntries.Add(back);
+            MenuEntries.Add ( StorylineEntry );
+            MenuEntries.Add ( BlankEntry );
+            MenuEntries.Add ( ContinueEntry );
+            //Select the first selectable entry
+            while (menuEntries[selectedEntry].HasNoHandle)
+            {
+                selectedEntry++;
+            }
         }
 
         
@@ -107,10 +98,10 @@ namespace MadScienceLab
             int i;
             for (i=0; i < menuEntries.Count; i++) //iterate for all entries except for [i].
             {
-                VarSizeMenuEntry menuEntry = (VarSizeMenuEntry)menuEntries[i];
+                MenuEntry menuEntry = menuEntries[i];
 
                 // each entry is to be centered horizontally, but not in LevelSelect - alignment is to be left.
-                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - 120/*menuEntry.GetWidth ( this ) / 2*/;
+                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth ( this ) / 2;
 
                 if (ScreenState == ScreenState.TransitionOn)
                     position.X -= transitionOffset * 256;
@@ -157,7 +148,7 @@ namespace MadScienceLab
             // Draw each menu entry in turn.
             for (int i = 0; i < base.menuEntries.Count; i++)
             {
-                VarSizeMenuEntry menuEntry = (VarSizeMenuEntry)menuEntries[i];
+                MenuEntry menuEntry = menuEntries[i];
 
                 bool isSelected = IsActive && (i == selectedEntry);
 
@@ -187,44 +178,27 @@ namespace MadScienceLab
 
         #region Handle Input
 
-        void level1MenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        void continueSelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen(1));
-        }
-        
-
-        void level2MenuEntrySelected(object sender, PlayerIndexEventArgs e)
-        {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen(2));
-        }
-
-        void level3MenuEntrySelected(object sender, PlayerIndexEventArgs e)
-        {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen(3));
+            List<String> RestOfStoryline = new List<String> ( Storyline );
+            List<String> RestOfTitles = new List<String> ( StoryTitles );
+            RestOfStoryline.RemoveAt ( 0 );
+            RestOfTitles.RemoveAt ( 0 );
+            if (RestOfStoryline.Count == 0)
+            {
+                LoadingScreen.Load ( ScreenManager, true, e.PlayerIndex,
+                               new GameplayScreen ( saveGameData.saveGameData.currentlevel ) ); // loads next level from currentLevel
+            }
+            else
+            {
+                ScreenManager.AddScreen ( new StoryScreen ( RestOfStoryline, RestOfTitles, saveGameData ), e.PlayerIndex );
+            }
         }
 
-        void level4MenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        protected override void OnCancel ( PlayerIndex playerIndex )
         {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen(4));
+            //Do nothing. The player should go through the story without skipping or going back.
         }
-
-        void level5MenuEntrySelected(object sender, PlayerIndexEventArgs e)
-        {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen(5));
-        }
-
-        void level6MenuEntrySelected ( object sender, PlayerIndexEventArgs e )
-        {
-            LoadingScreen.Load ( ScreenManager, true, e.PlayerIndex,
-                               new GameplayScreen ( 6 ) );
-        }
-
-
 
         #endregion
     }
