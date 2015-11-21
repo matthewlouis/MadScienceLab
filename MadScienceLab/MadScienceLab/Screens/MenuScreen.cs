@@ -33,10 +33,10 @@ namespace MadScienceLab
         protected int selectedEntry = 0;
         protected string menuTitle;
 
-        InputAction menuUp;
-        InputAction menuDown;
-        InputAction menuSelect;
-        InputAction menuCancel;
+        protected InputAction menuUp;
+        protected InputAction menuDown;
+        protected InputAction menuSelect;
+        protected InputAction menuCancel;
 
         #endregion
 
@@ -83,7 +83,8 @@ namespace MadScienceLab
             menuCancel = new InputAction(
                 new Buttons[] { Buttons.B, Buttons.Back },
                 new Keys[] { Keys.Escape },
-                true);
+                true );
+
         }
 
 
@@ -95,6 +96,7 @@ namespace MadScienceLab
         /// <summary>
         /// Responds to user input, changing the selected entry and accepting
         /// or cancelling the menu.
+        /// Jacob: Updated this to only lead to selecting selectable items.
         /// </summary>
         public override void HandleInput(GameTime gameTime, InputState input)
         {
@@ -105,22 +107,29 @@ namespace MadScienceLab
             // OnSelectEntry and OnCancel, so they can tell which player triggered them.
             PlayerIndex playerIndex;
 
-            // Move to the previous menu entry?
-            if (menuUp.Evaluate(input, ControllingPlayer, out playerIndex))
+            // Jacob: Move to the previous menu entry that can be selected
+            if (menuUp.Evaluate ( input, ControllingPlayer, out playerIndex ))
             {
-                selectedEntry--;
-
-                if (selectedEntry < 0)
-                    selectedEntry = menuEntries.Count - 1;
+                do
+                {
+                    selectedEntry--;
+                    if (selectedEntry < 0)
+                        selectedEntry = menuEntries.Count - 1;
+                }
+                while (menuEntries[selectedEntry].HasNoHandle);
             }
 
-            // Move to the next menu entry?
-            if (menuDown.Evaluate(input, ControllingPlayer, out playerIndex))
+            // Jacob: Move to the next menu entry that can be selected
+            if (menuDown.Evaluate ( input, ControllingPlayer, out playerIndex ))
             {
-                selectedEntry++;
+                do
+                {
+                    selectedEntry++;
 
-                if (selectedEntry >= menuEntries.Count)
-                    selectedEntry = 0;
+                    if (selectedEntry >= menuEntries.Count)
+                        selectedEntry = 0;
+                }
+                while (menuEntries[selectedEntry].HasNoHandle);
             }
 
             if (menuSelect.Evaluate(input, ControllingPlayer, out playerIndex))
