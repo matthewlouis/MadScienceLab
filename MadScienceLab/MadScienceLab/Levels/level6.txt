@@ -15,7 +15,7 @@ XX    X   XXRRXX SS       X
 X     X  TXRRRRXRXXX    L X
 X L   X  XX    X   X    X X
 X X   XT  XRRRRXS  X      X
-XL    XX  X   MXXX X     L 
+XL     X  X   MXXX       L 
 XX   R       X      RS   XX
 X   X      M         X    X
 X E XM       P   t  MX E  X
