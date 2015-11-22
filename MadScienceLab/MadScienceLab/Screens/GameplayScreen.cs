@@ -52,6 +52,7 @@ namespace MadScienceLab
         public static Dictionary<String, Model> _models;
         public static Dictionary<String, Texture2D> _textures;
         public static Dictionary<String, SoundEffect> _sounds;
+        public static Dictionary<string, MessageEvent> messages;
 
         Character player;
 
@@ -92,6 +93,10 @@ namespace MadScienceLab
 
         GameData.LevelData levelData;
 
+        // UI elements
+        Rectangle healthPosition = new Rectangle(170, 125, 250, 30);
+        Rectangle gear1Position = new Rectangle(25, 25, 150, 150);
+        Rectangle gear2Position = new Rectangle(170, 35, 100, 100);
         #endregion
 
         #region Initialization
@@ -210,6 +215,7 @@ namespace MadScienceLab
                 _textures.Add("LaserRed", content.Load<Texture2D>("Textures/LaserRed"));
                 _textures.Add("LaserOrange", content.Load<Texture2D>("Textures/LaserOrange"));
                 _textures.Add("LaserGreen", content.Load<Texture2D>("Textures/LaserGreen"));
+                _textures.Add("MessageBackground", content.Load<Texture2D>("Textures/message_background"));
 
                 _renderContext.Textures = _textures;
 
@@ -226,7 +232,7 @@ namespace MadScienceLab
                 _sounds.Add("ToggleSwitch", content.Load<SoundEffect>("Sounds/ToggleSwitch"));
 
                 //loads the basic level
-                basicLevel = LevelBuilder.MakeBasicLevel(levelData.currentlevelNum);
+                basicLevel = LevelBuilder.MakeBasicLevel(levelData.currentlevelNum, _renderContext);
                 basicLevel.setBackgroundBuffer(_renderContext); //Matt: need to do this now to draw background properly
 
                 CurrentLevel = basicLevel; //we can handle this through render context eventually.
@@ -240,6 +246,7 @@ namespace MadScienceLab
                 font = content.Load<SpriteFont>("Verdana");
                 _renderContext.Level = basicLevel;
                 _renderContext.SpriteFont = font;
+                _renderContext.MessageFont = content.Load<SpriteFont>("MessageFont");
                 basicLevel.PopulateTypeList(_renderContext);
 
                 _renderContext.Level.collidableObjects.Add(player); // Adding player to list of collidable objects - Steven
@@ -401,6 +408,8 @@ namespace MadScienceLab
 
             fpsCount.Draw(gameTime);
 
+
+
             // Spritebatch changes graphicsdevice values; sets the oringinal state
             ScreenManager.GraphicsDevice.BlendState = BlendState.AlphaBlend;
             ScreenManager.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
@@ -417,20 +426,20 @@ namespace MadScienceLab
 
         public void DrawPlayerHealth(RenderContext _renderContext)
         {
-            spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
-            spriteBatch.Draw(_textures["Gear"], new Rectangle(50, 50, 150, 150), Color.White);
-            spriteBatch.Draw(_textures["Gear"], new Rectangle(195, 60, 100, 100), Color.White);
+            //spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
+            spriteBatch.Draw(_renderContext.Textures["Gear"], gear1Position, Color.White);
+            spriteBatch.Draw(_renderContext.Textures["Gear"], gear2Position, Color.White);
             if (player.GetHealth() == GameConstants.HEALTH)
             {
-                spriteBatch.Draw(_textures["LaserGreen"], new Rectangle(195, 150, 250, 30), Color.White);
+                spriteBatch.Draw(_renderContext.Textures["LaserGreen"], healthPosition, Color.White);
             } 
             else if (player.GetHealth() < GameConstants.HEALTH && player.GetHealth() > 1)
             {
-                spriteBatch.Draw(_textures["LaserOrange"], new Rectangle(195, 150, 250, 30), Color.White);
+                spriteBatch.Draw(_renderContext.Textures["LaserOrange"], healthPosition, Color.White);
             }
                 else
             {
-                spriteBatch.Draw(_textures["LaserRed"], new Rectangle(195, 150, 250, 30), Color.White);
+                spriteBatch.Draw(_renderContext.Textures["LaserRed"], healthPosition, Color.White);
             }
         }
 
@@ -612,9 +621,9 @@ namespace MadScienceLab
                     _renderContext.Camera.View, 
                     player.AdjacentObj.GetWorldMatrix());
                 int offset = 30;
-                spriteBatch.Draw(_textures["B_Button"], new Rectangle((int)screenPos.X - offset, (int)screenPos.Y, 48, 48), Color.White);
+                spriteBatch.Draw(_renderContext.Textures["B_Button"], new Rectangle((int)screenPos.X - offset, (int)screenPos.Y, 48, 48), Color.White);
                 // Added a bob to the arrow
-                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X, (int)screenPos.Y - bob, 48, 48), Color.LawnGreen);
+                spriteBatch.Draw(_renderContext.Textures["Arrow"], new Rectangle((int)screenPos.X, (int)screenPos.Y - bob, 48, 48), Color.LawnGreen);
             }
              
             if (player.InteractiveObj != null && player.InteractiveObj.GetType() == typeof(ToggleSwitch))
@@ -625,7 +634,7 @@ namespace MadScienceLab
                     _renderContext.Camera.View,
                     player.InteractiveObj.GetWorldMatrix());
                 
-                spriteBatch.Draw(_textures["B_Button"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - 96, 48, 48), Color.White);
+                spriteBatch.Draw(_renderContext.Textures["B_Button"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - 96, 48, 48), Color.White);
             }
 
             // Provides visual feedback for where the box will be placed - Steven
@@ -661,9 +670,9 @@ namespace MadScienceLab
                 color = Color.LawnGreen * 0.6f;
                 
                 int offset = 6;
-                Vector2 origin = new Vector2(_textures["Arrow"].Bounds.Width / 2, _textures["Arrow"].Bounds.Height / 2);
+                Vector2 origin = new Vector2(_renderContext.Textures["Arrow"].Bounds.Width / 2, _renderContext.Textures["Arrow"].Bounds.Height / 2);
 
-                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X - offset, (int)screenPos.Y - bob, GameConstants.SINGLE_CELL_SIZE, GameConstants.SINGLE_CELL_SIZE), null, color,
+                spriteBatch.Draw(_renderContext.Textures["Arrow"], new Rectangle((int)screenPos.X - offset, (int)screenPos.Y - bob, GameConstants.SINGLE_CELL_SIZE, GameConstants.SINGLE_CELL_SIZE), null, color,
                     0f, origin, SpriteEffects.FlipVertically, 0f);
             }
         }

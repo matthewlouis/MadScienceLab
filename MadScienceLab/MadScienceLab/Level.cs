@@ -19,8 +19,11 @@ namespace MadScienceLab
         private VertexBuffer backgroundBuffer;
 
         //For drawing foreground using instance render
-        public List<BasicBlock> ForegroundBlocks { get { return instances; } set { instances = value; } }
-        List<BasicBlock> instances;
+        public List<BasicBlock> ForegroundBlocks { get { return foregroundBlockInstances; } set { foregroundBlockInstances = value; } }
+        List<BasicBlock> foregroundBlockInstances;
+        
+        public List<MessageEvent> Messages { get; set; } 
+
         Matrix[] instanceTransforms;
         Model instancedModel;
         Matrix[] instancedModelBones;
@@ -45,6 +48,8 @@ namespace MadScienceLab
         {
             Background = new List<BackgroundBlock>();
             ForegroundBlocks = new List<BasicBlock>();
+            Messages = new List<MessageEvent>();
+
             drawState.CullMode = CullMode.None;
         }
 
@@ -74,6 +79,10 @@ namespace MadScienceLab
 
             //Draw the children
             base.Draw(renderContext);
+
+            DrawMessage(renderContext);
+
+
         }        
 
         public override void Update(RenderContext renderContext)
@@ -126,6 +135,18 @@ namespace MadScienceLab
             backgroundBuffer.SetData<VertexPositionTexture>(vertexList.ToArray()); 
         }
 
+        private void DrawMessage(RenderContext renderContext)
+        {
+            foreach(MessageEvent msg in Messages)
+            {
+                if(msg.typingState == GameConstants.TYPING_STATE.DoneTyping || msg.typingState == GameConstants.TYPING_STATE.Typing)
+                {
+                    msg.DisplayMessage(renderContext);
+                }
+            }
+
+        }
+
         //Draws Background seperate: was able to get huge performance increase doing this way
         private void drawBackground(RenderContext renderContext)
         {
@@ -164,11 +185,11 @@ namespace MadScienceLab
             renderContext.GraphicsDevice.RasterizerState = drawState;
 
             // Gather instance transform matrices into a single array.
-            Array.Resize(ref instanceTransforms, instances.Count);
+            Array.Resize(ref instanceTransforms, foregroundBlockInstances.Count);
 
-            for (int i = 0; i < instances.Count; i++)
+            for (int i = 0; i < foregroundBlockInstances.Count; i++)
             {
-                instanceTransforms[i] = instances[i].GetWorldMatrix();
+                instanceTransforms[i] = foregroundBlockInstances[i].GetWorldMatrix();
             }
 
             //The actual drawing technique:
