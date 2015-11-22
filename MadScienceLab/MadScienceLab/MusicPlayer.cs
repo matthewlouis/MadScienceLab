@@ -18,7 +18,10 @@ namespace MadScienceLab
         public static void PlaySong(SoundEffect song){
             Stop();
             currentSong = song.CreateInstance();
-            currentSong.Volume = masterVolume;
+            if (!masterMuted) // Added to ensure option persist throughout the game - Steven
+                currentSong.Volume = masterVolume;
+            else
+                currentSong.Volume = 0;
             currentSong.IsLooped = true;
             currentSong.Play();
         }
