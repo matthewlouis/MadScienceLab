@@ -437,18 +437,7 @@ namespace MadScienceLab
         /// <param name="_renderContext"></param>
         public void DrawPlayerHealth(RenderContext _renderContext)
         {
-<<<<<<< HEAD
-            //spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
-            spriteBatch.Draw(_renderContext.Textures["Gear"], gear1Position, Color.White);
-            spriteBatch.Draw(_renderContext.Textures["Gear"], gear2Position, Color.White);
-            if (player.GetHealth() == GameConstants.HEALTH)
-            {
-                spriteBatch.Draw(_renderContext.Textures["LaserGreen"], healthPosition, Color.White);
-            } 
-            else if (player.GetHealth() < GameConstants.HEALTH && player.GetHealth() > 1)
-            {
-                spriteBatch.Draw(_renderContext.Textures["LaserOrange"], healthPosition, Color.White);
-=======
+
             Rectangle healthTexturePos = new Rectangle(195, 150, 250, 30);
             Rectangle playerGear = new Rectangle(50, 50, 150, 150);
             Rectangle playerHealthGear = new Rectangle(195, 60, 100, 100);
@@ -464,16 +453,12 @@ namespace MadScienceLab
             {
                 healthTexture = _textures["LaserOrange"];
                 currentState = ":|";
->>>>>>> refs/remotes/origin/master
             }
             else
             {
-<<<<<<< HEAD
-                spriteBatch.Draw(_renderContext.Textures["LaserRed"], healthPosition, Color.White);
-=======
                 healthTexture = _textures["LaserRed"];
                 currentState = ":(";
->>>>>>> refs/remotes/origin/master
+
             }
 
             Vector2 stateTextSize = font.MeasureString(currentState);

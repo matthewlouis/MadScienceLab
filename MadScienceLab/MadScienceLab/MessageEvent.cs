@@ -21,6 +21,7 @@ namespace MadScienceLab
         Vector2 textPosition = new Vector2(308, 510);
         public GameConstants.TYPING_STATE typingState;
         static int rowLength = 56;
+        bool display;
         
 
         public string Message
@@ -59,6 +60,7 @@ namespace MadScienceLab
             HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
             //Translate(new Vector3(0, 0, 0));
 
+            display = true;
             typedMessage = new string[4];
 
 
@@ -113,10 +115,10 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         public override void Update(RenderContext renderContext)
         {
-            if ((Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B)))
+            if (this.typingState == GameConstants.TYPING_STATE.DoneTyping && (Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B)))
             {
-                typingState = GameConstants.TYPING_STATE.Disabled;
-                
+                this.display = false;
+
             }
             if (typingState == GameConstants.TYPING_STATE.Typing)
             {
@@ -194,11 +196,14 @@ namespace MadScienceLab
 
         private void DrawMessage(RenderContext renderContext)
         {
-            renderContext.SpriteBatch.Begin();
-            renderContext.SpriteBatch.Draw(renderContext.Textures["MessageBackground"], messageBoxPosition, Color.White);
-            renderContext.SpriteBatch.Draw(renderContext.Textures["B_Button"], buttonPosition, Color.White);
-            renderContext.SpriteBatch.DrawString(renderContext.MessageFont, TypedMessage, textPosition, Color.White);
-            renderContext.SpriteBatch.End();
+            if (display)
+            {
+                renderContext.SpriteBatch.Begin();
+                renderContext.SpriteBatch.Draw(renderContext.Textures["MessageBackground"], messageBoxPosition, Color.White);
+                renderContext.SpriteBatch.Draw(renderContext.Textures["B_Button"], buttonPosition, Color.White);
+                renderContext.SpriteBatch.DrawString(renderContext.MessageFont, message, textPosition, Color.White);
+                renderContext.SpriteBatch.End();
+            }
         }
 
     }
