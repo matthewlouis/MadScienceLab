@@ -225,7 +225,7 @@ namespace MadScienceLab
                 _sounds.Add("LaserWhirLoop", content.Load<SoundEffect>("Sounds/LaserWhirLoop"));
                 _sounds.Add("PlayerHit", content.Load<SoundEffect>("Sounds/PlayerHit"));
                 _sounds.Add("ToggleSwitch", content.Load<SoundEffect>("Sounds/ToggleSwitch"));
-
+               
                 //loads the basic level
                 basicLevel = LevelBuilder.MakeBasicLevel(levelData.currentlevelNum);
                 basicLevel.setBackgroundBuffer(_renderContext); //Matt: need to do this now to draw background properly
@@ -352,7 +352,7 @@ namespace MadScienceLab
                              
                 player.AdjacentObj = null; //reset to null after checking PickBox, and before the adjacentObj is updated
                 player.InteractiveObj = null;
-
+                player.canPlace = true;
                 _renderContext.GameTime = gameTime;
                 _camera.Update(_renderContext);
                 basicLevel.Update(_renderContext);
@@ -703,8 +703,12 @@ namespace MadScienceLab
                 
                 // Determines what color the arrow will be, will add logic to check whether the player can place the block - Steven
                 Color color;
-                color = Color.LawnGreen * 0.6f;
                 
+                if (player.canPlace)
+                    color = Color.LawnGreen * 0.6f;
+                else
+                    color = Color.Red * 0.6f;
+
                 int offset = 6;
                 Vector2 origin = new Vector2(_textures["Arrow"].Bounds.Width / 2, _textures["Arrow"].Bounds.Height / 2);
 
