@@ -113,9 +113,9 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         public override void Update(RenderContext renderContext)
         {
-            if ((Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B)) && typingState == GameConstants.TYPING_STATE.Typing)
+            if ((Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B)))
             {
-                typingState = GameConstants.TYPING_STATE.NotTyped;
+                typingState = GameConstants.TYPING_STATE.Disabled;
                 
             }
             if (typingState == GameConstants.TYPING_STATE.Typing)

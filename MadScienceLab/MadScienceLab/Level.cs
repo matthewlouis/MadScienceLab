@@ -22,7 +22,7 @@ namespace MadScienceLab
         public List<BasicBlock> ForegroundBlocks { get { return foregroundBlockInstances; } set { foregroundBlockInstances = value; } }
         List<BasicBlock> foregroundBlockInstances;
         
-        public List<MessageEvent> Messages { get; set; } 
+        public Dictionary<string,MessageEvent> Messages { get; set; } 
 
         Matrix[] instanceTransforms;
         Model instancedModel;
@@ -48,7 +48,7 @@ namespace MadScienceLab
         {
             Background = new List<BackgroundBlock>();
             ForegroundBlocks = new List<BasicBlock>();
-            Messages = new List<MessageEvent>();
+            Messages = new Dictionary<string, MessageEvent>();
 
             drawState.CullMode = CullMode.None;
         }
@@ -137,7 +137,7 @@ namespace MadScienceLab
 
         private void DrawMessage(RenderContext renderContext)
         {
-            foreach(MessageEvent msg in Messages)
+            foreach(MessageEvent msg in Messages.Values)
             {
                 if(msg.typingState == GameConstants.TYPING_STATE.DoneTyping || msg.typingState == GameConstants.TYPING_STATE.Typing)
                 {

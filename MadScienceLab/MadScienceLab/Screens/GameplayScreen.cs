@@ -60,6 +60,7 @@ namespace MadScienceLab
         SpriteFont font;
         List<GameObject3D> debugHitbox;
         Texture2D dummyTexture;
+        private float rotationAngle;
 
         //Debugging - FPS - Matt
         private FPSCounter fpsCount;
@@ -323,6 +324,7 @@ namespace MadScienceLab
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
             if (IsActive)
             {
+                // Setting the vertical offset for bobbing images
                 if (bob > 10)
                     num = -1;
                 else if (bob < -10)
@@ -330,6 +332,8 @@ namespace MadScienceLab
 
                 bob += (int)(0.1f * gameTime.ElapsedGameTime.Milliseconds) * num;
 
+                rotationAngle += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                rotationAngle = rotationAngle % (MathHelper.Pi * 2);
                 _renderContext.Quadtree.clear();
 
                 foreach (CellObject obj in basicLevel.Children)
@@ -401,9 +405,12 @@ namespace MadScienceLab
             basicLevel.Draw(_renderContext);
             
             spriteBatch.Begin();
-            DrawPlayerHealth(_renderContext);
-            DrawInteractiveUI(_renderContext);
-            DrawDebugMap(_renderContext);
+            if (_textures.Count > 0) // Check for empty textures due to retrying level - Steven
+            {
+                DrawPlayerHealth(_renderContext);
+                DrawInteractiveUI(_renderContext);
+                DrawDebugMap(_renderContext);
+            }
             spriteBatch.End();
 
             fpsCount.Draw(gameTime);
@@ -424,8 +431,13 @@ namespace MadScienceLab
             }
         }
 
+        /// <summary>
+        /// Basic placeholder UI for player health
+        /// </summary>
+        /// <param name="_renderContext"></param>
         public void DrawPlayerHealth(RenderContext _renderContext)
         {
+<<<<<<< HEAD
             //spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
             spriteBatch.Draw(_renderContext.Textures["Gear"], gear1Position, Color.White);
             spriteBatch.Draw(_renderContext.Textures["Gear"], gear2Position, Color.White);
@@ -436,15 +448,65 @@ namespace MadScienceLab
             else if (player.GetHealth() < GameConstants.HEALTH && player.GetHealth() > 1)
             {
                 spriteBatch.Draw(_renderContext.Textures["LaserOrange"], healthPosition, Color.White);
-            }
-                else
+=======
+            Rectangle healthTexturePos = new Rectangle(195, 150, 250, 30);
+            Rectangle playerGear = new Rectangle(50, 50, 150, 150);
+            Rectangle playerHealthGear = new Rectangle(195, 60, 100, 100);
+            Texture2D healthTexture;
+            string currentState;
+            
+            if (player.GetHealth() == GameConstants.HEALTH)
             {
-                spriteBatch.Draw(_renderContext.Textures["LaserRed"], healthPosition, Color.White);
+                healthTexture = _textures["LaserGreen"];
+                currentState = ":)";
             }
+            else if (player.GetHealth() < GameConstants.HEALTH && player.GetHealth() > 1)
+            {
+                healthTexture = _textures["LaserOrange"];
+                currentState = ":|";
+>>>>>>> refs/remotes/origin/master
+            }
+            else
+            {
+<<<<<<< HEAD
+                spriteBatch.Draw(_renderContext.Textures["LaserRed"], healthPosition, Color.White);
+=======
+                healthTexture = _textures["LaserRed"];
+                currentState = ":(";
+>>>>>>> refs/remotes/origin/master
+            }
+
+            Vector2 stateTextSize = font.MeasureString(currentState);
+            Vector2 currentStatePos = new Vector2(playerGear.Center.X, playerGear.Center.Y);
+
+            string currentHealth = player.GetHealth().ToString() + "/" + GameConstants.HEALTH;
+            Vector2 textSize = font.MeasureString(currentHealth);
+            Vector2 currentHealthPos = new Vector2(playerHealthGear.Center.X - textSize.X / 2, playerHealthGear.Center.Y - textSize.Y / 2);
+
+            Vector2 origin = new Vector2(_textures["Gear"].Bounds.Width / 2, _textures["Gear"].Bounds.Height / 2);
+
+            spriteBatch.DrawString(font, currentHealth, currentHealthPos, Color.Black);
+            spriteBatch.DrawString(font, currentState, currentStatePos, Color.Black, MathHelper.PiOver2, new Vector2(stateTextSize.X / 2, stateTextSize.Y / 2), 1f, SpriteEffects.None, 1);
+            spriteBatch.Draw(
+                _textures["Gear"], 
+                new Vector2(playerGear.X + 75, playerGear.Y + 75), 
+                null, Color.White, rotationAngle, 
+                origin, 
+                (float)playerGear.Width / _textures["Gear"].Width, 
+                SpriteEffects.None, 0);
+            spriteBatch.Draw(
+                _textures["Gear"], 
+                new Vector2(playerHealthGear.X + playerHealthGear.Width / 2, playerHealthGear.Y + playerHealthGear.Height / 2), 
+                null, Color.White, -rotationAngle, 
+                origin, 
+                (float)playerHealthGear.Width / _textures["Gear"].Width, 
+                SpriteEffects.None, 0);
+            spriteBatch.Draw(healthTexture, healthTexturePos, Color.White);
         }
 
         /// <summary>
         /// Used for debugging hitboxes - Steven
+        /// Refactored by Jacob into an actual minimap
         /// </summary>
         /// <param name="_renderContext"></param>
         public void DrawDebugMap(RenderContext _renderContext)

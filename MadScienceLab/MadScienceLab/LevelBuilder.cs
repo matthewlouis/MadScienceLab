@@ -99,7 +99,7 @@ namespace MadScienceLab
                     case 'm':
                         MessageEvent message = new MessageEvent(col++, row, renderContext);
                         level.AddChild(message);
-                        level.Messages.Add(message);
+                        level.Messages.Add("" + row + ":" + (col - startWall), message);
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'B':
@@ -277,8 +277,10 @@ namespace MadScienceLab
                     //Message event
                     if (level.Children[index].GetType() == typeof(MessageEvent))
                     {
-                        MessageEvent messageEvent = (MessageEvent)level.Children[index];
-                        messageEvent.Message = ObjectAndSettings[1];
+                        //MessageEvent messageEvent = (MessageEvent)level.Children[index];
+                        //messageEvent.Message = ObjectAndSettings[1];
+                        level.Messages[ObjectAndSettings[0]].Message = ObjectAndSettings[1];
+                        
                     }
                     
                     //Trapdoor
