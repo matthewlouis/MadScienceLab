@@ -33,7 +33,7 @@ namespace MadScienceLab
         // physics
 
         // message events
-        public enum TYPING_STATE { NotTyped = 1, Typing = 2, DoneTyping = 3 }
+        public enum TYPING_STATE { NotTyped = 1, Typing = 2, DoneTyping = 3, Disabled = 4 }
 
         // sound
         public const int DISTANCE_SCALE = 4;

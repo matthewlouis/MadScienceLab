@@ -1,5 +1,5 @@
 ﻿XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXX   X1XXXXXXXXXXXXXXXX
+XXXXXXXX   X1XXXXXXX       XX
 X     tX                   XX
 X XXXXXX              L   SXX
 X          XXXXXX2XXXXXXXXXXX
@@ -10,7 +10,7 @@ Xt           XXXXXXXXXXXXXXXX
 XXX3M        D  D  D     DD@X
 Xt        XXXXXXXXXXXX   XXXX
 XX P      XXX           XXXXX
-XX B  t E XXXT         XXXXXX
+XX B  t   XXXT   E     XXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
