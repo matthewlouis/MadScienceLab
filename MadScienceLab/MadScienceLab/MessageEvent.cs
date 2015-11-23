@@ -18,9 +18,10 @@ namespace MadScienceLab
         int WPM = 400; //default WPM for text
         Vector2 messageBoxPosition = new Vector2(298, 500);
         Rectangle buttonPosition = new Rectangle(959, 662, 48, 48);
-        Vector2 textPosition = new Vector2(308, 510);
+        Vector2 textPosition = new Vector2(318, 516);
         public GameConstants.TYPING_STATE typingState;
         static int rowLength = 56;
+        Random rand;
         
 
         public string Message
@@ -43,7 +44,6 @@ namespace MadScienceLab
         /// </summary>
         /// 
         string[] typedMessage;
-        public string TypedMessage { get; private set; }
 
 
         public MessageEvent(int column, int row, RenderContext renderContext) : base(column, row)
@@ -58,9 +58,15 @@ namespace MadScienceLab
             HitboxHeight = GameConstants.SINGLE_CELL_SIZE;
             HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
             //Translate(new Vector3(0, 0, 0));
-            
+
+            rand = new Random();
+
             typedMessage = new string[4];
 
+            typedMessage[0] = "line 1";
+            typedMessage[1] = "line 2";
+            typedMessage[2] = "line 3";
+            typedMessage[3] = "line 4";
 
 
 
@@ -90,7 +96,7 @@ namespace MadScienceLab
         /// </summary>
         public void FinishTyping()
         {
-            TypedMessage = Message;
+            
             typingState = GameConstants.TYPING_STATE.DoneTyping;
         }
 
@@ -113,26 +119,32 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         public override void Update(RenderContext renderContext)
         {
-            if (this.typingState == GameConstants.TYPING_STATE.DoneTyping && (Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Y)))
+            if (this.typingState == GameConstants.TYPING_STATE.DoneTyping || 
+                this.typingState == GameConstants.TYPING_STATE.Typing
+                && (Keyboard.GetState().IsKeyDown(Keys.E) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Y)))
             {
                 this.typingState = GameConstants.TYPING_STATE.Disabled;
 
             }
-            if (typingState == GameConstants.TYPING_STATE.Typing)
-            {
+
+            typedMessage = message.Split('%');
+
+            //if (typingState == GameConstants.TYPING_STATE.Typing)
+            //{
                 
 
-                if (elapsedTypingTime < totalTimeToType) //until it's done
-                {
-                    elapsedTypingTime += renderContext.GameTime.ElapsedGameTime.Milliseconds;
-                    TypedMessage = Message.Substring(0, (int)(Message.Length * elapsedTypingTime / totalTimeToType)); //Get current message to be typed for the current point
-                }
-                else //done
-                {
-                    FinishTyping();
-                }
-            }
-            //handle typing ...
+            //    if (elapsedTypingTime < totalTimeToType) //until it's done
+            //    {
+            //        elapsedTypingTime += renderContext.GameTime.ElapsedGameTime.Milliseconds;
+            //        //typedMessage = Message.Substring(0, (int)(Message.Length * elapsedTypingTime / totalTimeToType)); //Get current message to be typed for the current point
+                    
+            //    }
+            //    else //done
+            //    {
+            //        FinishTyping();
+            //    }
+            //}
+            ////handle typing ...
 
             base.Update(renderContext);
         }
@@ -196,10 +208,17 @@ namespace MadScienceLab
         {
             if (this.typingState != GameConstants.TYPING_STATE.Disabled)
             {
+                
                 renderContext.SpriteBatch.Begin();
                 renderContext.SpriteBatch.Draw(renderContext.Textures["MessageBackground"], messageBoxPosition, Color.White);
-                renderContext.SpriteBatch.Draw(renderContext.Textures["B_Button"], buttonPosition, Color.White);
-                renderContext.SpriteBatch.DrawString(renderContext.MessageFont, message, textPosition, Color.White);
+                renderContext.SpriteBatch.Draw(renderContext.Textures["Y_Button"], buttonPosition, Color.White);
+                renderContext.SpriteBatch.DrawString(renderContext.MessageFont, typedMessage[0], textPosition, Color.White);
+
+                renderContext.SpriteBatch.DrawString(renderContext.MessageFont, typedMessage[1], textPosition + new Vector2(0, 40), Color.White);
+
+                renderContext.SpriteBatch.DrawString(renderContext.MessageFont, typedMessage[2], textPosition + new Vector2(0, 80), Color.White);
+
+                renderContext.SpriteBatch.DrawString(renderContext.MessageFont, typedMessage[3], textPosition + new Vector2(0, 120), Color.White);
                 renderContext.SpriteBatch.End();
             }
         }

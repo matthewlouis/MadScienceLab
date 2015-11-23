@@ -37,14 +37,13 @@ namespace MadScienceLab
             maxDistance = 2 * GameConstants.SINGLE_CELL_SIZE; //default distance
             this.facingDirection = RIGHT;
             this.movingDirection = RIGHT; //default direction
-
-            // Provides a hitbox for the block - Steven
+            Scale(1, 0.25f, 1);
+            Translate(Position.X, Position.Y + 18, Position.Z);
+            // Provides a hitbox for the moving platform
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
-            //Shrink the bounding box to 0.9x of its dimensions, while maintaining the same center
-            /*HitboxWidthOffset += (int)(HitboxWidth * 0.05);
-            HitboxWidth = (int)(HitboxWidth*0.9);
-            HitboxHeightOffset += (int)(HitboxHeight * 0.05);
-            HitboxHeight = (int)(HitboxHeight * 0.9);*/
+            HitboxHeight = 12;
+            HitboxHeightOffset = 16;
+            
         }
 
         public override void Update(RenderContext renderContext)

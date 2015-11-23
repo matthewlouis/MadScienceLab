@@ -71,6 +71,8 @@ namespace MadScienceLab
 
         InputAction pauseAction;
 
+        public static bool messageActive;
+
         // Level selected string to build level
         int levelNum;
 
@@ -135,6 +137,8 @@ namespace MadScienceLab
             random = new Random();
             //init fps counter
             fpsCount = new FPSCounter(_renderContext);
+
+            messageActive = false;
         }
 
 
@@ -322,7 +326,7 @@ namespace MadScienceLab
                 pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
             else
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
-            if (IsActive)
+            if (IsActive && !messageActive)
             {
                 // Setting the vertical offset for bobbing images
                 if (bob > 10)
@@ -384,6 +388,15 @@ namespace MadScienceLab
                 //fps debug
                 fpsCount.Update(gameTime);    
                 //timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+
+            // if message paused game then on button B or F key resume game
+            if (messageActive)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B))
+                {
+                    messageActive = false;
+                }
             }
         }
 

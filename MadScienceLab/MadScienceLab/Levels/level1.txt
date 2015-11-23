@@ -14,8 +14,8 @@ Above is level, below are links.
 2:30|5:32
 4:44|R,4
 4:53|L,4
-2:6| I've got to get out of here! Let me try hit the level to open this door!
-2:12|I could use the box to get over that wall.
-2:21| This pressure switch opens the door. I need to put something on it to keep the door open
-2:29| It looks like this switch activates the quantum box dropper. Each time i press the switch a box drop out till the dropper is out of boxes and turn red.
-5:42| Ooo! Moving platforms, my favorite
+2:6|I've got to get out of here! Let me try hit the level%to open this door!%%%
+2:12|I could use the box to get over that wall.%%%%
+2:21|This pressure switch opens the door. I need to put %something on it to keep the door open%%%
+2:29|It looks like this switch activates the quantum box%dropper. Each time I press the switch a box drops out %until the dropper is out of boxes and turns red.%Maybe I can stack them to climb up.%
+5:42|Ooo! Moving platforms, my favorite!!!%%%
