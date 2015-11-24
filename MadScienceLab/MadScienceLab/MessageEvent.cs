@@ -121,9 +121,10 @@ namespace MadScienceLab
         {
             if (this.typingState == GameConstants.TYPING_STATE.DoneTyping || 
                 this.typingState == GameConstants.TYPING_STATE.Typing
-                && (Keyboard.GetState().IsKeyDown(Keys.E) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Y)))
+                && (Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.Y)))
             {
                 this.typingState = GameConstants.TYPING_STATE.Disabled;
+                GameplayScreen.messageActive = false;
 
             }
 
@@ -206,18 +207,24 @@ namespace MadScienceLab
 
         private void DrawMessage(RenderContext renderContext)
         {
+            
             if (this.typingState != GameConstants.TYPING_STATE.Disabled)
             {
-                
+                // trying to get the game to pause while message is displaying and then unpause and remove message
+                if (!GameplayScreen.messageActive)
+                {
+                    GameplayScreen.messageActive = true;
+                    GameplayScreen.messageObj = this;
+
+                }
+
+                // draw the message to screen
                 renderContext.SpriteBatch.Begin();
                 renderContext.SpriteBatch.Draw(renderContext.Textures["MessageBackground"], messageBoxPosition, Color.White);
                 renderContext.SpriteBatch.Draw(renderContext.Textures["Y_Button"], buttonPosition, Color.White);
                 renderContext.SpriteBatch.DrawString(renderContext.MessageFont, typedMessage[0], textPosition, Color.White);
-
                 renderContext.SpriteBatch.DrawString(renderContext.MessageFont, typedMessage[1], textPosition + new Vector2(0, 40), Color.White);
-
                 renderContext.SpriteBatch.DrawString(renderContext.MessageFont, typedMessage[2], textPosition + new Vector2(0, 80), Color.White);
-
                 renderContext.SpriteBatch.DrawString(renderContext.MessageFont, typedMessage[3], textPosition + new Vector2(0, 120), Color.White);
                 renderContext.SpriteBatch.End();
             }

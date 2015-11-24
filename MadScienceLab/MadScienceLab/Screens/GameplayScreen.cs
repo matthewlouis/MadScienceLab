@@ -72,6 +72,7 @@ namespace MadScienceLab
         InputAction pauseAction;
 
         public static bool messageActive;
+        public static MessageEvent messageObj;
 
         // Level selected string to build level
         int levelNum;
@@ -396,6 +397,7 @@ namespace MadScienceLab
                 if (Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B))
                 {
                     messageActive = false;
+                    messageObj.Update(_renderContext);
                 }
             }
         }
