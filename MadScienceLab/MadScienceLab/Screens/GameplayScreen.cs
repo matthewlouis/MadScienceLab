@@ -325,7 +325,7 @@ namespace MadScienceLab
 
                 bob += (int)(0.1f * gameTime.ElapsedGameTime.Milliseconds) * num;
 
-                rotationAngle += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                rotationAngle += (float)gameTime.ElapsedGameTime.TotalSeconds * 1;
                 rotationAngle = rotationAngle % (MathHelper.Pi * 2);
                 _renderContext.Quadtree.clear();
 
