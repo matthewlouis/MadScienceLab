@@ -17,6 +17,7 @@ namespace MadScienceLab
     {
         public SpriteBatch    SpriteBatch { get; set; }
         public SpriteFont     SpriteFont { get; set; }
+        public SpriteFont     MessageFont { get; set; }
         public GraphicsDevice GraphicsDevice { get; set; }
         public GameTime       GameTime { get; set; }
         public GameTimer      GameTimer { get; set; }

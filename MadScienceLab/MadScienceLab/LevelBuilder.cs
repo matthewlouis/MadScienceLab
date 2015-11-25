@@ -25,7 +25,7 @@ namespace MadScienceLab
         static string levelSelect;
 
         //Builds Basic level
-        public static Level MakeBasicLevel(int levelNum)
+        public static Level MakeBasicLevel(int levelNum, RenderContext renderContext)
         {
             Level level = new Level();
             levelSelect = "level" + levelNum.ToString();
@@ -97,7 +97,9 @@ namespace MadScienceLab
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'm':
-                        level.AddChild(new MessageEvent(col++, row));
+                        MessageEvent message = new MessageEvent(col++, row, renderContext);
+                        level.AddChild(message);
+                        level.Messages.Add("" + row + ":" + (col - startWall), message);
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'B':
@@ -275,8 +277,10 @@ namespace MadScienceLab
                     //Message event
                     if (level.Children[index].GetType() == typeof(MessageEvent))
                     {
-                        MessageEvent messageEvent = (MessageEvent)level.Children[index];
-                        messageEvent.Message = ObjectAndSettings[1];
+                        //MessageEvent messageEvent = (MessageEvent)level.Children[index];
+                        //messageEvent.Message = ObjectAndSettings[1];
+                        level.Messages[ObjectAndSettings[0]].Message = ObjectAndSettings[1];
+                        
                     }
                     
                     //Trapdoor
