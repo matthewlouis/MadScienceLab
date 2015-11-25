@@ -693,7 +693,9 @@ namespace MadScienceLab
                     _renderContext.Camera.Projection,
                     _renderContext.Camera.View,
                     player.InteractiveObj.GetWorldMatrix());
-                
+                ToggleSwitch swich = (ToggleSwitch)player.InteractiveObj;
+                Console.WriteLine(player.interactState);
+                if (player.interactState == 0 && swich.RemainingToggles != 0 || swich.InfinitelyToggleable)
                 spriteBatch.Draw(_renderContext.Textures["B_Button"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - 96, 48, 48), Color.White);
             }
 
