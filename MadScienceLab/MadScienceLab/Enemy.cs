@@ -199,12 +199,12 @@ namespace MadScienceLab
                 {
                     if (enemyRange.Intersects(cellObject.Hitbox) && enemyRange.Intersects(renderContext.Player.Hitbox))
                     {
-                        if (direction == GameConstants.POINTDIR.pointLeft && cellObject.Position.X > renderContext.Player.Position.X)
+                        if (direction == GameConstants.POINTDIR.pointLeft && cellObject.Position.X > renderContext.Player.Position.X && renderContext.Player.Position.X <  Position.X)
                         {
                             return false;
                         }
 
-                        else if (direction == GameConstants.POINTDIR.pointRight && cellObject.Position.X < renderContext.Player.Position.X)
+                        else if (direction == GameConstants.POINTDIR.pointRight && cellObject.Position.X < renderContext.Player.Position.X && renderContext.Player.Position.X > Position.X)
                         {
                             return false;
                         }
