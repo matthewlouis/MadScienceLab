@@ -151,6 +151,8 @@ namespace MadScienceLab
             GraphicsDevice graphics = ScreenManager.GraphicsDevice;
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
             SpriteFont font = ScreenManager.Font;
+            Texture2D backButton = ScreenManager.BackButtonTexture;
+            Texture2D actionButton = ScreenManager.ActionButtonTexture;
 
             spriteBatch.Begin ();
 
@@ -179,6 +181,12 @@ namespace MadScienceLab
 
             spriteBatch.DrawString ( font, menuTitle, titlePosition, titleColor, 0,
                                    titleOrigin, titleScale, SpriteEffects.None, 0 );
+
+            //Draw select and back buttons
+            spriteBatch.Draw(actionButton, new Rectangle(960, 540, 50, 50), Color.White);
+            spriteBatch.DrawString(font, "Select", new Vector2(1020, 550), Color.White);
+            spriteBatch.Draw(backButton, new Rectangle(960, 590, 50, 50), Color.White);
+            spriteBatch.DrawString(font, "Back", new Vector2(1020, 600), Color.White);
 
             spriteBatch.End ();
         }
