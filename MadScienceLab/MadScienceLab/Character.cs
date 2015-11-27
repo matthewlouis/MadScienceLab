@@ -49,6 +49,7 @@ namespace MadScienceLab
         //For handling damage
         private static TimeSpan DAMAGE_DELAY = TimeSpan.FromMilliseconds(1000f);
         private static int BLINK_DELAY = 200;
+        public float damageDelayTime;
 
         private TimeSpan timeHit = TimeSpan.Zero;
         private bool damageable = true;
@@ -67,7 +68,12 @@ namespace MadScienceLab
             health -= damage;
                 damageable = false;
             soundEffects.PlaySound("PlayerHit");
+            }
         }
+
+        public bool IsInvuln()
+        {
+            return !damageable;
         }
         public int GetHealth()
         {
@@ -103,7 +109,7 @@ namespace MadScienceLab
             // Overriding the hitbox size, the new model will need to be the height of the cells, for now the vamp model height is overrided - Steven
             base.HitboxWidth = 24;
             HitboxWidthOffset = 12;
-            base.HitboxHeight = 47;
+            base.HitboxHeight = 48;
 
             //Load sound effects
             //soundFX = new Dictionary<string, SoundEffect>();
@@ -138,6 +144,7 @@ namespace MadScienceLab
             //For temporary invincibility when recently damaged
             if (!damageable)     
             {
+                damageDelayTime = (float)(renderContext.GameTime.TotalGameTime - timeHit).TotalMilliseconds / (float)DAMAGE_DELAY.TotalMilliseconds;
                 if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
                 {
                     damageable = true;

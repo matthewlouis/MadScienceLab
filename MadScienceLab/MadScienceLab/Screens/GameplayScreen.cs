@@ -65,8 +65,8 @@ namespace MadScienceLab
         RenderTarget2D ShaderRenderTarget;
         private float playerBob;
         private KeyboardState lastkey;
-
-
+        private List<float> healthGearAnglesList;
+        private int playerBobDirection = 1;
         //Debugging - FPS - Matt
         private FPSCounter fpsCount;
 
@@ -106,6 +106,7 @@ namespace MadScienceLab
         Rectangle gear1Position = new Rectangle(25, 25, 150, 150);
         Rectangle gear2Position = new Rectangle(170, 35, 100, 100);
         private int hudtype;
+        private bool damageTaken;
         #endregion
 
         #region Initialization
@@ -143,7 +144,7 @@ namespace MadScienceLab
             random = new Random();
             //init fps counter
             fpsCount = new FPSCounter(_renderContext);
-
+            healthGearAnglesList = new List<float>();
             messageActive = false;
         }
 
@@ -346,9 +347,13 @@ namespace MadScienceLab
 
                 bob += (int)(0.1f * gameTime.ElapsedGameTime.Milliseconds) * num;
 
-                playerBob += (float)gameTime.ElapsedGameTime.TotalSeconds / 5;
+                if (playerBob > 0.6f)
+                    playerBobDirection = -1;
+                else if (playerBob < -0.6f)
+                    playerBobDirection = 1;
+
+                playerBob += (float)gameTime.ElapsedGameTime.TotalSeconds / 5 * playerBobDirection;
                 playerBob = playerBob % (MathHelper.Pi * 2);
-                
 
                 rotationAngle += (float)gameTime.ElapsedGameTime.TotalSeconds * 1;
                 rotationAngle = rotationAngle % (MathHelper.Pi * 2);
@@ -456,7 +461,7 @@ namespace MadScienceLab
                         DrawPlayerHealthV3(_renderContext);
                         break;
                 }
-
+                DrawInteractiveUI(_renderContext);
                 DrawDebugMap(_renderContext);
             }
             spriteBatch.End();
@@ -543,31 +548,32 @@ namespace MadScienceLab
             Rectangle playerGear = new Rectangle(50, 50, 150, 150);
             Rectangle playerHealthGear = new Rectangle(195, 60, 100, 100);
             Rectangle playerHealthCountGear = new Rectangle(190, 120, 60, 60);
+            Rectangle centerHealthGear = new Rectangle(75, 75, 100, 100);
             Texture2D healthTexture;
-            string currentState;
 
             if (player.GetHealth() == GameConstants.HEALTH)
             {
                 healthTexture = _textures["LightGreen"];
-                currentState = ":)";
             }
             else if (player.GetHealth() < GameConstants.HEALTH && player.GetHealth() > 1)
             {
                 healthTexture = _textures["LightYellow"];
-                currentState = ":|";
             }
             else
             {
                 healthTexture = _textures["LightRed"];
-                currentState = ":(";
             }
 
-            Vector2 stateTextSize = font.MeasureString(currentState);
-            Vector2 currentStatePos = new Vector2(playerGear.Center.X, playerGear.Center.Y);
             Vector2 origin = new Vector2(_textures["Gear2"].Bounds.Width / 2, _textures["Gear2"].Bounds.Height / 2);
 
-            spriteBatch.DrawString(font, currentState, currentStatePos, Color.Black, MathHelper.PiOver2, new Vector2(stateTextSize.X / 2, stateTextSize.Y / 2), 1f, SpriteEffects.None, 1);
-            spriteBatch.Draw(_textures["GearHealthBar"], new Rectangle(playerHealthCountGear.X , playerHealthCountGear.Y + 10, 200, 30), Color.White);
+            // The background the health gears rests on
+            spriteBatch.Draw(_textures["GearHealthBar"], 
+                new Rectangle(playerHealthCountGear.X , 
+                    playerHealthCountGear.Center.Y - 15, 
+                    playerHealthCountGear.Width * GameConstants.HEALTH + 5, 30), 
+                    Color.White);
+            
+            // Draw the amount of gears based on max health count
             for (int i = 0; i < GameConstants.HEALTH; i++)
             {
                 float angle = rotationAngle;
@@ -579,22 +585,67 @@ namespace MadScienceLab
                 int offset = 20;
 
                 if (i < player.GetHealth())
-                    spriteBatch.Draw(healthTexture, new Rectangle((int)position.X - offset, (int)position.Y - offset, playerHealthCountGear.Width - offset, playerHealthCountGear.Width - offset), Color.White);
-                spriteBatch.Draw(
-                    _textures["Gear2"],
-                    position,
-                    null, Color.White, angle,
-                    origin,
-                    (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
-                    SpriteEffects.None, 0);
+                {
+                    spriteBatch.Draw(healthTexture, 
+                        new Rectangle((int)position.X - offset, (int)position.Y - offset, playerHealthCountGear.Width - offset, playerHealthCountGear.Width - offset), 
+                        Color.White);
+
+                    spriteBatch.Draw(_textures["Gear2"],
+                        position,
+                        null, Color.White, angle,
+                        origin,
+                        (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
+                        SpriteEffects.None, 0);
+                }
+                else if (i == player.GetHealth())
+                {
+                    if (player.IsInvuln())
+                    {
+                        spriteBatch.Draw(_textures["Gear2"],
+                            new Vector2(position.X + 20 * player.damageDelayTime, position.Y),
+                            null, Color.White, angle,
+                            origin,
+                            (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
+                            SpriteEffects.None, 0);
+                        damageTaken = true;
+                    }
+                    else
+                    {
+                        if (damageTaken)
+                        {
+                            healthGearAnglesList.Add(angle);
+                            damageTaken = false;
+                        }
+
+                        spriteBatch.Draw(_textures["Gear2"],
+                            new Vector2(position.X + 20, position.Y),
+                            null, Color.White, healthGearAnglesList[GameConstants.HEALTH - player.GetHealth() - 1],
+                            origin,
+                            (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
+                            SpriteEffects.None, 0);
+                    }
+                }
+                else
+                {
+                    spriteBatch.Draw(_textures["Gear2"],
+                        new Vector2(position.X + 20, position.Y),
+                        null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
+                        origin,
+                        (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
+                        SpriteEffects.None, 0);
+                }
+
             }
-            spriteBatch.Draw(
-                _textures["Gear2"],
-                new Vector2(playerGear.X + 75, playerGear.Y + 75),
-                null, Color.White, rotationAngle,
-                origin,
-                (float)playerGear.Width / _textures["Gear2"].Width,
-                SpriteEffects.None, 0);
+
+            // Player Portrait
+            spriteBatch.Draw(_textures["LightGreen"], centerHealthGear, new Color(0.7f, 0, 0.7f));
+            spriteBatch.Draw(_textures["PlayerPortrait"], centerHealthGear, Color.White);
+            spriteBatch.Draw(_textures["Gear2"],
+                             new Vector2(playerGear.X + 75, playerGear.Y + 75),
+                             null, Color.White, rotationAngle,
+                             origin,
+                             (float)playerGear.Width / _textures["Gear2"].Width,
+                             SpriteEffects.None, 0);
         }
 
         public void DrawPlayerHealthV3(RenderContext _renderContext)
@@ -625,19 +676,17 @@ namespace MadScienceLab
             spriteBatch.Draw(healthTexture, centerHealthGear, Color.White);
             spriteBatch.End();
 
-            Matrix matrix = Matrix.CreateTranslation(0, -centerHealthGear.Center.Y, 0) *
+            Matrix matrix = Matrix.CreateTranslation(0, -centerHealthGear.Center.Y + playerBob* 10, 0) *
                             Matrix.CreateRotationX(playerBob) *
-                            Matrix.CreateTranslation(0, centerHealthGear.Center.Y, 0) *
+                            Matrix.CreateTranslation(0, centerHealthGear.Center.Y - playerBob * 10, 0) *
                             Matrix.CreateScale(1, 1, 0);
 
-            spriteBatch.Begin(0, BlendState.AlphaBlend, null, null, null, null, Matrix.Identity);
-
-            Vector2 currentStatePos = new Vector2(playerGear.Center.X, playerGear.Center.Y);
-            Vector2 origin = new Vector2(_textures["Gear2"].Bounds.Width / 2, _textures["Gear2"].Bounds.Height / 2);
-
-            spriteBatch.Draw(_textures["PlayerPortrait"], centerHealthGear, Color.White);
+            spriteBatch.Begin(0, BlendState.AlphaBlend, null, null, null, null, matrix);
+            spriteBatch.Draw(_textures["PlayerPortrait"], new Rectangle(centerHealthGear.X, centerHealthGear.Y, centerHealthGear.Width, centerHealthGear.Height), Color.White);
             spriteBatch.End();
+            
             spriteBatch.Begin();
+            Vector2 origin = new Vector2(_textures["Gear2"].Bounds.Width / 2, _textures["Gear2"].Bounds.Height / 2);
             spriteBatch.Draw(
                 _textures["Gear2"],
                 new Vector2(playerGear.X + 75, playerGear.Y + 75),
@@ -839,9 +888,9 @@ namespace MadScienceLab
                     _renderContext.Camera.View,
                     player.InteractiveObj.GetWorldMatrix());
                 ToggleSwitch swich = (ToggleSwitch)player.InteractiveObj;
-                Console.WriteLine(player.interactState);
+
                 if (player.interactState == 0 && swich.RemainingToggles != 0 || swich.InfinitelyToggleable)
-                spriteBatch.Draw(_renderContext.Textures["B_Button"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - 96, 48, 48), Color.White);
+                    spriteBatch.Draw(_renderContext.Textures["B_Button"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - 96, 48, 48), Color.White);
             }
 
             // Provides visual feedback for where the box will be placed - Steven
