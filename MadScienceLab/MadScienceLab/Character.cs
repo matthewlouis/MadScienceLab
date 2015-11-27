@@ -36,7 +36,7 @@ namespace MadScienceLab
         public byte GetFacingDirection { get { return facingDirection;  } }
         byte putFacingDirection = FACING_RIGHT; //direction when the player puts down the box
         const int FACING_LEFT = 1, FACING_RIGHT = 2;
-
+        public bool canPlace = true;
         //For controls - stores previous state.
         GamePadState oldGamePadState;
         KeyboardState oldKeyboardState;
@@ -49,6 +49,7 @@ namespace MadScienceLab
         //For handling damage
         private static TimeSpan DAMAGE_DELAY = TimeSpan.FromMilliseconds(1000f);
         private static int BLINK_DELAY = 200;
+        public float damageDelayTime;
 
         private TimeSpan timeHit = TimeSpan.Zero;
         private bool damageable = true;
@@ -67,7 +68,12 @@ namespace MadScienceLab
             health -= damage;
                 damageable = false;
             soundEffects.PlaySound("PlayerHit");
+            }
         }
+
+        public bool IsInvuln()
+        {
+            return !damageable;
         }
         public int GetHealth()
         {
@@ -103,7 +109,7 @@ namespace MadScienceLab
             // Overriding the hitbox size, the new model will need to be the height of the cells, for now the vamp model height is overrided - Steven
             base.HitboxWidth = 24;
             HitboxWidthOffset = 12;
-            base.HitboxHeight = 47;
+            base.HitboxHeight = 48;
 
             //Load sound effects
             //soundFX = new Dictionary<string, SoundEffect>();
@@ -138,6 +144,7 @@ namespace MadScienceLab
             //For temporary invincibility when recently damaged
             if (!damageable)     
             {
+                damageDelayTime = (float)(renderContext.GameTime.TotalGameTime - timeHit).TotalMilliseconds / (float)DAMAGE_DELAY.TotalMilliseconds;
                 if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
                 {
                     damageable = true;
@@ -324,6 +331,8 @@ namespace MadScienceLab
         {
             //handle jump movement
             //Added a bit of physics to this.
+            TransVelocity = Vector3.Zero;
+
             jumping = true;
             base.TransVelocity += new Vector3(0, GameConstants.SINGLE_CELL_SIZE*5, 0);
             charModel.SetAnimationSpeed(MOVEMENT_ANIM_SPEED);
@@ -602,6 +611,23 @@ namespace MadScienceLab
         {
             foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
+                float sideXPos;
+                float leeway = 10; //leeway allowed to place the box away from you (ie. amount allowed to place a box into another object)
+                if (facingDirection == Character.FACING_RIGHT)
+                {
+                    sideXPos = Position.X + Hitbox.Width;
+                }
+                else //facing left
+                {
+                    sideXPos = Position.X - StoredBox.Hitbox.Width + leeway * 3;
+                }
+                Rectangle areaSide = new Rectangle((int)sideXPos, (int)Position.Y + 2, (int)StoredBox.Hitbox.Width - 10, (int)StoredBox.Hitbox.Height);
+
+                if (levelObject.isCollidable && areaSide.Intersects(levelObject.Hitbox))
+                {
+                    canPlace = false;
+                }
+
                 if (levelObject.isCollidable && StoredBox.Hitbox.Intersects(levelObject.Hitbox))
                 {
                     /**Determining what side was hit**/
@@ -702,8 +728,11 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Top";//top
-                                Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
-                                TransVelocity = Vector3.Zero;
+                                if (Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width > 2) 
+                                {
+                                    Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
+                                    TransVelocity = Vector3.Zero;
+                                }
                             }
                             else
                             {
@@ -726,13 +755,27 @@ namespace MadScienceLab
                                 {
                                     ((MovingPlatform)levelObject).PlayerOnPlatform = true;
                                 }
-                                Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+
                                 if (levelObject.Hitbox.Y > -25)
+                                {
                                     Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom, 0);
+
+                                    if (!(Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width == 2 && levelObject.GetType() == typeof(PickableBox)))
+                                    {
+                                        TransVelocity = Vector3.Zero;
+                                    }
+                                }
                                 else
+                                {
                                     Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
-                                if (!collisionJumping)
-                                    TransVelocity = Vector3.Zero;
+
+                                    if (!(Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width == 2 && levelObject.GetType() == typeof(PickableBox)))
+                                    {
+                                        TransVelocity = Vector3.Zero;
+                                    }
+                                }
+                               // if (!collisionJumping)
+                                    //TransVelocity = Vector3.Zero;
                                 jumping = false;
                                 falling = false;
                             }
