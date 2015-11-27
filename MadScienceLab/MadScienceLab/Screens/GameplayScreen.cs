@@ -105,7 +105,7 @@ namespace MadScienceLab
         Rectangle healthPosition = new Rectangle(170, 125, 250, 30);
         Rectangle gear1Position = new Rectangle(25, 25, 150, 150);
         Rectangle gear2Position = new Rectangle(170, 35, 100, 100);
-        private int hudtype;
+        private int hudtype = 1;
         private bool damageTaken;
         #endregion
 
