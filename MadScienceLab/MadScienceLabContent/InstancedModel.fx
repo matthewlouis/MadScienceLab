@@ -20,9 +20,14 @@ float3 AmbientLight = 0.25;
 
 texture Texture;
 
-sampler Sampler = sampler_state
+sampler Sampler : register(s0) = sampler_state
 {
     Texture = (Texture);
+	MipFilter = Linear;
+    MagFilter = Anisotropic;
+    MinFilter = Anisotropic;
+    AddressU = mirror;
+    AddressV = mirror;
 };
 
 

@@ -188,16 +188,12 @@ namespace MadScienceLab
 
                 _textures.Add("MoveableBox", content.Load<Texture2D>("WoodPlanks_Color"));
                 _textures.Add("BlockDropper", content.Load<Texture2D>("Textures/dropper"));
-                _textures.Add("BareMetal_Gray", content.Load<Texture2D>("Textures/BareMetal_Gray"));
-                _textures.Add("BrushedRoundMetal_Gray", content.Load<Texture2D>("Textures/BrushedRoundMetal_Gray"));
-                _textures.Add("DirtyMetal", content.Load<Texture2D>("Textures/DirtyMetal"));
-                _textures.Add("Fiberglass_White", content.Load<Texture2D>("Textures/Fiberglass_White"));
-                _textures.Add("MetalFloor_Gray", content.Load<Texture2D>("Textures/MetalFloor_Gray"));
-                _textures.Add("Tile_Beige", content.Load<Texture2D>("Textures/Tile_Beige"));
-                _textures.Add("Tile_Blue", content.Load<Texture2D>("Textures/Tile_Blue"));
-                _textures.Add("Tile_DarkGray", content.Load<Texture2D>("Textures/Tile_DarkGray"));
+                _textures.Add("Pipes2", content.Load<Texture2D>("Textures/Pipes2"));
+                _textures.Add("Pipes1", content.Load<Texture2D>("Textures/Pipes1"));
+                _textures.Add("Vent", content.Load<Texture2D>("Textures/Vent"));
+                _textures.Add("Tile_Black", content.Load<Texture2D>("Textures/Tile_Black"));
                 _textures.Add("Tile_Gray", content.Load<Texture2D>("Textures/Tile_Gray"));
-                _textures.Add("WindowBlocks", content.Load<Texture2D>("Textures/WindowBlocks"));
+                _textures.Add("Tile_White", content.Load<Texture2D>("Textures/Tile_White"));
                 _textures.Add("Tile_Fun", content.Load<Texture2D>("Textures/Tile_Fun"));
                 _textures.Add("Exit", content.Load<Texture2D>("Textures/EXIT"));
                 _textures.Add("Complete", content.Load<Texture2D>("Textures/Complete"));
