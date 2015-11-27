@@ -53,6 +53,8 @@ namespace MadScienceLab
         private TimeSpan timeHit = TimeSpan.Zero;
         private bool damageable = true;
 
+        private const float MOVEMENT_ANIM_SPEED = 3f;
+
        
 
         // Health Support
@@ -82,10 +84,12 @@ namespace MadScienceLab
 
         public Character(int startRow, int startCol):base(startRow, startCol)
         {
+            Scale(0.06f, 0.06f, 0.06f);
+            Rotate(0, 90f, 0);
+
             // create model with offset of position
-            charModel = new GameAnimatedModel("Vampire", startRow, startCol, this);
+            charModel = new GameAnimatedModel("SciTry", startRow, startCol, this);
             charModel.VerticalOffset = 22;         
-            Rotate(0f, 90f, 0f);
             health = GameConstants.HEALTH;
         }
 
@@ -93,11 +97,13 @@ namespace MadScienceLab
         {
             base.LoadContent(contentManager);
             charModel.LoadContent(contentManager);
+            charModel.SetAnimationSpeed(1.0f);
             charModel.PlayAnimation("Idle", true, 0f);
             UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, true);
             // Overriding the hitbox size, the new model will need to be the height of the cells, for now the vamp model height is overrided - Steven
-            //base.HitboxWidth = 48;
-            base.HitboxHeight = 48;
+            base.HitboxWidth = 24;
+            HitboxWidthOffset = 12;
+            base.HitboxHeight = 47;
 
             //Load sound effects
             //soundFX = new Dictionary<string, SoundEffect>();
@@ -205,12 +211,17 @@ namespace MadScienceLab
                 (currentGamePadState.Buttons.B == ButtonState.Pressed &&
                 oldGamePadState.Buttons.B != ButtonState.Pressed))
             {
+                charModel.SetAnimationSpeed(MOVEMENT_ANIM_SPEED);
                 if (interactState == Character.InteractState.CompletedPickup)
                 {
                     PutBox();
+                    charModel.PlayAnimation("DropBox", false, 0f);
                 }
                 else
-                    PickBox();  
+                {
+                    PickBox();
+                    charModel.PlayAnimation("PickBox", false, 0f);
+                }
             }
 
             //prevent the player from moving while still in box pickup/putdown animation
@@ -271,6 +282,7 @@ namespace MadScienceLab
             {
                 return; //don't draw the player 
             }
+
             charModel.Draw(renderContext);
         }
 
@@ -278,7 +290,15 @@ namespace MadScienceLab
         {
             facingDirection = FACING_LEFT;
             Rotate(0f, -90f, 0f);
-            charModel.PlayAnimation("Run",true,0f);
+            if (!jumping) //don't play run animation if jumping
+            {
+                charModel.SetAnimationSpeed(MOVEMENT_ANIM_SPEED);
+                //if player's hands are empty, play regular run, else he's holding a box
+                if(interactState == Character.InteractState.HandsEmpty)
+                    charModel.PlayAnimation("Run", true, 0.2f);
+                else
+                    charModel.PlayAnimation("RunBox", true, 0.2f);
+            }
             Vector3 newPosition = Position + new Vector3(-movementAmount, 0, 0);
             Translate(newPosition);
         }
@@ -287,7 +307,15 @@ namespace MadScienceLab
         {
             facingDirection = FACING_RIGHT;
             Rotate(0f, 90f, 0f);
-            charModel.PlayAnimation("Run", true, 0f);
+            if (!jumping) //don't play run animation if jumping
+            {
+                charModel.SetAnimationSpeed(MOVEMENT_ANIM_SPEED);
+                //if player's hands are empty, play regular run, else he's holding a box
+                if (interactState == Character.InteractState.HandsEmpty)
+                    charModel.PlayAnimation("Run", true, 0.2f);
+                else
+                    charModel.PlayAnimation("RunBox", true, 0.2f);
+            }
             Vector3 newPosition = Position + new Vector3(movementAmount,0, 0);
             Translate(newPosition);
         }
@@ -298,7 +326,12 @@ namespace MadScienceLab
             //Added a bit of physics to this.
             jumping = true;
             base.TransVelocity += new Vector3(0, GameConstants.SINGLE_CELL_SIZE*5, 0);
-            charModel.PlayAnimation("Jump",false, 0.2f);
+            charModel.SetAnimationSpeed(MOVEMENT_ANIM_SPEED);
+            //play corresponding animation if character is holding a box
+            if(interactState == Character.InteractState.HandsEmpty)
+                charModel.PlayAnimation("Jump",false, 0.2f);
+            else
+                charModel.PlayAnimation("JumpBox", false, 0.2f);
             soundEffects.PlaySound("Jump");
         }
         public void PutBox()
@@ -498,7 +531,11 @@ namespace MadScienceLab
 
         public void Stop()
         {
-            charModel.PlayAnimation("Idle", true, 0.2f);
+            charModel.SetAnimationSpeed(1.0f);
+            if(interactState == Character.InteractState.HandsEmpty)
+                charModel.PlayAnimation("Idle", true, 0.2f);
+            else
+                charModel.PlayAnimation("IdleBox", true, 0.2f);
         }
 
         public void InteractWithObject()

@@ -129,8 +129,8 @@ namespace MadScienceLab
                     effect.View = renderContext.Camera.View;
                     effect.Projection = renderContext.Camera.Projection;
 
-                    //effect.SpecularColor = new Vector3(0.25f);
-                    //effect.SpecularPower = 1;
+                    effect.SpecularColor = new Vector3(2f);
+                    effect.SpecularPower = 150;
                 }
 
                 mesh.Draw();
