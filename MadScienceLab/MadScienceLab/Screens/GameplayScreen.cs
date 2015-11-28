@@ -572,7 +572,7 @@ namespace MadScienceLab
                     playerHealthCountGear.Center.Y - 15, 
                     playerHealthCountGear.Width * GameConstants.HEALTH + 5, 30), 
                     Color.White);
-            
+            float empAngle = 0f;
             // Draw the amount of gears based on max health count
             for (int i = 0; i < GameConstants.HEALTH; i++)
             {
@@ -608,6 +608,7 @@ namespace MadScienceLab
                             (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
                             SpriteEffects.None, 0);
                         damageTaken = true;
+                        empAngle = angle;
                     }
                     else
                     {
@@ -627,6 +628,13 @@ namespace MadScienceLab
                 }
                 else
                 {
+                    // Temporary fix - Steven
+                    if (damageTaken)
+                    {
+                        healthGearAnglesList.Add(angle);
+                        damageTaken = false;
+                    }
+
                     spriteBatch.Draw(_textures["Gear2"],
                         new Vector2(position.X + 20, position.Y),
                         null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
