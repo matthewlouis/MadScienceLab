@@ -36,7 +36,7 @@ namespace MadScienceLab
         public byte GetFacingDirection { get { return facingDirection;  } }
         byte putFacingDirection = FACING_RIGHT; //direction when the player puts down the box
         const int FACING_LEFT = 1, FACING_RIGHT = 2;
-
+        public bool canPlace = true;
         //For controls - stores previous state.
         GamePadState oldGamePadState;
         KeyboardState oldKeyboardState;
@@ -49,9 +49,13 @@ namespace MadScienceLab
         //For handling damage
         private static TimeSpan DAMAGE_DELAY = TimeSpan.FromMilliseconds(1000f);
         private static int BLINK_DELAY = 200;
+        public float damageDelayTime;
 
         private TimeSpan timeHit = TimeSpan.Zero;
         private bool damageable = true;
+        private bool damageableAnim = true;
+
+        private const float MOVEMENT_ANIM_SPEED = 3f;
 
        
 
@@ -62,10 +66,15 @@ namespace MadScienceLab
             if (damageable) //if recently taken damage, don't take damage again
             {
                 timeHit = gametime.TotalGameTime; //get time when hit
-            health -= damage;
+                health -= damage;
                 damageable = false;
-            soundEffects.PlaySound("PlayerHit");
+                soundEffects.PlaySound("PlayerHit");
+            }
         }
+
+        public bool IsInvuln()
+        {
+            return !damageable;
         }
         public int GetHealth()
         {
@@ -82,10 +91,12 @@ namespace MadScienceLab
 
         public Character(int startRow, int startCol):base(startRow, startCol)
         {
+            Scale(0.06f, 0.06f, 0.06f);
+            Rotate(0, 90f, 0);
+
             // create model with offset of position
-            charModel = new GameAnimatedModel("Vampire", startRow, startCol, this);
+            charModel = new GameAnimatedModel("SciTry", startRow, startCol, this);
             charModel.VerticalOffset = 22;         
-            Rotate(0f, 90f, 0f);
             health = GameConstants.HEALTH;
         }
 
@@ -93,10 +104,12 @@ namespace MadScienceLab
         {
             base.LoadContent(contentManager);
             charModel.LoadContent(contentManager);
+            charModel.SetAnimationSpeed(1.0f);
             charModel.PlayAnimation("Idle", true, 0f);
             UpdateBoundingBox(charModel.Model, Matrix.CreateTranslation(charModel.Position), true, true);
             // Overriding the hitbox size, the new model will need to be the height of the cells, for now the vamp model height is overrided - Steven
-            //base.HitboxWidth = 48;
+            base.HitboxWidth = 24;
+            HitboxWidthOffset = 12;
             base.HitboxHeight = 48;
 
             //Load sound effects
@@ -132,6 +145,7 @@ namespace MadScienceLab
             //For temporary invincibility when recently damaged
             if (!damageable)     
             {
+                damageDelayTime = (float)(renderContext.GameTime.TotalGameTime - timeHit).TotalMilliseconds / (float)DAMAGE_DELAY.TotalMilliseconds;
                 if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
                 {
                     damageable = true;
@@ -205,12 +219,17 @@ namespace MadScienceLab
                 (currentGamePadState.Buttons.B == ButtonState.Pressed &&
                 oldGamePadState.Buttons.B != ButtonState.Pressed))
             {
+                charModel.SetAnimationSpeed(MOVEMENT_ANIM_SPEED);
                 if (interactState == Character.InteractState.CompletedPickup)
                 {
                     PutBox();
+                    charModel.PlayAnimation("DropBox", false, 0f);
                 }
                 else
-                    PickBox();  
+                {
+                    PickBox();
+                    charModel.PlayAnimation("PickBox", false, 0f);
+                }
             }
 
             //prevent the player from moving while still in box pickup/putdown animation
@@ -271,6 +290,7 @@ namespace MadScienceLab
             {
                 return; //don't draw the player 
             }
+
             charModel.Draw(renderContext);
         }
 
@@ -278,7 +298,15 @@ namespace MadScienceLab
         {
             facingDirection = FACING_LEFT;
             Rotate(0f, -90f, 0f);
-            charModel.PlayAnimation("Run",true,0f);
+            if (!jumping) //don't play run animation if jumping
+            {
+                charModel.SetAnimationSpeed(MOVEMENT_ANIM_SPEED);
+                //if player's hands are empty, play regular run, else he's holding a box
+                if(interactState == Character.InteractState.HandsEmpty)
+                    charModel.PlayAnimation("Run", true, 0.2f);
+                else
+                    charModel.PlayAnimation("RunBox", true, 0.2f);
+            }
             Vector3 newPosition = Position + new Vector3(-movementAmount, 0, 0);
             Translate(newPosition);
         }
@@ -287,7 +315,15 @@ namespace MadScienceLab
         {
             facingDirection = FACING_RIGHT;
             Rotate(0f, 90f, 0f);
-            charModel.PlayAnimation("Run", true, 0f);
+            if (!jumping) //don't play run animation if jumping
+            {
+                charModel.SetAnimationSpeed(MOVEMENT_ANIM_SPEED);
+                //if player's hands are empty, play regular run, else he's holding a box
+                if (interactState == Character.InteractState.HandsEmpty)
+                    charModel.PlayAnimation("Run", true, 0.2f);
+                else
+                    charModel.PlayAnimation("RunBox", true, 0.2f);
+            }
             Vector3 newPosition = Position + new Vector3(movementAmount,0, 0);
             Translate(newPosition);
         }
@@ -296,9 +332,16 @@ namespace MadScienceLab
         {
             //handle jump movement
             //Added a bit of physics to this.
+            TransVelocity = Vector3.Zero;
+
             jumping = true;
             base.TransVelocity += new Vector3(0, GameConstants.SINGLE_CELL_SIZE*5, 0);
-            charModel.PlayAnimation("Jump",false, 0.2f);
+            charModel.SetAnimationSpeed(MOVEMENT_ANIM_SPEED);
+            //play corresponding animation if character is holding a box
+            if(interactState == Character.InteractState.HandsEmpty)
+                charModel.PlayAnimation("Jump",false, 0.2f);
+            else
+                charModel.PlayAnimation("JumpBox", false, 0.2f);
             soundEffects.PlaySound("Jump");
         }
         public void PutBox()
@@ -498,7 +541,11 @@ namespace MadScienceLab
 
         public void Stop()
         {
-            charModel.PlayAnimation("Idle", true, 0.2f);
+            charModel.SetAnimationSpeed(1.0f);
+            if(interactState == Character.InteractState.HandsEmpty)
+                charModel.PlayAnimation("Idle", true, 0.2f);
+            else
+                charModel.PlayAnimation("IdleBox", true, 0.2f);
         }
 
         public void InteractWithObject()
@@ -565,6 +612,23 @@ namespace MadScienceLab
         {
             foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
+                float sideXPos;
+                float leeway = 10; //leeway allowed to place the box away from you (ie. amount allowed to place a box into another object)
+                if (facingDirection == Character.FACING_RIGHT)
+                {
+                    sideXPos = Position.X + Hitbox.Width;
+                }
+                else //facing left
+                {
+                    sideXPos = Position.X - StoredBox.Hitbox.Width + leeway * 3;
+                }
+                Rectangle areaSide = new Rectangle((int)sideXPos, (int)Position.Y + 2, (int)StoredBox.Hitbox.Width - 10, (int)StoredBox.Hitbox.Height);
+
+                if (levelObject.isCollidable && areaSide.Intersects(levelObject.Hitbox))
+                {
+                    canPlace = false;
+                }
+
                 if (levelObject.isCollidable && StoredBox.Hitbox.Intersects(levelObject.Hitbox))
                 {
                     /**Determining what side was hit**/
@@ -665,8 +729,11 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Top";//top
-                                Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
-                                TransVelocity = Vector3.Zero;
+                                if (Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width > 2) 
+                                {
+                                    Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
+                                    TransVelocity = Vector3.Zero;
+                                }
                             }
                             else
                             {
@@ -689,13 +756,27 @@ namespace MadScienceLab
                                 {
                                     ((MovingPlatform)levelObject).PlayerOnPlatform = true;
                                 }
-                                Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+
                                 if (levelObject.Hitbox.Y > -25)
+                                {
                                     Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom, 0);
+
+                                    if (!(Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width == 2 && levelObject.GetType() == typeof(PickableBox)))
+                                    {
+                                        TransVelocity = Vector3.Zero;
+                                    }
+                                }
                                 else
+                                {
                                     Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
-                                if (!collisionJumping)
-                                    TransVelocity = Vector3.Zero;
+
+                                    if (!(Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width == 2 && levelObject.GetType() == typeof(PickableBox)))
+                                    {
+                                        TransVelocity = Vector3.Zero;
+                                    }
+                                }
+                               // if (!collisionJumping)
+                                    //TransVelocity = Vector3.Zero;
                                 jumping = false;
                                 falling = false;
                             }

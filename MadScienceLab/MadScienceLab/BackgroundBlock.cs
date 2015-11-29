@@ -9,12 +9,12 @@ namespace MadScienceLab
 {
     public class BackgroundBlock:CellObject
     {
-        public BackgroundBlock(int row, int column, Texture2D texture)
+        public BackgroundBlock(int row, int column)
             : base(row, column, -GameConstants.SINGLE_CELL_SIZE) //calls overloaded cellobject constructor and places in background
         {
             //base.Model = GameplayScreen._models["BackgroundBlock"];
             //Scale(48f, 48f, 48f);
-            this.Texture = texture;
+            //this.Texture = texture;
         }
 
         public List<VertexPositionTexture> GetBillboardVertices()
