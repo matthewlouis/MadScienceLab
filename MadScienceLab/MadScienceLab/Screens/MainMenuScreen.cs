@@ -124,7 +124,7 @@ namespace MadScienceLab
         /// </summary>
         protected override void OnCancel(PlayerIndex playerIndex)
         {
-            const string message = "Are you sure you want to exit this sample?";
+            const string message = "Are you sure you want to exit Mad Lab?";
 
             MessageBoxScreen confirmExitMessageBox = new MessageBoxScreen(message);
 

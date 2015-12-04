@@ -33,5 +33,5 @@ Above is level, below are links.
 13:4|14:17
 9:2|R
 13:2|R
-3:5|Welcome to level 2
-2:8|You accessed this area!
+3:5|Welcome to level 2%%%
+2:8|You accessed this area!%%%
