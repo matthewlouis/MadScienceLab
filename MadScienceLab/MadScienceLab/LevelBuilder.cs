@@ -318,6 +318,31 @@ namespace MadScienceLab
                     case '5': //Black tile
                         level.Background[5].Add(new BackgroundBlock(col++, row));
                         break;
+                    case '6': //Black tile
+                        level.Background[6].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case '7': //Black tile
+                        level.Background[7].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case '8': //Black tile
+                        level.Background[8].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case '9': //Black tile
+                        level.Background[9].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case 's': //Black tile
+                        level.Background[10].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case 'e': //Black tile
+                        level.Background[11].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case 'a': //Black tile
+                        level.Background[12].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case 'q': //Black tile
+                        level.Background[13].Add(new BackgroundBlock(col++, row));
+                        break;
+
                     case '\n': //new line/row
                         row--;
                         col = startWall;

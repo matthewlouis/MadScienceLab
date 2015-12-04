@@ -17,7 +17,7 @@ namespace MadScienceLab
 
         public List<BackgroundBlock>[] Background { get; set; }
         private VertexBuffer[] backgroundBuffer;
-        private const int NUMBER_OF_BACKGROUND_TEXTURES = 6;
+        private const int NUMBER_OF_BACKGROUND_TEXTURES = 14;
 
         //For drawing foreground using instance render
         public List<BasicBlock> ForegroundBlocks { get { return foregroundBlockInstances; } set { foregroundBlockInstances = value; } }
@@ -210,7 +210,31 @@ namespace MadScienceLab
                         case 5:
                             renderContext.BasicEffect.Texture = renderContext.Textures["Tile_Black"];
                             break;
-                    }
+                        case 6:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Tile_Gray_Stain"];
+                            break;
+                        case 7:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Tile_Gray_Stain2"];
+                            break;
+                        case 8:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Tile_Gray_Stain3"];
+                            break;
+                        case 9:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Tile_Gray_Stain1"];
+                            break;
+                        case 10:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Emcsquare"];
+                            break;
+                        case 11:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Einstien"];
+                            break;
+                        case 12:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["atom1"];
+                            break;
+                        case 13:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["atom1"];
+                            break;
+                }
                     foreach (EffectPass pass in renderContext.BasicEffect.CurrentTechnique.Passes)
                     {
                         pass.Apply();
