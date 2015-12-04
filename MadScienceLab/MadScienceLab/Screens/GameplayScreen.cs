@@ -231,6 +231,7 @@ namespace MadScienceLab
                 _textures.Add("GearHealthBar", content.Load<Texture2D>("Textures/UI/HealthBar"));
                 _textures.Add("MessageBackground", content.Load<Texture2D>("Textures/message_background"));
                 _textures.Add("PlayerPortrait", content.Load<Texture2D>("Textures/UI/PlayerPortrait"));
+               //// _textures.Add("Explosion", content.Load<Texture2D>("Texture/explosion"));
                 _renderContext.Textures = _textures;
 
                 //Loads sound references

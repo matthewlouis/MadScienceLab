@@ -1,0 +1,376 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MadScienceLab.BackgroundBlock" Collapsed="true">
+    <Position X="6.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BackgroundBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.BaseCamera" Collapsed="true">
+    <Position X="2.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIYAABACAgACAIKAAAACAEAAAqABBEAAAAAAAAAUACA=</HashCode>
+      <FileName>BaseCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.BasicBlock" Collapsed="true">
+    <Position X="18" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAQAAAAIAAA=</HashCode>
+      <FileName>BasicBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.BoxDropper" Collapsed="true">
+    <Position X="24.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAABAAAgAAAIACAAACQAAAABAACAAAAAAAAAQ=</HashCode>
+      <FileName>BoxDropper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.Button" Collapsed="true">
+    <Position X="31.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAAABAAAgAACAAAAAAAAAAAAAAAAACAAAAAAAw=</HashCode>
+      <FileName>Button.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.CellObject" Collapsed="true">
+    <Position X="23.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAgAFgAAAIAAAAAAAgAQAABAAApgAAAAAAA=</HashCode>
+      <FileName>CellObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.Character" Collapsed="true">
+    <Position X="36" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BASAgACAlIEEUgEAAAgKRAAAAAAADoAIdAKowCA0sA0=</HashCode>
+      <FileName>Character.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.Door" Collapsed="true">
+    <Position X="27" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAIAAAAAAAAAABAAAAAAACAAAEA=</HashCode>
+      <FileName>Door.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.Enemy" Collapsed="true">
+    <Position X="9" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAAIBAAIggABCAAAAAAAAAAAQAIQBAAAAQBAAQ=</HashCode>
+      <FileName>Enemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.EnemySonar" Collapsed="true">
+    <Position X="11.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAIAAAAAAAAAAAAAEAAAIAAACAYAAAAAA=</HashCode>
+      <FileName>EnemySonar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.ExitBlock" Collapsed="true">
+    <Position X="20.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ExitBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.FPSCounter" Collapsed="true">
+    <Position X="44.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAEAAAQAAAgAAACAAAAAAAAACIAAAAAAACAAAAAQ=</HashCode>
+      <FileName>FPSCounter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.GameAnimatedModel" Collapsed="true">
+    <Position X="33.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAASABBAAAgBAAAEAAIAAAACgAAAAAECCAAAAgAQ=</HashCode>
+      <FileName>GameAnimatedModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.GameConstants" Collapsed="true">
+    <Position X="46.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAhAAAAQAAAABAACAAAAAAAAAAAKAAAkAAAAAg=</HashCode>
+      <FileName>GameConstants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.GameData" Collapsed="true">
+    <Position X="48.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAEgIBCAAAAAAAAAAAAAAAAAAAEAAgAAAAAAgAAAAA=</HashCode>
+      <FileName>GameData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.GameObject3D" Collapsed="true">
+    <Position X="21.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQCAAAAUAAEkwAgAQIEQAIBEAIYAACEADAFACABQAQ=</HashCode>
+      <FileName>GameObject3D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.GameTimer" Collapsed="true">
+    <Position X="43" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAAAAAQAAAgAAAAAAIAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>GameTimer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.LaserProjectile" Collapsed="true">
+    <Position X="13.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAACAIAAAAAE=</HashCode>
+      <FileName>LaserProjectile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.LaserTurret" Collapsed="true">
+    <Position X="22.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QCaAAAAgAAggIAAAAAAAAAAAAAAAAAAAAQAIAAAAIAQ=</HashCode>
+      <FileName>LaserTurret.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.Level" Collapsed="true">
+    <Position X="4.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQAgAEACAAApgAIAAAAAIIAgAIAAAQEBABgAYIBBAw=</HashCode>
+      <FileName>Level.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.LevelBuilder" Collapsed="true">
+    <Position X="44.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAABIAAAAABAAACgAAAAABAAAAAAEAIAAAIAEAAA=</HashCode>
+      <FileName>LevelBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.MadLabGame" Collapsed="true">
+    <Position X="43" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAEECEQBAAwQAAAAAAAAAAQAEAAgTABEAAmQAAAY=</HashCode>
+      <FileName>MadLabGame.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.MessageEvent" Collapsed="true">
+    <Position X="38.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQAAYAAAAAAAoAAAAAAICAAEAgAQAgQBAAAIAAQAKA=</HashCode>
+      <FileName>MessageEvent.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.MovingPlatform" Collapsed="true">
+    <Position X="40.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAQAAAIAAAgAAAQAAAAAABAICAAAhgAAAAAAgAAA=</HashCode>
+      <FileName>MovingPlatform.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.MusicPlayer" Collapsed="true">
+    <Position X="46.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAEAAAAAACAAEAAAAAAAAAACAIAAAAAAACAA=</HashCode>
+      <FileName>MusicPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.PickableBox" Collapsed="true">
+    <Position X="15.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>PickableBox.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.Program" Collapsed="true">
+    <Position X="50" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.Quadtree" Collapsed="true">
+    <Position X="43" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAABAAAAAAAAAEAAAARFAAAgAAAACAACAIAA=</HashCode>
+      <FileName>Quadtree.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.RenderContext" Collapsed="true">
+    <Position X="44.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAASBAAAAABEAAJQAAAMAAAQAAgAAAABQCAEAQAAEAA=</HashCode>
+      <FileName>RenderContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.Score" Collapsed="true">
+    <Position X="46.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Score.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.ScreenFactory" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="48.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ScreenFactory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="MadScienceLab.BackgroundScreen" Collapsed="true">
+    <Position X="43" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCAACAAAAAAgBAAAIAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Screens\BackgroundScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.GameOverScreen" Collapsed="true">
+    <Position X="1.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAFACAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Screens\GameOverScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.GameplayScreen" Collapsed="true">
+    <Position X="50" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAYCCGPAE4BwAgxBACAgAgAAgBBGACARABQIcCUAggI=</HashCode>
+      <FileName>Screens\GameplayScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.LevelCompleteBackgroundScreen" Collapsed="true">
+    <Position X="46.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCAACAAAAAAgBAAAIAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Screens\LevelCompleteBackgoundScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.LevelCompleteScreen" Collapsed="true">
+    <Position X="3.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIEACAAAEAAAACCAAAAAQABAAAAAAAAAARAAAAQCAA=</HashCode>
+      <FileName>Screens\LevelCompleteScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.LevelEntry" Collapsed="true">
+    <Position X="48.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAgAAAAJABAAAAAAAAIAAAACEQAAAI=</HashCode>
+      <FileName>Screens\LevelEntry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.LevelSelectScreen" Collapsed="true">
+    <Position X="10.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAgAAAAAAAAAEAIAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Screens\LevelSelectScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.LoadingScreen" Collapsed="true">
+    <Position X="50" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQAgAAAAAAAAgAAAAAQAAEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Screens\LoadingScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.MainMenuScreen" Collapsed="true">
+    <Position X="14.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAqAAAAAEAIAAAAAAAAgAAAAABAAAAAAAIgAACAA=</HashCode>
+      <FileName>Screens\MainMenuScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.MenuEntry" Collapsed="true">
+    <Position X="0.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAQgAgAAAAJABAAAAAAAAIAAAACEQAAAI=</HashCode>
+      <FileName>Screens\MenuEntry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.MenuScreen" Collapsed="true">
+    <Position X="9" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GQQAACGAAAAAAgAAAAAAgEAAAAAAIAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Screens\MenuScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.MessageBoxScreen" Collapsed="true">
+    <Position X="44.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQQCAACAAAgBAAAAAgAAAAAAAIAAAAAAAAAAAACA=</HashCode>
+      <FileName>Screens\MessageBoxScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.NextLevelScreen" Collapsed="true">
+    <Position X="5.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIEACCAAAAAAAAGAAAAAQARAAAgAAAAAAAQAAAQAAA=</HashCode>
+      <FileName>Screens\NextLevelScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.OptionsMenuScreen" Collapsed="true">
+    <Position X="8" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAgAAAAAAAABAAAACAAIAAAAAAAEAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Screens\OptionsMenuScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.PauseMenuScreen" Collapsed="true">
+    <Position X="12.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAACAAAAAAAAAAAAAAAAAAAAAAACIAAAAAAAAAAAA=</HashCode>
+      <FileName>Screens\PauseMenuScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.PlayerIndexEventArgs" Collapsed="true">
+    <Position X="48.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Screens\PlayerIndexEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.StoryScreen" Collapsed="true">
+    <Position X="17" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAgACAAAgAAAgAAACAAAAAACAAAAkAAABAACgAAAAA=</HashCode>
+      <FileName>Screens\StoryScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.VarSizeMenuEntry" Collapsed="true">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAoAAAAAAAABgAQAAIAAAAAAAAEgAAAA=</HashCode>
+      <FileName>Screens\VarSizeMenuEntry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.SoundEffectPlayer" Collapsed="true">
+    <Position X="50" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQEAQAAAAAAAAAACAAEAAgIMIAAAAAgAAAAAACEAAA=</HashCode>
+      <FileName>SoundEffectPlayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.SwitchableObject" Collapsed="true">
+    <Position X="26" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>SwitchableObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.ToggleSwitch" Collapsed="true">
+    <Position X="29.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIQAAAAAARAAAgIACAAQCAAAACAAABgACACAAgAAAAQ=</HashCode>
+      <FileName>ToggleSwitch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MadScienceLab.Trapdoor" Collapsed="true">
+    <Position X="27" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Trapdoor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
