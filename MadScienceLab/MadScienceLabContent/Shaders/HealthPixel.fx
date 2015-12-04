@@ -8,9 +8,10 @@ float4 main(float4 color : COLOR0, float2 texCoord : TEXCOORD0) : COLOR0
 	// Look up the texture color.
 	float4 tex = tex2D(TextureSampler, texCoord);
 	float3 colrgb = tex.rgb;
-	float greycolor = dot(colrgb, float3(0.3, 0.59, 0.11));
+	float3 grey = float3(0.2, 0.49, 0.01);
+	float greycolor = dot(colrgb, grey);
 
-	colrgb.rgb = lerp(dot(greycolor, float3(0.3, 0.59, 0.11)), colrgb, healthState);
+	colrgb.rgb = lerp(dot(greycolor, grey), colrgb, healthState);
 	return float4(colrgb.rgb, tex.a);
 }
 

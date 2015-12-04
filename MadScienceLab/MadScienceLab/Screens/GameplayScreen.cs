@@ -589,6 +589,8 @@ namespace MadScienceLab
                 }
                 else if (i == player.GetHealth()) // The gear that animates from left to right when damage is taken
                 {
+                    if (player.GetHealth() == 1)
+                        healthTexture = _textures["LightYellow"];
                     if (player.IsInvuln())
                     {
                         spriteBatch.End();
@@ -633,6 +635,8 @@ namespace MadScienceLab
                 }
                 else // Stop rotating the gears that represent missing health
                 {
+                    if (player.GetHealth() == 1)
+                    healthTexture = _textures["LightYellow"];
                     spriteBatch.End();
                     healthState.Parameters["healthState"].SetValue(0);
                     spriteBatch.Begin(0, BlendState.AlphaBlend, null, null, null, healthState);
