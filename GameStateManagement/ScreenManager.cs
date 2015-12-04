@@ -43,6 +43,8 @@ namespace GameStateManagement
         SpriteBatch spriteBatch;
         SpriteFont font;
         Texture2D blankTexture;
+        Texture2D backButtonTexture;
+        Texture2D actionButtonTexture;
 
         bool isInitialized;
 
@@ -70,6 +72,17 @@ namespace GameStateManagement
         public SpriteFont Font
         {
             get { return font; }
+        }
+
+
+        public Texture2D BackButtonTexture
+        {
+            get { return backButtonTexture; }
+        }
+
+        public Texture2D ActionButtonTexture
+        {
+            get { return actionButtonTexture; }
         }
 
 
@@ -132,6 +145,8 @@ namespace GameStateManagement
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = content.Load<SpriteFont>("Menu/menufont");
             blankTexture = content.Load<Texture2D>("Menu/blank");
+            backButtonTexture = content.Load<Texture2D>("Textures/Controller/B_Button");
+            actionButtonTexture = content.Load<Texture2D>("Textures/Controller/A_Button");
 
             // Tell each of the screens to load their content.
             foreach (GameScreen screen in screens)
