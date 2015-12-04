@@ -53,6 +53,7 @@ namespace MadScienceLab
 
         private TimeSpan timeHit = TimeSpan.Zero;
         private bool damageable = true;
+        private bool damageableAnim = true;
 
         private const float MOVEMENT_ANIM_SPEED = 3f;
 
@@ -65,9 +66,9 @@ namespace MadScienceLab
             if (damageable) //if recently taken damage, don't take damage again
             {
                 timeHit = gametime.TotalGameTime; //get time when hit
-            health -= damage;
+                health -= damage;
                 damageable = false;
-            soundEffects.PlaySound("PlayerHit");
+                soundEffects.PlaySound("PlayerHit");
             }
         }
 

@@ -588,7 +588,7 @@ namespace MadScienceLab
                     playerHealthCountGear.Center.Y - 15, 
                     playerHealthCountGear.Width * GameConstants.HEALTH + 5, 30), 
                     Color.White);
-            
+            float empAngle = 0f;
             // Draw the amount of gears based on max health count
             for (int i = 0; i < GameConstants.HEALTH; i++)
             {
@@ -624,6 +624,7 @@ namespace MadScienceLab
                             (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
                             SpriteEffects.None, 0);
                         damageTaken = true;
+                        empAngle = angle;
                     }
                     else
                     {
@@ -643,6 +644,13 @@ namespace MadScienceLab
                 }
                 else
                 {
+                    // Temporary fix - Steven
+                    if (damageTaken)
+                    {
+                        healthGearAnglesList.Add(angle);
+                        damageTaken = false;
+                    }
+
                     spriteBatch.Draw(_textures["Gear2"],
                         new Vector2(position.X + 20, position.Y),
                         null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
@@ -811,7 +819,21 @@ namespace MadScienceLab
                     else if (obj.GetType() == typeof(ToggleSwitch))
                         spriteBatch.Draw(dummyTexture, box, Color.Green * 0.8f);
                     else if (obj.GetType() == typeof(Enemy))
+                    {
+                        //Enemy enemy = (Enemy)obj;
+                        //Rectangle e = enemy.enemyRangeR;
+                        //e.Width = (e.Width * MinimapSize.X / LevelXSize); //convert width from level to minimap size
+                        //e.Height = (e.Height * MinimapSize.Y / LevelYSize); //convert height from level to minimap size
+                        //XPositionOfLevel = (e.X - xLeftWall); //position of level when normalized as a proportion of its size
+                        //YPositionOfLevel = (e.Y - (yFloor - CELL)); //returns distance of bottom (in game coords) of box from bottom of level
+                        //e.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - MinimapSideOffset; //convert from position in level to position in minimap
+                        //e.Y = MinimapSize.Y - YPositionOfLevel * MinimapSize.Y / LevelYSize - e.Height + MinimapSideOffset;
+
+
                         spriteBatch.Draw(dummyTexture, box, Color.Red * 0.8f);
+                       // spriteBatch.Draw(dummyTexture, e, Color.Yellow * 0.8f);
+                    }
+                        
                     else if (obj.GetType() == typeof(LaserTurret))
                         spriteBatch.Draw(dummyTexture, box, Color.DarkRed * 0.8f);
                     else
