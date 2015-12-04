@@ -32,21 +32,15 @@ namespace MadScienceLab
     class GameplayScreen : GameScreen
     {
         #region Fields
-        Rectangle quadRect;
-        public static Level CurrentLevel { get; private set; }
-
-        SpriteBatch spriteBatch;
-
-        ContentManager content;
-
-        RenderContext _renderContext;
-        BaseCamera _camera;
-        GameTimer _timer;
-        int bob = 0;
-        int num = 1;
-        private SoundEffect levelMusic;
-
-        Level basicLevel;
+        public static Level    CurrentLevel { get; private set; }
+        private SpriteBatch    spriteBatch;
+        private ContentManager content;
+        private RenderContext  _renderContext;
+        private BaseCamera     _camera;
+        private GameTimer      _timer;
+        private SoundEffect    levelMusic;
+        private SpriteFont     font;
+        private Level          basicLevel;
 
         //Note: Add fields for player, background etc. here
         public static Dictionary<String, Model> _models;
@@ -54,34 +48,43 @@ namespace MadScienceLab
         public static Dictionary<String, SoundEffect> _sounds;
         public static Dictionary<string, MessageEvent> messages;
 
+        // Player Info
         Character player;
+        private bool damageTaken;
+
+        // UI elements
+        private Texture2D dummyTexture;
+        private Effect healthState;
+        private Rectangle healthPosition = new Rectangle(170, 125, 250, 30);
+        private Rectangle gear1Position = new Rectangle(25, 25, 150, 150);
+        private Rectangle gear2Position = new Rectangle(170, 35, 100, 100);
+        private Rectangle healthTexturePos = new Rectangle(195, 150, 250, 30);
+        private Rectangle playerGear = new Rectangle(50, 50, 150, 150);
+        private Rectangle playerHealthGear = new Rectangle(195, 60, 100, 100);
+        private Rectangle playerHealthCountGear = new Rectangle(190, 120, 60, 60);
+        private Rectangle centerHealthGear = new Rectangle(75, 75, 100, 100);
+        private List<float> healthGearAnglesList;
+        private int hudtype = 1; // Only used for switching between different UI for feedback - Steven
+        private int arrowBobEffect = 0;
+        private int reverseNum = 1;
+        private float rotationAngle;
+        private int playerBobDirection = 1;
+
+        private KeyboardState lastkey;
 
         // Debugging - Steven
-        SpriteFont font;
-        List<GameObject3D> debugHitbox;
-        Texture2D dummyTexture;
-        private float rotationAngle;
-        Effect healthState;
-        RenderTarget2D ShaderRenderTarget;
         private float playerBob;
-        private KeyboardState lastkey;
-        private List<float> healthGearAnglesList;
-        private int playerBobDirection = 1;
+
         //Debugging - FPS - Matt
         private FPSCounter fpsCount;
-
-        Random random;
-
-        float pauseAlpha;
-
-        InputAction pauseAction;
-
+        private Random random;
+        private float pauseAlpha;
+        private InputAction pauseAction;
         public static bool messageActive;
         public static MessageEvent messageObj;
 
         // Level selected string to build level
         int levelNum;
-
 
         // struct holds the level data passed to be displayed on level complete screen and stored in save file
         public struct LevelData
@@ -101,13 +104,6 @@ namespace MadScienceLab
         }
 
         GameData.LevelData levelData;
-
-        // UI elements
-        Rectangle healthPosition = new Rectangle(170, 125, 250, 30);
-        Rectangle gear1Position = new Rectangle(25, 25, 150, 150);
-        Rectangle gear2Position = new Rectangle(170, 35, 100, 100);
-        private int hudtype = 1;
-        private bool damageTaken;
         #endregion
 
         #region Initialization
@@ -248,7 +244,6 @@ namespace MadScienceLab
 
                 // Loading shaders
                 healthState = content.Load<Effect>("Shaders/HealthPixel");
-                ShaderRenderTarget = new RenderTarget2D(_renderContext.GraphicsDevice, _renderContext.GraphicsDevice.PresentationParameters.BackBufferWidth, _renderContext.GraphicsDevice.PresentationParameters.BackBufferHeight);
                 //loads the basic level
                 basicLevel = LevelBuilder.MakeBasicLevel(levelData.currentlevelNum, _renderContext);
                 basicLevel.setBackgroundBuffer(_renderContext); //Matt: need to do this now to draw background properly
@@ -269,9 +264,7 @@ namespace MadScienceLab
 
                 _renderContext.Level.collidableObjects.Add(player); // Adding player to list of collidable objects - Steven
 
-                // Debugging - Steven
-                debugHitbox = new List<GameObject3D>();
-                debugHitbox.AddRange(_renderContext.Level.collidableObjects);
+                // Single color texture for minimap rendering
                 dummyTexture = new Texture2D(_renderContext.GraphicsDevice, 1, 1);
                 dummyTexture.SetData(new Color[] { Color.White * 0.8f});
 
@@ -342,12 +335,12 @@ namespace MadScienceLab
             if (IsActive && !messageActive)
             {
                 // Setting the vertical offset for bobbing images
-                if (bob > 10)
-                    num = -1;
-                else if (bob < -10)
-                    num = 1;
+                if (arrowBobEffect > 10)
+                    reverseNum = -1;
+                else if (arrowBobEffect < -10)
+                    reverseNum = 1;
 
-                bob += (int)(0.1f * gameTime.ElapsedGameTime.Milliseconds) * num;
+                arrowBobEffect += (int)(0.1f * gameTime.ElapsedGameTime.Milliseconds) * reverseNum;
 
                 if (playerBob > 0.6f)
                     playerBobDirection = -1;
@@ -547,11 +540,6 @@ namespace MadScienceLab
 
         public void DrawPlayerHealthV2(RenderContext _renderContext)
         {
-            Rectangle healthTexturePos = new Rectangle(195, 150, 250, 30);
-            Rectangle playerGear = new Rectangle(50, 50, 150, 150);
-            Rectangle playerHealthGear = new Rectangle(195, 60, 100, 100);
-            Rectangle playerHealthCountGear = new Rectangle(190, 120, 60, 60);
-            Rectangle centerHealthGear = new Rectangle(75, 75, 100, 100);
             Texture2D healthTexture;
 
             if (player.GetHealth() == GameConstants.HEALTH)
@@ -582,12 +570,14 @@ namespace MadScienceLab
                 float angle = rotationAngle;
                 Vector2 position = new Vector2(playerHealthCountGear.X + playerHealthCountGear.Width / 2 + i * (playerHealthCountGear.Width - 3), playerHealthCountGear.Y + playerHealthCountGear.Height / 2);
                
+                // Reverse the spin of every odd gears
                 if (i % 2 == 0)
                     angle = -(angle+2f);
 
+                // Centers and resizes the health lights inside the health gears
                 int offset = 20;
 
-                if (i < player.GetHealth())
+                if (i < player.GetHealth()) // Gears for health that has not taken damage
                 {
                     spriteBatch.Draw(healthTexture, 
                         new Rectangle((int)position.X - offset, (int)position.Y - offset, playerHealthCountGear.Width - offset, playerHealthCountGear.Width - offset), 
@@ -600,10 +590,20 @@ namespace MadScienceLab
                         (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
                         SpriteEffects.None, 0);
                 }
-                else if (i == player.GetHealth())
+                else if (i == player.GetHealth()) // The gear that animates from left to right when damage is taken
                 {
+                    if (player.GetHealth() == 1)
+                        healthTexture = _textures["LightYellow"];
                     if (player.IsInvuln())
                     {
+                        spriteBatch.End();
+                        healthState.Parameters["healthState"].SetValue(player.GetTimeScale());
+                        spriteBatch.Begin(0, BlendState.AlphaBlend, null, null, null, healthState);
+                        spriteBatch.Draw(healthTexture,
+                            new Rectangle((int)(position.X - offset + 20 * player.damageDelayTime), (int)position.Y - offset, playerHealthCountGear.Width - offset, playerHealthCountGear.Width - offset),
+                            Color.White);
+                        spriteBatch.End();
+                        spriteBatch.Begin();
                         spriteBatch.Draw(_textures["Gear2"],
                             new Vector2(position.X + 20 * player.damageDelayTime, position.Y),
                             null, Color.White, angle,
@@ -620,24 +620,34 @@ namespace MadScienceLab
                             healthGearAnglesList.Add(angle);
                             damageTaken = false;
                         }
-
+                        spriteBatch.End();
+                        healthState.Parameters["healthState"].SetValue(0);
+                        spriteBatch.Begin(0, BlendState.AlphaBlend, null, null, null, healthState);
+                        spriteBatch.Draw(healthTexture,
+                            new Rectangle((int)(position.X - offset + 20 * player.damageDelayTime), (int)position.Y - offset, playerHealthCountGear.Width - offset, playerHealthCountGear.Width - offset),
+                            Color.White);
+                        spriteBatch.End();
+                        spriteBatch.Begin();
                         spriteBatch.Draw(_textures["Gear2"],
                             new Vector2(position.X + 20, position.Y),
-                            null, Color.White, healthGearAnglesList[GameConstants.HEALTH - player.GetHealth() - 1],
+                            null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
                             origin,
                             (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
                             SpriteEffects.None, 0);
                     }
                 }
-                else
+                else // Stop rotating the gears that represent missing health
                 {
-                    // Temporary fix - Steven
-                    if (damageTaken)
-                    {
-                        healthGearAnglesList.Add(angle);
-                        damageTaken = false;
-                    }
-
+                    if (player.GetHealth() == 1)
+                    healthTexture = _textures["LightYellow"];
+                    spriteBatch.End();
+                    healthState.Parameters["healthState"].SetValue(0);
+                    spriteBatch.Begin(0, BlendState.AlphaBlend, null, null, null, healthState);
+                    spriteBatch.Draw(healthTexture,
+                        new Rectangle((int)(position.X - offset + 20), (int)position.Y - offset, playerHealthCountGear.Width - offset, playerHealthCountGear.Width - offset),
+                        Color.White);
+                    spriteBatch.End();
+                    spriteBatch.Begin();
                     spriteBatch.Draw(_textures["Gear2"],
                         new Vector2(position.X + 20, position.Y),
                         null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
@@ -645,7 +655,6 @@ namespace MadScienceLab
                         (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
                         SpriteEffects.None, 0);
                 }
-
             }
 
             // Player Portrait
@@ -812,65 +821,11 @@ namespace MadScienceLab
                     else
                         spriteBatch.Draw(dummyTexture, box, Color.Purple * 0.8f);
                 }
-
-                Rectangle qtbox = quadRect;
-                
-                qtbox.X /= 2;
-                qtbox.Y /= 2;
-                qtbox.Width /= 2;
-                qtbox.Height /= 2;
-                qtbox.X += 400;
-                qtbox.Y += 500;
-                spriteBatch.Draw(dummyTexture, qtbox, Color.Brown * 0.8f);
-                //Console.WriteLine(qtbox.ToString());
-                if (_renderContext.QuadtreeDebug != null)
-                foreach (CellObject qBox in _renderContext.QuadtreeDebug)
-                {
-                    Rectangle box = qBox.Hitbox;
-                    box.X /= 2;
-                    box.Y /= 2;
-                    box.Width /= 2;
-                    box.Height /= 2;
-                    box.X += 400;
-                    box.Y += 500;
-                    spriteBatch.Draw(dummyTexture, box, Color.Black * 0.8f);
-                    
-                }
-
-                Rectangle lbox = _renderContext.Level.Hitbox;
-                lbox.X /= 2;
-                lbox.Y /= 2;
-                lbox.Width /= 2;
-                lbox.Height /= 2;
-                lbox.X += 400;
-                lbox.Y += 500;
-                spriteBatch.Draw(dummyTexture, lbox, Color.Black * 0.8f);
-
-                // Comparing certain collision between two objects
-                int i = 0;
-                //foreach (Rectangle box in _renderContext.BoxesHit)
-                //{
-
-                //    Rectangle boxhit = box;
-                //    boxhit.X += 400;
-                //    boxhit.Y -= 500;
-                //    boxhit.X /= 2;
-                //    boxhit.Y /= -2;
-                //    boxhit.Width /= 2;
-                //    boxhit.Height /= 2;
-                //    if (i == 0)
-                //        spriteBatch.Draw(dummyTexture, boxhit, Color.Red * 0.8f);
-                //    if (i == 1)
-                //        spriteBatch.Draw(dummyTexture, boxhit, Color.Purple * 0.8f);
-                //    if (i == 2)
-                //        spriteBatch.Draw(dummyTexture, boxhit, Color.Blue * 0.8f);
-                //    i++;
-                //}
             }
         }
 
         /// <summary>
-        /// Draws the visual feedback for the player
+        /// Draws the visual feedback for the player when interacting with objects and carrying the box
         /// </summary>
         /// <param name="_renderContext"></param>
         public void DrawInteractiveUI(RenderContext _renderContext)
@@ -885,12 +840,15 @@ namespace MadScienceLab
                     _renderContext.Camera.Projection, 
                     _renderContext.Camera.View, 
                     player.AdjacentObj.GetWorldMatrix());
-                int offset = 30;
+                
+                int offset = 30; // Offsets the B button and arrow to the center of the box
+                
                 spriteBatch.Draw(_renderContext.Textures["B_Button"], new Rectangle((int)screenPos.X - offset, (int)screenPos.Y, 48, 48), Color.White);
                 // Added a bob to the arrow
-                spriteBatch.Draw(_renderContext.Textures["Arrow"], new Rectangle((int)screenPos.X, (int)screenPos.Y - bob, 48, 48), Color.LawnGreen);
+                spriteBatch.Draw(_renderContext.Textures["Arrow"], new Rectangle((int)screenPos.X, (int)screenPos.Y - arrowBobEffect, 48, 48), Color.LawnGreen);
             }
              
+            // Draws a B button when near switches
             if (player.InteractiveObj != null && player.InteractiveObj.GetType() == typeof(ToggleSwitch))
             {
                 Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(
@@ -898,9 +856,10 @@ namespace MadScienceLab
                     _renderContext.Camera.Projection,
                     _renderContext.Camera.View,
                     player.InteractiveObj.GetWorldMatrix());
-                ToggleSwitch swich = (ToggleSwitch)player.InteractiveObj;
+                ToggleSwitch toggleSwitch = (ToggleSwitch)player.InteractiveObj;
 
-                if (player.interactState == 0 && swich.RemainingToggles != 0 || swich.InfinitelyToggleable)
+                // Stops drawing if the switch uses is used up
+                if (player.interactState == 0 && toggleSwitch.RemainingToggles != 0 || toggleSwitch.InfinitelyToggleable)
                     spriteBatch.Draw(_renderContext.Textures["B_Button"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - 96, 48, 48), Color.White);
             }
 
@@ -940,10 +899,11 @@ namespace MadScienceLab
                 else
                     color = Color.Red * 0.6f;
 
-                int offset = 6;
+                int offset = 6; // Centers the arrow indicator to the center of a cell
+                
                 Vector2 origin = new Vector2(_renderContext.Textures["Arrow"].Bounds.Width / 2, _renderContext.Textures["Arrow"].Bounds.Height / 2);
 
-                spriteBatch.Draw(_renderContext.Textures["Arrow"], new Rectangle((int)screenPos.X - offset, (int)screenPos.Y - bob, GameConstants.SINGLE_CELL_SIZE, GameConstants.SINGLE_CELL_SIZE), null, color,
+                spriteBatch.Draw(_renderContext.Textures["Arrow"], new Rectangle((int)screenPos.X - offset, (int)screenPos.Y - arrowBobEffect, GameConstants.SINGLE_CELL_SIZE, GameConstants.SINGLE_CELL_SIZE), null, color,
                     0f, origin, SpriteEffects.FlipVertically, 0f);
             }
         }
