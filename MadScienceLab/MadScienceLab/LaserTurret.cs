@@ -89,13 +89,13 @@ namespace MadScienceLab
 
                 //Position the projectile according to the position of the turret
                 //Actually, not necessary.
-                /*float projectileX;
-                if (direction == GameConstants.DIRECTION.pointLeft)
+                float projectileX;
+                if (direction == GameConstants.POINTDIR.pointLeft)
                     projectileX = this.Hitbox.Left;
                 else
                     projectileX = this.Hitbox.Right - projectile.Hitbox.Width / 2;
                 projectile.Translate ( projectileX, this.Hitbox.Top, this.zPosition ); //position the projectile to be a position relative to the turret
-                 * */
+                
                 renderContext.Level.AddChild(projectile);
             }
 

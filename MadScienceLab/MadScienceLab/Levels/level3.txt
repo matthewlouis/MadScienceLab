@@ -4,7 +4,7 @@ X t D                     X    XXXXXXXXXXXXXXXXX
 XXXXXM            MXXXX   D    XXXXXX1XXXXXXXXXX
 XXXXX                   XXXX   XXX             X
 XX    XX            XXXXXX                   S X
-X    X             XXXXX          LXXXXXXXXXXXXX
+X    X     m       XXXXX          LXXXXXXXXXXXXX
 X   XX    XXXXrrrrXXXXXX   XXXXRRXXXX    X     X
 XX   X    X          XXX  XXX            X@    X
 Xt XXX    X X     E  Xt  XXXX            XXXXX X
@@ -33,3 +33,4 @@ Above is level, below are links.
 7:20|3:42
 3:18|U,3
 2:47|U,7
+12:12|Looks like my supercomputer started locking up the main hall doors. I have no choice but to re-open them manually!
