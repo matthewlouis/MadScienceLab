@@ -126,11 +126,12 @@ namespace MadScienceLab
                     effect.SetBoneTransforms(bones);
 
                     effect.EnableDefaultLighting();
+                    effect.AmbientLightColor = new Vector3(.3f, .3f, .3f);
                     effect.View = renderContext.Camera.View;
                     effect.Projection = renderContext.Camera.Projection;
 
-                    effect.SpecularColor = new Vector3(2f);
-                    effect.SpecularPower = 150;
+                    effect.SpecularColor = new Vector3(1,1,1);
+                    effect.SpecularPower = 200;
                 }
 
                 mesh.Draw();
