@@ -204,7 +204,8 @@ namespace MadScienceLab
             //Setting up basic controls
 
             // Jumping on keyboard Space or gamepad A button
-            if (!jumping && !falling &&
+            if (
+                !jumping && !falling &&
                 ((currentKeyboardState.IsKeyDown(Keys.Space) &&
                 oldKeyboardState.IsKeyUp(Keys.Space)) || 
                 (currentGamePadState.Buttons.A == ButtonState.Pressed &&
@@ -381,7 +382,7 @@ namespace MadScienceLab
 
         public void PickBox()
         {
-            if (interactState == InteractState.HandsEmpty/*state 0*/ && !jumping && !falling)
+            if (interactState == InteractState.HandsEmpty/*state 0*/ /*&& !jumping && !falling*/) //Jacob: re-allowing pickup while in the air
             {
                 if (AdjacentObj != null && AdjacentObj.GetType() == typeof(PickableBox) && (((PickableBox)(AdjacentObj)).IsLiftable))
                 {
@@ -401,8 +402,8 @@ namespace MadScienceLab
                     //     *      height increases upwards.
                     //     */
                     //}
-                    if (jumping || falling) //disallow putting down when jumping
-                        pickuppable = false;
+                    //if (jumping || falling) //disallow putting down when jumping
+                    //    pickuppable = false;
                     if (pickuppable) {
                         interactState = InteractState.JustPickedUpBox; //state 1
                         StoredBox = (PickableBox)AdjacentObj;
