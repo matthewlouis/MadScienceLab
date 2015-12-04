@@ -68,13 +68,25 @@ namespace MadScienceLab
                 timeHit = gametime.TotalGameTime; //get time when hit
                 health -= damage;
                 damageable = false;
+                delayDamagable = false;
                 soundEffects.PlaySound("PlayerHit");
             }
         }
 
+        private bool delayDamagable = true;
+
+        public float GetTimeScale()
+        {
+            return 1 - damageDelayTime;
+        }
+
+        /// <summary>
+        /// Returns the player's damagable state
+        /// </summary>
+        /// <returns></returns>
         public bool IsInvuln()
         {
-            return !damageable;
+            return !delayDamagable;
         }
         public int GetHealth()
         {
@@ -149,6 +161,10 @@ namespace MadScienceLab
                 if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
                 {
                     damageable = true;
+                }
+                if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY - TimeSpan.FromMilliseconds(100f))
+                {
+                    delayDamagable = true;
                 }
             }
 
