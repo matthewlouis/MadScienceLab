@@ -39,18 +39,23 @@ namespace MadScienceLab
 
         private GameAnimatedModel animmodel;
 
-        Rectangle enemyRange;
+        Texture2D texture;
+        public Rectangle enemyRangeL;
+        public Rectangle enemyRangeR;
 
-        public Enemy(int column, int row)
+        public Enemy(int column, int row, RenderContext rendeerContext)
             : base(column, row)
         {
+            texture = new Texture2D(rendeerContext.GraphicsDevice, 1, 1);
+            texture.SetData(new Color[] { Color.Gray });
+
             animmodel = new GameAnimatedModel("Doomba", column, row, this);
             animmodel.PlayAnimation("Move", true, 0f);
 
             isCollidable = false;
-
+            
             Scale(48f, 48f, 48f);
-            Position = new Vector3(Position.X, Position.Y - 18, Position.Z);
+            Position = new Vector3(Position.X, Position.Y - 18, Position.Z);            
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -68,7 +73,8 @@ namespace MadScienceLab
             base.LoadContent(contentManager);
 
             //attack range
-            enemyRange = new Rectangle((int)(Position.X - (HitboxWidth * 10)), (int)(Position.Y + (HitboxHeight/2)), (HitboxWidth * 21), (HitboxHeight));            
+            enemyRangeL = new Rectangle((int)(Position.X - (HitboxWidth * 5)), (int)(Position.Y + (HitboxHeight * 1.5)), (HitboxWidth * 5), (HitboxHeight));
+            enemyRangeR = new Rectangle((int)(Position.X + (HitboxWidth)), (int)(Position.Y + (HitboxHeight * 1.5)), (HitboxWidth * 5), (HitboxHeight));     
 
             // generate random direction and initialize
             Random rand = new Random();
@@ -76,8 +82,6 @@ namespace MadScienceLab
                 direction = GameConstants.POINTDIR.pointLeft;
             else
                 direction = GameConstants.POINTDIR.pointRight;
-
-
         }
 
         public override void Update(RenderContext renderContext)
@@ -102,26 +106,29 @@ namespace MadScienceLab
 
             }
 
-            enemyRange.X = (int)(Position.X - (HitboxWidth * 5));
-            enemyRange.Y = (int)(Position.Y + HitboxHeight);
+            enemyRangeL.X = (int)(Position.X - (HitboxWidth * 5));
+            enemyRangeL.Y = (int)(Position.Y + HitboxHeight * 1.5);
+
+            enemyRangeR.X = (int)(Position.X + HitboxWidth);
+            enemyRangeR.Y = (int)(Position.Y + HitboxHeight * 1.5);
+
 
 
             CheckEnemyBoxCollision(renderContext);
 
-            if (!CheckPlayerNearby(renderContext))
+            if (CheckPlayerNearby(renderContext))
             {
                 if (direction == GameConstants.POINTDIR.pointLeft)
                 {
-                    MoveLeft(GameConstants.MOVEAMOUNT * 2);
+                    MoveLeft((int)(GameConstants.MOVEAMOUNT * 1.5));
                 }
 
                 else if (direction == GameConstants.POINTDIR.pointRight)
                 {
-                    MoveRight(GameConstants.MOVEAMOUNT * 2);
+                    MoveRight((int)(GameConstants.MOVEAMOUNT * 1.5));
                 }
             }
 
-           
             soundEffects.Update(renderContext);
             animmodel.Update(renderContext);
 
@@ -130,7 +137,13 @@ namespace MadScienceLab
 
         public override void Draw(RenderContext renderContext)
         {
+
             animmodel.Draw(renderContext);
+
+            //renderContext.SpriteBatch.Begin();
+            //renderContext.SpriteBatch.Draw(texture, enemyRangeL, Color.Black);
+            //renderContext.SpriteBatch.Draw(texture, enemyRangeR, Color.Black);
+            //renderContext.SpriteBatch.End();
         }
 
         public void MoveLeft(float movementAmount)
@@ -193,26 +206,71 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         private bool CheckPlayerNearby(RenderContext renderContext)
         {
-            foreach (CellObject cellObject in renderContext.Level.collidableObjects)
+            if (enemyRangeL.Intersects(renderContext.Player.Hitbox) && direction == GameConstants.POINTDIR.pointLeft) 
             {
-                if (cellObject.GetType() != typeof(ToggleSwitch) && cellObject.GetType() != typeof(Enemy))
-                {
-                    if (enemyRange.Intersects(cellObject.Hitbox) && enemyRange.Intersects(renderContext.Player.Hitbox))
-                    {
-                        if (direction == GameConstants.POINTDIR.pointLeft && cellObject.Position.X > renderContext.Player.Position.X && renderContext.Player.Position.X <  Position.X)
-                        {
-                            return false;
-                        }
+                List<Rectangle> inrg = new List<Rectangle>();
 
-                        else if (direction == GameConstants.POINTDIR.pointRight && cellObject.Position.X < renderContext.Player.Position.X && renderContext.Player.Position.X > Position.X)
+                foreach (CellObject cellObject in renderContext.Level.collidableObjects)
+                {
+                    if (cellObject.GetType() != typeof(ToggleSwitch) && cellObject.GetType() != typeof(Enemy) && cellObject.GetType() != typeof(Character))
+                    {
+                        if (enemyRangeL.Intersects(cellObject.Hitbox))
+                        {
+                            inrg.Add(cellObject.Hitbox);
+                        }
+                    }
+                }
+
+
+                if (inrg.Count != 0 )
+                {
+                    foreach (Rectangle rectangle in inrg)
+                    {
+                        if (rectangle.X > renderContext.Player.Position.X)
                         {
                             return false;
                         }
-                        
                     }
-                } 
+                    return true;
+                }
+
+
+                return false;
             }
-            return true;
+            if (enemyRangeR.Intersects(renderContext.Player.Hitbox) && direction == GameConstants.POINTDIR.pointRight) 
+            {
+                List<Rectangle> inrg = new List<Rectangle>();
+
+                foreach (CellObject cellObject in renderContext.Level.collidableObjects)
+                {
+                    if (cellObject.GetType() != typeof(ToggleSwitch) && cellObject.GetType() != typeof(Enemy) && cellObject.GetType() != typeof(Character))
+                    {
+                        if (enemyRangeR.Intersects(cellObject.Hitbox))
+                        {
+                            inrg.Add(cellObject.Hitbox);
+                        }
+                    }
+                }
+
+
+                if (inrg.Count != 0)
+                {
+                    foreach (Rectangle rectangle in inrg)
+                    {
+                        if (rectangle.X < renderContext.Player.Position.X)
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+
+
+                return false;
+            }
+
+            return false;
+            
         }
 
 
