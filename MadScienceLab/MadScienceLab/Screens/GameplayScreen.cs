@@ -403,16 +403,26 @@ namespace MadScienceLab
                 fpsCount.Update(gameTime);    
                 //timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
+            else //still cover messages to upda
+            {
+                foreach (CellObject levelobject in basicLevel.Children)
+                {
+                    if (levelobject.GetType() == typeof(MessageEvent))
+                    {
+                        levelobject.Update(_renderContext);
+                    }
+                }
+            }
 
             // if message paused game then on button B or F key resume game
-            if (messageActive)
+            /*if (messageActive)
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B))
                 {
                     messageActive = false;
                     messageObj.Update(_renderContext);
                 }
-            }
+            }*/
 
             if (Keyboard.GetState().IsKeyDown(Keys.H) && lastkey.IsKeyUp(Keys.H))
             {
@@ -849,7 +859,7 @@ namespace MadScienceLab
             }
              
             // Draws a B button when near switches
-            if (player.InteractiveObj != null && player.InteractiveObj.GetType() == typeof(ToggleSwitch))
+            else if (player.InteractiveObj != null && player.InteractiveObj.GetType() == typeof(ToggleSwitch))
             {
                 Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(
                     player.InteractiveObj.WorldPosition,

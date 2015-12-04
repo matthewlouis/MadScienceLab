@@ -12,8 +12,8 @@ X    XX  M   B XXXXX
 X          M RRXXXXX
 X              X  XX
 X       M      X  XX
-X   m  M       D  XX
-X P X  m   LXE D SXX
+X      M       D  XX
+X P X      LXE D SXX
 XXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
@@ -33,5 +33,3 @@ Above is level, below are links.
 13:4|14:17
 9:2|R
 13:2|R
-3:5|Welcome to level 2%%%
-2:8|You accessed this area!%%%
