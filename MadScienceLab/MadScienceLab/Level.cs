@@ -131,9 +131,9 @@ namespace MadScienceLab
         //Creates buffer for background
         public void setBackgroundBuffer(RenderContext renderContext)
         {
-            int texturePatternIndex = 0;
-            foreach (List<BackgroundBlock> patternedBlocks in Background)
+            for (int texturePatternIndex = 0; texturePatternIndex < Background.Length; texturePatternIndex++)
             {
+                List<BackgroundBlock> patternedBlocks = Background[texturePatternIndex];
                 List<VertexPositionTexture> vertexList = new List<VertexPositionTexture>();
 
                 foreach (BackgroundBlock backgroundBlock in patternedBlocks)
@@ -148,7 +148,7 @@ namespace MadScienceLab
                 if (vertexList.Count != 0)
                 {
                     backgroundBuffer[texturePatternIndex] = new VertexBuffer(renderContext.GraphicsDevice, VertexPositionTexture.VertexDeclaration, vertexList.Count, BufferUsage.WriteOnly);
-                    backgroundBuffer[texturePatternIndex++].SetData<VertexPositionTexture>(vertexList.ToArray());
+                    backgroundBuffer[texturePatternIndex].SetData<VertexPositionTexture>(vertexList.ToArray());
                 }
             }
         }
@@ -187,8 +187,8 @@ namespace MadScienceLab
             for (int patternIndex = 0; patternIndex < backgroundBuffer.Length; patternIndex++)
             {
                     //if there are no patterned blocks of this type
-                   // if (backgroundBuffer[patternIndex] == null)
-                      //  continue;
+                    if (backgroundBuffer[patternIndex] == null)
+                        continue;
 
                     switch (patternIndex)
                     {
