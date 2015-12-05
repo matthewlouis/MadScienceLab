@@ -640,7 +640,7 @@ namespace MadScienceLab
                 }
                 Rectangle areaSide = new Rectangle((int)sideXPos, (int)Position.Y + 2, (int)StoredBox.Hitbox.Width - 10, (int)StoredBox.Hitbox.Height);
 
-                if (levelObject.isCollidable && areaSide.Intersects(levelObject.Hitbox) || levelObject.GetType() == typeof(MessageEvent))
+                if (levelObject.isCollidable && areaSide.Intersects(levelObject.Hitbox) && levelObject.GetType() != typeof(MessageEvent))
                 {
                     canPlace = false;
                 }
