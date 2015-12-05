@@ -12,6 +12,7 @@ namespace MadScienceLab
         public Point PlayerPoint;
         public Dictionary<Type, List<GameObject3D>> gameObjects;
         public List<GameObject3D> collidableObjects;
+        public List<GameObject3D> enemyList;
         public bool LevelOver { get; set; }
         public bool GameOver { get; set; }
 
@@ -59,6 +60,8 @@ namespace MadScienceLab
 
             ForegroundBlocks = new List<BasicBlock>();
             Messages = new Dictionary<string, MessageEvent>();
+
+            enemyList = new List<GameObject3D>();
 
             drawState.CullMode = CullMode.None;
         }

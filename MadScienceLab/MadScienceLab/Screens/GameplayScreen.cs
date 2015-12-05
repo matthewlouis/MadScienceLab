@@ -61,7 +61,7 @@ namespace MadScienceLab
         private Rectangle healthTexturePos = new Rectangle(195, 150, 250, 30);
         private Rectangle playerGear = new Rectangle(50, 50, 150, 150);
         private Rectangle playerHealthGear = new Rectangle(195, 60, 100, 100);
-        private Rectangle playerHealthCountGear = new Rectangle(190, 120, 60, 60);
+        private Rectangle playerHealthCountGear = new Rectangle(190, 80, 60, 60);
         private Rectangle centerHealthGear = new Rectangle(75, 75, 100, 100);
         private List<float> healthGearAnglesList;
         private int hudtype = 1; // Only used for switching between different UI for feedback - Steven
@@ -143,6 +143,8 @@ namespace MadScienceLab
             fpsCount = new FPSCounter(_renderContext);
             healthGearAnglesList = new List<float>();
             messageActive = false;
+
+            
         }
 
 
@@ -166,7 +168,7 @@ namespace MadScienceLab
                 //Set up basic effect for drawing background
                 _renderContext.BasicEffect = new BasicEffect(_renderContext.GraphicsDevice);
                 
-
+                
 
                 // TODO: use this.Content to load your game content here
                 //_models.Add("player", Content.Load<Model>("scientist"));
@@ -298,7 +300,7 @@ namespace MadScienceLab
 
                 Quadtree _quadtree = new Quadtree(0, _renderContext.Level.Hitbox);
                 _renderContext.Quadtree = _quadtree;
-                
+
                 // if game takes long to load. Simulate load by delaying for a
                 // while, giving you a chance to admire the beautiful loading screen.
                 Thread.Sleep(500);
@@ -457,6 +459,7 @@ namespace MadScienceLab
             basicLevel.Draw(_renderContext);
             
             spriteBatch.Begin();
+            
             if (_textures.Count > 0) // Check for empty textures due to retrying level - Steven
             {
                 switch (hudtype % 3)
@@ -479,7 +482,7 @@ namespace MadScienceLab
             }
             spriteBatch.End();
 
-            //fpsCount.Draw(gameTime);
+            fpsCount.Draw(gameTime);
 
 
 
@@ -976,6 +979,6 @@ namespace MadScienceLab
             Object.TransVelocity += Object.TransAccel / 60; //amt. accel (where TransAccel is in seconds) per frame ...
             Object.Translate(Object.Position + Object.TransVelocity / 60);
         }
-       
+
     }
 }

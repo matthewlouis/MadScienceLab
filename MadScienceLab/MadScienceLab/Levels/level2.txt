@@ -1,17 +1,17 @@
-﻿XXXXXXXXXXXXXXXXXXXXXXXXX
-X        X             XX
-X        X             XX
-XP  m   TX   @         XX
-XXXXXRRRXXXXXXXXXXXXX  XX
-X        XXXXXXXXXX    XX
-X        XXXXXXXXXX    XX
-X                      XX
-X                      XX
-XL  Bm           S     XX
-XXXXXXXXXXXXX   XXXrrrMXX
-XXXXXXXXXXXXXX         XX
-XXXXXXXXXXXXXXX    E   XX
-XXXXXXXXXXXXXXXXXXXXXXXXX
+﻿XXXXXXXXXXXXXXXXXXXXXXXX
+X        X             X
+X        X             X
+XP  m   TX   @         X
+XXXXXRRRXXXXXXXXXXXXX  X
+X        XXXXXXXXXX    X
+X        XXXXXXXXXX    X
+X                      X
+X                      X
+XL  Bm    m      S     X
+XXXXXXXXXXXXX   XXXrrrMX
+XXXXXXXXXXXXXX         X
+XXXXXXXXXXXXXXX    E   X
+XXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -20,4 +20,5 @@ Above is level, below are links.
 5:18|4:20&4:21&4:22
 5:2|R
 11:5|Hmm, a trap door - a neat security feature. I wonder where that leads.
+5:11|You can zoom out and see where to go by pressing the Left or Right Trigger buttons. View the minimap by pressing Y.
 5:6|I've got to watch out for the turrets!

@@ -15,11 +15,11 @@ namespace MadScienceLab
         static Door open, closed;
         static Button testButton;
         static ToggleSwitch testSwitch;
-        
+
         public static int levelwidth = 0;
         public const int startWall = 10;
         public const int startFloor = 1;
-         //need height in order to determine object Y position, which would be startFloor + ((levelheight-1) - row), levelheight-1 being the highest row
+        //need height in order to determine object Y position, which would be startFloor + ((levelheight-1) - row), levelheight-1 being the highest row
         public static int levelheight; //count \n; (# of "\n")+(1 for floor) is the height. placement; thus, get height first.
 
         static string levelSelect;
@@ -58,9 +58,9 @@ namespace MadScienceLab
              */
 
             //Note: The levels' txt files currently have a new line at the very end of it. Don't delete it.
-            
-            string leveltxtfile = FromFile ("Levels/" + levelSelect + ".txt" );
-            string backtxt = FromFile( "Levels/" + levelSelect + "Back.txt" );
+
+            string leveltxtfile = FromFile("Levels/" + levelSelect + ".txt");
+            string backtxt = FromFile("Levels/" + levelSelect + "Back.txt");
 
             //get object pairs (for links between switches and doors/boxes)
             // The format used to link buttons to doors "ButtonCoord linked to 1 or more DoorCoord" - Steven
@@ -68,34 +68,44 @@ namespace MadScienceLab
             //differentiate level and link strings
             string leveltxt = null; //everything above the line of "~" in Level.txt
             string linktxt = null; //everything below the line of "~" in Level.txt
-            //split leveltxtfile into leveltxt and linktxt, with the text enclosed by any number of "~" characters as the delimiter
+                                   //split leveltxtfile into leveltxt and linktxt, with the text enclosed by any number of "~" characters as the delimiter
 
             int pos = leveltxtfile.IndexOf("~"); //go to the "~" line
-            leveltxt = leveltxtfile.Substring(0, pos);            
+            leveltxt = leveltxtfile.Substring(0, pos);
             //put pos on the next line after the last "~" line
             pos = leveltxtfile.LastIndexOf("~"); //go to last ~
-            pos = leveltxtfile.IndexOf ( "\n", pos ) + 1; //go to next line, after the last ~
-            linktxt = leveltxtfile.Substring ( pos );
+            pos = leveltxtfile.IndexOf("\n", pos) + 1; //go to next line, after the last ~
+            linktxt = leveltxtfile.Substring(pos);
 
             Dictionary<string, int> _firstobject = new Dictionary<string, int>();
             Dictionary<string, int> _linkedobjects = new Dictionary<string, int>();
 
             String newline = "\r\n"; //in case a newline were to be used
-            levelheight = leveltxt.Length - leveltxt.Replace ("\n", "" ).Length;
+            levelheight = leveltxt.Length - leveltxt.Replace("\n", "").Length;
             levelwidth = 0; //reset this each time a new level is made
-            
-            //(No longer the case: "there will be walls and floor enclosing the aforementioned level")
+
+            CellObject lastXBlock = new CellObject(0, 0);
+            CellObject DoorAfterXBlock = new CellObject(0, 0);
+            Enemy e = new Enemy();
+            bool lookForNextXBlock = false;
+
+            //there will be walls and floor enclosing the aforementioned level
             //iterate through level string, find the level height and width from iterating through the txt file
-            int row = startFloor+levelheight-1, col = startWall; 
+            int row = startFloor + levelheight - 1, col = startWall;
             foreach (char c in leveltxt)
             {
+
                 switch (c) //convert char to level object at the coordinate iterated through
                 {
                     case ' ':
                         col++;
                         break;
                     case 'E':
-                        level.AddChild(new Enemy(col++, row, renderContext)); 
+                        e = new Enemy(col++, row, renderContext);
+                        level.AddChild(e);
+                        e.wallsToCheck.Add(lastXBlock);
+                        lookForNextXBlock = true;
+                        level.enemyList.Add(e);
                         break;
                     case 'M':
                         level.AddChild(new MovingPlatform(col++, row));
@@ -108,56 +118,63 @@ namespace MadScienceLab
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'B':
-                        level.AddChild ( new PickableBox ( col++, row ) ); //replace BasicBlock with the actual object once implemented
+                        PickableBox p = new PickableBox(col++, row);
+                        level.AddChild(p); //replace BasicBlock with the actual object once implemented
                         break;
                     case 'T': //Toggleable lever switch
-                        level.AddChild ( new ToggleSwitch ( col++, row, true ) );
+                        level.AddChild(new ToggleSwitch(col++, row, true));
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 't': //One-time lever switch
-                        level.AddChild ( new ToggleSwitch ( col++, row, false ) );
+                        level.AddChild(new ToggleSwitch(col++, row, false));
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 'S':
-                        level.AddChild ( new Button ( col++, row ) );
+                        level.AddChild(new Button(col++, row));
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1); // Adds the coordinates and actual index of the button
                         break;
                     case 'X':
                         BasicBlock blockToAdd = new BasicBlock(col++, row);
                         level.AddChild(blockToAdd);
                         level.ForegroundBlocks.Add(blockToAdd);
+                        lastXBlock = (CellObject)blockToAdd;
+                        if (lookForNextXBlock)
+                        {
+                            lookForNextXBlock = false;
+                            e.wallsToCheck.Add(lastXBlock);
+                        }
                         break;
                     case 'L':
-                       level.AddChild(new LaserTurret(col++, row, true, GameConstants.POINTDIR.pointLeft)); 
-                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);                      
+                        level.AddChild(new LaserTurret(col++, row, true, GameConstants.POINTDIR.pointLeft));
+                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'd':
-                        level.AddChild ( new Door ( col++, row, true ) ); //Starting open door
+                        level.AddChild(new Door(col++, row, true)); //Starting open door
                         _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'D':
                         //closed = new Door(col++, row, true);
-                        level.AddChild ( new Door ( col++, row, false ) ); //Starting closed door
+                        level.AddChild(new Door(col++, row, false)); //Starting closed door
                         _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'r':
-                        level.AddChild ( new Trapdoor ( col++, row, true ) );
+                        level.AddChild(new Trapdoor(col++, row, true));
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'R':
                         level.AddChild(new Trapdoor(col++, row, false));
-                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);   
+                        _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'P':
-                        level.PlayerPoint = new Point (col++, row); //set player position
+                        level.PlayerPoint = new Point(col++, row); //set player position
                         break;
                     case '@':
                         level.AddChild(new ExitBlock(col++, row));
                         break;
                     case 'G':
-                        level.AddChild ( new BasicBlock ( col++, row ) );
+                        level.AddChild(new BasicBlock(col++, row));
                         break;
                     case '\n': //the '\n' of the new line/row
                         row--;
@@ -172,6 +189,7 @@ namespace MadScienceLab
                     _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                 }
             }
+
 
             level.collidableObjects = new List<GameObject3D>();
             level.collidableObjects.AddRange(level.Children); // All objects that will be colliding with the player in the same Z axis - Steven
@@ -204,7 +222,8 @@ namespace MadScienceLab
                             SwitchableObject doorToAdd = (SwitchableObject)level.Children[index];
                             button.LinkedDoors.Add(doorToAdd);
                         }
-                    }else if(level.Children[index].GetType() == typeof(ToggleSwitch))
+                    }
+                    else if (level.Children[index].GetType() == typeof(ToggleSwitch))
                     {
                         ToggleSwitch toggleSwitch = (ToggleSwitch)level.Children[index];
                         if (ObjectAndSettings[1].Contains(':')) //check if the settings are regarding coordinates, or the number of possible toggle times
@@ -222,7 +241,7 @@ namespace MadScienceLab
                                 }
                             }
                         }
-                        else 
+                        else
                         {   //if the settings are regarding toggle times, parse that as toggle times
                             int ToggleTimes = 0;
                             bool isInt = Int32.TryParse(ObjectAndSettings[1], out ToggleTimes);
@@ -239,7 +258,8 @@ namespace MadScienceLab
                         string[] Settings = ObjectAndSettings[1].Split(',');
                         MovingPlatform movingPlatform = (MovingPlatform)level.Children[index];
                         //set initial direction of moving platform
-                        if(Settings[0] == "L") {
+                        if (Settings[0] == "L")
+                        {
                             movingPlatform.movingDirection = GameConstants.DIRECTION.Left;
                         }
                         else if (Settings[0] == "R")
@@ -257,10 +277,10 @@ namespace MadScienceLab
                         movingPlatform.maxDistance = Int32.Parse(Settings[1]) * GameConstants.SINGLE_CELL_SIZE;
                     }
                     //Jacob - Set Laser turret direction
-                    if (level.Children[index].GetType () == typeof ( LaserTurret ))
+                    if (level.Children[index].GetType() == typeof(LaserTurret))
                     {
                         LaserTurret laserTurret = (LaserTurret)level.Children[index];
-                        string[] Settings = ObjectAndSettings[1].Split ( ',' );
+                        string[] Settings = ObjectAndSettings[1].Split(',');
                         //set initial direction of moving platform
                         if (Settings[0] == "L")
                         {
@@ -268,9 +288,9 @@ namespace MadScienceLab
                         }
                         else
                             if (Settings[0] == "R")
-                            {
-                                laserTurret.direction = GameConstants.POINTDIR.pointRight;
-                            }
+                        {
+                            laserTurret.direction = GameConstants.POINTDIR.pointRight;
+                        }
                         //optional 2nd setting - set starting offset of laser turret, in milliseconds.
                         if (Settings.Length >= 2)
                         {
@@ -283,9 +303,9 @@ namespace MadScienceLab
                     {
                         level.Messages[ObjectAndSettings[0]].Message = ObjectAndSettings[1];
                     }
-                    
+
                     //Trapdoor
-                    if (level.Children[index].GetType () == typeof ( Trapdoor ))
+                    if (level.Children[index].GetType() == typeof(Trapdoor))
                     {
                         Trapdoor trapDoor = (Trapdoor)level.Children[index];
 
@@ -295,10 +315,10 @@ namespace MadScienceLab
                     }
                 }
             }
-          
+
             //DRAWS BACKGROUND
             row = startFloor + levelheight - 1;
-            col = startWall; 
+            col = startWall;
             foreach (char c2 in backtxt)
             {
                 switch (c2) //convert char to level object at the coordinate iterated through
@@ -373,19 +393,19 @@ namespace MadScienceLab
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        private static String FromFile ( String file )
+        private static String FromFile(String file)
         {
             //credit goes to MikeBMcLBob Taco Industries - https://social.msdn.microsoft.com/forums/windowsapps/en-US/7fcea210-8405-4a38-9459-eb0a361681cc/using-txt-file-in-xna-game?forum=wpdevelop for this.
             String txt = null;
-            using (var stream = TitleContainer.OpenStream ( file ))
+            using (var stream = TitleContainer.OpenStream(file))
             {
-                using (var reader = new StreamReader ( stream ))
+                using (var reader = new StreamReader(stream))
                 {
                     // Call StreamReader methods like ReadLine, ReadBlock, or ReadToEnd to read in your data, e.g.:  
-                    txt = reader.ReadToEnd ();
+                    txt = reader.ReadToEnd();
                 }
             }
-            txt = txt.Replace ( "\r\n", "\n" ); //remove all of the \r newlines - as this wasn't accounted for when we were writing the txt file. Note that the strings _did not_ consider these!
+            txt = txt.Replace("\r\n", "\n"); //remove all of the \r newlines - as this wasn't accounted for when we were writing the txt file. Note that the strings _did not_ consider these!
             return txt;
         }
     }

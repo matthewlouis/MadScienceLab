@@ -31,9 +31,10 @@ namespace MadScienceLab
         }
 
         float damageDelayTime;
+        TimeSpan DAMAGE_DELAY = TimeSpan.FromMilliseconds(1000f);
+        TimeSpan timeHit = TimeSpan.Zero;
         int TIME_DELAY = 1000;
-        int elapsedTime = 0;
-
+        int elaspedTime = 0;
         int attackRange = 4;
         float movementAmount = 1f;
         float speed = 1f;
@@ -46,6 +47,7 @@ namespace MadScienceLab
         Texture2D texture;
         public Rectangle enemyRangeL;
         public Rectangle enemyRangeR;
+        public List<GameObject3D> wallsToCheck;
 
         public Enemy(int column, int row, RenderContext rendeerContext)
             : base(column, row)
@@ -57,9 +59,15 @@ namespace MadScienceLab
             animmodel.PlayAnimation("Move", true, 0f);
 
             isCollidable = false;
-            
+
+            wallsToCheck = new List<GameObject3D>();
             Scale(40f, 40f, 40f); // 48,48,48
             Position = new Vector3(Position.X, Position.Y - 18, Position.Z);  // position.y - 18          
+        }
+
+        public Enemy()
+        {
+            // TODO: Complete member initialization
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -78,7 +86,7 @@ namespace MadScienceLab
 
             //attack range
             enemyRangeL = new Rectangle((int)(Position.X - (HitboxWidth * 10)), (int)(Position.Y + (HitboxHeight * 1.5)), (HitboxWidth * 10), (HitboxHeight));
-            enemyRangeR = new Rectangle((int)(Position.X + (HitboxWidth)), (int)(Position.Y + (HitboxHeight * 1.5)), (HitboxWidth * 10), (HitboxHeight));     
+            enemyRangeR = new Rectangle((int)(Position.X + (HitboxWidth)), (int)(Position.Y + (HitboxHeight * 1.5)), (HitboxWidth * 10), (HitboxHeight));
 
             // generate random direction and initialize
             Random rand = new Random();
@@ -91,14 +99,7 @@ namespace MadScienceLab
         public override void Update(RenderContext renderContext)
         {
 
-            List<CellObject> returnObjs = new List<CellObject>();
-            //renderContext.Quadtree.clear();
-            //foreach (CellObject obj in renderContext.Level.collidableObjects)
-            //{
-            //    renderContext.Quadtree.insert(obj);
-            //}
 
-            //renderContext.Quadtree.retrieve(returnObjs, Hitbox);
 
             if (direction == GameConstants.POINTDIR.pointLeft)
             {
@@ -168,38 +169,46 @@ namespace MadScienceLab
 
         private void CheckEnemyBoxCollision(RenderContext renderContext)
         {
-            elapsedTime += renderContext.GameTime.ElapsedGameTime.Milliseconds;
-                //Check collision of enemy against all objects in level except toggle switch and 
-                foreach (CellObject levelObject in renderContext.Level.collidableObjects)
+            elaspedTime += renderContext.GameTime.ElapsedGameTime.Milliseconds;
+            if (renderContext.Player.Hitbox.Intersects(Hitbox))
             {
+                renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
+                movestate = !movestate;
+
+                if (direction == GameConstants.POINTDIR.pointLeft && elaspedTime > TIME_DELAY)
+                {
+
+                    direction = GameConstants.POINTDIR.pointRight;
+                    elaspedTime = 0;
+
+                    return;
+                }
+                else if (direction == GameConstants.POINTDIR.pointRight && elaspedTime > TIME_DELAY)
+                {
+
+                    direction = GameConstants.POINTDIR.pointLeft;
+                    elaspedTime = 0;
+
+                    return;
+                }
+
+                return;
+            }
+            List<GameObject3D> checkBlocks = new List<GameObject3D>();
+            checkBlocks.AddRange(renderContext.Level.gameObjects[typeof(PickableBox)]);
+            checkBlocks.AddRange(renderContext.Level.gameObjects[typeof(Door)]);
+            checkBlocks.AddRange(wallsToCheck);
+            //Check collision of enemy against all objects in level except toggle switch and 
+            foreach (CellObject levelObject in checkBlocks)
+            {
+
                 if ((levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox)
                     && levelObject.GetType() != typeof(ToggleSwitch)) ||
                     (Hitbox.Intersects(levelObject.Hitbox) && levelObject.GetType() == typeof(Character)))
                 {
                     if (levelObject.GetType() == typeof(Character))
                     {
-                        renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
-                        movestate = !movestate;
 
-                        //damageDelayTime = (float)(renderContext.GameTime.TotalGameTime - timeHit).TotalMilliseconds / (float)DAMAGE_DELAY.TotalMilliseconds;
-
-
-                            if (direction == GameConstants.POINTDIR.pointLeft && elapsedTime > TIME_DELAY)
-                            {
-                                
-                                direction = GameConstants.POINTDIR.pointRight;
-                                elapsedTime = 0;
-                                return;
-                            }
-                            else if (direction == GameConstants.POINTDIR.pointRight && elapsedTime > TIME_DELAY)
-                            {
-                                
-                                direction = GameConstants.POINTDIR.pointLeft;
-                                elapsedTime = 0;
-                                return;
-                            }
-                        
-                        return;
                     }
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
                             * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
@@ -230,80 +239,35 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         private bool CheckPlayerNearby(RenderContext renderContext)
         {
+            List<GameObject3D> checkBlocks = new List<GameObject3D>();
+            checkBlocks.AddRange(renderContext.Level.gameObjects[typeof(PickableBox)]);
+            checkBlocks.AddRange(wallsToCheck);
             //check the if the player in the attack range of left side. and enemy face left.
-            if (enemyRangeL.Intersects(renderContext.Player.Hitbox) && direction == GameConstants.POINTDIR.pointLeft) 
+            if (enemyRangeL.Intersects(renderContext.Player.Hitbox) && direction == GameConstants.POINTDIR.pointLeft)
             {
-                // make a list put all box that in the attack range.
-                List<Rectangle> inrg = new List<Rectangle>();
-
-                foreach (CellObject cellObject in renderContext.Level.collidableObjects)
-                {
-                    // if the object is not switch button, enemy itself and player.
-                    if (cellObject.GetType() != typeof(ToggleSwitch) && cellObject.GetType() != typeof(Enemy) && cellObject.GetType() != typeof(Character))
+                foreach (CellObject rectangle in checkBlocks)
+                {   //check the obejcet in the box , if it between the enemy and player. than enemy will speed up
+                    if (rectangle.Hitbox.X > renderContext.Player.Position.X && rectangle.Hitbox.Intersects(enemyRangeL))
                     {
-                        if (enemyRangeL.Intersects(cellObject.Hitbox))
-                        {
-                            //add the obeject that in the attack  range in to the list.
-                            inrg.Add(cellObject.Hitbox);
-                        }
+                        return false;
                     }
                 }
-
-
-                if (inrg.Count != 0 )
-                {
-                    foreach (Rectangle rectangle in inrg)
-                    {   //check the obejcet in the box , if it between the enemy and player. than enemy will speed up
-                        if (rectangle.X > renderContext.Player.Position.X)
-                        {
-                            return false;
-                        }
-
-                    }
-                    return true;
-                }
-
-
                 return true;
             }
-
             //same with the left side, now just check right side.
-            if (enemyRangeR.Intersects(renderContext.Player.Hitbox) && direction == GameConstants.POINTDIR.pointRight) 
+            else if (enemyRangeR.Intersects(renderContext.Player.Hitbox) && direction == GameConstants.POINTDIR.pointRight)
             {
-                List<Rectangle> inrg = new List<Rectangle>();
-
-                foreach (CellObject cellObject in renderContext.Level.collidableObjects)
+                foreach (CellObject rectangle in checkBlocks)
                 {
-                    if (cellObject.GetType() != typeof(ToggleSwitch) && cellObject.GetType() != typeof(Enemy) && cellObject.GetType() != typeof(Character))
+                    if (rectangle.Hitbox.X < renderContext.Player.Position.X && rectangle.Hitbox.Intersects(enemyRangeR))
                     {
-                        if (enemyRangeR.Intersects(cellObject.Hitbox))
-                        {
-                            inrg.Add(cellObject.Hitbox);
-                        }
+                        return false;
                     }
                 }
-
-
-                if (inrg.Count != 0)
-                {
-                    foreach (Rectangle rectangle in inrg)
-                    {
-                        if (rectangle.X < renderContext.Player.Position.X)
-                        {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-
-
                 return true;
             }
-
             return false;
-            
         }
-
 
     }
 }

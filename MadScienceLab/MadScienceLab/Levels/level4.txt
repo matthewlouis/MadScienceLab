@@ -1,16 +1,16 @@
 ﻿XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXX   X1XXXXXXX       XX
+XXXXXXXX    1XXXXXXX       XX
 X     tX                   XX
 X XXXXXX              L   SXX
 X          XXXXXX2XXXXXXXXXXX
-X      XX  X             XXXX
+X      XX                XXXX
 XM    XXXX              tXXXX
 XXXXXXXXXXX     S  S  XXXXXXX
 Xt           XXXXXXXXX   XXXX
 XXX4M        D  D mD     DD@X
 Xt        XXXXXXXXXXXX   XXXX
 XX        XXX           XXXXX
-XX P  t   XXXT         XXXXXX
+XX P  t   XXXt         XXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
@@ -27,4 +27,4 @@ Above is level, below are links.
 11:23|L
 8:2|U,3
 11:27|5:27
-5:19|Ahhh! My old pal Einstien. How I miss him.
+5:19|Ahhh! My old pal Einstien!
