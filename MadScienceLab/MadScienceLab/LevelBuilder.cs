@@ -24,7 +24,12 @@ namespace MadScienceLab
 
         static string levelSelect;
 
-        //Builds Basic level
+        /// <summary>
+        /// Builds a new level.
+        /// </summary>
+        /// <param name="levelNum"></param>
+        /// <param name="renderContext"></param>
+        /// <returns></returns>
         public static Level MakeBasicLevel(int levelNum, RenderContext renderContext)
         {
             Level level = new Level();
@@ -65,7 +70,7 @@ namespace MadScienceLab
             string linktxt = null; //everything below the line of "~" in Level.txt
             //split leveltxtfile into leveltxt and linktxt, with the text enclosed by any number of "~" characters as the delimiter
 
-                int pos = leveltxtfile.IndexOf("~"); //go to the "~" line
+            int pos = leveltxtfile.IndexOf("~"); //go to the "~" line
             leveltxt = leveltxtfile.Substring(0, pos);            
             //put pos on the next line after the last "~" line
             pos = leveltxtfile.LastIndexOf("~"); //go to last ~
@@ -79,7 +84,7 @@ namespace MadScienceLab
             levelheight = leveltxt.Length - leveltxt.Replace ("\n", "" ).Length;
             levelwidth = 0; //reset this each time a new level is made
             
-            //there will be walls and floor enclosing the aforementioned level
+            //(No longer the case: "there will be walls and floor enclosing the aforementioned level")
             //iterate through level string, find the level height and width from iterating through the txt file
             int row = startFloor+levelheight-1, col = startWall; 
             foreach (char c in leveltxt)
@@ -273,14 +278,10 @@ namespace MadScienceLab
                         }
                     }
 
-
                     //Message event
                     if (level.Children[index].GetType() == typeof(MessageEvent))
                     {
-                        //MessageEvent messageEvent = (MessageEvent)level.Children[index];
-                        //messageEvent.Message = ObjectAndSettings[1];
                         level.Messages[ObjectAndSettings[0]].Message = ObjectAndSettings[1];
-                        
                     }
                     
                     //Trapdoor
@@ -294,7 +295,6 @@ namespace MadScienceLab
                     }
                 }
             }
-            
           
             //DRAWS BACKGROUND
             row = startFloor + levelheight - 1;
