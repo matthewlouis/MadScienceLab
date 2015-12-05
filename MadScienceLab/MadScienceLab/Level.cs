@@ -187,8 +187,8 @@ namespace MadScienceLab
             for (int patternIndex = 0; patternIndex < backgroundBuffer.Length; patternIndex++)
             {
                     //if there are no patterned blocks of this type
-                    if (backgroundBuffer[patternIndex] == null)
-                        continue;
+                   // if (backgroundBuffer[patternIndex] == null)
+                      //  continue;
 
                     switch (patternIndex)
                     {
@@ -247,12 +247,15 @@ namespace MadScienceLab
                             renderContext.BasicEffect.Texture = renderContext.Textures["chalkboard4"];
                             break;
                 }
+                if (backgroundBuffer[patternIndex] != null)
+                {
                     foreach (EffectPass pass in renderContext.BasicEffect.CurrentTechnique.Passes)
                     {
                         pass.Apply();
                         renderContext.GraphicsDevice.SetVertexBuffer(backgroundBuffer[patternIndex]);
                         renderContext.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, backgroundBuffer[patternIndex].VertexCount / 3);
                     }
+                }
             }
 
             //Set back to normal
