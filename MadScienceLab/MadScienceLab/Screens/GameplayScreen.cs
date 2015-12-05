@@ -186,11 +186,28 @@ namespace MadScienceLab
 
                 _textures.Add("MoveableBox", content.Load<Texture2D>("WoodPlanks_Color"));
                 _textures.Add("BlockDropper", content.Load<Texture2D>("Textures/dropper"));
+
+                // background textures
                 _textures.Add("Pipes2", content.Load<Texture2D>("Textures/Pipes2"));
                 _textures.Add("Pipes1", content.Load<Texture2D>("Textures/Pipes1"));
                 _textures.Add("Vent", content.Load<Texture2D>("Textures/Vent"));
                 _textures.Add("Tile_Black", content.Load<Texture2D>("Textures/Tile_Black"));
                 _textures.Add("Tile_Gray", content.Load<Texture2D>("Textures/Tile_Gray"));
+                _textures.Add("Emcsquare", content.Load<Texture2D>("Textures/Emcsquare"));
+                _textures.Add("atom1", content.Load<Texture2D>("Textures/atom1"));
+                _textures.Add("atom2", content.Load<Texture2D>("Textures/atom2"));
+                _textures.Add("Tile_Gray_Stain", content.Load<Texture2D>("Textures/Tile_Gray_Stain"));
+                _textures.Add("Tile_Gray_Stain1", content.Load<Texture2D>("Textures/Tile_Gray_Stain1"));
+                _textures.Add("Tile_Gray_Stain2", content.Load<Texture2D>("Textures/Tile_Gray_Stain2"));
+                _textures.Add("Tile_Gray_Stain3", content.Load<Texture2D>("Textures/Tile_Gray_Stain3"));
+                _textures.Add("Einstien", content.Load<Texture2D>("Textures/Einstien"));
+                _textures.Add("chalkboard1", content.Load<Texture2D>("Textures/chalkboard1"));
+                _textures.Add("chalkboard2", content.Load<Texture2D>("Textures/chalkboard2"));
+                _textures.Add("chalkboard3", content.Load<Texture2D>("Textures/chalkboard3"));
+                _textures.Add("chalkboard4", content.Load<Texture2D>("Textures/chalkboard4"));
+
+
+
                 _textures.Add("Tile_White", content.Load<Texture2D>("Textures/Tile_White"));
                 _textures.Add("Tile_Fun", content.Load<Texture2D>("Textures/Tile_Fun"));
                 _textures.Add("Exit", content.Load<Texture2D>("Textures/EXIT"));
@@ -414,16 +431,6 @@ namespace MadScienceLab
                 }
             }
 
-            // if message paused game then on button B or F key resume game
-            /*if (messageActive)
-            {
-                if (Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B))
-                {
-                    messageActive = false;
-                    messageObj.Update(_renderContext);
-                }
-            }*/
-
             if (Keyboard.GetState().IsKeyDown(Keys.H) && lastkey.IsKeyUp(Keys.H))
             {
                 hudtype++;
@@ -472,7 +479,7 @@ namespace MadScienceLab
             }
             spriteBatch.End();
 
-            fpsCount.Draw(gameTime);
+            //fpsCount.Draw(gameTime);
 
 
 

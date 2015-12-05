@@ -18,7 +18,7 @@ namespace MadScienceLab
 
         public List<BackgroundBlock>[] Background { get; set; }
         private VertexBuffer[] backgroundBuffer;
-        private const int NUMBER_OF_BACKGROUND_TEXTURES = 6;
+        private const int NUMBER_OF_BACKGROUND_TEXTURES = 18;
 
         //For drawing foreground using instance render
         public List<BasicBlock> ForegroundBlocks { get { return foregroundBlockInstances; } set { foregroundBlockInstances = value; } }
@@ -132,9 +132,9 @@ namespace MadScienceLab
         //Creates buffer for background
         public void setBackgroundBuffer(RenderContext renderContext)
         {
-            int texturePatternIndex = 0;
-            foreach (List<BackgroundBlock> patternedBlocks in Background)
+            for (int texturePatternIndex = 0; texturePatternIndex < Background.Length; texturePatternIndex++)
             {
+                List<BackgroundBlock> patternedBlocks = Background[texturePatternIndex];
                 List<VertexPositionTexture> vertexList = new List<VertexPositionTexture>();
 
                 foreach (BackgroundBlock backgroundBlock in patternedBlocks)
@@ -149,7 +149,7 @@ namespace MadScienceLab
                 if (vertexList.Count != 0)
                 {
                     backgroundBuffer[texturePatternIndex] = new VertexBuffer(renderContext.GraphicsDevice, VertexPositionTexture.VertexDeclaration, vertexList.Count, BufferUsage.WriteOnly);
-                    backgroundBuffer[texturePatternIndex++].SetData<VertexPositionTexture>(vertexList.ToArray());
+                    backgroundBuffer[texturePatternIndex].SetData<VertexPositionTexture>(vertexList.ToArray());
                 }
             }
         }
@@ -211,13 +211,52 @@ namespace MadScienceLab
                         case 5:
                             renderContext.BasicEffect.Texture = renderContext.Textures["Tile_Black"];
                             break;
-                    }
+                        case 6:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Tile_Gray_Stain"];
+                            break;
+                        case 7:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Tile_Gray_Stain2"];
+                            break;
+                        case 8:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Tile_Gray_Stain3"];
+                            break;
+                        case 9:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Tile_Gray_Stain1"];
+                            break;
+                        case 10:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Emcsquare"];
+                            break;
+                        case 11:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Einstien"];
+                            break;
+                        case 12:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["atom1"];
+                            break;
+                        case 13:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["atom2"];
+                            break;
+                        case 14:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["chalkboard1"];
+                            break;
+                        case 15:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["chalkboard2"];
+                            break;
+                        case 16:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["chalkboard3"];
+                            break;
+                        case 17:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["chalkboard4"];
+                            break;
+                }
+                if (backgroundBuffer[patternIndex] != null)
+                {
                     foreach (EffectPass pass in renderContext.BasicEffect.CurrentTechnique.Passes)
                     {
                         pass.Apply();
                         renderContext.GraphicsDevice.SetVertexBuffer(backgroundBuffer[patternIndex]);
                         renderContext.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, backgroundBuffer[patternIndex].VertexCount / 3);
                     }
+                }
             }
 
             //Set back to normal

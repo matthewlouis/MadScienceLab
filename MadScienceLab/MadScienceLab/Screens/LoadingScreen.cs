@@ -129,6 +129,8 @@ namespace MadScienceLab
                 otherScreensAreGone = true;
             }
 
+            ScreenManager.GraphicsDevice.Clear(ClearOptions.Target,
+                                               Color.Black, 0, 0);
             // The gameplay screen takes a while to load, so we display a loading
             // message while that is going on, but the menus load very quickly, and
             // it would look silly if we flashed this up for just a fraction of a
@@ -148,7 +150,7 @@ namespace MadScienceLab
                 Vector2 textSize = font.MeasureString(message);
                 Vector2 textPosition = (viewportSize - textSize) / 2;
 
-                Color color = Color.White * TransitionAlpha;
+                Color color = Color.Green * TransitionAlpha;
 
                 // Draw the text.
                 spriteBatch.Begin();

@@ -4,13 +4,13 @@ X     tX                   XX
 X XXXXXX              L   SXX
 X          XXXXXX2XXXXXXXXXXX
 X      XX  X             XXXX
-XM    XXXX               XXXX
-XXXXXXXXXXX     S  S   t XXXX
-Xt           XXXXXXXXXXXXXXXX
-XXX3M        D  D  D     DD@X
+XM    XXXX              tXXXX
+XXXXXXXXXXX     S  S  XXXXXXX
+Xt           XXXXXXXXX   XXXX
+XXX4M        D  D mD     DD@X
 Xt        XXXXXXXXXXXX   XXXX
-XX      P XXX           XXXXX
-XX  E t   XXXT   E     XXXXXX
+XX        XXX           XXXXX
+XX P  t   XXXT         XXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
@@ -20,10 +20,11 @@ Above is level, below are links.
 7:17|5:14
 2:7|5:4
 4:2|5:20
-7:24|10:18
+8:25|10:18
 6:2|10:18
 12:7|13:13
 5:5|R,5
 11:23|L
 8:2|U,3
 11:27|5:27
+5:19|Ahhh! My old pal Einstien. How I miss him.

@@ -13,10 +13,13 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MadScienceLab
 {
-    public class Character: CellObject
+    public class Character : CellObject
     {
-        public enum InteractState { HandsEmpty = 0, JustPickedUpBox = 1, AnimatingPickup = 2, CompletedPickup = 3, 
-                                    StartingDropBox = 4, AnimatingDropBox = 5};
+        public enum InteractState
+        {
+            HandsEmpty = 0, JustPickedUpBox = 1, AnimatingPickup = 2, CompletedPickup = 3,
+            StartingDropBox = 4, AnimatingDropBox = 5
+        };
 
         GameAnimatedModel charModel;
 
@@ -33,7 +36,7 @@ namespace MadScienceLab
 
         public int putDownAnimationAngle = 90;
         byte facingDirection = FACING_RIGHT;
-        public byte GetFacingDirection { get { return facingDirection;  } }
+        public byte GetFacingDirection { get { return facingDirection; } }
         byte putFacingDirection = FACING_RIGHT; //direction when the player puts down the box
         const int FACING_LEFT = 1, FACING_RIGHT = 2;
         public bool canPlace = true;
@@ -101,7 +104,7 @@ namespace MadScienceLab
             set { mapEnabled = value; }
         }
 
-        public Character(int startRow, int startCol):base(startRow, startCol)
+        public Character(int startRow, int startCol) : base(startRow, startCol)
         {
             Scale(0.06f, 0.06f, 0.06f);
             Rotate(0, 90f, 0);
@@ -187,8 +190,8 @@ namespace MadScienceLab
             //InteractiveObj = null;
 
             //Code used to update any actions occurring with PickBox and PutBox.
-            UpdatePickBox ();
-            UpdatePutBox (renderContext);
+            UpdatePickBox();
+            UpdatePutBox(renderContext);
             //update sound
             soundEffects.Update(renderContext);
             base.Update(renderContext);
@@ -232,13 +235,13 @@ namespace MadScienceLab
 
             //prevent the player from moving while still in box pickup/putdown animation
             bool NotActiveWithBox = interactState == InteractState.CompletedPickup || interactState == InteractState.HandsEmpty;
-            if ((currentKeyboardState.IsKeyDown ( Keys.Left ) || 
+            if ((currentKeyboardState.IsKeyDown(Keys.Left) ||
                 currentGamePadState.IsButtonDown(Buttons.DPadLeft) ||
                 currentGamePadState.IsButtonDown(Buttons.LeftThumbstickLeft)) && NotActiveWithBox)
             {
                 MoveLeft(GameConstants.MOVEAMOUNT);
             }
-            else if ((currentKeyboardState.IsKeyDown ( Keys.Right ) || 
+            else if ((currentKeyboardState.IsKeyDown(Keys.Right) ||
                 currentGamePadState.IsButtonDown(Buttons.DPadRight) ||
                 currentGamePadState.IsButtonDown(Buttons.LeftThumbstickRight)) && NotActiveWithBox)
             {
@@ -284,7 +287,7 @@ namespace MadScienceLab
         {
             //Create blink effect
             if (!damageable &&
-                (renderContext.GameTime.TotalGameTime - timeHit).Milliseconds % BLINK_DELAY <= BLINK_DELAY/2)
+                (renderContext.GameTime.TotalGameTime - timeHit).Milliseconds % BLINK_DELAY <= BLINK_DELAY / 2)
             {
                 return; //don't draw the player 
             }
@@ -300,7 +303,7 @@ namespace MadScienceLab
             {
                 charModel.SetAnimationSpeed(MOVEMENT_ANIM_SPEED);
                 //if player's hands are empty, play regular run, else he's holding a box
-                if(interactState == Character.InteractState.HandsEmpty)
+                if (interactState == Character.InteractState.HandsEmpty)
                     charModel.PlayAnimation("Run", true, 0.2f);
                 else
                     charModel.PlayAnimation("RunBox", true, 0.2f);
@@ -322,7 +325,7 @@ namespace MadScienceLab
                 else
                     charModel.PlayAnimation("RunBox", true, 0.2f);
             }
-            Vector3 newPosition = Position + new Vector3(movementAmount,0, 0);
+            Vector3 newPosition = Position + new Vector3(movementAmount, 0, 0);
             Translate(newPosition);
         }
 
@@ -333,11 +336,11 @@ namespace MadScienceLab
             TransVelocity = Vector3.Zero;
 
             jumping = true;
-            base.TransVelocity += new Vector3(0, GameConstants.SINGLE_CELL_SIZE*5, 0);
+            base.TransVelocity += new Vector3(0, GameConstants.SINGLE_CELL_SIZE * 5, 0);
             charModel.SetAnimationSpeed(MOVEMENT_ANIM_SPEED);
             //play corresponding animation if character is holding a box
-            if(interactState == Character.InteractState.HandsEmpty)
-                charModel.PlayAnimation("Jump",false, 0.2f);
+            if (interactState == Character.InteractState.HandsEmpty)
+                charModel.PlayAnimation("Jump", false, 0.2f);
             else
                 charModel.PlayAnimation("JumpBox", false, 0.2f);
             soundEffects.PlaySound("Jump");
@@ -385,7 +388,7 @@ namespace MadScienceLab
                 if (AdjacentObj != null && AdjacentObj.GetType() == typeof(PickableBox) && (((PickableBox)(AdjacentObj)).IsLiftable))
                 {
                     //check if there is area above the player to pick up the box
-                    Rectangle areaTop = new Rectangle ( (int)Position.X, CharacterHitbox.Bottom + 1, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height) );
+                    Rectangle areaTop = new Rectangle((int)Position.X, CharacterHitbox.Bottom + 1, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height));
                     bool pickuppable = true;
 
                     // to pick up boxes from under the other this has been commented out
@@ -402,7 +405,8 @@ namespace MadScienceLab
                     //}
                     if (jumping || falling) //disallow putting down when jumping
                         pickuppable = false;
-                    if (pickuppable) {
+                    if (pickuppable)
+                    {
                         interactState = InteractState.JustPickedUpBox; //state 1
                         StoredBox = (PickableBox)AdjacentObj;
                         StoredBox.isCollidable = false;
@@ -414,8 +418,8 @@ namespace MadScienceLab
                     ToggleSwitch currentSwitch = (ToggleSwitch)InteractiveObj;
                     if (currentSwitch.IsToggleable && currentSwitch.IsReady)
                     {
-                        soundEffects.PlaySound ( "ToggleSwitch" );
-                        currentSwitch.FlickSwitch ();
+                        soundEffects.PlaySound("ToggleSwitch");
+                        currentSwitch.FlickSwitch();
                     }
                 }
             }     
@@ -423,7 +427,7 @@ namespace MadScienceLab
         /// <summary>
         /// Code to update any animations occurring with PickBox.
         /// </summary>
-        public void UpdatePickBox ()
+        public void UpdatePickBox()
         {
             if (interactState == InteractState.JustPickedUpBox) //determine initial pickup animation angle
             {
@@ -445,7 +449,7 @@ namespace MadScienceLab
                         pickUpAnimationAngle += 9; //from right
 
                     float angleRad = pickUpAnimationAngle * 2 * (float)Math.PI / 360;
-                    StoredBox.Position = Position + new Vector3 ( CharacterHitbox.Width * (float)Math.Cos ( angleRad ), CharacterHitbox.Height * (float)Math.Sin ( angleRad ), 0f );
+                    StoredBox.Position = Position + new Vector3(CharacterHitbox.Width * (float)Math.Cos(angleRad), CharacterHitbox.Height * (float)Math.Sin(angleRad), 0f);
 
                     //no need to update hitbox anymore
                     /*StoredBox.Hitbox = new Rectangle ( (int)(Hitbox.Location.X + Hitbox.Width * Math.Cos ( angleRad )),
@@ -464,7 +468,7 @@ namespace MadScienceLab
             }
             else if (interactState == InteractState.CompletedPickup) //state 3s
             {
-                StoredBox.Position = Position + new Vector3 ( 0, CharacterHitbox.Height, 0 );
+                StoredBox.Position = Position + new Vector3(0, CharacterHitbox.Height, 0);
                 //no need to update hitbox anymore
                 /*StoredBox.Hitbox = new Rectangle ( Hitbox.Location.X, Hitbox.Location.Y + Hitbox.Height,
                                                  storedBox.Hitbox.Width, storedBox.Hitbox.Height );*/
@@ -475,7 +479,7 @@ namespace MadScienceLab
         /// Code to update any animations occurring with PutBox.
         /// </summary>
         /// <param name="renderContext"></param>
-        public void UpdatePutBox (RenderContext renderContext) //need renderContext to access level for collision checking
+        public void UpdatePutBox(RenderContext renderContext) //need renderContext to access level for collision checking
         {
             if (interactState == InteractState.StartingDropBox) //state 4
             {
@@ -492,7 +496,7 @@ namespace MadScienceLab
                         putDownAnimationAngle += 9;
 
                     float angleRad = putDownAnimationAngle * 2 * (float)Math.PI / 360;
-                    StoredBox.Position = Position + new Vector3 ( CharacterHitbox.Width * (float)Math.Cos ( angleRad ), CharacterHitbox.Height * (float)Math.Sin ( angleRad ), 0f );
+                    StoredBox.Position = Position + new Vector3(CharacterHitbox.Width * (float)Math.Cos(angleRad), CharacterHitbox.Height * (float)Math.Sin(angleRad), 0f);
                     
                     //no need to update hitbox
                     /*
@@ -508,15 +512,15 @@ namespace MadScienceLab
                     StoredBox.TransVelocity = Vector3.Zero;
                     float startX = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.X_RESOLUTION / 2);
                     float startY = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.Y_RESOLUTION / 2);
-                    Vector3 CELLREMAINDER = new Vector3 ( (StoredBox.Position.X - startX) % GameConstants.SINGLE_CELL_SIZE,
+                    Vector3 CELLREMAINDER = new Vector3((StoredBox.Position.X - startX) % GameConstants.SINGLE_CELL_SIZE,
                                                         (StoredBox.Position.Y - startY) % GameConstants.SINGLE_CELL_SIZE,
-                                                        StoredBox.Position.Z );
+                                                        StoredBox.Position.Z);
                     //Move positions to the nearest cell
 
                     if (CELLREMAINDER.X < GameConstants.SINGLE_CELL_SIZE / 2)
-                        StoredBox.Position = new Vector3 ( StoredBox.Position.X - CELLREMAINDER.X, StoredBox.Position.Y, StoredBox.Position.Z );
+                        StoredBox.Position = new Vector3(StoredBox.Position.X - CELLREMAINDER.X, StoredBox.Position.Y, StoredBox.Position.Z);
                     else
-                        StoredBox.Position = new Vector3 ( StoredBox.Position.X - CELLREMAINDER.X + GameConstants.SINGLE_CELL_SIZE, StoredBox.Position.Y, StoredBox.Position.Z );
+                        StoredBox.Position = new Vector3(StoredBox.Position.X - CELLREMAINDER.X + GameConstants.SINGLE_CELL_SIZE, StoredBox.Position.Y, StoredBox.Position.Z);
                     /*if (CELLREMAINDER.Y < Game1.SINGLE_CELL_SIZE / 2)
                         storedBox.Position = new Vector3(storedBox.Position.X, storedBox.Position.Y - CELLREMAINDER.Y, storedBox.Position.Z);
                     else
@@ -528,7 +532,7 @@ namespace MadScienceLab
 
 
                     //quantize position to a multiple of SINGLE_CELL_SIZE
-                    StoredBox.CheckCollision ( renderContext.Level ); //check and update box position based on collision before updating any other boxes' positions
+                    StoredBox.CheckCollision(renderContext.Level); //check and update box position based on collision before updating any other boxes' positions
                     //remove storedBox from player
                     StoredBox.isCollidable = true;
                     StoredBox = null;
@@ -540,7 +544,7 @@ namespace MadScienceLab
         public void Stop()
         {
             charModel.SetAnimationSpeed(1.0f);
-            if(interactState == Character.InteractState.HandsEmpty)
+            if (interactState == Character.InteractState.HandsEmpty)
                 charModel.PlayAnimation("Idle", true, 0.2f);
             else
                 charModel.PlayAnimation("IdleBox", true, 0.2f);
@@ -598,7 +602,7 @@ namespace MadScienceLab
                     }
                 //}
             }
-        }
+            }
 
         /// <summary>
         /// Checks the collisions for the box that the player is carrying seperately
@@ -685,7 +689,7 @@ namespace MadScienceLab
                     if (levelObject.GetType() == typeof(ExitBlock))
                     {
                         renderContext.Level.LevelOver = true;
-                    }
+            }
 
                     //Trigger MessageEvents if passed over
                     if (levelObject.GetType() == typeof(MessageEvent))
@@ -693,8 +697,8 @@ namespace MadScienceLab
                         MessageEvent msgEvent = (MessageEvent)levelObject as MessageEvent;
                         renderContext.CurrMsgEvent = msgEvent;
                         if (msgEvent.typingState == GameConstants.TYPING_STATE.NotTyped)
-                            msgEvent.StartTyping ();
-                    }
+                            msgEvent.StartTyping();
+        }
 
                     /**Determining what side was hit**/
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
@@ -715,7 +719,7 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Top";//top
-                                if (Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width > 2) 
+                                if (Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width > 2)
                                 {
                                     Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
                                     TransVelocity = Vector3.Zero;
@@ -761,8 +765,8 @@ namespace MadScienceLab
                                         TransVelocity = Vector3.Zero;
                                     }
                                 }
-                               // if (!collisionJumping)
-                                    //TransVelocity = Vector3.Zero;
+                                // if (!collisionJumping)
+                                //TransVelocity = Vector3.Zero;
                                 jumping = false;
                                 falling = false;
                             }
@@ -811,7 +815,7 @@ namespace MadScienceLab
                         MessageEvent msgEvent = (MessageEvent)levelObject as MessageEvent;
                         renderContext.CurrMsgEvent = msgEvent;
                         if (msgEvent.typingState == GameConstants.TYPING_STATE.NotTyped)
-                            msgEvent.StartTyping ();
+                            msgEvent.StartTyping();
                     }
 
                     /**Determining what side was hit**/

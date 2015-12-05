@@ -30,6 +30,10 @@ namespace MadScienceLab
             }
         }
 
+        float damageDelayTime;
+        TimeSpan DAMAGE_DELAY = TimeSpan.FromMilliseconds(1000f);
+        TimeSpan timeHit = TimeSpan.Zero;
+
         int attackRange = 4;
         float movementAmount = 1f;
         float speed = 1f;
@@ -59,6 +63,8 @@ namespace MadScienceLab
             Position = new Vector3(Position.X, Position.Y - 18, Position.Z);        
     
             wallsToCheck = new List<CellObject>();
+            Scale(40f, 40f, 40f); // 48,48,48
+            Position = new Vector3(Position.X, Position.Y - 18, Position.Z);  // position.y - 18          
         }
 
         public Enemy()
@@ -71,8 +77,8 @@ namespace MadScienceLab
             animmodel.LoadContent(contentManager);
             // Provides a hitbox for the block - Steven
             UpdateBoundingBox(animmodel.Model, Matrix.CreateTranslation(base.Position), false, false);
-            base.HitboxWidth = 48;
-            base.HitboxHeight = 20;
+            base.HitboxWidth = 40;
+            base.HitboxHeight = 16;
             base.HitboxHeightOffset = 20;
             soundEffects = new SoundEffectPlayer(this);
             SoundEffect sound = contentManager.Load<SoundEffect>("Sounds/DoombaLoop");
@@ -96,13 +102,13 @@ namespace MadScienceLab
         {
 
             List<CellObject> returnObjs = new List<CellObject>();
-            renderContext.Quadtree.clear();
-            foreach (CellObject obj in renderContext.Level.collidableObjects)
-            {
-                renderContext.Quadtree.insert(obj);
-            }
+            //renderContext.Quadtree.clear();
+            //foreach (CellObject obj in renderContext.Level.collidableObjects)
+            //{
+            //    renderContext.Quadtree.insert(obj);
+            //}
 
-            renderContext.Quadtree.retrieve(returnObjs, Hitbox);
+            //renderContext.Quadtree.retrieve(returnObjs, Hitbox);
 
             if (direction == GameConstants.POINTDIR.pointLeft)
             {
@@ -172,6 +178,7 @@ namespace MadScienceLab
 
         private void CheckEnemyBoxCollision(RenderContext renderContext)
         {
+
             //Check collision of enemy against all objects in level except toggle switch and 
             foreach (CellObject levelObject in wallsToCheck)
             {
@@ -179,6 +186,33 @@ namespace MadScienceLab
                     && levelObject.GetType() != typeof(ToggleSwitch)) ||
                     (Hitbox.Intersects(levelObject.Hitbox) && levelObject.GetType() == typeof(Character)))
                 {
+                    if (levelObject.GetType() == typeof(Character))
+                    {
+                        renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
+                        movestate = !movestate;
+
+                        damageDelayTime = (float)(renderContext.GameTime.TotalGameTime - timeHit).TotalMilliseconds / (float)DAMAGE_DELAY.TotalMilliseconds;
+
+
+                            if (direction == GameConstants.POINTDIR.pointLeft)
+                            {
+                                if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
+                                {
+                                direction = GameConstants.POINTDIR.pointRight;
+                                }
+                                return;
+                            }
+                            else if (direction == GameConstants.POINTDIR.pointRight)
+                            {
+                                if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
+                                {
+                                    direction = GameConstants.POINTDIR.pointLeft;
+                                }
+                                return;
+                            }
+                        
+                        return;
+                    }
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
                             * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
                     float hx = ((Hitbox.Height) + levelObject.Hitbox.Height)
@@ -205,7 +239,7 @@ namespace MadScienceLab
                 renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
                 movestate = !movestate;
                 return;
-            }
+        }
         }
 
         /// <summary>
@@ -218,23 +252,23 @@ namespace MadScienceLab
             if (enemyRangeL.Intersects(renderContext.Player.Hitbox) && direction == GameConstants.POINTDIR.pointLeft) 
             {
                 foreach (CellObject rectangle in wallsToCheck)
-                {   //check the obejcet in the box , if it between the enemy and player. than enemy will speed up
+                    {   //check the obejcet in the box , if it between the enemy and player. than enemy will speed up
                     if (rectangle.Hitbox.X > renderContext.Player.Position.X && rectangle.Hitbox.Intersects(enemyRangeL))
-                    {
-                        return false;
-                    }
+                        {
+                            return false;
+                        }
                 }
                 return true;
             }
             //same with the left side, now just check right side.
             else if (enemyRangeR.Intersects(renderContext.Player.Hitbox) && direction == GameConstants.POINTDIR.pointRight) 
-            {
-                foreach (CellObject rectangle in wallsToCheck)
                 {
-                    if (rectangle.Hitbox.X < renderContext.Player.Position.X && rectangle.Hitbox.Intersects(enemyRangeR))
+                foreach (CellObject rectangle in wallsToCheck)
                     {
-                        return false;
-                    }
+                    if (rectangle.Hitbox.X < renderContext.Player.Position.X && rectangle.Hitbox.Intersects(enemyRangeR))
+                        {
+                            return false;
+                        }
                 }
                 return true;
             }

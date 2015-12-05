@@ -43,7 +43,7 @@ namespace MadScienceLab
             // Provides a hitbox for the moving platform
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), false, false);
             HitboxHeight = 12;
-            HitboxHeightOffset = 16;
+            HitboxHeightOffset = 18;
             
         }
 
