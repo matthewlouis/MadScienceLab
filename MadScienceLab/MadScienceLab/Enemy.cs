@@ -58,8 +58,8 @@ namespace MadScienceLab
 
             isCollidable = false;
             
-            Scale(48f, 48f, 48f);
-            Position = new Vector3(Position.X, Position.Y - 18, Position.Z);            
+            Scale(40f, 40f, 40f); // 48,48,48
+            Position = new Vector3(Position.X, Position.Y - 18, Position.Z);  // position.y - 18          
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -67,8 +67,8 @@ namespace MadScienceLab
             animmodel.LoadContent(contentManager);
             // Provides a hitbox for the block - Steven
             UpdateBoundingBox(animmodel.Model, Matrix.CreateTranslation(base.Position), false, false);
-            base.HitboxWidth = 48;
-            base.HitboxHeight = 20;
+            base.HitboxWidth = 40;
+            base.HitboxHeight = 16;
             base.HitboxHeightOffset = 20;
             soundEffects = new SoundEffectPlayer(this);
             SoundEffect sound = contentManager.Load<SoundEffect>("Sounds/DoombaLoop");
@@ -92,13 +92,13 @@ namespace MadScienceLab
         {
 
             List<CellObject> returnObjs = new List<CellObject>();
-            renderContext.Quadtree.clear();
-            foreach (CellObject obj in renderContext.Level.collidableObjects)
-            {
-                renderContext.Quadtree.insert(obj);
-            }
+            //renderContext.Quadtree.clear();
+            //foreach (CellObject obj in renderContext.Level.collidableObjects)
+            //{
+            //    renderContext.Quadtree.insert(obj);
+            //}
 
-            renderContext.Quadtree.retrieve(returnObjs, Hitbox);
+            //renderContext.Quadtree.retrieve(returnObjs, Hitbox);
 
             if (direction == GameConstants.POINTDIR.pointLeft)
             {

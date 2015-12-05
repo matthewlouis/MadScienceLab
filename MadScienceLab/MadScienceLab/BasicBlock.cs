@@ -21,6 +21,7 @@ namespace MadScienceLab
         {
             model = GameplayScreen._models["BasicBlock"];
             base.isCollidable = true;
+            //Scale(12f, 12f, 12f);
 
             //randomly show slime
             if(random == null)
@@ -33,6 +34,8 @@ namespace MadScienceLab
 
             // Provides a hitbox for the block - Steven
             UpdateBoundingBox(model, Matrix.CreateTranslation(base.Position), false, false);
+            HitboxHeight = 48;
+            HitboxWidth = 48;
         }
 
         public override void Draw(RenderContext renderContext)

@@ -7,16 +7,17 @@ X        XXXXXXXXXX    XX
 X        XXXXXXXXXX    XX
 X                      XX
 X                      XX
-XL  B            S    MXX
-XXXXXXXXXXXXX   XXXrrr XX
+XL  Bm           S     XX
+XXXXXXXXXXXXX   XXXrrrMXX
 XXXXXXXXXXXXXX         XX
 XXXXXXXXXXXXXXX    E   XX
 XXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-5:23|U,5
+4:23|U,6
 11:9|10:6&10:7&10:8
 5:18|4:20&4:21&4:22
 5:2|R
 11:5|Hmm, a trap door - a neat security feature. I wonder where that leads.
+5:6|I've got to watch out for the turrets!

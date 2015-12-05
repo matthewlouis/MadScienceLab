@@ -318,6 +318,43 @@ namespace MadScienceLab
                     case '5': //Black tile
                         level.Background[5].Add(new BackgroundBlock(col++, row));
                         break;
+                    case '6': //Black tile
+                        level.Background[6].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case '7': //Black tile
+                        level.Background[7].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case '8': //Black tile
+                        level.Background[8].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case '9': //Black tile
+                        level.Background[9].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case 's': //emcsqaure
+                        level.Background[10].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case 'e': //einstien
+                        level.Background[11].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case 'a': //atom1
+                        level.Background[12].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case 'q': //atom2
+                        level.Background[13].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case 'z': //chalkboard1
+                        level.Background[14].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case 'x': //chalkboard2
+                        level.Background[15].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case 'c': //chalkboard3
+                        level.Background[16].Add(new BackgroundBlock(col++, row));
+                        break;
+                    case 'v': //chalkboard4
+                        level.Background[17].Add(new BackgroundBlock(col++, row));
+                        break;
+
                     case '\n': //new line/row
                         row--;
                         col = startWall;
