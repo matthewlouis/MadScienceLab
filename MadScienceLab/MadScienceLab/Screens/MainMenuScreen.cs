@@ -92,10 +92,10 @@ namespace MadScienceLab
                 storytitle.Add ( "Background" );
                 storytext.Add ( "It's a dark and stormy night. Deep in the depths of his 100-floor evil laboratory, Dr.Frankenbuns was hard at work, scheming new ways to take over the world." );
                 storytitle.Add ( "???" );
-                storytext.Add ( "But suddenly, lightning struck the Securitron-Combobulator on the roof of the lab (it was probably a dumb place to put it.)" );
+                storytext.Add ( "But suddenly, lightning struck the Securitron-Combobulator on the roof of the lab (it was probably a dumb place to put it)." );
                 storytitle.Add ( "Uh oh!" );
                 storytext.Add ( "The security systems have gone rogue; the very devices created to keep pesky intruders out are now keeping Dr.Frankenbuns inside." );
-                storytitle.Add("Uh oh!");
+                storytitle.Add("Watch out!");
                 storytext.Add("Even Doomba, his typically helpful robot vacuum cleaner, has acquired a thirst for destruction. One thing's for sure - it's going to be a long night.");
                 ScreenManager.AddScreen ( new StoryScreen ( storytext, storytitle, new GameplayScreen ( saveGameData.saveGameData.currentlevel ), saveGameData ), e.PlayerIndex );
             }
