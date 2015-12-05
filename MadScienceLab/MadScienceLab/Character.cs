@@ -142,15 +142,6 @@ namespace MadScienceLab
 
         public override void Update(RenderContext renderContext)
         {
-            //List<CellObject> returnObjs = new List<CellObject>();
-
-            //renderContext.Quadtree.clear();
-            //foreach (CellObject obj in renderContext.Level.collidableObjects)
-            //{
-            //    renderContext.Quadtree.insert(obj);
-            //}
-
-            //renderContext.Quadtree.retrieve(returnObjs, base.Hitbox);
 
             if (health <= 0)
             {
@@ -173,6 +164,7 @@ namespace MadScienceLab
 
             charModel.Update(renderContext);
             UpdatePhysics();
+<<<<<<< HEAD
 
             // Quad tree collision
             //foreach (CellObject worldObject in returnObjs)
@@ -183,6 +175,8 @@ namespace MadScienceLab
             //    }
             //    CheckPlayerBoxCollision(renderContext, worldObject);
             //}
+=======
+>>>>>>> refs/remotes/origin/master
 
             if (interactState == InteractState.CompletedPickup) // Start checking for collisions for the box being carried - Steven
             {
@@ -672,7 +666,7 @@ namespace MadScienceLab
                         {
                             if (wy > -hx)
                             {
-                                //boxHitState = "Box Top";//top
+                                //boxHitState = "Box Top";//top (debug)
                                 Position = new Vector3(Position.X, levelObject.Hitbox.Top - this.Hitbox.Height - StoredBox.Hitbox.Height - 1, 0); //clip to the top of the colliding object
                                 TransVelocity = Vector3.Zero;
                             }
@@ -879,6 +873,7 @@ namespace MadScienceLab
                             }
                             else
                             {
+                                //If colliding with player, have player move with the platform (ie. alongside the platform's Move() method)
                                 if (levelObject.GetType() == typeof(MovingPlatform))
                                 {
                                     ((MovingPlatform)levelObject).PlayerOnPlatform = true;
