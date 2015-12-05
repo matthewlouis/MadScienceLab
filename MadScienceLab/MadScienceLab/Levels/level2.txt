@@ -19,4 +19,4 @@ Above is level, below are links.
 11:9|10:6&10:7&10:8
 5:18|4:20&4:21&4:22
 5:2|R
-11:5|Hmm, a trap door - a neat security feature. I wonder%where that leads.%%%
+11:5|Hmm, a trap door - a neat security feature. I wonder where that leads.

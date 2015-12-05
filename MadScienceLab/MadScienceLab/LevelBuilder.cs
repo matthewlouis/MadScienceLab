@@ -90,7 +90,7 @@ namespace MadScienceLab
                         col++;
                         break;
                     case 'E':
-                        level.AddChild(new Enemy(col++, row)); 
+                        level.AddChild(new Enemy(col++, row, renderContext)); 
                         break;
                     case 'M':
                         level.AddChild(new MovingPlatform(col++, row));
