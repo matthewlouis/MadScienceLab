@@ -40,6 +40,7 @@ namespace MadScienceLab
         public override void Update(RenderContext renderContext)
         {
             
+            //Handle pressing of the button.
             if (IsPressed && doorsToggled == false)
             {
                 animmodel.PlayAnimation("Press", false, 0f);

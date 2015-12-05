@@ -10,6 +10,10 @@ namespace MadScienceLab
     class BoxDropper:SwitchableObject
     {
         public int NumberOfBoxes { get; private set; }
+
+        /// <summary>
+        /// Checks to see if the BoxDropper can drop a box. It prevents a box from being dropped if something is in the way of the drop.
+        /// </summary>
         public bool IsReady { 
             get {
                 PickableBox newBox = new PickableBox(new Vector2(this.Position.X, this.Position.Y - GameConstants.SINGLE_CELL_SIZE)); //used just for the purposes of getting PickableBox's bounding box.
@@ -62,12 +66,15 @@ namespace MadScienceLab
             base.HitboxHeight = base.HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
         }
 
-        //Drops a box
+        /// <summary>
+        /// Drops a box as the toggle action (of eg. a button or switch).
+        /// </summary>
+        /// <param name="renderContext"></param>
         public override void Toggle(RenderContext renderContext)
         {
             if (NumberOfBoxes > 0)
             {
-                ReservedBoxes++;
+                ReservedBoxes++; // Queues a box to be reserved for dropping as soon as it is possible.
                 NumberOfBoxes--;
             }
             
@@ -76,9 +83,12 @@ namespace MadScienceLab
                 animmodel[0] = animmodel[1];
         }
 
+
         public override void Update(RenderContext renderContext)
         {
             animmodel[0].Update ( renderContext );
+
+            // Drops the box (as specified in the ReservedBoxes queue) as soon as it is possible
             if (IsReady && ReservedBoxes > 0)
             {
                 //Creates new PickableBox underneath dropper.

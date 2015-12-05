@@ -104,22 +104,25 @@ namespace MadScienceLab
         /// <returns></returns>
         public virtual List<String> GetLines (MenuScreen screen, int width)
         {
-            TextWidth = 0;
+            TextWidth = 0; //The max width of the wrapped text lines.
             ScreenManager screenManager = screen.ScreenManager;
-            SpriteBatch spriteBatch = screenManager.SpriteBatch;
             SpriteFont font = screenManager.Font;
             string trimmableText = text;
             List<String> lines = new List<String>();
+
             while (trimmableText.Length >= 1) {
                 int c = 1;
                 while (c < trimmableText.Length &&
                     font.MeasureString ( trimmableText.Substring ( 0, ((trimmableText.IndexOf(" ", c+1)!=-1)?trimmableText.IndexOf(" ", c+1):trimmableText.Length) ) ).X*scalept2 < width) //so ends at trimmableText.Length or when the width when adding another char would exceed the width
                 {
-                    c = ((trimmableText.IndexOf ( " ", c + 1 ) != -1) ? trimmableText.IndexOf ( " ", c + 1 ) : trimmableText.Length); //Set to the next space or the end of the string if that doesn't exist.
+                    //Set to the next space or the end of the string if that doesn't exist.
+                    c = ((trimmableText.IndexOf ( " ", c + 1 ) != -1) ? trimmableText.IndexOf ( " ", c + 1 ) : trimmableText.Length);
                 }
                 String linestring = trimmableText.Substring ( 0, c ).TrimStart(' ');
                 lines.Add(linestring);
                 trimmableText = trimmableText.Substring ( c );
+
+                //Code to get max TextWidth (used for centering the text)
                 if (LineWidth(screen, linestring) > TextWidth)
                     TextWidth = font.MeasureString ( linestring ).X * scalept2;
             }
@@ -127,10 +130,15 @@ namespace MadScienceLab
             return lines;
         }
 
+        /// <summary>
+        /// Gets the width of the string, given the font and its respective size (in screen).
+        /// </summary>
+        /// <param name="screen"></param>
+        /// <param name="line"></param>
+        /// <returns></returns>
         protected virtual float LineWidth ( MenuScreen screen, String line )
         {
             ScreenManager screenManager = screen.ScreenManager;
-            SpriteBatch spriteBatch = screenManager.SpriteBatch;
             SpriteFont font = screenManager.Font;
             return font.MeasureString ( line ).X * scalept2;
         }
