@@ -234,12 +234,13 @@ namespace MadScienceLab
                         {
                             return false;
                         }
+
                     }
                     return true;
                 }
 
 
-                return false;
+                return true;
             }
 
             //same with the left side, now just check right side.
@@ -272,7 +273,7 @@ namespace MadScienceLab
                 }
 
 
-                return false;
+                return true;
             }
 
             return false;
