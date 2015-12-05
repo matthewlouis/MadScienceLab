@@ -31,8 +31,8 @@ namespace MadScienceLab
         }
 
         float damageDelayTime;
-        TimeSpan DAMAGE_DELAY = TimeSpan.FromMilliseconds(1000f);
-        TimeSpan timeHit = TimeSpan.Zero;
+        int TIME_DELAY = 1000;
+        int elapsedTime = 0;
 
         int attackRange = 4;
         float movementAmount = 1f;
@@ -168,9 +168,9 @@ namespace MadScienceLab
 
         private void CheckEnemyBoxCollision(RenderContext renderContext)
         {
-
-            //Check collision of enemy against all objects in level except toggle switch and 
-            foreach (CellObject levelObject in renderContext.Level.collidableObjects)
+            elapsedTime += renderContext.GameTime.ElapsedGameTime.Milliseconds;
+                //Check collision of enemy against all objects in level except toggle switch and 
+                foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
                 if ((levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox)
                     && levelObject.GetType() != typeof(ToggleSwitch)) ||
@@ -181,23 +181,21 @@ namespace MadScienceLab
                         renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
                         movestate = !movestate;
 
-                        damageDelayTime = (float)(renderContext.GameTime.TotalGameTime - timeHit).TotalMilliseconds / (float)DAMAGE_DELAY.TotalMilliseconds;
+                        //damageDelayTime = (float)(renderContext.GameTime.TotalGameTime - timeHit).TotalMilliseconds / (float)DAMAGE_DELAY.TotalMilliseconds;
 
 
-                            if (direction == GameConstants.POINTDIR.pointLeft)
+                            if (direction == GameConstants.POINTDIR.pointLeft && elapsedTime > TIME_DELAY)
                             {
-                                if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
-                                {
+                                
                                 direction = GameConstants.POINTDIR.pointRight;
-                                }
+                                elapsedTime = 0;
                                 return;
                             }
-                            else if (direction == GameConstants.POINTDIR.pointRight)
+                            else if (direction == GameConstants.POINTDIR.pointRight && elapsedTime > TIME_DELAY)
                             {
-                                if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
-                                {
-                                    direction = GameConstants.POINTDIR.pointLeft;
-                                }
+                                
+                                direction = GameConstants.POINTDIR.pointLeft;
+                                elapsedTime = 0;
                                 return;
                             }
                         
