@@ -78,6 +78,10 @@ namespace MadScienceLab
             return followTarget;
         }
         
+        /// <summary>
+        /// Set camera to follow the character, while being bounded by the level and moving only when necessary.
+        /// </summary>
+        /// <param name="character"></param>
         private void CameraFollow(Character character)
         {
             if (followTarget.Position.Y <= yFloor + bottomSideCollsion)
@@ -113,6 +117,10 @@ namespace MadScienceLab
 
 
         }
+
+        /// <summary>
+        /// Handle input to zoom in and out.
+        /// </summary>
         private void handleInput()
         {
             KeyboardState currentKeyboardState = Keyboard.GetState();

@@ -24,7 +24,12 @@ namespace MadScienceLab
 
         static string levelSelect;
 
-        //Builds Basic level
+        /// <summary>
+        /// Builds a new level.
+        /// </summary>
+        /// <param name="levelNum"></param>
+        /// <param name="renderContext"></param>
+        /// <returns></returns>
         public static Level MakeBasicLevel(int levelNum, RenderContext renderContext)
         {
             Level level = new Level();
@@ -78,7 +83,7 @@ namespace MadScienceLab
             String newline = "\r\n"; //in case a newline were to be used
             levelheight = leveltxt.Length - leveltxt.Replace ("\n", "" ).Length;
             levelwidth = 0; //reset this each time a new level is made
-
+            
             CellObject lastXBlock = new CellObject(0,0);
             Enemy e = new Enemy();
             bool lookForNextXBlock = false;
@@ -294,14 +299,10 @@ namespace MadScienceLab
                         }
                     }
 
-
                     //Message event
                     if (level.Children[index].GetType() == typeof(MessageEvent))
                     {
-                        //MessageEvent messageEvent = (MessageEvent)level.Children[index];
-                        //messageEvent.Message = ObjectAndSettings[1];
                         level.Messages[ObjectAndSettings[0]].Message = ObjectAndSettings[1];
-                        
                     }
                     
                     //Trapdoor
@@ -316,7 +317,6 @@ namespace MadScienceLab
                 }
             }
             
-          
             //DRAWS BACKGROUND
             row = startFloor + levelheight - 1;
             col = startWall; 

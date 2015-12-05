@@ -27,10 +27,9 @@ namespace MadScienceLab
         //Makes door unCollidable when open
         public override void Update(RenderContext renderContext)
         {
-            
-
             if (isOpen)
             {
+                //Animate opening door if not done yet.
                 float nextPos = Position.Z - DOOR_SPEED;
                 if (nextPos > DOOR_CLOSED_ZPOSITION)
                     this.Position = new Vector3(Position.X, Position.Y, nextPos);
@@ -39,6 +38,7 @@ namespace MadScienceLab
                 isCollidable = false;
             }else
             {
+                //Animate closing door if not done yet.
                 float nextPos = Position.Z + DOOR_SPEED;
                 if (nextPos < 0)
                     this.Position = new Vector3(Position.X, Position.Y, nextPos);
