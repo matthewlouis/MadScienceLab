@@ -489,7 +489,7 @@ namespace MadScienceLab
             }
             spriteBatch.End();
 
-            fpsCount.Draw(gameTime);
+            //fpsCount.Draw(gameTime);
 
 
 

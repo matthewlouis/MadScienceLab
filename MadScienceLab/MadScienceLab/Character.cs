@@ -13,10 +13,13 @@ using Microsoft.Xna.Framework.Media;
 
 namespace MadScienceLab
 {
-    public class Character: CellObject
+    public class Character : CellObject
     {
-        public enum InteractState { HandsEmpty = 0, JustPickedUpBox = 1, AnimatingPickup = 2, CompletedPickup = 3, 
-                                    StartingDropBox = 4, AnimatingDropBox = 5};
+        public enum InteractState
+        {
+            HandsEmpty = 0, JustPickedUpBox = 1, AnimatingPickup = 2, CompletedPickup = 3,
+            StartingDropBox = 4, AnimatingDropBox = 5
+        };
 
         GameAnimatedModel charModel;
 
@@ -33,7 +36,7 @@ namespace MadScienceLab
 
         public int putDownAnimationAngle = 90;
         byte facingDirection = FACING_RIGHT;
-        public byte GetFacingDirection { get { return facingDirection;  } }
+        public byte GetFacingDirection { get { return facingDirection; } }
         byte putFacingDirection = FACING_RIGHT; //direction when the player puts down the box
         const int FACING_LEFT = 1, FACING_RIGHT = 2;
         public bool canPlace = true;
@@ -57,7 +60,7 @@ namespace MadScienceLab
 
         private const float MOVEMENT_ANIM_SPEED = 3f;
 
-       
+
 
         // Health Support
         private int health;
@@ -95,20 +98,20 @@ namespace MadScienceLab
 
         private bool mapEnabled = false;
         // Debug map, can be used as a minimap - Steven
-        public bool MapEnabled 
+        public bool MapEnabled
         {
             get { return mapEnabled; }
             set { mapEnabled = value; }
         }
 
-        public Character(int startRow, int startCol):base(startRow, startCol)
+        public Character(int startRow, int startCol) : base(startRow, startCol)
         {
             Scale(0.06f, 0.06f, 0.06f);
             Rotate(0, 90f, 0);
 
             // create model with offset of position
             charModel = new GameAnimatedModel("SciTry", startRow, startCol, this);
-            charModel.VerticalOffset = 22;         
+            charModel.VerticalOffset = 22;
             health = GameConstants.HEALTH;
         }
 
@@ -136,7 +139,7 @@ namespace MadScienceLab
 
         }
 
-        
+
         public override void Update(RenderContext renderContext)
         {
             //List<CellObject> returnObjs = new List<CellObject>();
@@ -155,7 +158,7 @@ namespace MadScienceLab
             }
 
             //For temporary invincibility when recently damaged
-            if (!damageable)     
+            if (!damageable)
             {
                 damageDelayTime = (float)(renderContext.GameTime.TotalGameTime - timeHit).TotalMilliseconds / (float)DAMAGE_DELAY.TotalMilliseconds;
                 if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
@@ -170,7 +173,7 @@ namespace MadScienceLab
 
             charModel.Update(renderContext);
             UpdatePhysics();
-           
+
             // Quad tree collision
             //foreach (CellObject worldObject in returnObjs)
             //{
@@ -185,8 +188,9 @@ namespace MadScienceLab
             {
                 CheckBoxCarryCollision(renderContext);
             }
-            CheckPlayerBoxCollision(renderContext);   
-            CheckPickableBoxVincity(renderContext);
+            else
+                CheckPlayerBoxCollision(renderContext);
+            //CheckPickableBoxVincity(renderContext);
 
             HandleInput();
             if (TransVelocity.Y >= 0)
@@ -205,8 +209,8 @@ namespace MadScienceLab
             //InteractiveObj = null;
 
             //Code used to update any actions occurring with PickBox and PutBox.
-            UpdatePickBox ();
-            UpdatePutBox (renderContext);
+            UpdatePickBox();
+            UpdatePutBox(renderContext);
             //update sound
             soundEffects.Update(renderContext);
             base.Update(renderContext);
@@ -221,10 +225,9 @@ namespace MadScienceLab
             //Setting up basic controls
 
             // Jumping on keyboard Space or gamepad A button
-            if (
-                !jumping && !falling &&
+            if (!jumping && !falling &&
                 ((currentKeyboardState.IsKeyDown(Keys.Space) &&
-                oldKeyboardState.IsKeyUp(Keys.Space)) || 
+                oldKeyboardState.IsKeyUp(Keys.Space)) ||
                 (currentGamePadState.Buttons.A == ButtonState.Pressed &&
                 oldGamePadState.Buttons.A != ButtonState.Pressed)))
             {
@@ -232,7 +235,7 @@ namespace MadScienceLab
             }
 
             if ((currentKeyboardState.IsKeyDown(Keys.F) &&
-                oldKeyboardState.IsKeyUp(Keys.F)) || 
+                oldKeyboardState.IsKeyUp(Keys.F)) ||
                 (currentGamePadState.Buttons.B == ButtonState.Pressed &&
                 oldGamePadState.Buttons.B != ButtonState.Pressed))
             {
@@ -251,13 +254,13 @@ namespace MadScienceLab
 
             //prevent the player from moving while still in box pickup/putdown animation
             bool NotActiveWithBox = interactState == InteractState.CompletedPickup || interactState == InteractState.HandsEmpty;
-            if ((currentKeyboardState.IsKeyDown ( Keys.Left ) || 
+            if ((currentKeyboardState.IsKeyDown(Keys.Left) ||
                 currentGamePadState.IsButtonDown(Buttons.DPadLeft) ||
                 currentGamePadState.IsButtonDown(Buttons.LeftThumbstickLeft)) && NotActiveWithBox)
             {
                 MoveLeft(GameConstants.MOVEAMOUNT);
             }
-            else if ((currentKeyboardState.IsKeyDown ( Keys.Right ) || 
+            else if ((currentKeyboardState.IsKeyDown(Keys.Right) ||
                 currentGamePadState.IsButtonDown(Buttons.DPadRight) ||
                 currentGamePadState.IsButtonDown(Buttons.LeftThumbstickRight)) && NotActiveWithBox)
             {
@@ -303,7 +306,7 @@ namespace MadScienceLab
         {
             //Create blink effect
             if (!damageable &&
-                (renderContext.GameTime.TotalGameTime - timeHit).Milliseconds % BLINK_DELAY <= BLINK_DELAY/2)
+                (renderContext.GameTime.TotalGameTime - timeHit).Milliseconds % BLINK_DELAY <= BLINK_DELAY / 2)
             {
                 return; //don't draw the player 
             }
@@ -319,7 +322,7 @@ namespace MadScienceLab
             {
                 charModel.SetAnimationSpeed(MOVEMENT_ANIM_SPEED);
                 //if player's hands are empty, play regular run, else he's holding a box
-                if(interactState == Character.InteractState.HandsEmpty)
+                if (interactState == Character.InteractState.HandsEmpty)
                     charModel.PlayAnimation("Run", true, 0.2f);
                 else
                     charModel.PlayAnimation("RunBox", true, 0.2f);
@@ -341,7 +344,7 @@ namespace MadScienceLab
                 else
                     charModel.PlayAnimation("RunBox", true, 0.2f);
             }
-            Vector3 newPosition = Position + new Vector3(movementAmount,0, 0);
+            Vector3 newPosition = Position + new Vector3(movementAmount, 0, 0);
             Translate(newPosition);
         }
 
@@ -352,11 +355,11 @@ namespace MadScienceLab
             TransVelocity = Vector3.Zero;
 
             jumping = true;
-            base.TransVelocity += new Vector3(0, GameConstants.SINGLE_CELL_SIZE*5, 0);
+            base.TransVelocity += new Vector3(0, GameConstants.SINGLE_CELL_SIZE * 5, 0);
             charModel.SetAnimationSpeed(MOVEMENT_ANIM_SPEED);
             //play corresponding animation if character is holding a box
-            if(interactState == Character.InteractState.HandsEmpty)
-                charModel.PlayAnimation("Jump",false, 0.2f);
+            if (interactState == Character.InteractState.HandsEmpty)
+                charModel.PlayAnimation("Jump", false, 0.2f);
             else
                 charModel.PlayAnimation("JumpBox", false, 0.2f);
             soundEffects.PlaySound("Jump");
@@ -399,12 +402,12 @@ namespace MadScienceLab
 
         public void PickBox()
         {
-            if (interactState == InteractState.HandsEmpty/*state 0*/ /*&& !jumping && !falling*/) //Jacob: re-allowing pickup while in the air
+            if (interactState == InteractState.HandsEmpty/*state 0*/ && !jumping && !falling)
             {
                 if (AdjacentObj != null && AdjacentObj.GetType() == typeof(PickableBox) && (((PickableBox)(AdjacentObj)).IsLiftable))
                 {
                     //check if there is area above the player to pick up the box
-                    Rectangle areaTop = new Rectangle ( (int)Position.X, CharacterHitbox.Bottom + 1, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height) );
+                    Rectangle areaTop = new Rectangle((int)Position.X, CharacterHitbox.Bottom + 1, (int)(AdjacentObj.Hitbox.Width), (int)(AdjacentObj.Hitbox.Height));
                     bool pickuppable = true;
 
                     // to pick up boxes from under the other this has been commented out
@@ -419,9 +422,10 @@ namespace MadScienceLab
                     //     *      height increases upwards.
                     //     */
                     //}
-                    //if (jumping || falling) //disallow putting down when jumping
-                    //    pickuppable = false;
-                    if (pickuppable) {
+                    if (jumping || falling) //disallow putting down when jumping
+                        pickuppable = false;
+                    if (pickuppable)
+                    {
                         interactState = InteractState.JustPickedUpBox; //state 1
                         StoredBox = (PickableBox)AdjacentObj;
                         StoredBox.isCollidable = false;
@@ -433,16 +437,16 @@ namespace MadScienceLab
                     ToggleSwitch currentSwitch = (ToggleSwitch)InteractiveObj;
                     if (currentSwitch.IsToggleable && currentSwitch.IsReady)
                     {
-                        soundEffects.PlaySound ( "ToggleSwitch" );
-                        currentSwitch.FlickSwitch ();
+                        soundEffects.PlaySound("ToggleSwitch");
+                        currentSwitch.FlickSwitch();
                     }
                 }
-            }     
+            }
         }
         /// <summary>
         /// Code to update any animations occurring with PickBox.
         /// </summary>
-        public void UpdatePickBox ()
+        public void UpdatePickBox()
         {
             if (interactState == InteractState.JustPickedUpBox) //determine initial pickup animation angle
             {
@@ -464,7 +468,7 @@ namespace MadScienceLab
                         pickUpAnimationAngle += 9; //from right
 
                     float angleRad = pickUpAnimationAngle * 2 * (float)Math.PI / 360;
-                    StoredBox.Position = Position + new Vector3 ( CharacterHitbox.Width * (float)Math.Cos ( angleRad ), CharacterHitbox.Height * (float)Math.Sin ( angleRad ), 0f );
+                    StoredBox.Position = Position + new Vector3(CharacterHitbox.Width * (float)Math.Cos(angleRad), CharacterHitbox.Height * (float)Math.Sin(angleRad), 0f);
 
                     //no need to update hitbox anymore
                     /*StoredBox.Hitbox = new Rectangle ( (int)(Hitbox.Location.X + Hitbox.Width * Math.Cos ( angleRad )),
@@ -483,7 +487,7 @@ namespace MadScienceLab
             }
             else if (interactState == InteractState.CompletedPickup) //state 3s
             {
-                StoredBox.Position = Position + new Vector3 ( 0, CharacterHitbox.Height, 0 );
+                StoredBox.Position = Position + new Vector3(0, CharacterHitbox.Height, 0);
                 //no need to update hitbox anymore
                 /*StoredBox.Hitbox = new Rectangle ( Hitbox.Location.X, Hitbox.Location.Y + Hitbox.Height,
                                                  storedBox.Hitbox.Width, storedBox.Hitbox.Height );*/
@@ -494,7 +498,7 @@ namespace MadScienceLab
         /// Code to update any animations occurring with PutBox.
         /// </summary>
         /// <param name="renderContext"></param>
-        public void UpdatePutBox (RenderContext renderContext) //need renderContext to access level for collision checking
+        public void UpdatePutBox(RenderContext renderContext) //need renderContext to access level for collision checking
         {
             if (interactState == InteractState.StartingDropBox) //state 4
             {
@@ -511,8 +515,8 @@ namespace MadScienceLab
                         putDownAnimationAngle += 9;
 
                     float angleRad = putDownAnimationAngle * 2 * (float)Math.PI / 360;
-                    StoredBox.Position = Position + new Vector3 ( CharacterHitbox.Width * (float)Math.Cos ( angleRad ), CharacterHitbox.Height * (float)Math.Sin ( angleRad ), 0f );
-                    
+                    StoredBox.Position = Position + new Vector3(CharacterHitbox.Width * (float)Math.Cos(angleRad), CharacterHitbox.Height * (float)Math.Sin(angleRad), 0f);
+
                     //no need to update hitbox
                     /*
                     storedBox.Hitbox = new Rectangle ( (int)(Hitbox.Location.X + Hitbox.Width * Math.Cos ( angleRad )),
@@ -527,15 +531,15 @@ namespace MadScienceLab
                     StoredBox.TransVelocity = Vector3.Zero;
                     float startX = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.X_RESOLUTION / 2);
                     float startY = (GameConstants.SINGLE_CELL_SIZE * 1) - (GameConstants.Y_RESOLUTION / 2);
-                    Vector3 CELLREMAINDER = new Vector3 ( (StoredBox.Position.X - startX) % GameConstants.SINGLE_CELL_SIZE,
+                    Vector3 CELLREMAINDER = new Vector3((StoredBox.Position.X - startX) % GameConstants.SINGLE_CELL_SIZE,
                                                         (StoredBox.Position.Y - startY) % GameConstants.SINGLE_CELL_SIZE,
-                                                        StoredBox.Position.Z );
+                                                        StoredBox.Position.Z);
                     //Move positions to the nearest cell
 
                     if (CELLREMAINDER.X < GameConstants.SINGLE_CELL_SIZE / 2)
-                        StoredBox.Position = new Vector3 ( StoredBox.Position.X - CELLREMAINDER.X, StoredBox.Position.Y, StoredBox.Position.Z );
+                        StoredBox.Position = new Vector3(StoredBox.Position.X - CELLREMAINDER.X, StoredBox.Position.Y, StoredBox.Position.Z);
                     else
-                        StoredBox.Position = new Vector3 ( StoredBox.Position.X - CELLREMAINDER.X + GameConstants.SINGLE_CELL_SIZE, StoredBox.Position.Y, StoredBox.Position.Z );
+                        StoredBox.Position = new Vector3(StoredBox.Position.X - CELLREMAINDER.X + GameConstants.SINGLE_CELL_SIZE, StoredBox.Position.Y, StoredBox.Position.Z);
                     /*if (CELLREMAINDER.Y < Game1.SINGLE_CELL_SIZE / 2)
                         storedBox.Position = new Vector3(storedBox.Position.X, storedBox.Position.Y - CELLREMAINDER.Y, storedBox.Position.Z);
                     else
@@ -547,7 +551,7 @@ namespace MadScienceLab
 
 
                     //quantize position to a multiple of SINGLE_CELL_SIZE
-                    StoredBox.CheckCollision ( renderContext.Level ); //check and update box position based on collision before updating any other boxes' positions
+                    StoredBox.CheckCollision(renderContext.Level); //check and update box position based on collision before updating any other boxes' positions
                     //remove storedBox from player
                     StoredBox.isCollidable = true;
                     StoredBox = null;
@@ -559,7 +563,7 @@ namespace MadScienceLab
         public void Stop()
         {
             charModel.SetAnimationSpeed(1.0f);
-            if(interactState == Character.InteractState.HandsEmpty)
+            if (interactState == Character.InteractState.HandsEmpty)
                 charModel.PlayAnimation("Idle", true, 0.2f);
             else
                 charModel.PlayAnimation("IdleBox", true, 0.2f);
@@ -592,30 +596,30 @@ namespace MadScienceLab
         /// Checks all pickable boxes to see if player is close to the boxes - Steven
         /// </summary>
         /// <param name="renderContext"></param>
-        private void CheckPickableBoxVincity(RenderContext renderContext)
+        private void CheckPickableBoxVincity(RenderContext renderContext, CellObject worldObject)
         {
             if (!jumping || !falling)
             {
-                foreach (CellObject worldObject in renderContext.Level.gameObjects[typeof(PickableBox)])
+                //foreach (CellObject worldObject in renderContext.Level.gameObjects[typeof(PickableBox)])
+                //{
+                // Expanding the hitbox to see if player is near the box and flatten it to prevent from being picked up from 1 row above or below
+                Rectangle expandedHitbox = worldObject.Hitbox;
+                expandedHitbox.X -= 15;
+                expandedHitbox.Width += 30;
+                expandedHitbox.Y += 5;
+                expandedHitbox.Height -= 30;
+                if (Hitbox.Intersects(expandedHitbox))
                 {
-                    // Expanding the hitbox to see if player is near the box and flatten it to prevent from being picked up from 1 row above or below
-                    Rectangle expandedHitbox = worldObject.Hitbox;
-                    expandedHitbox.X -= 15;
-                    expandedHitbox.Width += 30;
-                    expandedHitbox.Y += 5;
-                    expandedHitbox.Height -= 30;
-                    if (Hitbox.Intersects(expandedHitbox))
+                    if (Hitbox.Center.X < expandedHitbox.Center.X && facingDirection == FACING_RIGHT)
                     {
-                        if (Hitbox.Center.X < expandedHitbox.Center.X && facingDirection == FACING_RIGHT)
-                        {
-                            AdjacentObj = worldObject;
-                        }
-                        else if (Hitbox.Center.X > expandedHitbox.Center.X && facingDirection == FACING_LEFT)
-                        {
-                            AdjacentObj = worldObject;
-                        }
+                        AdjacentObj = worldObject;
+                    }
+                    else if (Hitbox.Center.X > expandedHitbox.Center.X && facingDirection == FACING_LEFT)
+                    {
+                        AdjacentObj = worldObject;
                     }
                 }
+                //}
             }
         }
 
@@ -646,6 +650,7 @@ namespace MadScienceLab
                     canPlace = false;
                 }
 
+                #region Checks box collsion
                 if (levelObject.isCollidable && StoredBox.Hitbox.Intersects(levelObject.Hitbox))
                 {
                     /**Determining what side was hit**/
@@ -693,22 +698,9 @@ namespace MadScienceLab
                         InteractiveObj = levelObject;
                     }
                 }
-            }
-        }
+                #endregion
 
-        /// <summary>
-        /// Checks for player collision with all collidable objects in the level - Steven
-        /// </summary>
-        /// <param name="renderContext"></param>
-        private void CheckPlayerBoxCollision(RenderContext renderContext)
-        {
-
-            foreach (CellObject levelObject in renderContext.Level.collidableObjects)
-            {
-                if (levelObject.GetType() == typeof(MovingPlatform)) //default moving platforms for player to not be on the platform unless it would be found that the player were on it
-                {
-                    ((MovingPlatform)levelObject).PlayerOnPlatform = false;
-                }
+                #region Checks player collision
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
                     //renderContext.Boxhit = levelObject.Hitbox;
@@ -724,7 +716,7 @@ namespace MadScienceLab
                         MessageEvent msgEvent = (MessageEvent)levelObject as MessageEvent;
                         renderContext.CurrMsgEvent = msgEvent;
                         if (msgEvent.typingState == GameConstants.TYPING_STATE.NotTyped)
-                            msgEvent.StartTyping ();
+                            msgEvent.StartTyping();
                     }
 
                     /**Determining what side was hit**/
@@ -746,7 +738,7 @@ namespace MadScienceLab
                             if (wy > -hx)
                             {
                                 //boxHitState = "Box Top";//top
-                                if (Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width > 2) 
+                                if (Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width > 2)
                                 {
                                     Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
                                     TransVelocity = Vector3.Zero;
@@ -792,8 +784,126 @@ namespace MadScienceLab
                                         TransVelocity = Vector3.Zero;
                                     }
                                 }
-                               // if (!collisionJumping)
-                                    //TransVelocity = Vector3.Zero;
+                                // if (!collisionJumping)
+                                //TransVelocity = Vector3.Zero;
+                                jumping = false;
+                                falling = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        InteractiveObj = levelObject;
+                    }
+                }
+                #endregion
+            }
+        }
+
+        /// <summary>
+        /// Checks for player collision with all collidable objects in the level - Steven
+        /// </summary>
+        /// <param name="renderContext"></param>
+        private void CheckPlayerBoxCollision(RenderContext renderContext)
+        {
+
+            foreach (CellObject levelObject in renderContext.Level.collidableObjects)
+            {
+                if (levelObject.GetType() == typeof(MovingPlatform)) //default moving platforms for player to not be on the platform unless it would be found that the player were on it
+                {
+                    ((MovingPlatform)levelObject).PlayerOnPlatform = false;
+                }
+
+                if (levelObject.GetType() == typeof(PickableBox))
+                {
+                    CheckPickableBoxVincity(renderContext, levelObject);
+                }
+
+                if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
+                {
+                    //renderContext.Boxhit = levelObject.Hitbox;
+                    //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
+                    if (levelObject.GetType() == typeof(ExitBlock))
+                    {
+                        renderContext.Level.LevelOver = true;
+                    }
+
+                    //Trigger MessageEvents if passed over
+                    if (levelObject.GetType() == typeof(MessageEvent))
+                    {
+                        MessageEvent msgEvent = (MessageEvent)levelObject as MessageEvent;
+                        renderContext.CurrMsgEvent = msgEvent;
+                        if (msgEvent.typingState == GameConstants.TYPING_STATE.NotTyped)
+                            msgEvent.StartTyping();
+                    }
+
+                    /**Determining what side was hit**/
+                    float wy = (levelObject.Hitbox.Width + Hitbox.Width)
+                             * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
+                    float hx = (Hitbox.Height + levelObject.Hitbox.Height)
+                             * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
+
+                    if (levelObject.GetType() == typeof(Button)) //if it is a button
+                    {
+                        Button button = (Button)levelObject as Button;
+                        button.IsPressed = true;
+                    }
+
+                    if (!levelObject.IsPassable) //if object is not passable, handle physics issues:
+                    {
+                        if (wy > hx)
+                        {
+                            if (wy > -hx)
+                            {
+                                //boxHitState = "Box Top";//top
+                                if (Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width > 2)
+                                {
+                                    Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
+                                    TransVelocity = Vector3.Zero;
+                                }
+                            }
+                            else
+                            {
+                                //boxHitState = "Box Left";// left
+                                Position = new Vector3(levelObject.Hitbox.Right + 1 - HitboxWidthOffset, (int)Position.Y, 0);
+                                AdjacentObj = levelObject;
+                            }
+                        }
+                        else
+                        {
+                            if (wy > -hx)
+                            {
+                                //boxHitState = "Box Right";// right
+                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth - HitboxWidthOffset, (int)Position.Y, 0);
+                                AdjacentObj = levelObject;
+                            }
+                            else
+                            {
+                                if (levelObject.GetType() == typeof(MovingPlatform))
+                                {
+                                    ((MovingPlatform)levelObject).PlayerOnPlatform = true;
+                                }
+
+                                if (levelObject.Hitbox.Y > -25)
+                                {
+                                    Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom, 0);
+
+                                    if (!(Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width == 2 && levelObject.GetType() == typeof(PickableBox)))
+                                    {
+                                        TransVelocity = Vector3.Zero;
+                                    }
+                                }
+                                else
+                                {
+                                    Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+
+                                    if (!(Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width == 2 && levelObject.GetType() == typeof(PickableBox)))
+                                    {
+                                        TransVelocity = Vector3.Zero;
+                                    }
+                                }
+                                // if (!collisionJumping)
+                                //TransVelocity = Vector3.Zero;
                                 jumping = false;
                                 falling = false;
                             }

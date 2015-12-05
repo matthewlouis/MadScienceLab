@@ -54,7 +54,7 @@ namespace MadScienceLab
             this.loadingIsSlow = loadingIsSlow;
             this.screensToLoad = screensToLoad;
 
-            TransitionOnTime = TimeSpan.FromSeconds(0.5);
+            TransitionOnTime = TimeSpan.FromSeconds(1);
         }
 
 

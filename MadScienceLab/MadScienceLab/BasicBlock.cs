@@ -21,7 +21,8 @@ namespace MadScienceLab
         {
             model = GameplayScreen._models["BasicBlock"];
             base.isCollidable = true;
-            Scale(12f, 12f, 12f);
+            //Scale(12f, 12f, 12f);
+
             //randomly show slime
             if(random == null)
                 random = new Random(SLIME_RANDOMNESS); //seeding with const so levels always look the same
