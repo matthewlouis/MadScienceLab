@@ -71,6 +71,7 @@ namespace MadScienceLab
             MenuEntries.Add ( StorylineEntry );
             MenuEntries.Add ( BlankEntry );
             MenuEntries.Add ( ContinueEntry );
+
             //Select the first selectable entry
             while (menuEntries[selectedEntry].HasNoHandle)
             {
@@ -116,25 +117,11 @@ namespace MadScienceLab
                 // move down for the next entry the size of this entry
                 position.Y += menuEntry.GetHeight ( this );
             }
-                /*LevelSelectMenuEntry menuBackEntry = (LevelSelectMenuEntry)menuEntries[i];
-
-                // the Back is to be centered horizontally.
-                position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuBackEntry.GetWidth ( this ) / 2;
-
-                if (ScreenState == ScreenState.TransitionOn)
-                    position.X -= transitionOffset * 256;
-                else
-                    position.X += transitionOffset * 512;
-
-                // set the entry's position
-                menuBackEntry.Position = position;
-
-                // move down for the next entry the size of this entry
-                position.Y += menuBackEntry.GetHeight ( this );*/
         }
 
         /// <summary>
         /// Draws the menu.
+        /// This overrides MenuScreen in order to prevent the "Back" icon from being displayed.
         /// </summary>
         public override void Draw ( GameTime gameTime )
         {
@@ -174,7 +161,7 @@ namespace MadScienceLab
             spriteBatch.DrawString ( font, menuTitle, titlePosition, titleColor, 0,
                                    titleOrigin, titleScale, SpriteEffects.None, 0 );
 
-            //Draw select and back buttons
+            //Draw Select button ONLY. Not back button.
             spriteBatch.Draw(actionButton, new Rectangle(960, 540, 50, 50), Color.White);
             spriteBatch.DrawString(font, "Select", new Vector2(1020, 550), Color.White);
 
@@ -185,6 +172,11 @@ namespace MadScienceLab
 
         #region Handle Input
 
+        /// <summary>
+        /// Button event for continuing the string of story in the story screen.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void continueSelected(object sender, PlayerIndexEventArgs e)
         {
             List<String> RestOfStoryline = new List<String> ( Storyline );

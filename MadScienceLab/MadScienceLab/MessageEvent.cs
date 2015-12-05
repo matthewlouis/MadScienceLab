@@ -20,10 +20,10 @@ namespace MadScienceLab
         Rectangle buttonPosition = new Rectangle(959, 662, 48, 48);
         Vector2 textPosition = new Vector2(318, 516);
         public GameConstants.TYPING_STATE typingState;
-        static int rowLength = 56;
-        Random rand;
         
-
+        /// <summary>
+        /// The full message displayed by the MessageEvent.
+        /// </summary>
         public string Message
         {
             get { return message; }
@@ -55,7 +55,6 @@ namespace MadScienceLab
         {
             base.isCollidable = true;
             base.IsPassable = true;
-            //base.Model = GameplayScreen._models["ExitBlock"];
             this.typingState = GameConstants.TYPING_STATE.NotTyped;
             Scale(48f, 48f, 48f);
             //Position = new Vector3(Position.X, Position.Y - 2, Position.Z - 27); //not sure about this position
@@ -64,28 +63,11 @@ namespace MadScienceLab
             HitboxWidth = GameConstants.SINGLE_CELL_SIZE;
             //Translate(new Vector3(0, 0, 0));
 
-            rand = new Random();
-
             typedMessageLines = new List<String>(4);
             typedMessage = "";
-
-
-            //Maybe extraneous
-            //typedMessageLines.Add("line 1");
-            //typedMessageLines.Add("line 1");
-            //typedMessageLines.Add("line 1");
-            //typedMessageLines.Add("line 1");
-            //typedMessage[0] = "line 1";
-            //typedMessage[1] = "line 2";
-            //typedMessage[2] = "line 3";
-            //typedMessage[3] = "line 4";
-
-
-
-
         }
         /*
-         make length of text shown (as a substring) proportional to the (elapsed time) / (total timelength of text).
+         * make length of text shown (as a substring) proportional to the (elapsed time) / (total timelength of text).
          * Can make eg. as default, each char amounting to maybe ~50ms more time, or something => 20 chars per second.
          * Maybe 33 chars per second - for 400 WPM.
          */
@@ -134,6 +116,8 @@ namespace MadScienceLab
             {
                 return;
             }
+
+            //Action button leads to closing the screen, if typing is all displayed.
             if (this.typingState == GameConstants.TYPING_STATE.DoneTyping
                 && ((Keyboard.GetState().IsKeyDown(Keys.F) && lastKey.IsKeyUp(Keys.F)) || 
                     (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B) && lastButton.IsButtonUp(Buttons.B))))
@@ -141,6 +125,8 @@ namespace MadScienceLab
                 this.typingState = GameConstants.TYPING_STATE.Disabled;
                 GameplayScreen.messageActive = false;
             }
+
+            //Action button leads to finishing typing, if currently typing.
             else if(this.typingState == GameConstants.TYPING_STATE.Typing
                  && ((Keyboard.GetState().IsKeyDown(Keys.F) && lastKey.IsKeyUp(Keys.F)) || 
                     (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B) && lastButton.IsButtonUp(Buttons.B))))
@@ -148,11 +134,11 @@ namespace MadScienceLab
                 FinishTyping();
             }
 
+            //When typing, have the typed text update, as if it were a typewriter.
             if (typingState == GameConstants.TYPING_STATE.Typing)
             {
-                
-
-                if (elapsedTypingTime < totalTimeToType) //until it's done
+                //Update the typed text until it's done.
+                if (elapsedTypingTime < totalTimeToType) 
                 {
                     elapsedTypingTime += renderContext.GameTime.ElapsedGameTime.Milliseconds;
                     typedMessage = Message.Substring(0, (int)(Message.Length * elapsedTypingTime / totalTimeToType)); //Get current message to be typed for the current point
@@ -163,12 +149,13 @@ namespace MadScienceLab
                     FinishTyping();
                 }
             }
-            else if (typingState == GameConstants.TYPING_STATE.DoneTyping)
+            else if (typingState == GameConstants.TYPING_STATE.DoneTyping) //Use the complete message.
             {
                 typedMessage = Message;
             }
-            //handle typing ...
-            typedMessageLines = GetLines(typedMessage, renderContext, renderContext.Textures["MessageBackground"].Width - 30); //checking width
+            typedMessageLines = GetLines(typedMessage, renderContext, renderContext.Textures["MessageBackground"].Width - 30); //Wrap text according to the width of the message box.
+
+            //Update the previous button and key state.
             lastKey = Keyboard.GetState();
             lastButton = GamePad.GetState(PlayerIndex.One);
 
@@ -180,62 +167,32 @@ namespace MadScienceLab
             //Do nothing - don't call base
         }
 
-
-
-        //public static string SplitLineToMultiline(string input)
-        //{
-        //    StringBuilder result = new StringBuilder();
-        //    StringBuilder line = new StringBuilder();
-
-        //    Stack<string> stack = new Stack<string>(input.Split(' '));
-
-        //    while (stack.Count > 0)
-        //    {
-        //        var word = stack.Pop();
-        //        if (word.Length > rowLength)
-        //        {
-        //            string head = word.Substring(0, rowLength);
-        //            string tail = word.Substring(rowLength);
-
-        //            word = head;
-        //            stack.Push(tail);
-        //        }
-
-        //        if (line.Length + word.Length > rowLength)
-        //        {
-        //            result.AppendLine(line.ToString());
-        //            line.Clear();
-        //        }
-
-        //        line.Append(word + "\n");
-        //    }
-
-        //    result.Append(line);
-        //    return result.ToString();
-        //}
-
         /// <summary>
         /// Jacob: This breaks the text into separate lines, depending on the specified max width for the text string
         /// And that is returned.
         /// </summary>
         /// <returns></returns>
-        public virtual List<String> GetLines(string origText, RenderContext renderContext, int width)
+        public virtual List<String> GetLines(string text, RenderContext renderContext, int width)
         {
             float TextWidth = 0;
             SpriteFont font = renderContext.MessageFont;
-            string trimmableText = origText;
+            string trimmableText = text;
             List<String> lines = new List<String>();
+
             while (trimmableText.Length >= 1)
             {
                 int c = 1;
                 while (c < trimmableText.Length &&
                     font.MeasureString(trimmableText.Substring(0, ((trimmableText.IndexOf(" ", c + 1) != -1) ? trimmableText.IndexOf(" ", c + 1) : trimmableText.Length))).X < width) //so ends at trimmableText.Length or when the width when adding another char would exceed the width
                 {
-                    c = ((trimmableText.IndexOf(" ", c + 1) != -1) ? trimmableText.IndexOf(" ", c + 1) : trimmableText.Length); //Set to the next space or the end of the string if that doesn't exist.
+                    //Set to the next space or the end of the string if that doesn't exist.
+                    c = ((trimmableText.IndexOf(" ", c + 1) != -1) ? trimmableText.IndexOf(" ", c + 1) : trimmableText.Length);
                 }
                 String linestring = trimmableText.Substring(0, c).TrimStart(' ');
                 lines.Add(linestring);
                 trimmableText = trimmableText.Substring(c);
+
+                //Code to get max TextWidth (used for centering the text)
                 if (LineWidth(renderContext, linestring) > TextWidth)
                     TextWidth = font.MeasureString(linestring).X;
             }
@@ -243,6 +200,12 @@ namespace MadScienceLab
             return lines;
         }
 
+        /// <summary>
+        /// Gets the width of the string, given the font and its respective size (in screen).
+        /// </summary>
+        /// <param name="screen"></param>
+        /// <param name="line"></param>
+        /// <returns></returns>
         protected virtual float LineWidth(RenderContext renderContext, String line)
         {
             SpriteFont font = renderContext.MessageFont;
@@ -285,9 +248,6 @@ namespace MadScienceLab
                 for (int line = 0; line < typedMessageLines.Count && line < 4; line++)
                 {
                     renderContext.SpriteBatch.DrawString(renderContext.MessageFont, typedMessageLines[line], textPosition + new Vector2(0, 40*line), Color.White);
-                    //renderContext.SpriteBatch.DrawString(renderContext.MessageFont, typedMessage[1], textPosition + new Vector2(0, 40), Color.White);
-                    //renderContext.SpriteBatch.DrawString(renderContext.MessageFont, typedMessage[2], textPosition + new Vector2(0, 80), Color.White);
-                    //renderContext.SpriteBatch.DrawString(renderContext.MessageFont, typedMessage[3], textPosition + new Vector2(0, 120), Color.White);
                 }
                 renderContext.SpriteBatch.End();
             }
