@@ -17,7 +17,7 @@ namespace MadScienceLab
 
         public List<BackgroundBlock>[] Background { get; set; }
         private VertexBuffer[] backgroundBuffer;
-        private const int NUMBER_OF_BACKGROUND_TEXTURES = 14;
+        private const int NUMBER_OF_BACKGROUND_TEXTURES = 18;
 
         //For drawing foreground using instance render
         public List<BasicBlock> ForegroundBlocks { get { return foregroundBlockInstances; } set { foregroundBlockInstances = value; } }
@@ -232,7 +232,19 @@ namespace MadScienceLab
                             renderContext.BasicEffect.Texture = renderContext.Textures["atom1"];
                             break;
                         case 13:
-                            renderContext.BasicEffect.Texture = renderContext.Textures["atom1"];
+                            renderContext.BasicEffect.Texture = renderContext.Textures["atom2"];
+                            break;
+                        case 14:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["chalkboard1"];
+                            break;
+                        case 15:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["chalkboard2"];
+                            break;
+                        case 16:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["chalkboard3"];
+                            break;
+                        case 17:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["chalkboard4"];
                             break;
                 }
                     foreach (EffectPass pass in renderContext.BasicEffect.CurrentTechnique.Passes)

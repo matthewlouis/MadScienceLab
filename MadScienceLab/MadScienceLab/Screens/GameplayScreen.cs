@@ -197,7 +197,6 @@ namespace MadScienceLab
                 _textures.Add("Vent", content.Load<Texture2D>("Textures/Vent"));
                 _textures.Add("Tile_Black", content.Load<Texture2D>("Textures/Tile_Black"));
                 _textures.Add("Tile_Gray", content.Load<Texture2D>("Textures/Tile_Gray"));
-
                 _textures.Add("Emcsquare", content.Load<Texture2D>("Textures/Emcsquare"));
                 _textures.Add("atom1", content.Load<Texture2D>("Textures/atom1"));
                 _textures.Add("atom2", content.Load<Texture2D>("Textures/atom2"));
@@ -206,6 +205,11 @@ namespace MadScienceLab
                 _textures.Add("Tile_Gray_Stain2", content.Load<Texture2D>("Textures/Tile_Gray_Stain2"));
                 _textures.Add("Tile_Gray_Stain3", content.Load<Texture2D>("Textures/Tile_Gray_Stain3"));
                 _textures.Add("Einstien", content.Load<Texture2D>("Textures/Einstien"));
+                _textures.Add("chalkboard1", content.Load<Texture2D>("Textures/chalkboard1"));
+                _textures.Add("chalkboard2", content.Load<Texture2D>("Textures/chalkboard2"));
+                _textures.Add("chalkboard3", content.Load<Texture2D>("Textures/chalkboard3"));
+                _textures.Add("chalkboard4", content.Load<Texture2D>("Textures/chalkboard4"));
+
 
 
                 _textures.Add("Tile_White", content.Load<Texture2D>("Textures/Tile_White"));

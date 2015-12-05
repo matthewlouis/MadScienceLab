@@ -17,8 +17,8 @@ X L   X  XX    X   X    X X
 X X   XT  XRRRRXS  X      X
 XL     X  X   MXXX       L 
 XX   R       X      RS   XX
-X   X      M         X    X
-X E XM       P   t  MX E  X
+X   XM     M         X    X
+X E X        P   t  MX E  X
 XXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Want it so that:
