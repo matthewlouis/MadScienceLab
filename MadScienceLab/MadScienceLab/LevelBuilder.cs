@@ -78,19 +78,28 @@ namespace MadScienceLab
             String newline = "\r\n"; //in case a newline were to be used
             levelheight = leveltxt.Length - leveltxt.Replace ("\n", "" ).Length;
             levelwidth = 0; //reset this each time a new level is made
-            
+
+            CellObject lastXBlock = new CellObject(0,0);
+            Enemy e = new Enemy();
+            bool lookForNextXBlock = false;
+
             //there will be walls and floor enclosing the aforementioned level
             //iterate through level string, find the level height and width from iterating through the txt file
             int row = startFloor+levelheight-1, col = startWall; 
             foreach (char c in leveltxt)
             {
+                
                 switch (c) //convert char to level object at the coordinate iterated through
                 {
                     case ' ':
                         col++;
                         break;
                     case 'E':
-                        level.AddChild(new Enemy(col++, row, renderContext)); 
+                        e = new Enemy(col++, row, renderContext);
+                        level.AddChild(e);
+                        e.wallsToCheck.Add(lastXBlock);
+                        lookForNextXBlock = true;
+                        level.enemyList.Add(e);
                         break;
                     case 'M':
                         level.AddChild(new MovingPlatform(col++, row));
@@ -103,7 +112,13 @@ namespace MadScienceLab
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'B':
-                        level.AddChild ( new PickableBox ( col++, row ) ); //replace BasicBlock with the actual object once implemented
+                        PickableBox p = new PickableBox(col++, row);
+                        level.AddChild ( p ); //replace BasicBlock with the actual object once implemented
+                        if (level.enemyList.Count > 1)
+                            foreach (Enemy enemy in level.enemyList)
+                            {
+                                enemy.wallsToCheck.Add(p);
+                            }
                         break;
                     case 'T': //Toggleable lever switch
                         level.AddChild ( new ToggleSwitch ( col++, row, true ) );
@@ -121,6 +136,12 @@ namespace MadScienceLab
                         BasicBlock blockToAdd = new BasicBlock(col++, row);
                         level.AddChild(blockToAdd);
                         level.ForegroundBlocks.Add(blockToAdd);
+                        lastXBlock = (CellObject)blockToAdd;
+                        if (lookForNextXBlock)
+                        {
+                            lookForNextXBlock = false;
+                            e.wallsToCheck.Add(lastXBlock);
+                        }
                         break;
                     case 'L':
                        level.AddChild(new LaserTurret(col++, row, true, GameConstants.POINTDIR.pointLeft)); 

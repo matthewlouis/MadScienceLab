@@ -42,6 +42,7 @@ namespace MadScienceLab
         Texture2D texture;
         public Rectangle enemyRangeL;
         public Rectangle enemyRangeR;
+        public List<CellObject> wallsToCheck;
 
         public Enemy(int column, int row, RenderContext rendeerContext)
             : base(column, row)
@@ -55,7 +56,14 @@ namespace MadScienceLab
             isCollidable = false;
             
             Scale(48f, 48f, 48f);
-            Position = new Vector3(Position.X, Position.Y - 18, Position.Z);            
+            Position = new Vector3(Position.X, Position.Y - 18, Position.Z);        
+    
+            wallsToCheck = new List<CellObject>();
+        }
+
+        public Enemy()
+        {
+            // TODO: Complete member initialization
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -165,18 +173,12 @@ namespace MadScienceLab
         private void CheckEnemyBoxCollision(RenderContext renderContext)
         {
             //Check collision of enemy against all objects in level except toggle switch and 
-            foreach (CellObject levelObject in renderContext.Level.collidableObjects)
+            foreach (CellObject levelObject in wallsToCheck)
             {
                 if ((levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox)
                     && levelObject.GetType() != typeof(ToggleSwitch)) ||
                     (Hitbox.Intersects(levelObject.Hitbox) && levelObject.GetType() == typeof(Character)))
                 {
-                    if (levelObject.GetType() == typeof(Character))
-                    {
-                        renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
-                        movestate = !movestate;
-                        return;
-                    }
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
                             * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
                     float hx = ((Hitbox.Height) + levelObject.Hitbox.Height)
@@ -198,6 +200,12 @@ namespace MadScienceLab
 
                 }
             }
+            if (renderContext.Player.Hitbox.Intersects(Hitbox))
+            {
+                renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
+                movestate = !movestate;
+                return;
+            }
         }
 
         /// <summary>
@@ -209,77 +217,29 @@ namespace MadScienceLab
             //check the if the player in the attack range of left side. and enemy face left.
             if (enemyRangeL.Intersects(renderContext.Player.Hitbox) && direction == GameConstants.POINTDIR.pointLeft) 
             {
-                // make a list put all box that in the attack range.
-                List<Rectangle> inrg = new List<Rectangle>();
-
-                foreach (CellObject cellObject in renderContext.Level.collidableObjects)
-                {
-                    // if the object is not switch button, enemy itself and player.
-                    if (cellObject.GetType() != typeof(ToggleSwitch) && cellObject.GetType() != typeof(Enemy) && cellObject.GetType() != typeof(Character))
+                foreach (CellObject rectangle in wallsToCheck)
+                {   //check the obejcet in the box , if it between the enemy and player. than enemy will speed up
+                    if (rectangle.Hitbox.X > renderContext.Player.Position.X && rectangle.Hitbox.Intersects(enemyRangeL))
                     {
-                        if (enemyRangeL.Intersects(cellObject.Hitbox))
-                        {
-                            //add the obeject that in the attack  range in to the list.
-                            inrg.Add(cellObject.Hitbox);
-                        }
+                        return false;
                     }
                 }
-
-
-                if (inrg.Count != 0 )
-                {
-                    foreach (Rectangle rectangle in inrg)
-                    {   //check the obejcet in the box , if it between the enemy and player. than enemy will speed up
-                        if (rectangle.X > renderContext.Player.Position.X)
-                        {
-                            return false;
-                        }
-
-                    }
-                    return true;
-                }
-
-
                 return true;
             }
-
             //same with the left side, now just check right side.
-            if (enemyRangeR.Intersects(renderContext.Player.Hitbox) && direction == GameConstants.POINTDIR.pointRight) 
+            else if (enemyRangeR.Intersects(renderContext.Player.Hitbox) && direction == GameConstants.POINTDIR.pointRight) 
             {
-                List<Rectangle> inrg = new List<Rectangle>();
-
-                foreach (CellObject cellObject in renderContext.Level.collidableObjects)
+                foreach (CellObject rectangle in wallsToCheck)
                 {
-                    if (cellObject.GetType() != typeof(ToggleSwitch) && cellObject.GetType() != typeof(Enemy) && cellObject.GetType() != typeof(Character))
+                    if (rectangle.Hitbox.X < renderContext.Player.Position.X && rectangle.Hitbox.Intersects(enemyRangeR))
                     {
-                        if (enemyRangeR.Intersects(cellObject.Hitbox))
-                        {
-                            inrg.Add(cellObject.Hitbox);
-                        }
+                        return false;
                     }
                 }
-
-
-                if (inrg.Count != 0)
-                {
-                    foreach (Rectangle rectangle in inrg)
-                    {
-                        if (rectangle.X < renderContext.Player.Position.X)
-                        {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-
-
                 return true;
             }
-
             return false;
-            
         }
-
 
     }
 }

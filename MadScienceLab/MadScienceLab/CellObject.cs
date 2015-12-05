@@ -62,6 +62,8 @@ namespace MadScienceLab
             TransAccel = new Vector3(0, 0, 0);
         }
 
+        public CellObject() { }
+
         //Will need to override update to move hitbox as well.
         public override void Update(RenderContext renderContext)
         {

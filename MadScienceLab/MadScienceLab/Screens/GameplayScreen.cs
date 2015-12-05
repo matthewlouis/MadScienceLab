@@ -638,12 +638,12 @@ namespace MadScienceLab
                             Color.White);
                         spriteBatch.End();
                         spriteBatch.Begin();
-                        spriteBatch.Draw(_textures["Gear2"],
-                            new Vector2(position.X + 20, position.Y),
-                            null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
-                            origin,
-                            (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
-                            SpriteEffects.None, 0);
+                        //spriteBatch.Draw(_textures["Gear2"],
+                        //    new Vector2(position.X + 20, position.Y),
+                        //    null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
+                        //    origin,
+                        //    (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
+                        //    SpriteEffects.None, 0);
                     }
                 }
                 else // Stop rotating the gears that represent missing health
@@ -658,12 +658,12 @@ namespace MadScienceLab
                         Color.White);
                     spriteBatch.End();
                     spriteBatch.Begin();
-                    spriteBatch.Draw(_textures["Gear2"],
-                        new Vector2(position.X + 20, position.Y),
-                        null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
-                        origin,
-                        (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
-                        SpriteEffects.None, 0);
+                    //spriteBatch.Draw(_textures["Gear2"],
+                    //    new Vector2(position.X + 20, position.Y),
+                    //    null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
+                    //    origin,
+                    //    (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
+                    //    SpriteEffects.None, 0);
                 }
             }
 

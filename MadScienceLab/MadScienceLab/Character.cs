@@ -185,8 +185,9 @@ namespace MadScienceLab
             {
                 CheckBoxCarryCollision(renderContext);
             }
+            else
             CheckPlayerBoxCollision(renderContext);   
-            CheckPickableBoxVincity(renderContext);
+            //CheckPickableBoxVincity(renderContext);
 
             HandleInput();
             if (TransVelocity.Y >= 0)
@@ -591,12 +592,12 @@ namespace MadScienceLab
         /// Checks all pickable boxes to see if player is close to the boxes - Steven
         /// </summary>
         /// <param name="renderContext"></param>
-        private void CheckPickableBoxVincity(RenderContext renderContext)
+        private void CheckPickableBoxVincity(RenderContext renderContext, CellObject worldObject)
         {
             if (!jumping || !falling)
             {
-                foreach (CellObject worldObject in renderContext.Level.gameObjects[typeof(PickableBox)])
-                {
+                //foreach (CellObject worldObject in renderContext.Level.gameObjects[typeof(PickableBox)])
+                //{
                     // Expanding the hitbox to see if player is near the box and flatten it to prevent from being picked up from 1 row above or below
                     Rectangle expandedHitbox = worldObject.Hitbox;
                     expandedHitbox.X -= 15;
@@ -614,7 +615,7 @@ namespace MadScienceLab
                             AdjacentObj = worldObject;
                         }
                     }
-                }
+                //}
             }
         }
 
@@ -645,6 +646,7 @@ namespace MadScienceLab
                     canPlace = false;
                 }
 
+                #region Checks box collsion
                 if (levelObject.isCollidable && StoredBox.Hitbox.Intersects(levelObject.Hitbox))
                 {
                     /**Determining what side was hit**/
@@ -692,6 +694,105 @@ namespace MadScienceLab
                         InteractiveObj = levelObject;
                     }
                 }
+                #endregion
+
+                #region Checks player collision
+                if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
+                {
+                    //renderContext.Boxhit = levelObject.Hitbox;
+                    //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
+                    if (levelObject.GetType() == typeof(ExitBlock))
+                    {
+                        renderContext.Level.LevelOver = true;
+                    }
+
+                    //Trigger MessageEvents if passed over
+                    if (levelObject.GetType() == typeof(MessageEvent))
+                    {
+                        MessageEvent msgEvent = (MessageEvent)levelObject as MessageEvent;
+                        renderContext.CurrMsgEvent = msgEvent;
+                        if (msgEvent.typingState == GameConstants.TYPING_STATE.NotTyped)
+                            msgEvent.StartTyping ();
+                    }
+
+                    /**Determining what side was hit**/
+                    float wy = (levelObject.Hitbox.Width + Hitbox.Width)
+                             * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
+                    float hx = (Hitbox.Height + levelObject.Hitbox.Height)
+                             * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
+
+                    if (levelObject.GetType() == typeof(Button)) //if it is a button
+                    {
+                        Button button = (Button)levelObject as Button;
+                        button.IsPressed = true;
+                    }
+
+                    if (!levelObject.IsPassable) //if object is not passable, handle physics issues:
+                    {
+                        if (wy > hx)
+                        {
+                            if (wy > -hx)
+                            {
+                                //boxHitState = "Box Top";//top
+                                if (Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width > 2) 
+                                {
+                                    Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
+                                    TransVelocity = Vector3.Zero;
+                                }
+                            }
+                            else
+                            {
+                                //boxHitState = "Box Left";// left
+                                Position = new Vector3(levelObject.Hitbox.Right + 1 - HitboxWidthOffset, (int)Position.Y, 0);
+                                AdjacentObj = levelObject;
+                            }
+                        }
+                        else
+                        {
+                            if (wy > -hx)
+                            {
+                                //boxHitState = "Box Right";// right
+                                Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth - HitboxWidthOffset, (int)Position.Y, 0);
+                                AdjacentObj = levelObject;
+                            }
+                            else
+                            {
+                                if (levelObject.GetType() == typeof(MovingPlatform))
+                                {
+                                    ((MovingPlatform)levelObject).PlayerOnPlatform = true;
+                                }
+
+                                if (levelObject.Hitbox.Y > -25)
+                                {
+                                    Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom, 0);
+
+                                    if (!(Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width == 2 && levelObject.GetType() == typeof(PickableBox)))
+                                    {
+                                        TransVelocity = Vector3.Zero;
+                                    }
+                                }
+                                else
+                                {
+                                    Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+
+                                    if (!(Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width == 2 && levelObject.GetType() == typeof(PickableBox)))
+                                    {
+                                        TransVelocity = Vector3.Zero;
+                                    }
+                                }
+                               // if (!collisionJumping)
+                                    //TransVelocity = Vector3.Zero;
+                                jumping = false;
+                                falling = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        InteractiveObj = levelObject;
+                    }
+                }
+                #endregion
             }
         }
 
@@ -708,6 +809,12 @@ namespace MadScienceLab
                 {
                     ((MovingPlatform)levelObject).PlayerOnPlatform = false;
                 }
+
+                if (levelObject.GetType() == typeof(PickableBox))
+                {
+                    CheckPickableBoxVincity(renderContext, levelObject);
+                }
+
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
                     //renderContext.Boxhit = levelObject.Hitbox;

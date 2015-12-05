@@ -86,7 +86,10 @@ namespace MadScienceLab
                 renderContext.Level.AddChild(newBox);
                 animmodel[0].PlayAnimationOnceNoLoop ( "Drop", 0f );
                 renderContext.Level.collidableObjects.Add(newBox); // Adding to the list of collidable objects that Quadtree will be using - Steven
-
+                foreach (Enemy enemy in renderContext.Level.enemyList)
+                {
+                    enemy.wallsToCheck.Add(newBox);
+                }
                 if(NumberOfBoxes == 0 && ReservedBoxes == 0)         //if now empty
                     animmodel[0] = animmodel[1]; //replace model with empty one
                 ReservedBoxes--;
