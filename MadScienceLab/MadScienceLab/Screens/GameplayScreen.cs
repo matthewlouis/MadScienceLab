@@ -403,7 +403,7 @@ namespace MadScienceLab
                 fpsCount.Update(gameTime);    
                 //timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
-            else //still cover messages to update
+            else //still cover messages to upda
             {
                 foreach (CellObject levelobject in basicLevel.Children)
                 {

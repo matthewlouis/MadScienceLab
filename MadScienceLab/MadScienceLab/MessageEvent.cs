@@ -71,10 +71,10 @@ namespace MadScienceLab
 
 
             //Maybe extraneous
-            //typedMessageLines.Add("line 1");
-            //typedMessageLines.Add("line 1");
-            //typedMessageLines.Add("line 1");
-            //typedMessageLines.Add("line 1");
+            typedMessageLines.Add("line 1");
+            typedMessageLines.Add("line 1");
+            typedMessageLines.Add("line 1");
+            typedMessageLines.Add("line 1");
             //typedMessage[0] = "line 1";
             //typedMessage[1] = "line 2";
             //typedMessage[2] = "line 3";
@@ -130,10 +130,7 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         public override void Update(RenderContext renderContext)
         {
-            if (this.typingState == GameConstants.TYPING_STATE.Disabled || this.typingState == GameConstants.TYPING_STATE.NotTyped) //Completely cease update upon being disabled.
-            {
-                return;
-            }
+            
             if (this.typingState == GameConstants.TYPING_STATE.DoneTyping
                 && ((Keyboard.GetState().IsKeyDown(Keys.F) && lastKey.IsKeyUp(Keys.F)) || 
                     (GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B) && lastButton.IsButtonUp(Buttons.B))))
