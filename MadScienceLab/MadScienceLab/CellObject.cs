@@ -47,6 +47,11 @@ namespace MadScienceLab
             //Can place code to translate the hit box here.
         }
 
+        public CellObject()
+        {
+
+        }
+        
         //Overloaded Constructor for placing background objects.
         public CellObject(int column, int row, int zPosition):this(column, row)
         {
