@@ -7,7 +7,7 @@ X      XX  X             XXXX
 XM    XXXX              tXXXX
 XXXXXXXXXXX     S  S  XXXXXXX
 Xt           XXXXXXXXX   XXXX
-XXX4M        D  D  D     DD@X
+XXX4M        D  D mD     DD@X
 Xt        XXXXXXXXXXXX   XXXX
 XX        XXX           XXXXX
 XX P  t   XXXT         XXXXXX
@@ -27,3 +27,4 @@ Above is level, below are links.
 11:23|L
 8:2|U,3
 11:27|5:27
+5:19|Ahhh! My old pal Einstien. How I miss him.

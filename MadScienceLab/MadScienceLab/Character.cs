@@ -164,19 +164,6 @@ namespace MadScienceLab
 
             charModel.Update(renderContext);
             UpdatePhysics();
-<<<<<<< HEAD
-
-            // Quad tree collision
-            //foreach (CellObject worldObject in returnObjs)
-            //{
-            //    if (interactState == InteractState.CompletedPickup) // Start checking for collisions for the box being carried - Steven
-            //    {
-            //        CheckBoxCarryCollision(renderContext, worldObject);
-            //    }
-            //    CheckPlayerBoxCollision(renderContext, worldObject);
-            //}
-=======
->>>>>>> refs/remotes/origin/master
 
             if (interactState == InteractState.CompletedPickup) // Start checking for collisions for the box being carried - Steven
             {

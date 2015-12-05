@@ -431,16 +431,6 @@ namespace MadScienceLab
                 }
             }
 
-            // if message paused game then on button B or F key resume game
-            /*if (messageActive)
-            {
-                if (Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B))
-                {
-                    messageActive = false;
-                    messageObj.Update(_renderContext);
-                }
-            }*/
-
             if (Keyboard.GetState().IsKeyDown(Keys.H) && lastkey.IsKeyUp(Keys.H))
             {
                 hudtype++;

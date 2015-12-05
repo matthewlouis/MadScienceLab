@@ -16,9 +16,9 @@ X     X  TXRRRRXRXXX    L X
 X L   X  XX    X   X    X X
 X X   XT  XRRRRXS  X      X
 XL     X  X   MXXX       L 
-XX   R       X      RS   XX
-X   XM     M         X    X
-X E X        P   t  MX E  X
+XX           X       S   XX
+X   X  X   M      X  X    X
+X E XM D     P  t D MX E  X
 XXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Want it so that:
@@ -46,10 +46,8 @@ Note: It's possible for players to clip through moving platforms, and it might e
 12:3|R,1500
 5:26|L,1500|laser turret facing left with new offset
 13:26|L,1500|laser turret facing left with new offset
-2:18|4:6|Moving platform blocker trapdoor
-16:2|4:21|PlatformBlocker#2
-4:6|B|make trapdoor face down
-4:21|B
+2:17|2:8|Moving platform blocker trapdoor
+16:2|2:19|PlatformBlocker#2
 13:17|16:15|boxdropper switch
 2:6|U,13|start of moving platforms - along the sides
 2:21|U,9
