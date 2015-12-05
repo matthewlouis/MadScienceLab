@@ -52,7 +52,7 @@ namespace MadScienceLab
             : base("Level Select")
         {
             // get save data
-            saveGameData = new GameData();
+            //saveGameData = new GameData();
             
 
             // Create our menu entries.

@@ -36,14 +36,14 @@ namespace MadScienceLab
         {
 
             // get save game
-            saveGameData = new GameData();
+            //saveGameData = new GameData();
 
             // Create our menu entries.
            
-            if (saveGameData.saveGameData.currentlevel < GameConstants.LEVELS &&
-                saveGameData.saveGameData.currentlevel > 1)
-                playGameMenuEntry = new MenuEntry("Continue Game");
-            else if(saveGameData.saveGameData.currentlevel == 1)
+            //if (saveGameData.saveGameData.currentlevel < GameConstants.LEVELS &&
+            //    saveGameData.saveGameData.currentlevel > 1)
+            //    playGameMenuEntry = new MenuEntry("Continue Game");
+            //else if(saveGameData.saveGameData.currentlevel == 1)
                 playGameMenuEntry = new MenuEntry("Play Game");
             MenuEntry LevelSelectMenuEntry = new MenuEntry("Level Select");
             MenuEntry optionsMenuEntry = new MenuEntry("Options");

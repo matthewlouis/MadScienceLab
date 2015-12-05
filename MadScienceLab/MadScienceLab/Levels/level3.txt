@@ -7,14 +7,14 @@ XX    XX            XXXXXX                   S X
 X    X     m       XXXXX          LXXXXXXXXXXXXX
 X   XX    XXXXrrrrXXXXXX   XXXXRRXXXX    X     X
 XX   X    X          XXX  XXX            X@    X
-Xt XXX    X X     E  Xt  XXXX            XXXXX X
+Xt XXX    X X        Xt  XXXX            XXXXX X
 XXXXXX    X XXXXXXXXXXXXXXX              X     X
 X         X XX     tXXXXX                X     X
 X   XXXXXMX XX    XXXXXXX                X     X
 X  X        XX     X                     X     X
-XEEEEEEEE   XXX    Xt    EEEEEE          X     X
-X             X  M XXXXXX EEEEEEEEEE     D     X
-XMP      ES  BXX   DEEEEEEEEEEEEEEEEB    X    MX
+X           XXX    Xt                    X     X
+X    E        X  M XXXXXX                D     X
+XMP       S  BXX   D                B    X    MX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.

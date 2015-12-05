@@ -108,7 +108,7 @@ namespace MadScienceLab
             AddInitialScreens();
 
             // load save game data
-            saveGameData = new GameData();
+           // saveGameData = new GameData();
         }
 
         
