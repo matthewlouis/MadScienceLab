@@ -403,16 +403,26 @@ namespace MadScienceLab
                 fpsCount.Update(gameTime);    
                 //timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
+            else //still cover messages to upda
+            {
+                foreach (CellObject levelobject in basicLevel.Children)
+                {
+                    if (levelobject.GetType() == typeof(MessageEvent))
+                    {
+                        levelobject.Update(_renderContext);
+                    }
+                }
+            }
 
             // if message paused game then on button B or F key resume game
-            if (messageActive)
+            /*if (messageActive)
             {
                 if (Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B))
                 {
                     messageActive = false;
                     messageObj.Update(_renderContext);
                 }
-            }
+            }*/
 
             if (Keyboard.GetState().IsKeyDown(Keys.H) && lastkey.IsKeyUp(Keys.H))
             {
@@ -816,18 +826,18 @@ namespace MadScienceLab
                         spriteBatch.Draw(dummyTexture, box, Color.Green * 0.8f);
                     else if (obj.GetType() == typeof(Enemy))
                     {
-                        //Enemy enemy = (Enemy)obj;
-                        //Rectangle e = enemy.enemyRangeR;
-                        //e.Width = (e.Width * MinimapSize.X / LevelXSize); //convert width from level to minimap size
-                        //e.Height = (e.Height * MinimapSize.Y / LevelYSize); //convert height from level to minimap size
-                        //XPositionOfLevel = (e.X - xLeftWall); //position of level when normalized as a proportion of its size
-                        //YPositionOfLevel = (e.Y - (yFloor - CELL)); //returns distance of bottom (in game coords) of box from bottom of level
-                        //e.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - MinimapSideOffset; //convert from position in level to position in minimap
-                        //e.Y = MinimapSize.Y - YPositionOfLevel * MinimapSize.Y / LevelYSize - e.Height + MinimapSideOffset;
+                        Enemy enemy = (Enemy)obj;
+                        Rectangle e = enemy.enemyRangeL;
+                        e.Width = (e.Width * MinimapSize.X / LevelXSize); //convert width from level to minimap size
+                        e.Height = (e.Height * MinimapSize.Y / LevelYSize); //convert height from level to minimap size
+                        XPositionOfLevel = (e.X - xLeftWall); //position of level when normalized as a proportion of its size
+                        YPositionOfLevel = (e.Y - (yFloor - CELL)); //returns distance of bottom (in game coords) of box from bottom of level
+                        e.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - MinimapSideOffset; //convert from position in level to position in minimap
+                        e.Y = MinimapSize.Y - YPositionOfLevel * MinimapSize.Y / LevelYSize - e.Height + MinimapSideOffset;
 
 
                         spriteBatch.Draw(dummyTexture, box, Color.Red * 0.8f);
-                       // spriteBatch.Draw(dummyTexture, e, Color.Yellow * 0.8f);
+                        spriteBatch.Draw(dummyTexture, e, Color.Yellow * 0.8f);
                     }
                         
                     else if (obj.GetType() == typeof(LaserTurret))
@@ -863,7 +873,7 @@ namespace MadScienceLab
             }
              
             // Draws a B button when near switches
-            if (player.InteractiveObj != null && player.InteractiveObj.GetType() == typeof(ToggleSwitch))
+            else if (player.InteractiveObj != null && player.InteractiveObj.GetType() == typeof(ToggleSwitch))
             {
                 Vector3 screenPos = _renderContext.GraphicsDevice.Viewport.Project(
                     player.InteractiveObj.WorldPosition,

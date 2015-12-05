@@ -73,8 +73,8 @@ namespace MadScienceLab
             base.LoadContent(contentManager);
 
             //attack range
-            enemyRangeL = new Rectangle((int)(Position.X - (HitboxWidth * 5)), (int)(Position.Y + (HitboxHeight * 1.5)), (HitboxWidth * 5), (HitboxHeight));
-            enemyRangeR = new Rectangle((int)(Position.X + (HitboxWidth)), (int)(Position.Y + (HitboxHeight * 1.5)), (HitboxWidth * 5), (HitboxHeight));     
+            enemyRangeL = new Rectangle((int)(Position.X - (HitboxWidth * 10)), (int)(Position.Y + (HitboxHeight * 1.5)), (HitboxWidth * 10), (HitboxHeight));
+            enemyRangeR = new Rectangle((int)(Position.X + (HitboxWidth)), (int)(Position.Y + (HitboxHeight * 1.5)), (HitboxWidth * 10), (HitboxHeight));     
 
             // generate random direction and initialize
             Random rand = new Random();
@@ -106,7 +106,7 @@ namespace MadScienceLab
 
             }
 
-            enemyRangeL.X = (int)(Position.X - (HitboxWidth * 5));
+            enemyRangeL.X = (int)(Position.X - (HitboxWidth * 10));
             enemyRangeL.Y = (int)(Position.Y + HitboxHeight * 1.5);
 
             enemyRangeR.X = (int)(Position.X + HitboxWidth);
@@ -206,16 +206,20 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         private bool CheckPlayerNearby(RenderContext renderContext)
         {
+            //check the if the player in the attack range of left side. and enemy face left.
             if (enemyRangeL.Intersects(renderContext.Player.Hitbox) && direction == GameConstants.POINTDIR.pointLeft) 
             {
+                // make a list put all box that in the attack range.
                 List<Rectangle> inrg = new List<Rectangle>();
 
                 foreach (CellObject cellObject in renderContext.Level.collidableObjects)
                 {
+                    // if the object is not switch button, enemy itself and player.
                     if (cellObject.GetType() != typeof(ToggleSwitch) && cellObject.GetType() != typeof(Enemy) && cellObject.GetType() != typeof(Character))
                     {
                         if (enemyRangeL.Intersects(cellObject.Hitbox))
                         {
+                            //add the obeject that in the attack  range in to the list.
                             inrg.Add(cellObject.Hitbox);
                         }
                     }
@@ -225,18 +229,21 @@ namespace MadScienceLab
                 if (inrg.Count != 0 )
                 {
                     foreach (Rectangle rectangle in inrg)
-                    {
+                    {   //check the obejcet in the box , if it between the enemy and player. than enemy will speed up
                         if (rectangle.X > renderContext.Player.Position.X)
                         {
                             return false;
                         }
+
                     }
                     return true;
                 }
 
 
-                return false;
+                return true;
             }
+
+            //same with the left side, now just check right side.
             if (enemyRangeR.Intersects(renderContext.Player.Hitbox) && direction == GameConstants.POINTDIR.pointRight) 
             {
                 List<Rectangle> inrg = new List<Rectangle>();
@@ -266,7 +273,7 @@ namespace MadScienceLab
                 }
 
 
-                return false;
+                return true;
             }
 
             return false;
