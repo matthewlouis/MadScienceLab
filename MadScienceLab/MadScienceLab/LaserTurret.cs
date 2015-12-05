@@ -88,7 +88,6 @@ namespace MadScienceLab
                 LaserProjectile projectile = new LaserProjectile(CellNumber.X, CellNumber.Y, _direction);
 
                 //Position the projectile according to the position of the turret
-                //Actually, not necessary.
                 float projectileX;
                 if (direction == GameConstants.POINTDIR.pointLeft)
                     projectileX = this.Hitbox.Left;

@@ -179,6 +179,7 @@ namespace MadScienceLab
         /// <param name="e"></param>
         void continueSelected(object sender, PlayerIndexEventArgs e)
         {
+            //Continue the rest of the story screens.
             List<String> RestOfStoryline = new List<String> ( Storyline );
             List<String> RestOfTitles = new List<String> ( StoryTitles );
             RestOfStoryline.RemoveAt ( 0 );
