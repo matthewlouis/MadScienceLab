@@ -253,7 +253,9 @@ namespace MadScienceLab
             }
 
 
-            if (currentKeyboardState.IsKeyDown(Keys.M) && oldKeyboardState.IsKeyUp(Keys.M))
+            if (currentKeyboardState.IsKeyDown(Keys.M) && oldKeyboardState.IsKeyUp(Keys.M) ||
+                (currentGamePadState.Buttons.Y == ButtonState.Pressed &&
+                oldGamePadState.Buttons.Y != ButtonState.Pressed))
             {
                 MapEnabled = !MapEnabled;
             }
@@ -375,7 +377,7 @@ namespace MadScienceLab
                  */
             }
             if (jumping || falling) //disallow putting down when jumping
-                putdownable = false;
+               putdownable = false;
             if (putdownable)
                 interactState = InteractState.StartingDropBox; //state for while the player begins putting down the box
             //}
@@ -383,7 +385,7 @@ namespace MadScienceLab
 
         public void PickBox()
         {
-            if (interactState == InteractState.HandsEmpty/*state 0*/ && !jumping && !falling)
+            if (interactState == InteractState.HandsEmpty/*state 0*/ /*&& !jumping && !falling*/)
             {
                 if (AdjacentObj != null && AdjacentObj.GetType() == typeof(PickableBox) && (((PickableBox)(AdjacentObj)).IsLiftable))
                 {
@@ -403,8 +405,8 @@ namespace MadScienceLab
                     //     *      height increases upwards.
                     //     */
                     //}
-                    if (jumping || falling) //disallow putting down when jumping
-                        pickuppable = false;
+                    //if (jumping || falling) //disallow putting down when jumping
+                        //pickuppable = false;
                     if (pickuppable)
                     {
                         interactState = InteractState.JustPickedUpBox; //state 1
