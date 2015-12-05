@@ -73,8 +73,8 @@ namespace MadScienceLab
             base.LoadContent(contentManager);
 
             //attack range
-            enemyRangeL = new Rectangle((int)(Position.X - (HitboxWidth * 5)), (int)(Position.Y + (HitboxHeight * 1.5)), (HitboxWidth * 5), (HitboxHeight));
-            enemyRangeR = new Rectangle((int)(Position.X + (HitboxWidth)), (int)(Position.Y + (HitboxHeight * 1.5)), (HitboxWidth * 5), (HitboxHeight));     
+            enemyRangeL = new Rectangle((int)(Position.X - (HitboxWidth * 10)), (int)(Position.Y + (HitboxHeight * 1.5)), (HitboxWidth * 10), (HitboxHeight));
+            enemyRangeR = new Rectangle((int)(Position.X + (HitboxWidth)), (int)(Position.Y + (HitboxHeight * 1.5)), (HitboxWidth * 10), (HitboxHeight));     
 
             // generate random direction and initialize
             Random rand = new Random();
@@ -106,7 +106,7 @@ namespace MadScienceLab
 
             }
 
-            enemyRangeL.X = (int)(Position.X - (HitboxWidth * 5));
+            enemyRangeL.X = (int)(Position.X - (HitboxWidth * 10));
             enemyRangeL.Y = (int)(Position.Y + HitboxHeight * 1.5);
 
             enemyRangeR.X = (int)(Position.X + HitboxWidth);
