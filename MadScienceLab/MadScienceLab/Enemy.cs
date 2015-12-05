@@ -88,13 +88,13 @@ namespace MadScienceLab
         {
 
             List<CellObject> returnObjs = new List<CellObject>();
-            renderContext.Quadtree.clear();
-            foreach (CellObject obj in renderContext.Level.collidableObjects)
-            {
-                renderContext.Quadtree.insert(obj);
-            }
+            //renderContext.Quadtree.clear();
+            //foreach (CellObject obj in renderContext.Level.collidableObjects)
+            //{
+            //    renderContext.Quadtree.insert(obj);
+            //}
 
-            renderContext.Quadtree.retrieve(returnObjs, Hitbox);
+            //renderContext.Quadtree.retrieve(returnObjs, Hitbox);
 
             if (direction == GameConstants.POINTDIR.pointLeft)
             {
