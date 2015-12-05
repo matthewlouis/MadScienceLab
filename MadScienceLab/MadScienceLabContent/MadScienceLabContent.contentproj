@@ -496,16 +496,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Textures\Controller\tex1_30x24_822f8b2b31de83f9_d8ba6976f8808940_8.png">
-      <Name>tex1_30x24_822f8b2b31de83f9_d8ba6976f8808940_8</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="Textures\Controller\tex1_34x40_73ee2ba4f26723ef_a9e575e5a5704172_9.png">
-      <Name>tex1_34x40_73ee2ba4f26723ef_a9e575e5a5704172_9</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Textures\Controller\UpDown_DPad.png">
       <Name>UpDown_DPad</Name>
       <Importer>TextureImporter</Importer>

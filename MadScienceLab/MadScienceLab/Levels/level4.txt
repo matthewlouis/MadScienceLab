@@ -10,7 +10,7 @@ Xt           XXXXXXXXX   XXXX
 XXX4M        D  D  D     DD@X
 Xt        XXXXXXXXXXXX   XXXX
 XX        XXX           XXXXX
-XX P  t   XXXT   E     XXXXXX
+XX P  t   XXXT         XXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.

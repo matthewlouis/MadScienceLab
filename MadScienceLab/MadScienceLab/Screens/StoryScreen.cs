@@ -60,8 +60,8 @@ namespace MadScienceLab
             Storyline = storytext;
             StoryTitles = titletext;
 
-            StorylineEntry = new VarSizeMenuEntry ( Storyline[0] , 0.6f);
-            BlankEntry = new VarSizeMenuEntry ( " ", 0.5f);
+            StorylineEntry = new VarSizeMenuEntry ( Storyline[0] , 0.7f);
+            BlankEntry = new VarSizeMenuEntry ( " ", 0.7f);
             MenuEntry ContinueEntry = new VarSizeMenuEntry ( "Continue", 1f);
 
             // Hook up menu event handlers.

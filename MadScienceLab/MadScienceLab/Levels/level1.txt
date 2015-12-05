@@ -1,10 +1,10 @@
 ﻿                            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
                             XXXXXX                        X
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                       @X
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX2XX       m           XXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX2XX                   XXXXXX
 X        X                X          XXXXX M        MXXXXXX
 X        X       X        X          XXXXXB          XXXXXX
-X P  m T D m B   X  m S B D mt      BXXXXXBB         XXXXXX
+X P    T D   B   X    S B D  t      BXXXXXBB         XXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Above is level, below are links.
@@ -14,8 +14,3 @@ Above is level, below are links.
 2:30|5:32
 4:44|R,4
 4:53|L,4
-2:6|I've got to get out of here! I should try pulling that lever to open this door!
-2:12|Hmmm... I could use the box to get over that wall.
-2:21|This pressure switch opens the door. I need to put something on it to keep the door open.
-2:29|It looks like this switch activates the quantum box dropper. Each time I press the switch a box drops out until the dropper is out of boxes and turns red. Maybe I can stack them to climb up.
-5:42|Oooh! Moving platforms, my favorite!!!
