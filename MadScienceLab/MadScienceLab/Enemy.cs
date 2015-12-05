@@ -30,6 +30,10 @@ namespace MadScienceLab
             }
         }
 
+        float damageDelayTime;
+        TimeSpan DAMAGE_DELAY = TimeSpan.FromMilliseconds(1000f);
+        TimeSpan timeHit = TimeSpan.Zero;
+
         int attackRange = 4;
         float movementAmount = 1f;
         float speed = 1f;
@@ -164,6 +168,7 @@ namespace MadScienceLab
 
         private void CheckEnemyBoxCollision(RenderContext renderContext)
         {
+
             //Check collision of enemy against all objects in level except toggle switch and 
             foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
@@ -175,6 +180,27 @@ namespace MadScienceLab
                     {
                         renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
                         movestate = !movestate;
+
+                        damageDelayTime = (float)(renderContext.GameTime.TotalGameTime - timeHit).TotalMilliseconds / (float)DAMAGE_DELAY.TotalMilliseconds;
+
+
+                            if (direction == GameConstants.POINTDIR.pointLeft)
+                            {
+                                if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
+                                {
+                                direction = GameConstants.POINTDIR.pointRight;
+                                }
+                                return;
+                            }
+                            else if (direction == GameConstants.POINTDIR.pointRight)
+                            {
+                                if ((renderContext.GameTime.TotalGameTime - timeHit) >= DAMAGE_DELAY)
+                                {
+                                    direction = GameConstants.POINTDIR.pointLeft;
+                                }
+                                return;
+                            }
+                        
                         return;
                     }
                     float wy = (levelObject.Hitbox.Width + Hitbox.Width)
