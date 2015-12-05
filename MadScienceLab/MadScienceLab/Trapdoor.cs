@@ -16,8 +16,12 @@ namespace MadScienceLab
             Rotate(0, 0, 90f);
             UpdateBoundingBox(GameplayScreen._models["BasicBlock"], /*Matrix.CreateRotationZ(90f) * */Matrix.CreateTranslation(base.Position), false, false);
             HitboxHeightOffset = verticalOffset; //Lower the hitbox
+            //HitboxHeight = 12;
+            //HitboxWidth = 48;
             //HitboxHeight /= 2;
         }
+
+        
         public void faceBottom ()
         {
             if (!facingBottom)
