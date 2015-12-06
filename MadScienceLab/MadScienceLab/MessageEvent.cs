@@ -12,7 +12,8 @@ namespace MadScienceLab
 {
     public class MessageEvent : CellObject
     {
-       
+        private SoundEffectPlayer soundFX;
+
         int elapsedTypingTime = 0;
         int totalTimeToType = 0;
         int WPM = 600; //default WPM for text
@@ -91,6 +92,8 @@ namespace MadScienceLab
         public void FinishTyping()
         {
             typingState = GameConstants.TYPING_STATE.DoneTyping;
+            soundFX.SoundInstances["Type"].Stop();
+            soundFX.SoundInstances["Type"].Dispose();
         }
 
         /// <summary>
@@ -137,6 +140,12 @@ namespace MadScienceLab
             //When typing, have the typed text update, as if it were a typewriter.
             if (typingState == GameConstants.TYPING_STATE.Typing)
             {
+                if (soundFX == null)
+                {
+                    soundFX = new SoundEffectPlayer(renderContext.Player);
+                    soundFX.LoadSound("Type", renderContext.Sounds["Type"]);
+                    soundFX.PlayAndLoopSound("Type");
+                }
                 //Update the typed text until it's done.
                 if (elapsedTypingTime < totalTimeToType) 
                 {

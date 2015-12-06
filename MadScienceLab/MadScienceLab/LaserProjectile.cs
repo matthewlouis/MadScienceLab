@@ -16,6 +16,7 @@ namespace MadScienceLab
         public LaserProjectile(int column, int row, GameConstants.POINTDIR direction):base(column, row)
         {
             base.Model = GameplayScreen._models["projectile"];
+            Scale(1.9f, 3f, 3f);
             //Rotate(0f, 0f, 90f);
             //SetVerticalOffset();
             //SetHorizontalOffset(30);

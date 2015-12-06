@@ -66,6 +66,12 @@ namespace MadScienceLab
             }
         }
 
+        //Changes the pitch of a sound
+        public void AdjustPitch(String name, float pitchAmount)
+        {
+            SoundInstances[name].Pitch = pitchAmount;
+        }
+
         public void Update(RenderContext renderContext)
         {
             listener.Position = renderContext.Player.Position / distanceScale; //always make player the listener
