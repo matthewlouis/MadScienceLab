@@ -628,6 +628,11 @@ namespace MadScienceLab
             Rectangle areaSide = new Rectangle((int)sideXPos, (int)Position.Y + 2, (int)StoredBox.Hitbox.Width - 10, (int)StoredBox.Hitbox.Height);
             foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
+                if (levelObject.GetType() == typeof(MovingPlatform)) //default moving platforms for player to not be on the platform unless it would be found that the player were on it
+                {
+                    ((MovingPlatform)levelObject).PlayerOnPlatform = false;
+                }
+
                 if (levelObject.isCollidable && areaSide.Intersects(levelObject.Hitbox) && levelObject.GetType() != typeof(MessageEvent))
                 {
                     canPlace = false;
@@ -684,7 +689,7 @@ namespace MadScienceLab
                 #endregion
 
                 #region Checks player collision
-                if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
+                else if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
                     //renderContext.Boxhit = levelObject.Hitbox;
                     //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt

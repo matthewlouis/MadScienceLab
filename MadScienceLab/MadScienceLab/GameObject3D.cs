@@ -183,7 +183,7 @@ namespace MadScienceLab
         public virtual void CheckCollision(Level level)
         {
 
-            foreach (CellObject levelObject in level.Children)
+            foreach (CellObject levelObject in level.collidableObjects)
             {
                 if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox) && levelObject != this)
                 {
@@ -233,7 +233,7 @@ namespace MadScienceLab
                             { //hitting something below
                                 //boxHitState = "Box Bottem";//bottem
                                 //Game1.boxPosition = "{"+Position.X+", "+Position.Y+", "+Position.Z+"}";
-                                Position = new Vector3(Position.X, levelObject.Hitbox.Y + this.Hitbox.Height, 0); //clip to the top of the colliding object
+                                Position = new Vector3(Position.X, levelObject.Hitbox.Bottom, 0); //clip to the top of the colliding object
                                 TransVelocity = new Vector3(TransVelocity.X, Math.Max(TransVelocity.Y, -GameConstants.SINGLE_CELL_SIZE * 2), TransVelocity.Z); //cease velocity
                                 /*Note that not all velocity is reset, to avoid an issue with 'box shaking,' due to:
                                  *  when velocity would be reset, there would be at least one frame where
