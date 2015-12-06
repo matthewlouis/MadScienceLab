@@ -175,7 +175,8 @@
       <FileName>MusicPlayer.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MadScienceLab.PickableBox" Collapsed="true">
+  <Class Name="MadScienceLab.
+         " Collapsed="true">
     <Position X="15.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
