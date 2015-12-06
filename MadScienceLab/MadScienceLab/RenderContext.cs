@@ -34,5 +34,6 @@ namespace MadScienceLab
         public Game Game { get; set; }
         public Dictionary<String, Texture2D> Textures { get; set; }
         public Dictionary<String, SoundEffect> Songs { get; set; }
+        public Dictionary<String, SoundEffect> Sounds { get; set; }
     }
 }

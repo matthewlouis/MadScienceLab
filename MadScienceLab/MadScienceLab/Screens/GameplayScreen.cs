@@ -260,6 +260,9 @@ namespace MadScienceLab
                 _sounds.Add("LaserWhirLoop", content.Load<SoundEffect>("Sounds/LaserWhirLoop"));
                 _sounds.Add("PlayerHit", content.Load<SoundEffect>("Sounds/PlayerHit"));
                 _sounds.Add("ToggleSwitch", content.Load<SoundEffect>("Sounds/ToggleSwitch"));
+                _sounds.Add("Type", content.Load<SoundEffect>("Sounds/Type"));
+
+                _renderContext.Sounds = _sounds;
 
                 // Loading shaders
                 healthState = content.Load<Effect>("Shaders/HealthPixel");
