@@ -689,7 +689,7 @@ namespace MadScienceLab
                 #endregion
 
                 #region Checks player collision
-                else if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
+                if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
                 {
                     //renderContext.Boxhit = levelObject.Hitbox;
                     //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
