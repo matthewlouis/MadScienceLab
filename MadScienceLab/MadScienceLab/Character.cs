@@ -253,7 +253,9 @@ namespace MadScienceLab
             }
 
 
-            if (currentKeyboardState.IsKeyDown(Keys.M) && oldKeyboardState.IsKeyUp(Keys.M))
+            if (currentKeyboardState.IsKeyDown(Keys.M) && oldKeyboardState.IsKeyUp(Keys.M) ||
+                (currentGamePadState.Buttons.Y == ButtonState.Pressed &&
+                oldGamePadState.Buttons.Y != ButtonState.Pressed))
             {
                 MapEnabled = !MapEnabled;
             }
@@ -612,20 +614,19 @@ namespace MadScienceLab
         /// <param name="renderContext"></param>
         private void CheckBoxCarryCollision(RenderContext renderContext)
         {
+            float sideXPos;
+            float leeway = 10; //leeway allowed to place the box away from you (ie. amount allowed to place a box into another object)
+            if (facingDirection == Character.FACING_RIGHT)
+            {
+                sideXPos = Position.X + Hitbox.Width;
+            }
+            else //facing left
+            {
+                sideXPos = Position.X - StoredBox.Hitbox.Width + leeway * 3;
+            }
+            Rectangle areaSide = new Rectangle((int)sideXPos, (int)Position.Y + 2, (int)StoredBox.Hitbox.Width - 10, (int)StoredBox.Hitbox.Height);
             foreach (CellObject levelObject in renderContext.Level.collidableObjects)
             {
-                float sideXPos;
-                float leeway = 10; //leeway allowed to place the box away from you (ie. amount allowed to place a box into another object)
-                if (facingDirection == Character.FACING_RIGHT)
-                {
-                    sideXPos = Position.X + Hitbox.Width;
-                }
-                else //facing left
-                {
-                    sideXPos = Position.X - StoredBox.Hitbox.Width + leeway * 3;
-                }
-                Rectangle areaSide = new Rectangle((int)sideXPos, (int)Position.Y + 2, (int)StoredBox.Hitbox.Width - 10, (int)StoredBox.Hitbox.Height);
-
                 if (levelObject.isCollidable && areaSide.Intersects(levelObject.Hitbox) && levelObject.GetType() != typeof(MessageEvent))
                 {
                     canPlace = false;
@@ -894,6 +895,244 @@ namespace MadScienceLab
                     else
                     {
                         InteractiveObj = levelObject;
+                    }
+                }
+            }
+        }
+
+        private void CheckPlayerBoxCollision(RenderContext renderContext, bool isHoldingBox)
+        {
+            Rectangle newHitbox = new Rectangle();
+            Rectangle areaSide = new Rectangle();
+            if (isHoldingBox)
+            {
+                newHitbox = new Rectangle(StoredBox.Hitbox.X, Hitbox.Y, StoredBox.Hitbox.Width, StoredBox.Hitbox.Height + Hitbox.Height);
+                float sideXPos;
+                float leeway = 10; //leeway allowed to place the box away from you (ie. amount allowed to place a box into another object)
+                if (facingDirection == Character.FACING_RIGHT)
+                {
+                    sideXPos = Position.X + Hitbox.Width;
+                }
+                else //facing left
+                {
+                    sideXPos = Position.X - StoredBox.Hitbox.Width + leeway * 3;
+                }
+                areaSide = new Rectangle((int)sideXPos, (int)Position.Y + 2, (int)StoredBox.Hitbox.Width - 10, (int)StoredBox.Hitbox.Height);
+            }
+  
+            foreach (CellObject levelObject in renderContext.Level.collidableObjects)
+            {
+                if (levelObject.GetType() == typeof(MovingPlatform)) //default moving platforms for player to not be on the platform unless it would be found that the player were on it
+                {
+                    ((MovingPlatform)levelObject).PlayerOnPlatform = false;
+                }
+
+                if (isHoldingBox)
+                {
+                    if (levelObject.isCollidable && areaSide.Intersects(levelObject.Hitbox) && levelObject.GetType() != typeof(MessageEvent))
+                    {
+                        canPlace = false;
+                    }
+
+                    if (levelObject.isCollidable && newHitbox.Intersects(levelObject.Hitbox))
+                    {
+                        //renderContext.Boxhit = levelObject.Hitbox;
+                        //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
+                        if (levelObject.GetType() == typeof(ExitBlock))
+                        {
+                            renderContext.Level.LevelOver = true;
+                        }
+
+                        //Trigger MessageEvents if passed over
+                        if (levelObject.GetType() == typeof(MessageEvent))
+                        {
+                            MessageEvent msgEvent = (MessageEvent)levelObject as MessageEvent;
+                            renderContext.CurrMsgEvent = msgEvent;
+                            if (msgEvent.typingState == GameConstants.TYPING_STATE.NotTyped)
+                                msgEvent.StartTyping();
+                        }
+
+                        /**Determining what side was hit**/
+                        float wy = (levelObject.Hitbox.Width + newHitbox.Width)
+                                 * (levelObject.Hitbox.Center.Y - newHitbox.Center.Y);
+                        float hx = (newHitbox.Height + levelObject.Hitbox.Height)
+                                 * (levelObject.Hitbox.Center.X - newHitbox.Center.X);
+
+                        if (levelObject.GetType() == typeof(Button)) //if it is a button
+                        {
+                            Button button = (Button)levelObject as Button;
+                            button.IsPressed = true;
+                        }
+
+                        if (!levelObject.IsPassable) //if object is not passable, handle physics issues:
+                        {
+                            if (wy > hx)
+                            {
+                                if (wy > -hx)
+                                {
+                                    //boxHitState = "Box Top";//top
+                                    if (Rectangle.Intersect(levelObject.Hitbox, newHitbox).Width > 2)
+                                    {
+                                        Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
+                                        TransVelocity = Vector3.Zero;
+                                    }
+                                }
+                                else
+                                {
+                                    //boxHitState = "Box Left";// left
+                                    Position = new Vector3(levelObject.Hitbox.Right + 1, (int)Position.Y, 0);
+                                    AdjacentObj = levelObject;
+                                }
+                            }
+                            else
+                            {
+                                if (wy > -hx)
+                                {
+                                    //boxHitState = "Box Right";// right
+                                    Position = new Vector3(levelObject.Hitbox.Left - newHitbox.Width, (int)Position.Y, 0);
+                                    AdjacentObj = levelObject;
+                                }
+                                else
+                                {
+                                    //If colliding with player, have player move with the platform (ie. alongside the platform's Move() method)
+                                    if (levelObject.GetType() == typeof(MovingPlatform))
+                                    {
+                                        ((MovingPlatform)levelObject).PlayerOnPlatform = true;
+                                    }
+
+                                    if (levelObject.Hitbox.Y > -25)
+                                    {
+                                        Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom, 0);
+
+                                        if (!(Rectangle.Intersect(levelObject.Hitbox, newHitbox).Width == 2 && levelObject.GetType() == typeof(PickableBox)))
+                                        {
+                                            TransVelocity = Vector3.Zero;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+
+                                        if (!(Rectangle.Intersect(levelObject.Hitbox, newHitbox).Width == 2 && levelObject.GetType() == typeof(PickableBox)))
+                                        {
+                                            TransVelocity = Vector3.Zero;
+                                        }
+                                    }
+                                    // if (!collisionJumping)
+                                    //TransVelocity = Vector3.Zero;
+                                    jumping = false;
+                                    falling = false;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            InteractiveObj = levelObject;
+                        }
+                    }
+                }
+                else
+                {
+                    if (levelObject.GetType() == typeof(PickableBox))
+                    {
+                        CheckPickableBoxVincity(renderContext, levelObject);
+                    }
+
+                    if (levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox))
+                    {
+                        //renderContext.Boxhit = levelObject.Hitbox;
+                        //For presentation: If Exit, display end of level text...will need to refactor to Level class later. - Matt
+                        if (levelObject.GetType() == typeof(ExitBlock))
+                        {
+                            renderContext.Level.LevelOver = true;
+                        }
+
+                        //Trigger MessageEvents if passed over
+                        if (levelObject.GetType() == typeof(MessageEvent))
+                        {
+                            MessageEvent msgEvent = (MessageEvent)levelObject as MessageEvent;
+                            renderContext.CurrMsgEvent = msgEvent;
+                            if (msgEvent.typingState == GameConstants.TYPING_STATE.NotTyped)
+                                msgEvent.StartTyping();
+                        }
+
+                        /**Determining what side was hit**/
+                        float wy = (levelObject.Hitbox.Width + Hitbox.Width)
+                                 * (levelObject.Hitbox.Center.Y - Hitbox.Center.Y);
+                        float hx = (Hitbox.Height + levelObject.Hitbox.Height)
+                                 * (levelObject.Hitbox.Center.X - Hitbox.Center.X);
+
+                        if (levelObject.GetType() == typeof(Button)) //if it is a button
+                        {
+                            Button button = (Button)levelObject as Button;
+                            button.IsPressed = true;
+                        }
+
+                        if (!levelObject.IsPassable) //if object is not passable, handle physics issues:
+                        {
+                            if (wy > hx)
+                            {
+                                if (wy > -hx)
+                                {
+                                    //boxHitState = "Box Top";//top
+                                    if (Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width > 2)
+                                    {
+                                        Position = new Vector3((int)Position.X, (int)Position.Y - 1, 0);
+                                        TransVelocity = Vector3.Zero;
+                                    }
+                                }
+                                else
+                                {
+                                    //boxHitState = "Box Left";// left
+                                    Position = new Vector3(levelObject.Hitbox.Right + 1 - HitboxWidthOffset, (int)Position.Y, 0);
+                                    AdjacentObj = levelObject;
+                                }
+                            }
+                            else
+                            {
+                                if (wy > -hx)
+                                {
+                                    //boxHitState = "Box Right";// right
+                                    Position = new Vector3(levelObject.Hitbox.Left - HitboxWidth - HitboxWidthOffset, (int)Position.Y, 0);
+                                    AdjacentObj = levelObject;
+                                }
+                                else
+                                {
+                                    //If colliding with player, have player move with the platform (ie. alongside the platform's Move() method)
+                                    if (levelObject.GetType() == typeof(MovingPlatform))
+                                    {
+                                        ((MovingPlatform)levelObject).PlayerOnPlatform = true;
+                                    }
+
+                                    if (levelObject.Hitbox.Y > -25)
+                                    {
+                                        Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom, 0);
+
+                                        if (!(Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width == 2 && levelObject.GetType() == typeof(PickableBox)))
+                                        {
+                                            TransVelocity = Vector3.Zero;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Position = new Vector3((int)Position.X, (int)levelObject.Hitbox.Bottom - 1, 0);
+
+                                        if (!(Rectangle.Intersect(levelObject.Hitbox, Hitbox).Width == 2 && levelObject.GetType() == typeof(PickableBox)))
+                                        {
+                                            TransVelocity = Vector3.Zero;
+                                        }
+                                    }
+                                    // if (!collisionJumping)
+                                    //TransVelocity = Vector3.Zero;
+                                    jumping = false;
+                                    falling = false;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            InteractiveObj = levelObject;
+                        }
                     }
                 }
             }

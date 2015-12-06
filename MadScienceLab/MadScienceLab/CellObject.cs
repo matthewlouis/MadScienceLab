@@ -80,7 +80,7 @@ namespace MadScienceLab
             if (screenPos2D.X >= -GameConstants.SINGLE_CELL_SIZE*2 && 
                 screenPos2D.X <= renderContext.GraphicsDevice.Viewport.Width + GameConstants.SINGLE_CELL_SIZE*2 &&
                 screenPos2D.Y >= -GameConstants.SINGLE_CELL_SIZE * 2 &&
-                screenPos2D.Y <= renderContext.GraphicsDevice.Viewport.Width * 2)
+                screenPos2D.Y <= renderContext.GraphicsDevice.Viewport.Height)
             {
                 foreach (ModelMesh mesh in Model.Meshes)
                 {

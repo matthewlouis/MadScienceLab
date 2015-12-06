@@ -61,7 +61,7 @@ namespace MadScienceLab
         private Rectangle healthTexturePos = new Rectangle(195, 150, 250, 30);
         private Rectangle playerGear = new Rectangle(50, 50, 150, 150);
         private Rectangle playerHealthGear = new Rectangle(195, 60, 100, 100);
-        private Rectangle playerHealthCountGear = new Rectangle(190, 120, 60, 60);
+        private Rectangle playerHealthCountGear = new Rectangle(190, 80, 60, 60);
         private Rectangle centerHealthGear = new Rectangle(75, 75, 100, 100);
         private List<float> healthGearAnglesList;
         private int hudtype = 1; // Only used for switching between different UI for feedback - Steven
@@ -479,7 +479,7 @@ namespace MadScienceLab
             }
             spriteBatch.End();
 
-            //fpsCount.Draw(gameTime);
+            fpsCount.Draw(gameTime);
 
 
 
@@ -645,12 +645,12 @@ namespace MadScienceLab
                             Color.White);
                         spriteBatch.End();
                         spriteBatch.Begin();
-                        //spriteBatch.Draw(_textures["Gear2"],
-                        //    new Vector2(position.X + 20, position.Y),
-                        //    null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
-                        //    origin,
-                        //    (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
-                        //    SpriteEffects.None, 0);
+                        spriteBatch.Draw(_textures["Gear2"],
+                            new Vector2(position.X + 20, position.Y),
+                            null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
+                            origin,
+                            (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
+                            SpriteEffects.None, 0);
                     }
                 }
                 else // Stop rotating the gears that represent missing health
@@ -665,12 +665,12 @@ namespace MadScienceLab
                         Color.White);
                     spriteBatch.End();
                     spriteBatch.Begin();
-                    //spriteBatch.Draw(_textures["Gear2"],
-                    //    new Vector2(position.X + 20, position.Y),
-                    //    null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
-                    //    origin,
-                    //    (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
-                    //    SpriteEffects.None, 0);
+                    spriteBatch.Draw(_textures["Gear2"],
+                        new Vector2(position.X + 20, position.Y),
+                        null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
+                        origin,
+                        (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
+                        SpriteEffects.None, 0);
                 }
             }
 
@@ -820,7 +820,10 @@ namespace MadScienceLab
                     box.Y += 300;*/
                     //box.Y = GameConstants.Y_RESOLUTION - box.Y; //Jacob: convert game logic coords (+ is up, 0 is floor) to screen coords (+ is down, 0 is top)
                     if (obj.GetType() == typeof(Character))
+                    {
                         spriteBatch.Draw(dummyTexture, box, Color.Blue * 0.8f);
+
+                    }
                     else if (obj.GetType() == typeof(BasicBlock))
                         spriteBatch.Draw(dummyTexture, box, Color.DarkSlateGray * 0.8f);
                     else if (obj.GetType() == typeof(PickableBox))

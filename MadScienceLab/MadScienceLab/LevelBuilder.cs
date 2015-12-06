@@ -85,6 +85,7 @@ namespace MadScienceLab
             levelwidth = 0; //reset this each time a new level is made
             
             CellObject lastXBlock = new CellObject(0,0);
+            CellObject DoorAfterXBlock = new CellObject(0, 0);
             Enemy e = new Enemy();
             bool lookForNextXBlock = false;
 
@@ -119,11 +120,6 @@ namespace MadScienceLab
                     case 'B':
                         PickableBox p = new PickableBox(col++, row);
                         level.AddChild ( p ); //replace BasicBlock with the actual object once implemented
-                        if (level.enemyList.Count > 1)
-                            foreach (Enemy enemy in level.enemyList)
-                            {
-                                enemy.wallsToCheck.Add(p);
-                            }
                         break;
                     case 'T': //Toggleable lever switch
                         level.AddChild ( new ToggleSwitch ( col++, row, true ) );
@@ -193,6 +189,7 @@ namespace MadScienceLab
                     _linkedobjects.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                 }
             }
+
 
             level.collidableObjects = new List<GameObject3D>();
             level.collidableObjects.AddRange(level.Children); // All objects that will be colliding with the player in the same Z axis - Steven
