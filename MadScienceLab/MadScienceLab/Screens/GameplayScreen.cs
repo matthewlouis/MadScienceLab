@@ -260,6 +260,9 @@ namespace MadScienceLab
                 _sounds.Add("LaserWhirLoop", content.Load<SoundEffect>("Sounds/LaserWhirLoop"));
                 _sounds.Add("PlayerHit", content.Load<SoundEffect>("Sounds/PlayerHit"));
                 _sounds.Add("ToggleSwitch", content.Load<SoundEffect>("Sounds/ToggleSwitch"));
+                _sounds.Add("Type", content.Load<SoundEffect>("Sounds/Type"));
+
+                _renderContext.Sounds = _sounds;
 
                 // Loading shaders
                 healthState = content.Load<Effect>("Shaders/HealthPixel");
@@ -383,7 +386,7 @@ namespace MadScienceLab
                 player.Update(_renderContext);
                              
                 //apply gravity to pickable boxes
-                foreach (CellObject levelobject in basicLevel.Children)
+                foreach (CellObject levelobject in basicLevel.collidableObjects)
                 {
                     //check collision - cease gravity if colliding with another box below - then apply physics
                     if (levelobject.GetType() == typeof(PickableBox) && levelobject.isCollidable)
@@ -482,7 +485,7 @@ namespace MadScienceLab
             }
             spriteBatch.End();
 
-            fpsCount.Draw(gameTime);
+            //fpsCount.Draw(gameTime);
 
 
 
@@ -836,18 +839,18 @@ namespace MadScienceLab
                         spriteBatch.Draw(dummyTexture, box, Color.Green * 0.8f);
                     else if (obj.GetType() == typeof(Enemy))
                     {
-                        Enemy enemy = (Enemy)obj;
-                        Rectangle e = enemy.enemyRangeL;
-                        e.Width = (e.Width * MinimapSize.X / LevelXSize); //convert width from level to minimap size
-                        e.Height = (e.Height * MinimapSize.Y / LevelYSize); //convert height from level to minimap size
-                        XPositionOfLevel = (e.X - xLeftWall); //position of level when normalized as a proportion of its size
-                        YPositionOfLevel = (e.Y - (yFloor - CELL)); //returns distance of bottom (in game coords) of box from bottom of level
-                        e.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - MinimapSideOffset; //convert from position in level to position in minimap
-                        e.Y = MinimapSize.Y - YPositionOfLevel * MinimapSize.Y / LevelYSize - e.Height + MinimapSideOffset;
+                        //Enemy enemy = (Enemy)obj;
+                        //Rectangle e = enemy.enemyRangeL;
+                        //e.Width = (e.Width * MinimapSize.X / LevelXSize); //convert width from level to minimap size
+                        //e.Height = (e.Height * MinimapSize.Y / LevelYSize); //convert height from level to minimap size
+                        //XPositionOfLevel = (e.X - xLeftWall); //position of level when normalized as a proportion of its size
+                        //YPositionOfLevel = (e.Y - (yFloor - CELL)); //returns distance of bottom (in game coords) of box from bottom of level
+                        //e.X = GameConstants.X_RESOLUTION - (LevelXSize - XPositionOfLevel) * MinimapSize.X / LevelXSize - MinimapSideOffset; //convert from position in level to position in minimap
+                        //e.Y = MinimapSize.Y - YPositionOfLevel * MinimapSize.Y / LevelYSize - e.Height + MinimapSideOffset;
 
 
                         spriteBatch.Draw(dummyTexture, box, Color.Red * 0.8f);
-                        spriteBatch.Draw(dummyTexture, e, Color.Yellow * 0.8f);
+                        //spriteBatch.Draw(dummyTexture, e, Color.Yellow * 0.8f);
                     }
                         
                     else if (obj.GetType() == typeof(LaserTurret))

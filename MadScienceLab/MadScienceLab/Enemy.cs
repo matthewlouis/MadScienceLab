@@ -82,6 +82,7 @@ namespace MadScienceLab
             SoundEffect sound = contentManager.Load<SoundEffect>("Sounds/DoombaLoop");
             soundEffects.LoadSound("Roomba", contentManager.Load<SoundEffect>("Sounds/DoombaLoop"));
             soundEffects.PlayAndLoopSound("Roomba");
+            soundEffects.SoundInstances["Roomba"].Volume = 1f;
             base.LoadContent(contentManager);
 
             //attack range
@@ -126,13 +127,17 @@ namespace MadScienceLab
                 if (direction == GameConstants.POINTDIR.pointLeft)
                 {
                     MoveLeft((int)(GameConstants.MOVEAMOUNT * 1.5));
+                    soundEffects.AdjustPitch("Roomba", 0.1f); //Make him sound faster
                 }
 
                 else if (direction == GameConstants.POINTDIR.pointRight)
                 {
                     MoveRight((int)(GameConstants.MOVEAMOUNT * 1.5));
+                    soundEffects.AdjustPitch("Roomba", 0.1f);
                 }
             }
+            else
+                soundEffects.AdjustPitch("Roomba", 0f); //vacuum sound and normal pitch
 
             soundEffects.Update(renderContext);
             animmodel.Update(renderContext);
