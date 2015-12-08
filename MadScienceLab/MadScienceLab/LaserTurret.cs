@@ -54,7 +54,7 @@ namespace MadScienceLab
             // collision handling
             base.isCollidable = true;
             UpdateBoundingBox(base.Model, Matrix.CreateTranslation(base.Position), true, true);
-            base.HitboxHeightOffset = 2;
+            base.HitboxHeightOffset = -5;
         }
 
         public override void LoadContent(Microsoft.Xna.Framework.Content.ContentManager contentManager)
@@ -93,7 +93,7 @@ namespace MadScienceLab
                     projectileX = this.Hitbox.Left;
                 else
                     projectileX = this.Hitbox.Right - projectile.Hitbox.Width / 2;
-                projectile.Translate ( projectileX, this.Hitbox.Top, this.zPosition ); //position the projectile to be a position relative to the turret
+                projectile.Translate ( projectileX, this.Hitbox.Top - base.HitboxHeightOffset, this.zPosition ); //position the projectile to be a position relative to the turret
                 
                 renderContext.Level.AddChild(projectile);
             }
