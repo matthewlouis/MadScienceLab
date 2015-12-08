@@ -52,6 +52,7 @@ namespace MadScienceLab
         public static Dictionary<String, Model> _models;
         public static Dictionary<String, Texture2D> _textures;
         public static Dictionary<String, SoundEffect> _sounds;
+        public static Dictionary<string, MessageEvent> messages;
 
         Character player;
 
@@ -59,7 +60,13 @@ namespace MadScienceLab
         SpriteFont font;
         List<GameObject3D> debugHitbox;
         Texture2D dummyTexture;
-
+        private float rotationAngle;
+        Effect healthState;
+        RenderTarget2D ShaderRenderTarget;
+        private float playerBob;
+        private KeyboardState lastkey;
+        private List<float> healthGearAnglesList;
+        private int playerBobDirection = 1;
         //Debugging - FPS - Matt
         private FPSCounter fpsCount;
 
@@ -68,6 +75,8 @@ namespace MadScienceLab
         float pauseAlpha;
 
         InputAction pauseAction;
+
+        public static bool messageActive;
 
         // Level selected string to build level
         int levelNum;
@@ -92,6 +101,12 @@ namespace MadScienceLab
 
         GameData.LevelData levelData;
 
+        // UI elements
+        Rectangle healthPosition = new Rectangle(170, 125, 250, 30);
+        Rectangle gear1Position = new Rectangle(25, 25, 150, 150);
+        Rectangle gear2Position = new Rectangle(170, 35, 100, 100);
+        private int hudtype = 1;
+        private bool damageTaken;
         #endregion
 
         #region Initialization
@@ -129,6 +144,8 @@ namespace MadScienceLab
             random = new Random();
             //init fps counter
             fpsCount = new FPSCounter(_renderContext);
+            healthGearAnglesList = new List<float>();
+            messageActive = false;
         }
 
 
@@ -172,16 +189,12 @@ namespace MadScienceLab
 
                 _textures.Add("MoveableBox", content.Load<Texture2D>("WoodPlanks_Color"));
                 _textures.Add("BlockDropper", content.Load<Texture2D>("Textures/dropper"));
-                _textures.Add("BareMetal_Gray", content.Load<Texture2D>("Textures/BareMetal_Gray"));
-                _textures.Add("BrushedRoundMetal_Gray", content.Load<Texture2D>("Textures/BrushedRoundMetal_Gray"));
-                _textures.Add("DirtyMetal", content.Load<Texture2D>("Textures/DirtyMetal"));
-                _textures.Add("Fiberglass_White", content.Load<Texture2D>("Textures/Fiberglass_White"));
-                _textures.Add("MetalFloor_Gray", content.Load<Texture2D>("Textures/MetalFloor_Gray"));
-                _textures.Add("Tile_Beige", content.Load<Texture2D>("Textures/Tile_Beige"));
-                _textures.Add("Tile_Blue", content.Load<Texture2D>("Textures/Tile_Blue"));
-                _textures.Add("Tile_DarkGray", content.Load<Texture2D>("Textures/Tile_DarkGray"));
+                _textures.Add("Pipes2", content.Load<Texture2D>("Textures/Pipes2"));
+                _textures.Add("Pipes1", content.Load<Texture2D>("Textures/Pipes1"));
+                _textures.Add("Vent", content.Load<Texture2D>("Textures/Vent"));
+                _textures.Add("Tile_Black", content.Load<Texture2D>("Textures/Tile_Black"));
                 _textures.Add("Tile_Gray", content.Load<Texture2D>("Textures/Tile_Gray"));
-                _textures.Add("WindowBlocks", content.Load<Texture2D>("Textures/WindowBlocks"));
+                _textures.Add("Tile_White", content.Load<Texture2D>("Textures/Tile_White"));
                 _textures.Add("Tile_Fun", content.Load<Texture2D>("Textures/Tile_Fun"));
                 _textures.Add("Exit", content.Load<Texture2D>("Textures/EXIT"));
                 _textures.Add("Complete", content.Load<Texture2D>("Textures/Complete"));
@@ -206,11 +219,17 @@ namespace MadScienceLab
                 _textures.Add("Right_Stick", content.Load<Texture2D>("Textures/Controller/Right_Stick"));
                 _textures.Add("Right_Trigger", content.Load<Texture2D>("Textures/Controller/Right_Trigger"));
                 _textures.Add("LeftRight_Trigger", content.Load<Texture2D>("Textures/Controller/LeftRight_Trigger"));
-                _textures.Add("Gear", content.Load<Texture2D>("Textures/GearTest"));
-                _textures.Add("LaserRed", content.Load<Texture2D>("Textures/LaserRed"));
-                _textures.Add("LaserOrange", content.Load<Texture2D>("Textures/LaserOrange"));
-                _textures.Add("LaserGreen", content.Load<Texture2D>("Textures/LaserGreen"));
-
+                _textures.Add("Gear", content.Load<Texture2D>("Textures/UI/GearTest"));
+                _textures.Add("LaserRed", content.Load<Texture2D>("Textures/UI/LaserRed"));
+                _textures.Add("LaserOrange", content.Load<Texture2D>("Textures/UI/LaserOrange"));
+                _textures.Add("LaserGreen", content.Load<Texture2D>("Textures/UI/LaserGreen"));
+                _textures.Add("LightGreen", content.Load<Texture2D>("Textures/UI/LightBulbGreen"));
+                _textures.Add("LightYellow", content.Load<Texture2D>("Textures/UI/LightBulbYellow"));
+                _textures.Add("LightRed", content.Load<Texture2D>("Textures/UI/LightBulbRed"));
+                _textures.Add("Gear2", content.Load<Texture2D>("Textures/UI/GearTestV2"));
+                _textures.Add("GearHealthBar", content.Load<Texture2D>("Textures/UI/HealthBar"));
+                _textures.Add("MessageBackground", content.Load<Texture2D>("Textures/message_background"));
+                _textures.Add("PlayerPortrait", content.Load<Texture2D>("Textures/UI/PlayerPortrait"));
                 _renderContext.Textures = _textures;
 
                 //Loads sound references
@@ -225,8 +244,11 @@ namespace MadScienceLab
                 _sounds.Add("PlayerHit", content.Load<SoundEffect>("Sounds/PlayerHit"));
                 _sounds.Add("ToggleSwitch", content.Load<SoundEffect>("Sounds/ToggleSwitch"));
 
+                // Loading shaders
+                healthState = content.Load<Effect>("Shaders/HealthPixel");
+                ShaderRenderTarget = new RenderTarget2D(_renderContext.GraphicsDevice, _renderContext.GraphicsDevice.PresentationParameters.BackBufferWidth, _renderContext.GraphicsDevice.PresentationParameters.BackBufferHeight);
                 //loads the basic level
-                basicLevel = LevelBuilder.MakeBasicLevel(levelData.currentlevelNum);
+                basicLevel = LevelBuilder.MakeBasicLevel(levelData.currentlevelNum, _renderContext);
                 basicLevel.setBackgroundBuffer(_renderContext); //Matt: need to do this now to draw background properly
 
                 CurrentLevel = basicLevel; //we can handle this through render context eventually.
@@ -240,6 +262,7 @@ namespace MadScienceLab
                 font = content.Load<SpriteFont>("Verdana");
                 _renderContext.Level = basicLevel;
                 _renderContext.SpriteFont = font;
+                _renderContext.MessageFont = content.Load<SpriteFont>("MessageFont");
                 basicLevel.PopulateTypeList(_renderContext);
 
                 _renderContext.Level.collidableObjects.Add(player); // Adding player to list of collidable objects - Steven
@@ -314,8 +337,9 @@ namespace MadScienceLab
                 pauseAlpha = Math.Min(pauseAlpha + 1f / 32, 1);
             else
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
-            if (IsActive)
+            if (IsActive && !messageActive)
             {
+                // Setting the vertical offset for bobbing images
                 if (bob > 10)
                     num = -1;
                 else if (bob < -10)
@@ -323,6 +347,16 @@ namespace MadScienceLab
 
                 bob += (int)(0.1f * gameTime.ElapsedGameTime.Milliseconds) * num;
 
+                if (playerBob > 0.6f)
+                    playerBobDirection = -1;
+                else if (playerBob < -0.6f)
+                    playerBobDirection = 1;
+
+                playerBob += (float)gameTime.ElapsedGameTime.TotalSeconds / 5 * playerBobDirection;
+                playerBob = playerBob % (MathHelper.Pi * 2);
+
+                rotationAngle += (float)gameTime.ElapsedGameTime.TotalSeconds * 1;
+                rotationAngle = rotationAngle % (MathHelper.Pi * 2);
                 _renderContext.Quadtree.clear();
 
                 foreach (CellObject obj in basicLevel.Children)
@@ -348,7 +382,7 @@ namespace MadScienceLab
                              
                 player.AdjacentObj = null; //reset to null after checking PickBox, and before the adjacentObj is updated
                 player.InteractiveObj = null;
-
+                player.canPlace = true;
                 _renderContext.GameTime = gameTime;
                 _camera.Update(_renderContext);
                 basicLevel.Update(_renderContext);
@@ -374,6 +408,22 @@ namespace MadScienceLab
                 fpsCount.Update(gameTime);    
                 //timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
+
+            // if message paused game then on button B or F key resume game
+            if (messageActive)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.F) || GamePad.GetState(PlayerIndex.One).IsButtonDown(Buttons.B))
+                {
+                    messageActive = false;
+                }
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.H) && lastkey.IsKeyUp(Keys.H))
+            {
+                hudtype++;
+            }
+
+            lastkey = Keyboard.GetState();
         }
 
 
@@ -394,12 +444,31 @@ namespace MadScienceLab
             basicLevel.Draw(_renderContext);
             
             spriteBatch.Begin();
-            DrawPlayerHealth(_renderContext);
-            DrawInteractiveUI(_renderContext);
-            DrawDebugMap(_renderContext);
+            if (_textures.Count > 0) // Check for empty textures due to retrying level - Steven
+            {
+                switch (hudtype % 3)
+                {
+                    case 0:
+                        DrawPlayerHealth(_renderContext);
+                        break;
+                    case 1:
+                        DrawPlayerHealthV2(_renderContext);
+                        break;
+                    case 2:
+                        DrawPlayerHealthV3(_renderContext);
+                        break;
+                    default:
+                        DrawPlayerHealthV3(_renderContext);
+                        break;
+                }
+                DrawInteractiveUI(_renderContext);
+                DrawDebugMap(_renderContext);
+            }
             spriteBatch.End();
 
             fpsCount.Draw(gameTime);
+
+
 
             // Spritebatch changes graphicsdevice values; sets the oringinal state
             ScreenManager.GraphicsDevice.BlendState = BlendState.AlphaBlend;
@@ -415,27 +484,229 @@ namespace MadScienceLab
             }
         }
 
+        /// <summary>
+        /// Basic placeholder UI for player health
+        /// </summary>
+        /// <param name="_renderContext"></param>
         public void DrawPlayerHealth(RenderContext _renderContext)
         {
-            spriteBatch.DrawString(font, "Health: " + player.GetHealth().ToString(), new Vector2(50, 50), Color.Black);
-            spriteBatch.Draw(_textures["Gear"], new Rectangle(50, 50, 150, 150), Color.White);
-            spriteBatch.Draw(_textures["Gear"], new Rectangle(195, 60, 100, 100), Color.White);
+
+            Rectangle healthTexturePos = new Rectangle(195, 150, 250, 30);
+            Rectangle playerGear = new Rectangle(50, 50, 150, 150);
+            Rectangle playerHealthGear = new Rectangle(195, 60, 100, 100);
+            Texture2D healthTexture;
+            string currentState;
+            
             if (player.GetHealth() == GameConstants.HEALTH)
             {
-                spriteBatch.Draw(_textures["LaserGreen"], new Rectangle(195, 150, 250, 30), Color.White);
-            } 
+                healthTexture = _textures["LaserGreen"];
+                currentState = ":)";
+            }
             else if (player.GetHealth() < GameConstants.HEALTH && player.GetHealth() > 1)
             {
-                spriteBatch.Draw(_textures["LaserOrange"], new Rectangle(195, 150, 250, 30), Color.White);
+                healthTexture = _textures["LaserOrange"];
+                currentState = ":|";
             }
-                else
+            else
             {
-                spriteBatch.Draw(_textures["LaserRed"], new Rectangle(195, 150, 250, 30), Color.White);
+                healthTexture = _textures["LaserRed"];
+                currentState = ":(";
+
             }
+
+            Vector2 stateTextSize = font.MeasureString(currentState);
+            Vector2 currentStatePos = new Vector2(playerGear.Center.X, playerGear.Center.Y);
+
+            string currentHealth = player.GetHealth().ToString() + "/" + GameConstants.HEALTH;
+            Vector2 textSize = font.MeasureString(currentHealth);
+            Vector2 currentHealthPos = new Vector2(playerHealthGear.Center.X - textSize.X / 2, playerHealthGear.Center.Y - textSize.Y / 2);
+
+            Vector2 origin = new Vector2(_textures["Gear"].Bounds.Width / 2, _textures["Gear"].Bounds.Height / 2);
+
+            spriteBatch.DrawString(font, currentHealth, currentHealthPos, Color.Black);
+            spriteBatch.DrawString(font, currentState, currentStatePos, Color.Black, MathHelper.PiOver2, new Vector2(stateTextSize.X / 2, stateTextSize.Y / 2), 1f, SpriteEffects.None, 1);
+            spriteBatch.Draw(
+                _textures["Gear"], 
+                new Vector2(playerGear.X + 75, playerGear.Y + 75), 
+                null, Color.White, rotationAngle, 
+                origin, 
+                (float)playerGear.Width / _textures["Gear"].Width, 
+                SpriteEffects.None, 0);
+            spriteBatch.Draw(
+                _textures["Gear"], 
+                new Vector2(playerHealthGear.X + playerHealthGear.Width / 2, playerHealthGear.Y + playerHealthGear.Height / 2), 
+                null, Color.White, -rotationAngle, 
+                origin, 
+                (float)playerHealthGear.Width / _textures["Gear"].Width, 
+                SpriteEffects.None, 0);
+            spriteBatch.Draw(healthTexture, healthTexturePos, Color.White);
+        }
+
+        public void DrawPlayerHealthV2(RenderContext _renderContext)
+        {
+            Rectangle healthTexturePos = new Rectangle(195, 150, 250, 30);
+            Rectangle playerGear = new Rectangle(50, 50, 150, 150);
+            Rectangle playerHealthGear = new Rectangle(195, 60, 100, 100);
+            Rectangle playerHealthCountGear = new Rectangle(190, 120, 60, 60);
+            Rectangle centerHealthGear = new Rectangle(75, 75, 100, 100);
+            Texture2D healthTexture;
+
+            if (player.GetHealth() == GameConstants.HEALTH)
+            {
+                healthTexture = _textures["LightGreen"];
+            }
+            else if (player.GetHealth() < GameConstants.HEALTH && player.GetHealth() > 1)
+            {
+                healthTexture = _textures["LightYellow"];
+            }
+            else
+            {
+                healthTexture = _textures["LightRed"];
+            }
+
+            Vector2 origin = new Vector2(_textures["Gear2"].Bounds.Width / 2, _textures["Gear2"].Bounds.Height / 2);
+
+            // The background the health gears rests on
+            spriteBatch.Draw(_textures["GearHealthBar"], 
+                new Rectangle(playerHealthCountGear.X , 
+                    playerHealthCountGear.Center.Y - 15, 
+                    playerHealthCountGear.Width * GameConstants.HEALTH + 5, 30), 
+                    Color.White);
+            float empAngle = 0f;
+            // Draw the amount of gears based on max health count
+            for (int i = 0; i < GameConstants.HEALTH; i++)
+            {
+                float angle = rotationAngle;
+                Vector2 position = new Vector2(playerHealthCountGear.X + playerHealthCountGear.Width / 2 + i * (playerHealthCountGear.Width - 3), playerHealthCountGear.Y + playerHealthCountGear.Height / 2);
+               
+                if (i % 2 == 0)
+                    angle = -(angle+2f);
+
+                int offset = 20;
+
+                if (i < player.GetHealth())
+                {
+                    spriteBatch.Draw(healthTexture, 
+                        new Rectangle((int)position.X - offset, (int)position.Y - offset, playerHealthCountGear.Width - offset, playerHealthCountGear.Width - offset), 
+                        Color.White);
+
+                    spriteBatch.Draw(_textures["Gear2"],
+                        position,
+                        null, Color.White, angle,
+                        origin,
+                        (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
+                        SpriteEffects.None, 0);
+                }
+                else if (i == player.GetHealth())
+                {
+                    if (player.IsInvuln())
+                    {
+                        spriteBatch.Draw(_textures["Gear2"],
+                            new Vector2(position.X + 20 * player.damageDelayTime, position.Y),
+                            null, Color.White, angle,
+                            origin,
+                            (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
+                            SpriteEffects.None, 0);
+                        damageTaken = true;
+                        empAngle = angle;
+                    }
+                    else
+                    {
+                        if (damageTaken)
+                        {
+                            healthGearAnglesList.Add(angle);
+                            damageTaken = false;
+                        }
+
+                        spriteBatch.Draw(_textures["Gear2"],
+                            new Vector2(position.X + 20, position.Y),
+                            null, Color.White, healthGearAnglesList[GameConstants.HEALTH - player.GetHealth() - 1],
+                            origin,
+                            (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
+                            SpriteEffects.None, 0);
+                    }
+                }
+                else
+                {
+                    // Temporary fix - Steven
+                    if (damageTaken)
+                    {
+                        healthGearAnglesList.Add(angle);
+                        damageTaken = false;
+                    }
+
+                    spriteBatch.Draw(_textures["Gear2"],
+                        new Vector2(position.X + 20, position.Y),
+                        null, Color.White, healthGearAnglesList[GameConstants.HEALTH - i - 1],
+                        origin,
+                        (float)playerHealthCountGear.Width / _textures["Gear2"].Width,
+                        SpriteEffects.None, 0);
+                }
+
+            }
+
+            // Player Portrait
+            spriteBatch.Draw(_textures["LightGreen"], centerHealthGear, new Color(0.7f, 0, 0.7f));
+            spriteBatch.Draw(_textures["PlayerPortrait"], centerHealthGear, Color.White);
+            spriteBatch.Draw(_textures["Gear2"],
+                             new Vector2(playerGear.X + 75, playerGear.Y + 75),
+                             null, Color.White, rotationAngle,
+                             origin,
+                             (float)playerGear.Width / _textures["Gear2"].Width,
+                             SpriteEffects.None, 0);
+        }
+
+        public void DrawPlayerHealthV3(RenderContext _renderContext)
+        {
+            Rectangle healthTexturePos = new Rectangle(195, 150, 250, 30);
+            Rectangle playerGear = new Rectangle(50, 50, 150, 150);
+            Rectangle playerHealthGear = new Rectangle(195, 60, 100, 100);
+            Rectangle playerHealthCountGear = new Rectangle(190, 120, 60, 60);
+            Rectangle centerHealthGear = new Rectangle(75, 75, 100, 100);
+            Texture2D healthTexture;
+
+            if (player.GetHealth() == GameConstants.HEALTH)
+            {
+                healthTexture = _textures["LightGreen"];
+            }
+            else if (player.GetHealth() < GameConstants.HEALTH && player.GetHealth() > 1)
+            {
+                healthTexture = _textures["LightYellow"];
+            }
+            else
+            {
+                healthTexture = _textures["LightRed"];
+            }
+
+            spriteBatch.End();
+            healthState.Parameters["healthState"].SetValue((float)player.GetHealth() / (float)GameConstants.HEALTH);
+            spriteBatch.Begin(0, BlendState.AlphaBlend, null, null, null, healthState);
+            spriteBatch.Draw(healthTexture, centerHealthGear, Color.White);
+            spriteBatch.End();
+
+            Matrix matrix = Matrix.CreateTranslation(0, -centerHealthGear.Center.Y + playerBob* 10, 0) *
+                            Matrix.CreateRotationX(playerBob) *
+                            Matrix.CreateTranslation(0, centerHealthGear.Center.Y - playerBob * 10, 0) *
+                            Matrix.CreateScale(1, 1, 0);
+
+            spriteBatch.Begin(0, BlendState.AlphaBlend, null, null, null, null, matrix);
+            spriteBatch.Draw(_textures["PlayerPortrait"], new Rectangle(centerHealthGear.X, centerHealthGear.Y, centerHealthGear.Width, centerHealthGear.Height), Color.White);
+            spriteBatch.End();
+            
+            spriteBatch.Begin();
+            Vector2 origin = new Vector2(_textures["Gear2"].Bounds.Width / 2, _textures["Gear2"].Bounds.Height / 2);
+            spriteBatch.Draw(
+                _textures["Gear2"],
+                new Vector2(playerGear.X + 75, playerGear.Y + 75),
+                null, Color.White, rotationAngle,
+                origin,
+                (float)playerGear.Width / _textures["Gear2"].Width,
+                SpriteEffects.None, 0);
         }
 
         /// <summary>
         /// Used for debugging hitboxes - Steven
+        /// Refactored by Jacob into an actual minimap
         /// </summary>
         /// <param name="_renderContext"></param>
         public void DrawDebugMap(RenderContext _renderContext)
@@ -612,9 +883,9 @@ namespace MadScienceLab
                     _renderContext.Camera.View, 
                     player.AdjacentObj.GetWorldMatrix());
                 int offset = 30;
-                spriteBatch.Draw(_textures["B_Button"], new Rectangle((int)screenPos.X - offset, (int)screenPos.Y, 48, 48), Color.White);
+                spriteBatch.Draw(_renderContext.Textures["B_Button"], new Rectangle((int)screenPos.X - offset, (int)screenPos.Y, 48, 48), Color.White);
                 // Added a bob to the arrow
-                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X, (int)screenPos.Y - bob, 48, 48), Color.LawnGreen);
+                spriteBatch.Draw(_renderContext.Textures["Arrow"], new Rectangle((int)screenPos.X, (int)screenPos.Y - bob, 48, 48), Color.LawnGreen);
             }
              
             if (player.InteractiveObj != null && player.InteractiveObj.GetType() == typeof(ToggleSwitch))
@@ -624,8 +895,10 @@ namespace MadScienceLab
                     _renderContext.Camera.Projection,
                     _renderContext.Camera.View,
                     player.InteractiveObj.GetWorldMatrix());
-                
-                spriteBatch.Draw(_textures["B_Button"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - 96, 48, 48), Color.White);
+                ToggleSwitch swich = (ToggleSwitch)player.InteractiveObj;
+
+                if (player.interactState == 0 && swich.RemainingToggles != 0 || swich.InfinitelyToggleable)
+                    spriteBatch.Draw(_renderContext.Textures["B_Button"], new Rectangle((int)screenPos.X - 24, (int)screenPos.Y - 96, 48, 48), Color.White);
             }
 
             // Provides visual feedback for where the box will be placed - Steven
@@ -658,12 +931,16 @@ namespace MadScienceLab
                 
                 // Determines what color the arrow will be, will add logic to check whether the player can place the block - Steven
                 Color color;
-                color = Color.LawnGreen * 0.6f;
                 
-                int offset = 6;
-                Vector2 origin = new Vector2(_textures["Arrow"].Bounds.Width / 2, _textures["Arrow"].Bounds.Height / 2);
+                if (player.canPlace)
+                    color = Color.LawnGreen * 0.6f;
+                else
+                    color = Color.Red * 0.6f;
 
-                spriteBatch.Draw(_textures["Arrow"], new Rectangle((int)screenPos.X - offset, (int)screenPos.Y - bob, GameConstants.SINGLE_CELL_SIZE, GameConstants.SINGLE_CELL_SIZE), null, color,
+                int offset = 6;
+                Vector2 origin = new Vector2(_renderContext.Textures["Arrow"].Bounds.Width / 2, _renderContext.Textures["Arrow"].Bounds.Height / 2);
+
+                spriteBatch.Draw(_renderContext.Textures["Arrow"], new Rectangle((int)screenPos.X - offset, (int)screenPos.Y - bob, GameConstants.SINGLE_CELL_SIZE, GameConstants.SINGLE_CELL_SIZE), null, color,
                     0f, origin, SpriteEffects.FlipVertically, 0f);
             }
         }
@@ -705,5 +982,6 @@ namespace MadScienceLab
             Object.TransVelocity += Object.TransAccel / 60; //amt. accel (where TransAccel is in seconds) per frame ...
             Object.Translate(Object.Position + Object.TransVelocity / 60);
         }
+       
     }
 }

@@ -21,7 +21,7 @@ namespace MadScienceLab
         // player
         public const float MOVEAMOUNT = 2f;
         public const int PLAYER_DAMAGE = 1;
-        public const int HEALTH = 3;
+        public const int HEALTH = 5;
 
         // projectile 
         public enum POINTDIR { pointLeft = -1, pointRight = 1 } //Jacob: Renamed this to POINTDIR, as I decided to use DIRECTION for all 4 directions
@@ -33,7 +33,7 @@ namespace MadScienceLab
         // physics
 
         // message events
-        public enum TYPING_STATE { NotTyped = 1, Typing = 2, DoneTyping = 3 }
+        public enum TYPING_STATE { NotTyped = 1, Typing = 2, DoneTyping = 3, Disabled = 4 }
 
         // sound
         public const int DISTANCE_SCALE = 4;

@@ -15,12 +15,16 @@ namespace MadScienceLab
         public bool LevelOver { get; set; }
         public bool GameOver { get; set; }
 
-        public List<BackgroundBlock> Background { get; set; }
-        private VertexBuffer backgroundBuffer;
+        public List<BackgroundBlock>[] Background { get; set; }
+        private VertexBuffer[] backgroundBuffer;
+        private const int NUMBER_OF_BACKGROUND_TEXTURES = 6;
 
         //For drawing foreground using instance render
-        public List<BasicBlock> ForegroundBlocks { get { return instances; } set { instances = value; } }
-        List<BasicBlock> instances;
+        public List<BasicBlock> ForegroundBlocks { get { return foregroundBlockInstances; } set { foregroundBlockInstances = value; } }
+        List<BasicBlock> foregroundBlockInstances;
+        
+        public Dictionary<string,MessageEvent> Messages { get; set; } 
+
         Matrix[] instanceTransforms;
         Model instancedModel;
         Matrix[] instancedModelBones;
@@ -43,8 +47,19 @@ namespace MadScienceLab
 
         public Level()
         {
-            Background = new List<BackgroundBlock>();
+            //init background texture collection
+            Background = new List<BackgroundBlock>[NUMBER_OF_BACKGROUND_TEXTURES];
+            for (int i = 0; i < Background.Length; i++)
+            {
+                Background[i] = new List<BackgroundBlock>();
+            }
+
+            //init background buffer
+            backgroundBuffer = new VertexBuffer[NUMBER_OF_BACKGROUND_TEXTURES];
+
             ForegroundBlocks = new List<BasicBlock>();
+            Messages = new Dictionary<string, MessageEvent>();
+
             drawState.CullMode = CullMode.None;
         }
 
@@ -74,6 +89,10 @@ namespace MadScienceLab
 
             //Draw the children
             base.Draw(renderContext);
+
+            DrawMessage(renderContext);
+
+
         }        
 
         public override void Update(RenderContext renderContext)
@@ -112,18 +131,38 @@ namespace MadScienceLab
         //Creates buffer for background
         public void setBackgroundBuffer(RenderContext renderContext)
         {
-            List<VertexPositionTexture> vertexList = new List<VertexPositionTexture>();
-
-            foreach (BackgroundBlock backgroundBlock in Background)
+            int texturePatternIndex = 0;
+            foreach (List<BackgroundBlock> patternedBlocks in Background)
             {
-                foreach (VertexPositionTexture vertex in
-                    backgroundBlock.GetBillboardVertices())
+                List<VertexPositionTexture> vertexList = new List<VertexPositionTexture>();
+
+                foreach (BackgroundBlock backgroundBlock in patternedBlocks)
                 {
-                    vertexList.Add(vertex);
+                    foreach (VertexPositionTexture vertex in
+                        backgroundBlock.GetBillboardVertices())
+                    {
+                        vertexList.Add(vertex);
+                    }
+                }
+                //if there are background blocks of this pattern
+                if (vertexList.Count != 0)
+                {
+                    backgroundBuffer[texturePatternIndex] = new VertexBuffer(renderContext.GraphicsDevice, VertexPositionTexture.VertexDeclaration, vertexList.Count, BufferUsage.WriteOnly);
+                    backgroundBuffer[texturePatternIndex++].SetData<VertexPositionTexture>(vertexList.ToArray());
                 }
             }
-            backgroundBuffer = new VertexBuffer(renderContext.GraphicsDevice, VertexPositionTexture.VertexDeclaration, vertexList.Count, BufferUsage.WriteOnly);
-            backgroundBuffer.SetData<VertexPositionTexture>(vertexList.ToArray()); 
+        }
+
+        private void DrawMessage(RenderContext renderContext)
+        {
+            foreach(MessageEvent msg in Messages.Values)
+            {
+                if(msg.typingState == GameConstants.TYPING_STATE.DoneTyping || msg.typingState == GameConstants.TYPING_STATE.Typing)
+                {
+                    msg.DisplayMessage(renderContext);
+                }
+            }
+
         }
 
         //Draws Background seperate: was able to get huge performance increase doing this way
@@ -131,7 +170,6 @@ namespace MadScienceLab
         {
             //TODO: allow multiple backgrounds
             //Draw background 
-            renderContext.BasicEffect.Texture = renderContext.Textures["Tile_Gray"];
             renderContext.BasicEffect.TextureEnabled = true;
 
             renderContext.BasicEffect.World = Matrix.Identity;
@@ -146,12 +184,39 @@ namespace MadScienceLab
             rs.CullMode = CullMode.CullClockwiseFace;
             rs.MultiSampleAntiAlias = false;
             renderContext.GraphicsDevice.RasterizerState = rs;
-            
-            foreach (EffectPass pass in renderContext.BasicEffect.CurrentTechnique.Passes)
+            for (int patternIndex = 0; patternIndex < backgroundBuffer.Length; patternIndex++)
             {
-                pass.Apply();
-                renderContext.GraphicsDevice.SetVertexBuffer(backgroundBuffer);
-                renderContext.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, backgroundBuffer.VertexCount / 3);
+                    //if there are no patterned blocks of this type
+                    if (backgroundBuffer[patternIndex] == null)
+                        continue;
+
+                    switch (patternIndex)
+                    {
+                        case 0:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Tile_Gray"];
+                            break;
+                        case 1:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Tile_White"];
+                            break;
+                        case 2:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Vent"];
+                            break;
+                        case 3:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Pipes1"];
+                            break;
+                        case 4:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Pipes2"];
+                            break;
+                        case 5:
+                            renderContext.BasicEffect.Texture = renderContext.Textures["Tile_Black"];
+                            break;
+                    }
+                    foreach (EffectPass pass in renderContext.BasicEffect.CurrentTechnique.Passes)
+                    {
+                        pass.Apply();
+                        renderContext.GraphicsDevice.SetVertexBuffer(backgroundBuffer[patternIndex]);
+                        renderContext.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, backgroundBuffer[patternIndex].VertexCount / 3);
+                    }
             }
 
             //Set back to normal
@@ -162,13 +227,14 @@ namespace MadScienceLab
         {
             RasterizerState oldState = renderContext.GraphicsDevice.RasterizerState;
             renderContext.GraphicsDevice.RasterizerState = drawState;
+            //renderContext.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
 
             // Gather instance transform matrices into a single array.
-            Array.Resize(ref instanceTransforms, instances.Count);
+            Array.Resize(ref instanceTransforms, foregroundBlockInstances.Count);
 
-            for (int i = 0; i < instances.Count; i++)
+            for (int i = 0; i < foregroundBlockInstances.Count; i++)
             {
-                instanceTransforms[i] = instances[i].GetWorldMatrix();
+                instanceTransforms[i] = foregroundBlockInstances[i].GetWorldMatrix();
             }
 
             //The actual drawing technique:

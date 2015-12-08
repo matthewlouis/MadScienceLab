@@ -25,7 +25,7 @@ namespace MadScienceLab
         static string levelSelect;
 
         //Builds Basic level
-        public static Level MakeBasicLevel(int levelNum)
+        public static Level MakeBasicLevel(int levelNum, RenderContext renderContext)
         {
             Level level = new Level();
             levelSelect = "level" + levelNum.ToString();
@@ -97,7 +97,9 @@ namespace MadScienceLab
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'm':
-                        level.AddChild(new MessageEvent(col++, row));
+                        MessageEvent message = new MessageEvent(col++, row, renderContext);
+                        level.AddChild(message);
+                        level.Messages.Add("" + row + ":" + (col - startWall), message);
                         _firstobject.Add("" + row + ":" + (col - startWall), level.Children.Count - 1);
                         break;
                     case 'B':
@@ -275,8 +277,10 @@ namespace MadScienceLab
                     //Message event
                     if (level.Children[index].GetType() == typeof(MessageEvent))
                     {
-                        MessageEvent messageEvent = (MessageEvent)level.Children[index];
-                        messageEvent.Message = ObjectAndSettings[1];
+                        //MessageEvent messageEvent = (MessageEvent)level.Children[index];
+                        //messageEvent.Message = ObjectAndSettings[1];
+                        level.Messages[ObjectAndSettings[0]].Message = ObjectAndSettings[1];
+                        
                     }
                     
                     //Trapdoor
@@ -299,45 +303,27 @@ namespace MadScienceLab
             {
                 switch (c2) //convert char to level object at the coordinate iterated through
                 {
-                    case '1': //Bare Metal Gray
-                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["BareMetal_Gray"]));
+                    case '1': //White tile
+                        level.Background[1].Add(new BackgroundBlock(col++, row));
                         break;
-                    case '2': //Rounded Brushed Gray Metal
-                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["BrushedRoundMetal_Gray"]));
+                    case '2': //Metal Vent
+                        level.Background[2].Add(new BackgroundBlock(col++, row));
                         break;
-                    case '3': //Textured Metal Floor Gray
-                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["MetalFloor_Gray"]));
+                    case '3': //pipe arrangement 1 on bluish gray tile
+                        level.Background[3].Add(new BackgroundBlock(col++, row));
                         break;
-                    case '4': //Dirty Rusted Metal
-                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["DirtyMetal"]));
+                    case '4': //pipe arrangement 2 on bluish gray tile
+                        level.Background[4].Add(new BackgroundBlock(col++, row));
                         break;
-                    case '5': //White Fiberglass
-                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["Fiberglass_White"]));
-                        break;
-                    case '6': //Tile Blue
-                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Blue"]));
-                        break;
-                    case '7': //Tile Beige
-                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Beige"]));
-                        break;
-                    case '8': //Tile Multicolored
-                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Fun"]));
-                        break;
-                    case '9': //Tile Gray
-                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_DarkGray"]));
-                        break;
-                    case '0': //Windowed Glass Blocks
-                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["WindowBlocks"]));
-                        break;
-                    case '@':
-                        col++;
+                    case '5': //Black tile
+                        level.Background[5].Add(new BackgroundBlock(col++, row));
                         break;
                     case '\n': //new line/row
                         row--;
                         col = startWall;
                         break;
-                    default:
-                        level.Background.Add(new BackgroundBlock(col++, row, GameplayScreen._textures["Tile_Gray"]));
+                    default: //Regular bluish gray tile
+                        level.Background[0].Add(new BackgroundBlock(col++, row));
                         break;
                 }
             }

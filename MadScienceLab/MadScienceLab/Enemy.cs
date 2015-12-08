@@ -39,6 +39,8 @@ namespace MadScienceLab
 
         private GameAnimatedModel animmodel;
 
+        Rectangle enemyRange;
+
         public Enemy(int column, int row)
             : base(column, row)
         {
@@ -65,14 +67,17 @@ namespace MadScienceLab
             soundEffects.PlayAndLoopSound("Roomba");
             base.LoadContent(contentManager);
 
+            //attack range
+            enemyRange = new Rectangle((int)(Position.X - (HitboxWidth * 10)), (int)(Position.Y + (HitboxHeight/2)), (HitboxWidth * 21), (HitboxHeight));            
+
             // generate random direction and initialize
             Random rand = new Random();
             if (rand.Next(0, 1) == 0)
                 direction = GameConstants.POINTDIR.pointLeft;
             else
                 direction = GameConstants.POINTDIR.pointRight;
-           
-            
+
+
         }
 
         public override void Update(RenderContext renderContext)
@@ -82,7 +87,7 @@ namespace MadScienceLab
             renderContext.Quadtree.clear();
             foreach (CellObject obj in renderContext.Level.collidableObjects)
             {
-                    renderContext.Quadtree.insert(obj);
+                renderContext.Quadtree.insert(obj);
             }
 
             renderContext.Quadtree.retrieve(returnObjs, Hitbox);
@@ -91,15 +96,32 @@ namespace MadScienceLab
             {
                 MoveLeft(movementAmount * speed);
             }
-            else if(direction == GameConstants.POINTDIR.pointRight)
+            else if (direction == GameConstants.POINTDIR.pointRight)
             {
                 MoveRight(movementAmount * speed);
 
             }
-            
 
-            CheckPlayerNearby(renderContext); 
+            enemyRange.X = (int)(Position.X - (HitboxWidth * 5));
+            enemyRange.Y = (int)(Position.Y + HitboxHeight);
+
+
             CheckEnemyBoxCollision(renderContext);
+
+            if (!CheckPlayerNearby(renderContext))
+            {
+                if (direction == GameConstants.POINTDIR.pointLeft)
+                {
+                    MoveLeft(GameConstants.MOVEAMOUNT * 2);
+                }
+
+                else if (direction == GameConstants.POINTDIR.pointRight)
+                {
+                    MoveRight(GameConstants.MOVEAMOUNT * 2);
+                }
+            }
+
+           
             soundEffects.Update(renderContext);
             animmodel.Update(renderContext);
 
@@ -131,12 +153,12 @@ namespace MadScienceLab
         {
             //Check collision of enemy against all objects in level except toggle switch and 
             foreach (CellObject levelObject in renderContext.Level.collidableObjects)
-            {                
+            {
                 if ((levelObject.isCollidable && Hitbox.Intersects(levelObject.Hitbox)
-                    && levelObject.GetType() != typeof(ToggleSwitch)) || 
+                    && levelObject.GetType() != typeof(ToggleSwitch)) ||
                     (Hitbox.Intersects(levelObject.Hitbox) && levelObject.GetType() == typeof(Character)))
                 {
-                    if(levelObject.GetType() == typeof(Character))
+                    if (levelObject.GetType() == typeof(Character))
                     {
                         renderContext.Player.TakeDamage(GameConstants.PLAYER_DAMAGE, renderContext.GameTime);
                         movestate = !movestate;
@@ -169,15 +191,32 @@ namespace MadScienceLab
         /// Checkes based on a hitbox whether the player is nearby the enemy and sets enemy volicity while in range
         /// </summary>
         /// <param name="renderContext"></param>
-        private void CheckPlayerNearby(RenderContext renderContext)
+        private bool CheckPlayerNearby(RenderContext renderContext)
         {
-            
+            foreach (CellObject cellObject in renderContext.Level.collidableObjects)
+            {
+                if (cellObject.GetType() != typeof(ToggleSwitch) && cellObject.GetType() != typeof(Enemy))
+                {
+                    if (enemyRange.Intersects(cellObject.Hitbox) && enemyRange.Intersects(renderContext.Player.Hitbox))
+                    {
+                        if (direction == GameConstants.POINTDIR.pointLeft && cellObject.Position.X > renderContext.Player.Position.X && renderContext.Player.Position.X <  Position.X)
+                        {
+                            return false;
+                        }
+
+                        else if (direction == GameConstants.POINTDIR.pointRight && cellObject.Position.X < renderContext.Player.Position.X && renderContext.Player.Position.X > Position.X)
+                        {
+                            return false;
+                        }
+                        
+                    }
+                } 
+            }
+            return true;
         }
 
 
     }
-
-
 }
 
 
