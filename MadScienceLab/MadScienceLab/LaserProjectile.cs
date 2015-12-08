@@ -103,6 +103,7 @@ namespace MadScienceLab
             {
                 if (!worldObject.IsPassable && Hitbox.Intersects(worldObject.Hitbox))
                 {
+                    Console.Out.WriteLine(worldObject);
                     if (worldObject.GetType() == typeof(Character))
                     {
                         active = false;
