@@ -407,7 +407,7 @@ namespace MadScienceLab
                 {
                     levelData.time = _timer.ElapsedTime.ToString ();
                     levelData.remainingHealth = _renderContext.Player.GetHealth();
-                    LoadingScreen.Load(ScreenManager, false, null, new LevelCompleteBackgroundScreen(),
+                    LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
                                                                new LevelCompleteScreen(levelData));
                 }
                 if (_renderContext.Level.GameOver)
