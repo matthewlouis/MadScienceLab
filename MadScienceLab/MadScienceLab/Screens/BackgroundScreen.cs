@@ -98,7 +98,7 @@ namespace MadScienceLab
                 menuSize = new Rectangle(ScreenManager.GraphicsDevice.Viewport.Width / 2 - (int)menuBounds.X / 2, ScreenManager.GraphicsDevice.Viewport.Height / 2 - (int)menuBounds.Y / 2 + 20, (int)menuBounds.X, (int)menuBounds.Y);
                 scale = 1.5f;
                 Vector2 madLabTextBounds = new Vector2((int)(madLabText.Width * scale), (int)(madLabText.Height * scale));
-                madLabTextSize = new Rectangle(ScreenManager.GraphicsDevice.Viewport.Width / 2 - (int)madLabTextBounds.X / 2, 40, (int)madLabTextBounds.X, (int)madLabTextBounds.Y);
+                madLabTextSize = new Rectangle(ScreenManager.GraphicsDevice.Viewport.Width / 2 - (int)madLabTextBounds.X / 2, 20, (int)madLabTextBounds.X, (int)madLabTextBounds.Y);
                 gear1 = content.Load<Texture2D>("Textures/UI/bg_0000_Layer-1");
                 gear2 = content.Load<Texture2D>("Textures/UI/bg_0002_Layer-3");
                 gear3 = content.Load<Texture2D>("Textures/UI/bg_0001_Layer-2");
@@ -150,17 +150,17 @@ namespace MadScienceLab
         public override void Update(GameTime gameTime, bool otherScreenHasFocus,
                                                        bool coveredByOtherScreen)
         {
-            ripple.Parameters["fT"].SetValue((float)gameTime.TotalGameTime.TotalSeconds / 2);
+            ripple.Parameters["fT"].SetValue((float)gameTime.TotalGameTime.TotalSeconds / 1f);
             elaspedTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (elaspedTime > 1000)
-            {
-                rotationAngle += (float)gameTime.ElapsedGameTime.TotalSeconds * 1;
+            //if (elaspedTime > 1000)
+            //{
+                rotationAngle += (float)gameTime.ElapsedGameTime.TotalSeconds / 10;
                 rotationAngle = rotationAngle % (MathHelper.Pi * 2);
-                if (elaspedTime > 2000)
-                {
-                    elaspedTime = 0;
-                }
-            }
+                //if (elaspedTime > 2000)
+                //{
+                //    elaspedTime = 0;
+                //}
+            //}
             base.Update(gameTime, otherScreenHasFocus, false);
         }
 
