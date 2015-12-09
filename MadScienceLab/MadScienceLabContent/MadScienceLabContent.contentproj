@@ -783,6 +783,7 @@
       <Name>MadLabText</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="Sounds\Type.wav">
       <Name>Type</Name>
       <Importer>WavImporter</Importer>
