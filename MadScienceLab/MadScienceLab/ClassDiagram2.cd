@@ -45,7 +45,7 @@
   <Class Name="MadScienceLab.Character" Collapsed="true">
     <Position X="36" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BASAgACAlIEEUgEAAAgKRAAAAAAADoAIdAKowCA0sA0=</HashCode>
+      <HashCode>BASAhACAlIEEUgEAAQgKRAAAAAAADoAIdAKowCA0sA0=</HashCode>
       <FileName>Character.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -59,7 +59,7 @@
   <Class Name="MadScienceLab.Enemy" Collapsed="true">
     <Position X="9" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AASAAAAAIBAAIggABCAAAAAAAAAAAQAIQBAAAAQBAAQ=</HashCode>
+      <HashCode>AASAIAAAABCAIggABCACBAAAAAAAAwAKRBAAAASBEAQ=</HashCode>
       <FileName>Enemy.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -136,7 +136,7 @@
   <Class Name="MadScienceLab.Level" Collapsed="true">
     <Position X="4.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACQAgAEACAAApgAIAAAAAIIAgAIAAAQEBABgAYIBBAw=</HashCode>
+      <HashCode>ACSAgAEACAAApgAIAAAAAIIAgAIAAAQEBABgAYIBBAw=</HashCode>
       <FileName>Level.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -157,7 +157,7 @@
   <Class Name="MadScienceLab.MessageEvent" Collapsed="true">
     <Position X="38.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACQAAYAAAAAAAoAAAAAAICAAEAgAQAgQBAAAIAAQAKA=</HashCode>
+      <HashCode>ACQAAQCAAAACAoAAAAAAICAgEAgAYAgQBAAAIgAQAKA=</HashCode>
       <FileName>MessageEvent.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -175,8 +175,7 @@
       <FileName>MusicPlayer.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MadScienceLab.
-         " Collapsed="true">
+  <Class Name="MadScienceLab.PickableBox" Collapsed="true">
     <Position X="15.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
@@ -222,21 +221,21 @@
   <Class Name="MadScienceLab.BackgroundScreen" Collapsed="true">
     <Position X="43" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQCAACAAAAAAgBAAAIAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <HashCode>CAQCSgixgBACAiBAAAIAACQAAAIAABIRBAAQAAgEAAA=</HashCode>
       <FileName>Screens\BackgroundScreen.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MadScienceLab.GameOverScreen" Collapsed="true">
     <Position X="1.25" Y="6" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAFACAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <HashCode>AAAFACAAAAAAAgACAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
       <FileName>Screens\GameOverScreen.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="MadScienceLab.GameplayScreen" Collapsed="true">
     <Position X="50" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAYCCGPAE4BwAgxBACAgAgAAgBBGACARABQIcCUAggI=</HashCode>
+      <HashCode>AAYCCGHAE4RwAg5BAAAgAAAAABRGASARCBQIcCUIggI=</HashCode>
       <FileName>Screens\GameplayScreen.cs</FileName>
     </TypeIdentifier>
   </Class>
